@@ -1,0 +1,117 @@
+import { Box, Button, IconButton, Typography, AppBar, Toolbar, Drawer, List, ListItem, Tooltip } from "@mui/material";
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import { useDispatch, useSelector } from "react-redux";
+import { setLogout } from "../slices/authSlice";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
+
+function Navbar() {
+  const dispatch = useDispatch();
+  const authState = useSelector((state) => state.auth);
+  const { token, nombre } = authState;
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [ nameBar, setNameBar ] = useState(null)
+
+  const handleLogout = () => {
+    dispatch(setLogout());
+  };
+
+  const toggleDrawer = (open) => (event) => {
+    if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
+      return;
+    }
+    setDrawerOpen(open);
+  };
+
+  const menuItems = [
+    { to: "/", label: <BarChartIcon/> , title : 'INICIO' },
+    { to: "/solicitudes", label: <FormatListBulletedIcon/>, title : 'SOLICITUDES' },
+    { to: "/create", label: <NoteAddIcon/>, title : 'CREAR SOLICITUD' },
+  ];
+
+  const getFirstName = (nombre) => {
+    if (!nombre) return "";
+    return nombre.split(" ")[0];
+  };
+
+  useEffect(() => {
+    if (nombre) {
+      setNameBar(getFirstName(nombre));
+    }
+  }, [nombre]);
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="fixed" sx={{ background: "#0b2f6d" }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          {token && (
+            <>
+              <Drawer
+                anchor="left"
+                open={drawerOpen}
+                onClose={toggleDrawer(false)}
+              >
+                <Box
+                  sx={{ width: 300, background: "#0b2f6d", display: 'flex', flexDirection: 'column', height: '100vh' }}
+                  role="presentation"
+                  onClick={toggleDrawer(false)}
+                  onKeyDown={toggleDrawer(false)}
+                >
+                  <List sx={{ flexGrow: 1, pt: 1 }}>
+                    {menuItems.map((item, index) => (
+                      <ListItem key={index}>
+                        <Tooltip title={item.title} placement="left">
+                        <Button
+                          variant="contained"
+                          color="info"
+                          sx={{ width: "100%", p: 1 }}
+                        >
+                          <Link
+                            to={item.to}
+                            style={{ color: "white", textDecoration: "none", width: "100%", height: "100%", fontWeight: "bold" }}
+                          >
+                            {item.label}
+                          </Link>
+                        </Button>
+                        </Tooltip>
+                      </ListItem>
+                    ))}
+                  </List>
+                  <Box sx={{ p: 1 }}>
+                    <Button
+                      variant="contained"
+                      color="info"
+                      sx={{ width: "100%", height: "40px", fontWeight: "bold" }}
+                      onClick={handleLogout}
+                      startIcon={<LogoutIcon />}
+                    >
+                      CERRAR SESION
+                    </Button>
+                  </Box>
+                </Box>
+              </Drawer>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={toggleDrawer(true)}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="body1" sx={{ fontWeight: "bold", pr:2 }}>
+                 ¡ Hola, { nameBar } !
+              </Typography>
+            </>
+          )}
+        </Toolbar>
+      </AppBar>
+    </Box>
+  );
+}
+
+export default Navbar;
