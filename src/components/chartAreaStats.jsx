@@ -13,17 +13,20 @@ import { getAreaStats } from "../api/statsApi";
 import { useSelector } from "react-redux";
 
 function ChartAreaStats() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const authState = useSelector((state) => state.auth);
   const { token } = authState;
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF6347', '#6A5ACD'];
 
-
   const fetchData = async () => {
     try {
       const res = await getAreaStats(token);
-      setData(res);
+      const formattedData = res.map(item => ({
+        ...item,
+        porcentaje: parseFloat(item.porcentaje.toFixed(1)) // Aseguramos que porcentaje sea un número
+      }));
+      setData(formattedData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -40,7 +43,7 @@ function ChartAreaStats() {
           <PieChart>
             <Pie
               data={data}
-              dataKey="conteo"
+              dataKey="porcentaje"
               nameKey="nombreArea"
               cx="50%"
               cy="50%"

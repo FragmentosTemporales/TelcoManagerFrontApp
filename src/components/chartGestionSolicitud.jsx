@@ -57,9 +57,9 @@ function ChartGestionSolicitud() {
             cursor={{ fill: "rgba(200, 200, 200, 0.5)" }}
           />
           <Legend verticalAlign="top" height={36} />
-          <Bar dataKey="conteo" fill="url(#gradient)">
+          <Bar dataKey="porcentaje" fill="url(#gradient)">
             <LabelList
-              dataKey="conteo"
+              dataKey="porcentaje"
               position="right"
               style={{ fill: "black", fontSize: 12 }}
             />

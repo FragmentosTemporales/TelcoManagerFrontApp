@@ -14,6 +14,7 @@ import FormCalidad from "./views/CreateFormCalidad";
 import FormRRHH from "./views/CreateFormRRHH";
 import FormOperaciones from "./views/CreateFormOperaciones";
 import FormLogistica from "./views/CreateFormLogistica";
+import NotificacionesView from "./views/Notificaciones";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/RECURSOS HUMANOS/:logID" element={<FormRRHH />} />
           <Route path="/OPERACIONES/:logID" element={<FormOperaciones />} />
           <Route path="/LOGISTICA/:logID" element={<FormLogistica />} />
+          <Route path="/notificaciones" element={<NotificacionesView />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>

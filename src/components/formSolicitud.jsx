@@ -33,7 +33,7 @@ function FormSolicitud() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     personaID: "",
-    personaSolicitaID: "",
+    userID: "",
     motivoID: "",
     areaID: "",
     submotivoID: null,
@@ -42,6 +42,7 @@ function FormSolicitud() {
   const [personaOptions, setPersonaOptions] = useState([]);
   const [areaOptions, setAreaOptions] = useState([]);
   const [smOptions, setSmOptions] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -103,10 +104,11 @@ function FormSolicitud() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     dispatch(onLoading());
     const payload = {
       personaID: form.personaID,
-      personaSolicitaID: form.personaSolicitaID,
+      userID: form.userID,
       motivoID: form.motivoID,
       areaID: form.areaID,
       submotivoID: form.submotivoID,
@@ -117,7 +119,7 @@ function FormSolicitud() {
       setOpen(true);
       setForm({
         personaID: "",
-        personaSolicitaID: "",
+        userID: "",
         motivoID: "",
         areaID: "",
         submotivoID: null,
@@ -149,7 +151,7 @@ function FormSolicitud() {
   useEffect(() => {
     setForm((prevForm) => ({
       ...prevForm,
-      personaSolicitaID: user_id || "",
+      userID: user_id || "",
     }));
   }, [user_id]);
 
@@ -309,8 +311,13 @@ function FormSolicitud() {
               </Box>
 
               <Box sx={{ textAlign: "center" }}>
-                <Button type="submit" variant="contained" sx={{background:'#0b2f6d', fontWeight: "bold"}}>
-                  Crear
+              <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                  disabled={isSubmitting}  // Deshabilitar el botón cuando isSubmitting es true
+                >
+                  {isSubmitting ? "Procesando..." : "Crear"}
                 </Button>
               </Box>
             </form>

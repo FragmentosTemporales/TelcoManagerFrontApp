@@ -23,6 +23,7 @@ function FormFlota() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     logID: logID,
@@ -55,6 +56,7 @@ function FormFlota() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     dispatch(onLoading());
   
     const formData = new FormData();
@@ -219,13 +221,14 @@ function FormFlota() {
             </Box>
 
             <Box sx={{ textAlign: "center" }}>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ background: "#0b2f6d" }}
-              >
-                Crear
-              </Button>
+            <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                  disabled={isSubmitting}  // Deshabilitar el botón cuando isSubmitting es true
+                >
+                  {isSubmitting ? "Procesando..." : "Crear"}
+                </Button>
             </Box>
           </form>
         </CardContent>

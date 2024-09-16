@@ -14,6 +14,7 @@ import solicitudReducer from "../slices/solicitudSlice";
 import seReducer from "../slices/seSlice"
 import sgReducer from "../slices/sgSlice"
 import formReducer from "../slices/formSlice"
+import notificacionReducer from "../slices/notificacionSlice"
 
 export const store = configureStore({
   reducer: {
@@ -32,5 +33,6 @@ export const store = configureStore({
     se: seReducer,
     sg: sgReducer,
     form: formReducer,
+    notificacion: notificacionReducer
   },
 });
