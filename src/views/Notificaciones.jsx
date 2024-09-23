@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  Chip,
   CardHeader,
   Paper,
   Table,
@@ -13,10 +14,12 @@ import {
 } from "@mui/material";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { updateNotificacion } from "../api/notificacionesAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { onLoad, onLoading } from "../slices/notificacionSlice";
+import { updateNotificacion, getNotificaciones } from "../api/notificacionesAPI";
 
 function NotificacionesView() {
+  const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
   const notificacionState = useSelector((state) => state.notificacion);
   const { token } = authState;
@@ -25,10 +28,21 @@ function NotificacionesView() {
   const updating = async (id) => {
     try {
       const data = { read: true };
-      const res = await updateNotificacion(token, data, id);
-      console.log(res)
+      await updateNotificacion(token, data, id);
+      fetchData()
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      dispatch(onLoading());
+      const res = await getNotificaciones(token);
+      console.log(res)
+      dispatch(onLoad(res));
+    } catch (error) {
+      console.error("Error fetching notificaciones:", error);
     }
   };
 
@@ -84,7 +98,7 @@ function NotificacionesView() {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {["FECHA", "DESCRIPCION", "IR"].map((header) => (
+                  {["FECHA", "DESCRIPCION", "ESTADO","IR"].map((header) => (
                     <TableCell
                       key={header}
                       align="center"
@@ -101,6 +115,12 @@ function NotificacionesView() {
                     <TableRow key={index}>
                       <TableCell align="center">{row.fecha}</TableCell>
                       <TableCell align="center">{row.descri}</TableCell>
+                      <TableCell align="center">
+              <Chip
+                label={row.read ? "Leído" : "No leído"}
+                color={row.read ? "success" : "warning"}
+              />
+            </TableCell>
                       <TableCell align="center">
                         <Link to={row.nav_path}>
                           <Button

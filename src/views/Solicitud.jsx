@@ -6,8 +6,8 @@ import {
   CardContent,
   CardHeader,
   FormControl,
-  InputLabel ,
-  MenuItem ,
+  InputLabel,
+  MenuItem,
   Skeleton,
   Table,
   TableContainer,
@@ -24,8 +24,20 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUniqueSolicitud } from "../api/solicitudAPI";
 import extractDate from "../helpers/main";
-import { getSolicitudEstado } from "../api/seAPI";
 import { createSG } from "../api/sgAPI";
+import {
+  estadoData2,
+  estadoData3,
+  estadoData4,
+  estadoData7,
+  estadoData8,
+} from "../data/estadoData";
+import RrhhViewer from "../components/rrhhFormViewer";
+import PrevencionViewer from "../components/prevencionFormViewer";
+import CalidadViewer from "../components/calidadFormViewer";
+import OperacionesViewer from "../components/operacionesFormViewer";
+import LogisticaViewer from "../components/logisticaFormViewer";
+import FlotaViewer from "../components/flotaFormViewer";
 
 function Solicitud() {
   const { solicitud_id } = useParams();
@@ -35,7 +47,7 @@ function Solicitud() {
   const [data, setData] = useState(null);
   const [dataGestiones, setDataGestiones] = useState(null);
   const [dataForm, setDataForm] = useState(null);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -61,6 +73,7 @@ function Solicitud() {
       setDataForm(res.form);
       setLogID(res.logID);
       setIsLoading(false);
+      setIsSubmitting(false);
     } catch (error) {
       setMessage("Error al cargar la información");
       setOpen(true);
@@ -69,6 +82,7 @@ function Solicitud() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const { logID, solicitudEstadoID } = form;
     try {
       const response = await createSG({ logID, solicitudEstadoID }, token);
@@ -81,22 +95,96 @@ function Solicitud() {
     }
   };
 
-  const fetchOptions = async () => {
-    try {
-      const res = await getSolicitudEstado(token);
-      const transformedOptions = res.map((item) => ({
-        value: item.solicitudEstadoID,
-        label: item.descri,
-      }));
-      setOptions(transformedOptions);
-    } catch (error) {
-      console.error("Error fetching options:", error);
+  const setDataOptions = () => {
+    if (dataGestiones[0] && dataGestiones[0].estado) {
+      switch (dataGestiones[0].estado) {
+        case "ENVIADA A RRHH":
+          const transformedOptions = estadoData2.map((item) => ({
+            value: item.solicitudEstadoID,
+            label: item.descri,
+          }));
+          setOptions(transformedOptions);
+          break;
+
+        case "EVALUACION LEGAL":
+          const transformedOptions2 = estadoData3.map((item) => ({
+            value: item.solicitudEstadoID,
+            label: item.descri,
+          }));
+          setOptions(transformedOptions2);
+          break;
+
+        case "PENDIENTE FIRMA EMPLEADOR":
+          const transformedOptions3 = estadoData4.map((item) => ({
+            value: item.solicitudEstadoID,
+            label: item.descri,
+          }));
+          setOptions(transformedOptions3);
+          break;
+
+        case "LICENCIA MEDICA":
+          const transformedOptions4 = estadoData7.map((item) => ({
+            value: item.solicitudEstadoID,
+            label: item.descri,
+          }));
+          setOptions(transformedOptions4);
+          break;
+
+        case "VACACIONES":
+          const transformedOptions5 = estadoData7.map((item) => ({
+            value: item.solicitudEstadoID,
+            label: item.descri,
+          }));
+          setOptions(transformedOptions5);
+          break;
+
+        case "PENDIENTE FIRMA TRABAJADOR":
+          const transformedOptions6 = estadoData7.map((item) => ({
+            value: item.solicitudEstadoID,
+            label: item.descri,
+          }));
+          setOptions(transformedOptions6);
+          break;
+
+        case "SOLICITUD DE ANULACION":
+          const transformedOptions7 = estadoData8.map((item) => ({
+            value: item.solicitudEstadoID,
+            label: item.descri,
+          }));
+          setOptions(transformedOptions7);
+          break;
+
+        default:
+          console.log("Estado no reconocido");
+          break;
+      }
+    } else {
+      console.log("No hay estado disponible en dataGestiones[0]");
     }
   };
 
-  useEffect(() => {
-    fetchOptions();
-  }, [token]);
+  const setFormViewer = () => {
+    if (data?.form !== "None") {
+      switch (data.areaID) {
+        case 1:
+          return <PrevencionViewer data={data.form} />
+        case 2:
+          return <CalidadViewer data={data.form} />
+        case 3:
+          return <OperacionesViewer data={data.form} />
+        case 4:
+          return <LogisticaViewer data={data.form} />
+        case 5:
+          return <RrhhViewer data={data.form} />;
+        case 6:
+          return <FlotaViewer data={data.form} />;
+        default:
+          console.log("Formulario no reconocido");
+      }
+    } else {
+      console.log("No hay Formulario para mostrar");
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -110,6 +198,12 @@ function Solicitud() {
       }));
     }
   }, [logID]);
+
+  useEffect(() => {
+    if (dataGestiones && dataGestiones.length > 0) {
+      setDataOptions();
+    }
+  }, [dataGestiones]);
 
   return (
     <Box
@@ -200,10 +294,7 @@ function Solicitud() {
                 { label: "MOTIVO AMONESTACION :", value: data.motivo },
                 { label: "SUBMOTIVO :", value: data.submotivo },
                 { label: "FUNCIONARIO A AMONESTAR :", value: data.amonestado },
-                {
-                  label: "RUT FUNCIONARIO A AMONESTAR :",
-                  value: data.rutAmonestado,
-                },
+                { label: "RUT FUNCIONARIO A AMONESTAR :", value: data.rutAmonestado }
               ].map((item, index) => (
                 <Box
                   key={index}
@@ -244,31 +335,7 @@ function Solicitud() {
 
             <CardContent sx={{ p: 4 }}>
               {dataForm !== false && dataForm !== null ? (
-                Object.keys(dataForm || {}).map((key, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      mb: 2,
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      component="div"
-                      sx={{ fontWeight: "bold" }}
-                    >
-                      {key}:
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      component="div"
-                      sx={{ color: "text.secondary", pl: 1 }}
-                    >
-                      {dataForm[key]}
-                    </Typography>
-                  </Box>
-                ))
+                setFormViewer()
               ) : (
                 <Box
                   sx={{
@@ -369,13 +436,13 @@ function Solicitud() {
             />
             <CardContent>
               <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-                <Box sx={{ mb: 2, display:'flex', justifyContent:'center'}}>
-                  <FormControl  variant="filled" >
+                <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
+                  <FormControl variant="filled">
                     <InputLabel id="estado-label">Estado</InputLabel>
                     <Select
                       labelId="estado-label"
                       id="estado-select"
-                      sx={{width:'350px'}}
+                      sx={{ width: "350px" }}
                       value={form.solicitudEstadoID || ""}
                       onChange={(event) => {
                         setForm((prevForm) => ({
@@ -396,9 +463,10 @@ function Solicitud() {
                   <Button
                     type="submit"
                     variant="contained"
-                    sx={{ background: "#0b2f6d" }}
+                    sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                    disabled={isSubmitting} // Deshabilitar el botón cuando isSubmitting es true
                   >
-                    Crear
+                    {isSubmitting ? "Procesando..." : "Crear"}
                   </Button>
                 </Box>
               </form>

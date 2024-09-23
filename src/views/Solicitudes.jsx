@@ -39,7 +39,6 @@ function Solicitudes() {
   const [options, setOptions] = useState([]);
   const [page, setPage] = useState(1);
   const [filterID, setFilterID] = useState(undefined);
-  const [showFilters, setShowFilters] = useState(true);
 
   const handleClose = () => setOpen(false);
 
@@ -51,7 +50,6 @@ function Solicitudes() {
         filterID === undefined
           ? await getSolicitudes(token, page)
           : await getFilteredSolicitudes(token, filterID, page);
-
       dispatch(onLoad(res));
     } catch (error) {
       dispatch(setMessage("Información no encontrada."));

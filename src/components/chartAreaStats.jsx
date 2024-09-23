@@ -24,7 +24,7 @@ function ChartAreaStats() {
       const res = await getAreaStats(token);
       const formattedData = res.map(item => ({
         ...item,
-        porcentaje: parseFloat(item.porcentaje.toFixed(1)) // Aseguramos que porcentaje sea un número
+        porcentaje: parseFloat(item.porcentaje.toFixed(1))
       }));
       setData(formattedData);
     } catch (error) {
