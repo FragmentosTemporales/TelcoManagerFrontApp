@@ -23,6 +23,7 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUniqueSolicitud } from "../api/solicitudAPI";
+import { createNotificacion } from "../api/notificacionesAPI";
 import extractDate from "../helpers/main";
 import { createSG } from "../api/sgAPI";
 import {
@@ -32,6 +33,7 @@ import {
   estadoData7,
   estadoData8,
 } from "../data/estadoData";
+import userData from "../data/userData";
 import RrhhViewer from "../components/rrhhFormViewer";
 import PrevencionViewer from "../components/prevencionFormViewer";
 import CalidadViewer from "../components/calidadFormViewer";
@@ -50,6 +52,7 @@ function Solicitud() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [users, setUsers] = useState(false);
   const [message, setMessage] = useState("");
   const [logID, setLogID] = useState(undefined);
   const [options, setOptions] = useState([]);
@@ -58,12 +61,32 @@ function Solicitud() {
     solicitudEstadoID: "",
   });
 
+  const [notificacion, setNotificacion] = useState({
+    nav_path: "",
+    descri: "",
+    userID: "",
+  });
+
   const title = `SOLICITUD DE AMONESTACIÓN N° ${solicitud_id}`;
   const tableTitle = `REGISTRO DE GESTIONES`;
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (data && data !== null) {
+      setNotificacion({
+        nav_path: `/solicitud/${solicitud_id}`,
+        descri: `Tienes una nueva actualización para la amonestación con folio N° ${solicitud_id}`,
+        userID: "",
+      });
+    }
+  }, [data]);
+
+  useEffect(()=>{
+    console.log(notificacion)
+  },[notificacion])
 
   const fetchData = async () => {
     try {
@@ -84,8 +107,11 @@ function Solicitud() {
     e.preventDefault();
     setIsSubmitting(true);
     const { logID, solicitudEstadoID } = form;
+    const { nav_path, descri, userID } = notificacion;
     try {
       const response = await createSG({ logID, solicitudEstadoID }, token);
+      const notifRes = await createNotificacion({ nav_path, descri, userID}, token)
+      console.log(notifRes)
       setMessage(response.message);
       setOpen(true);
       fetchData();
@@ -167,13 +193,13 @@ function Solicitud() {
     if (data?.form !== "None") {
       switch (data.areaID) {
         case 1:
-          return <PrevencionViewer data={data.form} />
+          return <PrevencionViewer data={data.form} />;
         case 2:
-          return <CalidadViewer data={data.form} />
+          return <CalidadViewer data={data.form} />;
         case 3:
-          return <OperacionesViewer data={data.form} />
+          return <OperacionesViewer data={data.form} />;
         case 4:
-          return <LogisticaViewer data={data.form} />
+          return <LogisticaViewer data={data.form} />;
         case 5:
           return <RrhhViewer data={data.form} />;
         case 6:
@@ -198,6 +224,14 @@ function Solicitud() {
       }));
     }
   }, [logID]);
+
+  useEffect(() => {
+    const transformedOptions = userData.map((item) => ({
+      value: item.userID,
+      label: item.nombre,
+    }));
+    setUsers(transformedOptions);
+  }, []);
 
   useEffect(() => {
     if (dataGestiones && dataGestiones.length > 0) {
@@ -294,7 +328,10 @@ function Solicitud() {
                 { label: "MOTIVO AMONESTACION :", value: data.motivo },
                 { label: "SUBMOTIVO :", value: data.submotivo },
                 { label: "FUNCIONARIO A AMONESTAR :", value: data.amonestado },
-                { label: "RUT FUNCIONARIO A AMONESTAR :", value: data.rutAmonestado }
+                {
+                  label: "RUT FUNCIONARIO A AMONESTAR :",
+                  value: data.rutAmonestado,
+                },
               ].map((item, index) => (
                 <Box
                   key={index}
@@ -440,6 +477,7 @@ function Solicitud() {
                   <FormControl variant="filled">
                     <InputLabel id="estado-label">Estado</InputLabel>
                     <Select
+                      required
                       labelId="estado-label"
                       id="estado-select"
                       sx={{ width: "350px" }}
@@ -459,12 +497,37 @@ function Solicitud() {
                     </Select>
                   </FormControl>
                 </Box>
+                <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
+                  <FormControl variant="filled">
+                    <InputLabel id="user-label">Notificar a</InputLabel>
+                    <Select
+                      required
+                      labelId="user-label"
+                      id="user-select"
+                      sx={{ width: "350px" }}
+                      value={notificacion.userID || ""}
+                      onChange={(event) => {
+                        setNotificacion((prevForm) => ({
+                          ...prevForm,
+                          userID: event.target.value,
+                        }));
+                      }}
+                    >
+                      {users.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+
                 <Box sx={{ textAlign: "center" }}>
                   <Button
                     type="submit"
                     variant="contained"
                     sx={{ background: "#0b2f6d", fontWeight: "bold" }}
-                    disabled={isSubmitting} // Deshabilitar el botón cuando isSubmitting es true
+                    disabled={isSubmitting}
                   >
                     {isSubmitting ? "Procesando..." : "Crear"}
                   </Button>

@@ -23,7 +23,11 @@ function ChartGestionSolicitud() {
   const fetchData = async () => {
     try {
       const res = await getSGEstados(token);
-      setData(res);
+      const formattedData = res.map(item => ({
+        ...item,
+        porcentaje: parseFloat(item.porcentaje.toFixed(1))
+      }));
+      setData(formattedData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
