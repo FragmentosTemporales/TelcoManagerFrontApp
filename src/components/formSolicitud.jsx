@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createSolicitud } from "../api/solicitudAPI";
-import { getSubMotivoList } from "../api/smAPI";
+import { motivoData17, motivoData18, motivoData19, motivoData20, motivoData22 } from "../data/submotivoData";
 import areaData from "../data/areaData";
 import {
   prevencionData,
@@ -52,16 +52,55 @@ function FormSolicitud() {
     setOpen(false);
   };
 
-  const fetchSubMotivo = async (ID) => {
-    try {
-      const res = await getSubMotivoList(token, ID);
-      const transformedOptions = res.map((item) => ({
-        value: item.submotivoID,
-        label: item.descri,
-      }));
-      setSmOptions(transformedOptions);
-    } catch (error) {
-      console.log(error);
+  const setSubmotivoData = () => {
+    if (form.motivoID && form.motivoID != "") {
+      switch (form.motivoID) {
+        case "17":
+          const transformedOptions = motivoData17.map((item) => ({
+            value: item.submotivoID,
+            label: item.descri,
+          }));
+          setSmOptions(transformedOptions);
+          break;
+
+        case "18":
+          const transformedOptions2 = motivoData18.map((item) => ({
+            value: item.submotivoID,
+            label: item.descri,
+          }));
+          setSmOptions(transformedOptions2);
+          break;
+
+        case "19":
+          const transformedOptions3 = motivoData19.map((item) => ({
+            value: item.submotivoID,
+            label: item.descri,
+          }));
+          setSmOptions(transformedOptions3);
+          break;
+
+        case "20":
+          const transformedOptions4 = motivoData20.map((item) => ({
+            value: item.submotivoID,
+            label: item.descri,
+          }));
+          setSmOptions(transformedOptions4);
+          break;
+
+        case "22":
+          const transformedOptions5 = motivoData22.map((item) => ({
+            value: item.submotivoID,
+            label: item.descri,
+          }));
+          setSmOptions(transformedOptions5);
+          break;
+
+        default:
+          console.log("motivoID no reconocida");
+          break;
+      }
+    } else {
+      console.log("No hay submotivos disponible");
     }
   };
 
@@ -122,7 +161,7 @@ function FormSolicitud() {
           break;
       }
     } else {
-      console.log("No hay estado disponible en dataGestiones[0]");
+      console.log("No hay motivos disponible");
     }
   };
 
@@ -186,7 +225,7 @@ function FormSolicitud() {
 
   useEffect(() => {
     {
-      form.motivoID != "" ? fetchSubMotivo(form.motivoID) : null;
+      form.motivoID != "" ? setSubmotivoData() : null;
     }
   }, [form.motivoID]);
 

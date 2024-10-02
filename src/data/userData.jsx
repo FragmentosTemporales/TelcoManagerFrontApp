@@ -34,6 +34,18 @@ const userData = [
         "nombre":"Karina Del Carmen Ortega Zambrano",
         "numDoc":"15964890-7",
         "correo":"karina.ortega@dominion.cl"
+    },
+    {
+        "userID": 7,
+        "nombre":"Roberto Segundo Fernandez Gonzalez",
+        "numDoc":"10416843-4",
+        "correo":"roberto.fernandez@dominion-global.com"
+    },
+    {
+        "userID": 8,
+        "nombre":"Jaime Ivan Quispe Arredondo",
+        "numDoc":"10776657-K",
+        "correo":"jaimeivan.quispe@dominion-global.com"
     }
 ]
 export default userData

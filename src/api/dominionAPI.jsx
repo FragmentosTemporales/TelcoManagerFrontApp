@@ -1,25 +1,11 @@
 import axios from "axios";
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-const dominionUrl = import.meta.env.VITE_DOMINION_URL
+const baseUrl = import.meta.env.VITE_DOMINION_URL
 
-export const onLogin = async (payload) => {
-  try {
-    const url = `${baseUrl}/login`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.message;
-  }
-};
 
 export const onLoginDominion = async (payload) => {
   try {
-    const url = `${dominionUrl}/login`;
+    const url = `${baseUrl}/login`;
     
     // Convertir el payload a formato URL codificada
     const formData = new URLSearchParams();
@@ -32,12 +18,23 @@ export const onLoginDominion = async (payload) => {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
-    
-    console.log(response.data)
     return response.data;
   } catch (error) {
-    console.log(error)
     throw error.message;
   }
 };
 
+export const getReversas = async (token, rut) => {
+    try {
+      const url = `${baseUrl}/reversa_serie/${rut}`;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.message;
+    }
+  };

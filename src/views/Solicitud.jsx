@@ -84,9 +84,6 @@ function Solicitud() {
     }
   }, [data]);
 
-  useEffect(()=>{
-    console.log(notificacion)
-  },[notificacion])
 
   const fetchData = async () => {
     try {

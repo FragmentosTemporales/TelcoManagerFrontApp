@@ -2,6 +2,7 @@ import { Box, Alert, Card, CardHeader, Typography } from "@mui/material";
 import ChartGestionSolicitud from "../components/chartGestionSolicitud";
 import ChartAreaStats from "../components/chartAreaStats";
 import ChartMotivoStats from "../components/chartMotivoStats";
+import ReportesPowerBiTelco from "../components/reportBi";
 
 function Home({ open, handleClose, message }) {
   const renderAlert = () => (
@@ -78,7 +79,7 @@ function Home({ open, handleClose, message }) {
         sx={{
           borderRadius: 0,
           width: "70%",
-          height: '100%',
+          height: "100%",
           overflow: "hidden",
           boxShadow: 5,
           display: "flex",
@@ -98,6 +99,18 @@ function Home({ open, handleClose, message }) {
           <ChartMotivoStats />
         </Box>
       </Card>
+
+      {/*
+      <Box>
+        <ReportesPowerBiTelco
+          name="CHILE - MVS - Reporte Operaciones ATC - Mensual"
+          reportId="da9c521d-25e9-48a4-b143-1da684aff555"
+          groupId="1367bc65-9ea5-44d2-9430-946090220353"
+          url="https://app.powerbi.com/reportEmbed?reportId=da9c521d-25e9-48a4-b143-1da684aff555&groupId=1367bc65-9ea5-44d2-9430-946090220353&w=2&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVNPVVRILUNFTlRSQUwtVVMtcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQiLCJlbWJlZEZlYXR1cmVzIjp7InVzYWdlTWV0cmljc1ZOZXh0Ijp0cnVlfX0%3d"
+        />
+      </Box>
+      */}
+
     </Box>
   );
 }

@@ -17,6 +17,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MailIcon from "@mui/icons-material/Mail";
+import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid';
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "../slices/authSlice";
 import { getNotificaciones } from "../api/notificacionesAPI";
@@ -60,13 +61,14 @@ function Navbar() {
       ),
       title: "NOTIFICACIONES",
     },
-    { to: "/", label: <BarChartIcon />, title: "INICIO" },
+    { to: "/", label: <BarChartIcon />, title: "REPORTES" },
     {
       to: "/solicitudes",
       label: <FormatListBulletedIcon />,
       title: "SOLICITUDES",
     },
     { to: "/create", label: <NoteAddIcon />, title: "CREAR SOLICITUD" },
+    { to: "/reversa", label: <FlipCameraAndroidIcon />, title: "MENU REVERSA" },
   ];
 
   const getFirstName = (nombre) => {

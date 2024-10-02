@@ -6,12 +6,17 @@ import {
   CardHeader,
   Button,
   TextField,
+  InputAdornment,
 } from "@mui/material";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import LockIcon from '@mui/icons-material/Lock';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { onLogin } from "../api/authAPI";
+import { onLoginDominion } from "../api/dominionAPI";
 import { onLoad, onLoading, setMessage } from "../slices/authSlice";
+import { domLoadAuth, domLoading } from "../slices/dominionSlice";
 
 function Login() {
   const { message } = useSelector((state) => state.auth);
@@ -36,6 +41,12 @@ function Login() {
       const response = await onLogin(payload);
       dispatch(onLoad(response));
       navigate("/");
+
+      const payload2 = { username: response.numDoc, password: form.clave };
+
+      const res = await onLoginDominion(payload2)
+      dispatch(domLoadAuth(res));
+
     } catch (error) {
       dispatch(setMessage(error));
       setOpen(true);
@@ -84,6 +95,13 @@ function Login() {
                 variant="outlined"
                 value={form.correo}
                 onChange={handleChange}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AccountBoxIcon />
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Box>
             <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
@@ -92,11 +110,18 @@ function Login() {
                 sx={{ minWidth: "400px" }}
                 id="clave"
                 label="Clave"
-                type="password" // Mantenido como 'password'
+                type="password"
                 name="clave"
                 variant="outlined"
                 value={form.clave}
                 onChange={handleChange}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockIcon />
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Box>
             <Box sx={{ textAlign: "center" }}>
