@@ -42,7 +42,7 @@ export const authSlice = createSlice({
       state.correo = null;
       state.nombre = null;
       state.numDoc = null;
-      state.token = '';
+      state.token = null;
       state.is_load = false;
       state.is_loading = false;
       localStorage.removeItem('correo');

@@ -111,7 +111,6 @@ function Solicitudes() {
     fetchOptions();
   }, []);
 
-
   return (
     <Box
       sx={{
@@ -157,7 +156,7 @@ function Solicitudes() {
           }}
         />
         <CardContent>
-          <form >
+          <form>
             <Box
               sx={{
                 display: "flex",
@@ -169,8 +168,8 @@ function Solicitudes() {
                 labelId="estado-label"
                 required
                 id="estado-select"
-                value={filterID || ""} 
-                sx={{ minWidth: "200px", height:"40px" }}
+                value={filterID || ""}
+                sx={{ minWidth: "200px", height: "40px" }}
                 onChange={(event) => {
                   setFilterID(event.target.value);
                 }}
@@ -185,7 +184,12 @@ function Solicitudes() {
               <Button
                 variant="contained"
                 onClick={handleClear}
-                sx={{ fontWeight: "bold", background: "#0b2f6d", minWidth:"200px", height:"40px" }}
+                sx={{
+                  fontWeight: "bold",
+                  background: "#0b2f6d",
+                  minWidth: "200px",
+                  height: "40px",
+                }}
               >
                 LIMPIAR FILTROS
               </Button>
@@ -271,6 +275,7 @@ function Solicitudes() {
                     {[
                       "FECHA SOLICITUD",
                       "N° SOLICITUD",
+                      "MOTIVO",
                       "FORMULARIO",
                       "SOLICITANTE",
                       "AMONESTADO",
@@ -290,20 +295,36 @@ function Solicitudes() {
                   {data && data.length > 0 ? (
                     data.map((row, index) => (
                       <TableRow key={index}>
-                        <TableCell align="center">
+                        <TableCell align="center" sx={{fontSize:"12px"}}>
                           {row.fechaSolicitud}
                         </TableCell>
-                        <TableCell align="center">
-                          {row.numeroSolicitud}
+                        <TableCell align="center" sx={{fontSize:"12px"}}>{row.solicitudID}</TableCell>
+                        <TableCell align="center" sx={{fontSize:"12px"}}>{row.motivo && row.motivo.descri ? row.motivo.descri : "Sin Información"}</TableCell>
+                        <TableCell align="center" sx={{fontSize:"12px"}}>
+                          {row.area && row.area.descri
+                            ? row.area.descri
+                            : "Sin área asignada"}
                         </TableCell>
-                        <TableCell align="center">{row.nombreArea}</TableCell>
-                        <TableCell align="center">{row.solicitante}</TableCell>
-                        <TableCell align="center">{row.amonestado}</TableCell>
+                        <TableCell align="center" sx={{fontSize:"12px"}}>
+                          {row.solicitante && row.solicitante.nombre
+                            ? row.solicitante.nombre
+                            : "Sin Información"}
+                        </TableCell>
+                        <TableCell align="center" sx={{fontSize:"12px"}}>
+                          {row.persona && row.persona.Nombre
+                            ? row.persona.Nombre +
+                              " " +
+                              row.persona.ApellidoPaterno +
+                              " " +
+                              row.persona.ApellidoMaterno
+                            : "Sin Información"}
+                        </TableCell>
                         <TableCell
                           align="center"
                           sx={{
                             display: "flex",
                             justifyContent: "space-around",
+                            fontSize:"12px"
                           }}
                         >
                           <Tooltip
@@ -328,7 +349,7 @@ function Solicitudes() {
                                   alignItems: "center",
                                   justifyContent: "center",
                                 }}
-                                to={`/solicitud/${row.numeroSolicitud}`}
+                                to={`/solicitud/${row.solicitudID}`}
                               >
                                 <FindInPageIcon />
                               </Link>

@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { PowerBIEmbed } from "powerbi-client-react";
 import { models } from "powerbi-client";
-import "../styles/reports.css";
 
 import { createPB_Token } from "../api/powerBIAPI";
 

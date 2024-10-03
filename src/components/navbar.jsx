@@ -24,7 +24,6 @@ import { getNotificaciones } from "../api/notificacionesAPI";
 import { onLoad, onLoading } from "../slices/notificacionSlice";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import dominionLogo from "../images/DLogo.jpg";
 import Whatsapp from "./wsp";
 
 function Navbar() {
@@ -182,44 +181,6 @@ function Navbar() {
               >
                 <MenuIcon />
               </IconButton>
-
-              <Box
-                sx={{
-                  height: "40px",
-                  width: "40px",
-                  backgroundColor: "white",
-                  borderRadius: "50%", // para un contenedor circular
-                  position: "relative", // hacer que el contenedor sea relativo
-                  overflow: "hidden",
-                  transition: "transform 0.2s", // añadir transición al contenedor
-                  "&:hover": {
-                    transform: "scale(1.1)", // escalar el contenedor
-                  },
-                }}
-              >
-                <img
-                  src={dominionLogo}
-                  alt="Logo Dominion"
-                  style={{
-                    height: "80%",
-                    width: "80%",
-                    borderRadius: "50%",
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%) scale(1.1)",
-                    transition: "transform 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform =
-                      "translate(-50%, -50%) scale(1.1)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform =
-                      "translate(-50%, -50%) scale(1)";
-                  }}
-                />
-              </Box>
 
               <Typography variant="body1" sx={{ fontWeight: "bold", pr: 2 }}>
                 ¡Hola, {nameBar}!
