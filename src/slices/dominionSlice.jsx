@@ -17,6 +17,12 @@ export const dominionSlice = createSlice({
     domLoading: (state) => {
       (state.is_loading = true), (state.is_load = false);
     },
+    domsetLogout: (state) => {
+      state.domToken = null;
+      state.domTokenType = null;
+      localStorage.removeItem('domToken');
+      localStorage.removeItem('domTokenType');
+    },
     domLoadAuth: (state, action) => {
       const payload = action.payload;
       state.domMessage = payload.message;
@@ -33,11 +39,11 @@ export const dominionSlice = createSlice({
       state.is_load = true;
     },
     setDomMessage: (state, action) => {
-      state.message = action.payload;
+      state.domMessage = action.payload;
     },
   },
 });
 
-export const { domLoad, domLoading, domLoadAuth, setDomMessage } =
+export const { domLoad, domLoading, domLoadAuth, setDomMessage, domsetLogout } =
   dominionSlice.actions;
 export default dominionSlice.reducer;

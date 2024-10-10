@@ -39,7 +39,6 @@ function NotificacionesView() {
     try {
       dispatch(onLoading());
       const res = await getNotificaciones(token);
-      console.log(res)
       dispatch(onLoad(res));
     } catch (error) {
       console.error("Error fetching notificaciones:", error);

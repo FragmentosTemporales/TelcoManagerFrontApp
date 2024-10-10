@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const state = {
   is_loading: false,
   is_load: false,
-  user_id: null,
+  data: null,
   message: null,
 };
 
@@ -18,7 +18,7 @@ export const userSlice = createSlice({
     },
     onLoad: (state, action ) => {
       const payload = action.payload
-      console.log('userSlice: ', payload)
+      state.data = payload
       state.is_loading = false,
       state.is_load = true;
     },

@@ -22,6 +22,7 @@ function Login() {
   const { message } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ correo: "", clave: "" });
 
@@ -34,6 +35,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     dispatch(onLoading());
     const payload = { correo: form.correo, clave: form.clave };
 
@@ -42,13 +44,16 @@ function Login() {
       dispatch(onLoad(response));
       navigate("/");
 
-      const payload2 = { username: response.numDoc, password: form.clave };
+      const usuario = response.usuario
+
+      const payload2 = { username: usuario.numDoc, password: form.clave };
 
       const res = await onLoginDominion(payload2)
       dispatch(domLoadAuth(res));
 
     } catch (error) {
       dispatch(setMessage(error));
+      setIsSubmitting(false);
       setOpen(true);
     }
   };
@@ -71,7 +76,7 @@ function Login() {
       }}
     >
       {open && renderAlert()}
-      <Card sx={{ width: "30%", borderRadius: "0px", boxShadow: 5, minWidth: "450px" }}>
+      <Card sx={{ width: {lg:"30%", md:"70%", xs:"90%" }, borderRadius: "0px", boxShadow: 5, minWidth: "450px" }}>
         <CardHeader
           title="Iniciar Sesión"
           sx={{
@@ -125,8 +130,8 @@ function Login() {
               />
             </Box>
             <Box sx={{ textAlign: "center" }}>
-              <Button type="submit" variant="contained" sx={{ background: "#0b2f6d" }}>
-                Enviar
+              <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ background: "#0b2f6d" }}>
+              {isSubmitting ? "Cargando..." : "Ingresar"}
               </Button>
             </Box>
           </form>

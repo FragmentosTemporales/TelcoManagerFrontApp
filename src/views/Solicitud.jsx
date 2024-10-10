@@ -84,7 +84,6 @@ function Solicitud() {
     }
   }, [data]);
 
-
   const fetchData = async () => {
     try {
       const res = await getUniqueSolicitud(token, solicitud_id);
@@ -107,8 +106,11 @@ function Solicitud() {
     const { nav_path, descri, userID } = notificacion;
     try {
       const response = await createSG({ logID, solicitudEstadoID }, token);
-      const notifRes = await createNotificacion({ nav_path, descri, userID}, token)
-      console.log(notifRes)
+      const notifRes = await createNotificacion(
+        { nav_path, descri, userID },
+        token
+      );
+      console.log(notifRes);
       setMessage(response.message);
       setOpen(true);
       fetchData();
@@ -117,6 +119,129 @@ function Solicitud() {
       setOpen(true);
     }
   };
+
+  const setTableEstado = () => (
+    <>
+      <CardContent>
+        <TableContainer
+          component={Paper}
+          sx={{ width: "100%", height: "100%" }}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  sx={{ background: "#d8d8d8", fontWeight: "bold" }}
+                  align="center"
+                >
+                  FECHA
+                </TableCell>
+                <TableCell
+                  sx={{ background: "#d8d8d8", fontWeight: "bold" }}
+                  align="center"
+                >
+                  ESTADO
+                </TableCell>
+                <TableCell
+                  sx={{ background: "#d8d8d8", fontWeight: "bold" }}
+                  align="center"
+                >
+                  GESTIONADO POR
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {dataGestiones && dataGestiones.length > 0 ? (
+                dataGestiones.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell align="center">
+                      {extractDate(row.fecha)}
+                    </TableCell>
+                    <TableCell align="center">{row.estado}</TableCell>
+                    <TableCell align="center">{row.responsable}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={3} align="center">
+                    Sin gestiones registradas
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </>
+  );
+
+  const setFormNotif = () => (
+    <>
+      <CardContent>
+        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
+            <FormControl variant="filled">
+              <InputLabel id="estado-label">Estado</InputLabel>
+              <Select
+                required
+                labelId="estado-label"
+                id="estado-select"
+                sx={{ width: "350px" }}
+                value={form.solicitudEstadoID || ""}
+                onChange={(event) => {
+                  setForm((prevForm) => ({
+                    ...prevForm,
+                    solicitudEstadoID: event.target.value,
+                  }));
+                }}
+              >
+                {options.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
+            <FormControl variant="filled">
+              <InputLabel id="user-label">Notificar a</InputLabel>
+              <Select
+                required
+                labelId="user-label"
+                id="user-select"
+                sx={{ width: "350px" }}
+                value={notificacion.userID || ""}
+                onChange={(event) => {
+                  setNotificacion((prevForm) => ({
+                    ...prevForm,
+                    userID: event.target.value,
+                  }));
+                }}
+              >
+                {users.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ textAlign: "center" }}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Crear"}
+            </Button>
+          </Box>
+        </form>
+      </CardContent>
+    </>
+  );
 
   const setDataOptions = () => {
     if (dataGestiones[0] && dataGestiones[0].estado) {
@@ -209,9 +334,85 @@ function Solicitud() {
     }
   };
 
+  const setDetallesView = () => (
+    <>
+    <CardContent sx={{ p: 4 }}>
+              {dataForm !== false && dataForm !== null ? (
+                setFormViewer()
+              ) : (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography
+                    variant="body1"
+                    component="div"
+                    sx={{ color: "text.secondary", pb: 6 }}
+                  >
+                    Sin información
+                  </Typography>
+                  <Link to={`/${data.area}/${data.logID}`}>
+                    <Button variant="contained" sx={{ background: "#0b2f6d" }}>
+                      Crear Formulario
+                    </Button>
+                  </Link>
+                </Box>
+              )}
+            </CardContent>
+    </>
+  )
+
+  const setSolicitudView = () => (
+    <>
+    <CardContent sx={{ p: 4 }}>
+              {[
+                { label: "Fecha Solicitud :", value: data.fechaSolicitud },
+                { label: "Solicitante :", value: data.solicitante },
+                { label: "Rut Solicitante :", value: data.rutSolicitante },
+                { label: "Tipo Formulario :", value: data.area },
+                { label: "Motivo :", value: data.motivo },
+                { label: "Submotivo :", value: data.submotivo },
+                { label: "Amonestado :", value: data.amonestado },
+                {
+                  label: "Rut Amonestado :",
+                  value: data.rutAmonestado,
+                },
+              ].map((item, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mb: 2,
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    {item.label}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    component="div"
+                    sx={{ color: "text.secondary", pl: 1 }}
+                  >
+                    {item.value}
+                  </Typography>
+                </Box>
+              ))}
+            </CardContent>
+    </>
+  )
+
   useEffect(() => {
     fetchData();
-  }, [solicitud_id]);
+  }, []);
 
   useEffect(() => {
     if (logID !== undefined) {
@@ -283,7 +484,6 @@ function Solicitud() {
               width: "90%",
               maxWidth: "800px",
               overflow: "hidden",
-              backgroundColor: "#f5f5f5",
               borderRadius: "0",
               mt: 3,
             }}
@@ -316,45 +516,7 @@ function Solicitud() {
               }}
             />
 
-            <CardContent sx={{ p: 4 }}>
-              {[
-                { label: "FECHA SOLICITUD :", value: data.fechaSolicitud },
-                { label: "SOLICITANTE :", value: data.solicitante },
-                { label: "RUT SOLICITANTE :", value: data.rutSolicitante },
-                { label: "TIPO FORMULARIO :", value: data.area },
-                { label: "MOTIVO AMONESTACION :", value: data.motivo },
-                { label: "SUBMOTIVO :", value: data.submotivo },
-                { label: "FUNCIONARIO A AMONESTAR :", value: data.amonestado },
-                {
-                  label: "RUT FUNCIONARIO A AMONESTAR :",
-                  value: data.rutAmonestado,
-                },
-              ].map((item, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    mb: 2,
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    component="div"
-                    sx={{ fontWeight: "bold" }}
-                  >
-                    {item.label}
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    component="div"
-                    sx={{ color: "text.secondary", pl: 1 }}
-                  >
-                    {item.value}
-                  </Typography>
-                </Box>
-              ))}
-            </CardContent>
+            {setSolicitudView()}
 
             <CardHeader
               title="DETALLES"
@@ -367,33 +529,7 @@ function Solicitud() {
               }}
             />
 
-            <CardContent sx={{ p: 4 }}>
-              {dataForm !== false && dataForm !== null ? (
-                setFormViewer()
-              ) : (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography
-                    variant="body1"
-                    component="div"
-                    sx={{ color: "text.secondary", pb: 6 }}
-                  >
-                    Sin información
-                  </Typography>
-                  <Link to={`/${data.area}/${data.logID}`}>
-                    <Button variant="contained" sx={{ background: "#0b2f6d" }}>
-                      Crear Formulario
-                    </Button>
-                  </Link>
-                </Box>
-              )}
-            </CardContent>
+            {setDetallesView()}
 
             <CardHeader
               title={tableTitle}
@@ -405,58 +541,7 @@ function Solicitud() {
                 textAlign: "center",
               }}
             />
-            <CardContent>
-              <TableContainer
-                component={Paper}
-                sx={{ width: "100%", height: "100%" }}
-              >
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell
-                        sx={{ background: "#d8d8d8", fontWeight: "bold" }}
-                        align="center"
-                      >
-                        FECHA
-                      </TableCell>
-                      <TableCell
-                        sx={{ background: "#d8d8d8", fontWeight: "bold" }}
-                        align="center"
-                      >
-                        ESTADO
-                      </TableCell>
-                      <TableCell
-                        sx={{ background: "#d8d8d8", fontWeight: "bold" }}
-                        align="center"
-                      >
-                        GESTIONADO POR
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {dataGestiones && dataGestiones.length > 0 ? (
-                      dataGestiones.map((row, index) => (
-                        <TableRow key={index}>
-                          <TableCell align="center">
-                            {extractDate(row.fecha)}
-                          </TableCell>
-                          <TableCell align="center">{row.estado}</TableCell>
-                          <TableCell align="center">
-                            {row.responsable}
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={3} align="center">
-                          Sin gestiones registradas
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
+            {setTableEstado()}
 
             <CardHeader
               title="AGREGAR GESTION"
@@ -468,69 +553,7 @@ function Solicitud() {
                 textAlign: "center",
               }}
             />
-            <CardContent>
-              <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-                <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
-                  <FormControl variant="filled">
-                    <InputLabel id="estado-label">Estado</InputLabel>
-                    <Select
-                      required
-                      labelId="estado-label"
-                      id="estado-select"
-                      sx={{ width: "350px" }}
-                      value={form.solicitudEstadoID || ""}
-                      onChange={(event) => {
-                        setForm((prevForm) => ({
-                          ...prevForm,
-                          solicitudEstadoID: event.target.value,
-                        }));
-                      }}
-                    >
-                      {options.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
-                <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
-                  <FormControl variant="filled">
-                    <InputLabel id="user-label">Notificar a</InputLabel>
-                    <Select
-                      required
-                      labelId="user-label"
-                      id="user-select"
-                      sx={{ width: "350px" }}
-                      value={notificacion.userID || ""}
-                      onChange={(event) => {
-                        setNotificacion((prevForm) => ({
-                          ...prevForm,
-                          userID: event.target.value,
-                        }));
-                      }}
-                    >
-                      {users.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
-
-                <Box sx={{ textAlign: "center" }}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{ background: "#0b2f6d", fontWeight: "bold" }}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Procesando..." : "Crear"}
-                  </Button>
-                </Box>
-              </form>
-            </CardContent>
+            {setFormNotif()}
           </Card>
         </>
       )}

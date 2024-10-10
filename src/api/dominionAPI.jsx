@@ -26,7 +26,7 @@ export const onLoginDominion = async (payload) => {
 
 export const getReversas = async (token, rut) => {
     try {
-      const url = `${baseUrl}/reversa_serie_pendiente/${rut}`;
+      const url = `${baseUrl}/reversa_serie/${rut}`;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,

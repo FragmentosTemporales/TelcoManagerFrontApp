@@ -4,10 +4,8 @@ import CreateArea from "./views/CreateArea";
 import Home from "./views/Home";
 import Login from "./views/Login";
 import Navbar from "./components/navbar";
-import SubMotivo from "./views/Sm";
 import Solicitudes from "./views/Solicitudes";
 import Solicitud from "./views/Solicitud";
-import SolicitudEstado from "./views/Se";
 import FormFlota from "./views/CreateFormFlota";
 import FormPrevencion from "./views/CreateFormPrevencion";
 import FormCalidad from "./views/CreateFormCalidad";
@@ -16,6 +14,8 @@ import FormOperaciones from "./views/CreateFormOperaciones";
 import FormLogistica from "./views/CreateFormLogistica";
 import NotificacionesView from "./views/Notificaciones";
 import ReversaView from "./views/Reversa";
+import Charts from "./views/Charts";
+import CreateZone from "./views/CreateZone";
 
 function App() {
   return (
@@ -24,10 +24,9 @@ function App() {
       <Routes>
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<Home />} />
-          <Route path="/submotivo" element={<SubMotivo />} />
+          <Route path="/charts" element={<Charts/>}/>
           <Route path="/solicitudes" element={<Solicitudes />} />
           <Route path="/solicitud/:solicitud_id" element={<Solicitud />} />
-          <Route path="/se" element={<SolicitudEstado />} />
           <Route path="/create" element={<CreateArea />} />
           <Route path="/FLOTA/:logID" element={<FormFlota />} />
           <Route path="/PREVENCION/:logID" element={<FormPrevencion />} />
@@ -37,6 +36,7 @@ function App() {
           <Route path="/LOGISTICA/:logID" element={<FormLogistica />} />
           <Route path="/notificaciones" element={<NotificacionesView />} />
           <Route path="/reversa" element={<ReversaView />} />
+          <Route path="/createzone" element={<CreateZone />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>

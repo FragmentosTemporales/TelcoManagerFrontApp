@@ -25,9 +25,9 @@ import FindInPageIcon from "@mui/icons-material/FindInPage";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSolicitudEstado } from "../api/seAPI";
 import { getSolicitudes, getFilteredSolicitudes } from "../api/solicitudAPI";
 import { onLoad, onLoading, setMessage } from "../slices/solicitudSlice";
+import filterData from "../data/filterSolicitud";
 
 function Solicitudes() {
   const authState = useSelector((state) => state.auth);
@@ -45,7 +45,6 @@ function Solicitudes() {
   const fetchData = async () => {
     try {
       dispatch(onLoading());
-
       const res =
         filterID === undefined
           ? await getSolicitudes(token, page)
@@ -62,17 +61,12 @@ function Solicitudes() {
     setFilterID(undefined);
   };
 
-  const fetchOptions = async () => {
-    try {
-      const res = await getSolicitudEstado(token);
-      const transformedOptions = res.map((item) => ({
-        value: item.solicitudEstadoID,
-        label: item.descri,
-      }));
-      setOptions(transformedOptions);
-    } catch (error) {
-      console.error("Error fetching options:", error);
-    }
+  const fetchOptions = () => {
+    const transformedOptions = filterData.map((item) => ({
+      value: item.solicitudEstadoID,
+      label: item.descri,
+    }));
+    setOptions(transformedOptions);
   };
 
   const handlePage = (newPage) => setPage(newPage);
@@ -103,37 +97,8 @@ function Solicitudes() {
     </>
   );
 
-  useEffect(() => {
-    fetchData();
-  }, [page, filterID]);
-
-  useEffect(() => {
-    fetchOptions();
-  }, []);
-
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-        width: "100%",
-        overflow: "auto",
-        paddingTop: 8,
-        paddingBottom: "50px",
-      }}
-    >
-      {open && (
-        <Alert
-          onClose={handleClose}
-          severity="info"
-          sx={{ marginTop: "2%", width: "80%" }}
-        >
-          {message}
-        </Alert>
-      )}
+  const filterCard = () => (
+    <>
       <Card
         sx={{
           width: "80%",
@@ -193,10 +158,28 @@ function Solicitudes() {
               >
                 LIMPIAR FILTROS
               </Button>
+
+              <Button
+                variant="contained"
+                onClick={fetchData}
+                sx={{
+                  fontWeight: "bold",
+                  background: "#0b2f6d",
+                  minWidth: "200px",
+                  height: "40px",
+                }}
+              >
+                ACTUALIZAR
+              </Button>
             </Box>
           </form>
         </CardContent>
       </Card>
+    </>
+  );
+
+  const createNew = () => (
+    <>
       <Box
         sx={{
           width: "80%",
@@ -221,29 +204,125 @@ function Solicitudes() {
           </Button>
         </Link>
       </Box>
-      {is_loading && !is_load ? (
-        <Box
-          sx={{
-            width: "80%",
-            overflow: "hidden",
-            backgroundColor: "#f5f5f5",
-            boxShadow: 5,
-            textAlign: "center",
-            borderRadius: "0px",
-            minHeight: "250px",
-            mt: 2,
-          }}
-        >
-          <Skeleton
-            variant="rounded"
-            width={"90%"}
-            height={"70%"}
-            sx={{ p: 3, m: 3 }}
-          />
-        </Box>
-      ) : (
-        <>
-          <Card
+    </>
+  );
+
+  const setTableHead = () => (
+    <>
+      <TableHead>
+        <TableRow>
+          {[
+            "FECHA SOLICITUD",
+            "N° SOLICITUD",
+            "MOTIVO",
+            "FORMULARIO",
+            "SOLICITANTE",
+            "AMONESTADO",
+            "ACCIONES",
+          ].map((header) => (
+            <TableCell
+              key={header}
+              align="center"
+              sx={{ background: "#d8d8d8", fontWeight: "bold" }}
+            >
+              {header}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    </>
+  );
+
+  const setTableBody = () => (
+    <>
+      <TableBody>
+        {data && data.length > 0 ? (
+          data.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell
+                align="center"
+                sx={{ fontSize: "12px", minHeight: "70px" }}
+              >
+                {row.fechaSolicitud}
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                {row.solicitudID}
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                {row.motivo && row.motivo.descri
+                  ? row.motivo.descri
+                  : "Sin Información"}
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                {row.area && row.area.descri
+                  ? row.area.descri
+                  : "Sin área asignada"}
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                {row.solicitante && row.solicitante.nombre
+                  ? row.solicitante.nombre
+                  : "Sin Información"}
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                {row.persona && row.persona.Nombre
+                  ? row.persona.Nombre +
+                    " " +
+                    row.persona.ApellidoPaterno +
+                    " " +
+                    row.persona.ApellidoMaterno
+                  : "Sin Información"}
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center", //
+                  fontSize: "12px",
+                  minHeight: "70px",
+                }}
+              >
+                <Tooltip title="Visualizar Solicitud" placement="left">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: 30,
+                      height: 30,
+                      minWidth: 30,
+                      padding: 0,
+                      background: "#0b2f6d",
+                    }}
+                  >
+                    <Link
+                      style={{
+                        color: "white",
+                        textDecoration: "none",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      to={`/solicitud/${row.solicitudID}`}
+                    >
+                      <FindInPageIcon />
+                    </Link>
+                  </Button>
+                </Tooltip>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={6} align="center">
+              No hay datos disponibles
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </>
+  );
+
+  const setTableCard = () => (
+    <Card
             sx={{
               width: "80%",
               overflow: "hidden",
@@ -270,105 +349,69 @@ function Solicitudes() {
               sx={{ width: "100%", height: "100%", overflow: "auto" }}
             >
               <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    {[
-                      "FECHA SOLICITUD",
-                      "N° SOLICITUD",
-                      "MOTIVO",
-                      "FORMULARIO",
-                      "SOLICITANTE",
-                      "AMONESTADO",
-                      "ACCIONES",
-                    ].map((header) => (
-                      <TableCell
-                        key={header}
-                        align="center"
-                        sx={{ background: "#d8d8d8", fontWeight: "bold" }}
-                      >
-                        {header}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data && data.length > 0 ? (
-                    data.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell align="center" sx={{fontSize:"12px"}}>
-                          {row.fechaSolicitud}
-                        </TableCell>
-                        <TableCell align="center" sx={{fontSize:"12px"}}>{row.solicitudID}</TableCell>
-                        <TableCell align="center" sx={{fontSize:"12px"}}>{row.motivo && row.motivo.descri ? row.motivo.descri : "Sin Información"}</TableCell>
-                        <TableCell align="center" sx={{fontSize:"12px"}}>
-                          {row.area && row.area.descri
-                            ? row.area.descri
-                            : "Sin área asignada"}
-                        </TableCell>
-                        <TableCell align="center" sx={{fontSize:"12px"}}>
-                          {row.solicitante && row.solicitante.nombre
-                            ? row.solicitante.nombre
-                            : "Sin Información"}
-                        </TableCell>
-                        <TableCell align="center" sx={{fontSize:"12px"}}>
-                          {row.persona && row.persona.Nombre
-                            ? row.persona.Nombre +
-                              " " +
-                              row.persona.ApellidoPaterno +
-                              " " +
-                              row.persona.ApellidoMaterno
-                            : "Sin Información"}
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                            fontSize:"12px"
-                          }}
-                        >
-                          <Tooltip
-                            title="Visualizar Solicitud"
-                            placement="left"
-                          >
-                            <Button
-                              variant="contained"
-                              sx={{
-                                width: 30,
-                                height: 30,
-                                minWidth: 30,
-                                padding: 0,
-                                background: "#0b2f6d",
-                              }}
-                            >
-                              <Link
-                                style={{
-                                  color: "white",
-                                  textDecoration: "none",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                }}
-                                to={`/solicitud/${row.solicitudID}`}
-                              >
-                                <FindInPageIcon />
-                              </Link>
-                            </Button>
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={6} align="center">
-                        No hay datos disponibles
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
+                {setTableHead()}
+                {setTableBody()}
               </Table>
             </TableContainer>
           </Card>
+  )
+
+  useEffect(() => {
+    fetchData();
+  }, [page]);
+
+  useEffect(() => {
+    fetchOptions();
+  }, []);
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%",
+        width: "100%",
+        overflow: "auto",
+        paddingTop: 8,
+        paddingBottom: "50px",
+      }}
+    >
+      {open && (
+        <Alert
+          onClose={handleClose}
+          severity="info"
+          sx={{ marginTop: "2%", width: "80%" }}
+        >
+          {message}
+        </Alert>
+      )}
+      {filterCard()}
+      {createNew()}
+      {is_loading && !is_load ? (
+        <Box
+          sx={{
+            width: "80%",
+            overflow: "hidden",
+            backgroundColor: "#f5f5f5",
+            boxShadow: 5,
+            borderRadius: "0px",
+            mt: 2,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Skeleton
+            variant="rounded"
+            width={"90%"}
+            height={"800px"}
+            sx={{ p: 3, m: 3 }}
+          />
+        </Box>
+      ) : (
+        <>
+          {setTableCard()}
           <ButtonGroup
             size="small"
             aria-label="pagination-button-group"

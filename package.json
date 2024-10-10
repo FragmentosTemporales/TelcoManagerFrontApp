@@ -12,8 +12,10 @@
   "dependencies": {
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
+    "@firebasegen/default": "file:generated/javascript/default",
     "@mui/icons-material": "^5.16.5",
     "@mui/material": "^5.16.5",
+    "@mui/x-charts": "^7.19.0",
     "@reduxjs/toolkit": "^2.2.6",
     "axios": "^1.7.2",
     "powerbi-client-react": "^1.4.0",

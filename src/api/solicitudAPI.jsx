@@ -38,6 +38,7 @@ export const getFilteredSolicitudes = async (token, estadoID, page) => {
     const pagina = page
     const estado = estadoID
     const url = `${baseUrl}/get-solicitudes/${estado}&${pagina}`;
+    console.log(url)
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,

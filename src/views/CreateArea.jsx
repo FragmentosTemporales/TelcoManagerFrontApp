@@ -25,7 +25,6 @@ function CreateArea({ open, handleClose, message }) {
       <Box sx={{
               width: "50%",
               overflow: "hidden",
-              backgroundColor: "#f5f5f5",
               borderRadius: "0",
               mt: 3
             }}>

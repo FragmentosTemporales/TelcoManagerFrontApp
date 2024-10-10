@@ -32,12 +32,40 @@ export const onLoginDominion = async (payload) => {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
-    
-    console.log(response.data)
     return response.data;
   } catch (error) {
-    console.log(error)
     throw error.message;
   }
 };
 
+export const createUser = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/create-user`;
+    console.log(payload)
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.message;
+  }
+};
+
+export const getUsers = async (token) => {
+  try {
+    const url = `${baseUrl}/get-users`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    throw new Error("Failed to fetch notifications");
+  }
+};
