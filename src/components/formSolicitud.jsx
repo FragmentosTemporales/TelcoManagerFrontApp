@@ -8,7 +8,9 @@ import {
   InputLabel,
   TextField,
   Autocomplete,
+  Typography
 } from "@mui/material";
+import FeedIcon from '@mui/icons-material/Feed';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -271,8 +273,17 @@ function FormSolicitud() {
         }}
       >
         <CardHeader
-          title="Formulario Solicitud"
-          sx={{ background: "#0b2f6d", color: "white" }}
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+              FORMULARIO SOLICITUD
+            </Typography>
+          }
+          avatar={<FeedIcon/>}
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
         />
         <CardContent
           sx={{

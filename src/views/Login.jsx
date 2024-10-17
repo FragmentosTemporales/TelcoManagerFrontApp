@@ -7,19 +7,23 @@ import {
   Button,
   TextField,
   InputAdornment,
+  Typography
 } from "@mui/material";
+import InputIcon from '@mui/icons-material/Input';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LockIcon from '@mui/icons-material/Lock';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { onLogin } from "../api/authAPI";
 import { onLoginDominion } from "../api/dominionAPI";
 import { onLoad, onLoading, setMessage } from "../slices/authSlice";
-import { domLoadAuth, domLoading } from "../slices/dominionSlice";
+import { domLoadAuth } from "../slices/dominionSlice";
 
 function Login() {
   const { message } = useSelector((state) => state.auth);
+  const authState = useSelector((state) => state.auth);
+  const { token } = authState;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,6 +68,12 @@ function Login() {
     </Alert>
   );
 
+  useEffect(()=>{
+    if (token && token != null){
+      navigate("/")
+    }
+  },[token])
+
   return (
     <Box
       sx={{
@@ -77,13 +87,16 @@ function Login() {
     >
       {open && renderAlert()}
       <Card sx={{ width: {lg:"30%", md:"70%", xs:"90%" }, borderRadius: "0px", boxShadow: 5, minWidth: "450px" }}>
-        <CardHeader
-          title="Iniciar Sesión"
+      <CardHeader
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+              INICIAR SESION
+            </Typography>
+          }
+
           sx={{
-            backgroundColor: "#0b2f6d",
+            background: "#0b2f6d",
             color: "white",
-            padding: "16px",
-            borderBottom: "1px solid #ddd",
             textAlign: "center",
           }}
         />

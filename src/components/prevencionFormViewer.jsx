@@ -38,13 +38,13 @@ function PrevencionViewer({ data }) {
     >
       {data && data["Auditor"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Auditor:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Auditor"]}`}
           </Typography>
@@ -53,13 +53,13 @@ function PrevencionViewer({ data }) {
 
       {data && data["Fecha Auditoria"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Fecha Auditoria:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Fecha Auditoria"]}`}
           </Typography>
@@ -68,13 +68,13 @@ function PrevencionViewer({ data }) {
 
       {data && data["Epp Auditado"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Epp Auditado:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Epp Auditado"]}`}
           </Typography>
@@ -83,13 +83,13 @@ function PrevencionViewer({ data }) {
 
       {data && data["Fecha Entrega Epp"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Fecha Entrega Epp:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Fecha Entrega Epp"]}`}
           </Typography>
@@ -98,13 +98,13 @@ function PrevencionViewer({ data }) {
 
       {data && data["Dirección"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Dirección:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Dirección"]}`}
           </Typography>
@@ -113,13 +113,13 @@ function PrevencionViewer({ data }) {
 
       {data && data["Declaración"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Declaración:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Declaración"]}`}
           </Typography>
@@ -128,7 +128,7 @@ function PrevencionViewer({ data }) {
 
       {data && data["Archivo"] !== "None" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
             Archivo:
           </Typography>
           <Tooltip title="Descargar Archivo" placement="right">

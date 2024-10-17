@@ -43,7 +43,7 @@ export const authSlice = createSlice({
       const usuario = payload.usuario
 
       state.correo = usuario.correo;
-      state.user_id = usuario.user_id;
+      state.user_id = usuario.userID;
       state.nombre = usuario.nombre; 
       state.numDoc = usuario.numDoc; 
       state.permisos = usuario.permisos
@@ -52,7 +52,7 @@ export const authSlice = createSlice({
 
       localStorage.setItem('correo', usuario.correo);
       localStorage.setItem('token', usuario.token);
-      localStorage.setItem('user_id', usuario.user_id);
+      localStorage.setItem('user_id', usuario.userID);
       localStorage.setItem('nombre', usuario.nombre);
       localStorage.setItem('permisos', JSON.stringify(usuario.permisos));
     },

@@ -11,7 +11,9 @@ import {
   Select,
   MenuItem,
   Button,
+  Typography
 } from "@mui/material";
+import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUsers } from "../api/authAPI";
@@ -128,13 +130,16 @@ function PermisosList() {
         }}
       >
         <CardHeader
-          title="GESTIONAR PERMISOS"
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+              PERMISOS
+            </Typography>
+          }
+          avatar={<AddModeratorIcon/>}
           sx={{
-            backgroundColor: "#0b2f6d",
+            background: "#0b2f6d",
             color: "white",
-            padding: "10px",
-            borderBottom: "1px solid #ddd",
-            fontWeight: "bold",
+            textAlign: "end",
           }}
         />
         <CardContent sx={{ display: "flex", alignContent: "center" }}>

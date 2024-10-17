@@ -71,7 +71,6 @@ export const updateSolicitud = async (token, solicitud_id, payload) => {
   try {
     const id = solicitud_id;
     const data = payload
-    console.log('DATA: ', data)
     const url = `${baseUrl}/update-solicitud/${id}`;
     const response = await axios.put(url, data, {
       headers: {

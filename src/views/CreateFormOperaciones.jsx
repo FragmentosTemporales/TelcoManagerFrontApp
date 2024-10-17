@@ -7,7 +7,9 @@ import {
     CardHeader,
     InputLabel,
     TextField,
+    Typography
   } from "@mui/material";
+  import FeedIcon from '@mui/icons-material/Feed';
   import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
   import { useParams, useNavigate } from "react-router-dom";
@@ -101,9 +103,18 @@ import {
           }}
         >
           <CardHeader
-            title="Formulario Operaciones"
-            sx={{ background: "#0b2f6d", color: "white" }}
-          />
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+              FORMULARIO OPERACIONES
+            </Typography>
+          }
+          avatar={<FeedIcon/>}
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
+        />
   
           <CardContent
             sx={{

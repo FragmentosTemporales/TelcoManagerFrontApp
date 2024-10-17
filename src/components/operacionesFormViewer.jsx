@@ -37,13 +37,13 @@ function OperacionesViewer({ data }) {
     >
       {data && data["Fecha Evento"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
             Fecha Evento:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Fecha Evento"]}`}
           </Typography>
@@ -52,7 +52,7 @@ function OperacionesViewer({ data }) {
 
       {data && data["Archivo"] !== "None" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
             Archivo:
           </Typography>
           <Tooltip title="Descargar Archivo" placement="right">

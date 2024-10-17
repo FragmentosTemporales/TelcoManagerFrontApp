@@ -12,7 +12,7 @@ function CreateZone() {
     >
       <UserForm />
       <PermisosList/>
-      <UserList/>
+      {/*<UserList/>*/}
     </Box>
   );
 }

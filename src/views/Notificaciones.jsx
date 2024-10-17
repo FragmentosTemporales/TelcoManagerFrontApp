@@ -11,8 +11,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography
 } from "@mui/material";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { onLoad, onLoading } from "../slices/notificacionSlice";
@@ -81,15 +83,18 @@ function NotificacionesView() {
           }}
         >
           <CardHeader
-            title="NOTIFICACIONES"
-            sx={{
-              backgroundColor: "#0b2f6d",
-              color: "white",
-              padding: "10px",
-              borderBottom: "1px solid #ddd",
-              fontWeight: "bold",
-            }}
-          />
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+              NOTIFICACIONES
+            </Typography>
+          }
+          avatar={<CircleNotificationsIcon/>}
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
+        />
           <TableContainer
             component={Paper}
             sx={{ width: "100%", height: "100%", overflow: "auto" }}

@@ -37,13 +37,13 @@ function RrhhViewer({ data }) {
     >
       {data && data["Fecha Marcaje"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
             Fecha Marcaje:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Fecha Marcaje"]}`}
           </Typography>
@@ -52,13 +52,13 @@ function RrhhViewer({ data }) {
 
       {data && data["Fecha Subida Documento"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
             Fecha Subida Documento:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Fecha Subida Documento"]}`}
           </Typography>
@@ -67,7 +67,7 @@ function RrhhViewer({ data }) {
 
       {data && data["Archivo"] !== "None" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
             Archivo:
           </Typography>
           <Tooltip title="Descargar Archivo" placement="right">
@@ -75,7 +75,7 @@ function RrhhViewer({ data }) {
             variant="contained"
             color="info"
             sx={{ fontWeight: "bold", ml: 2 }}
-            onClick={downloader} // Llamamos a la función cuando se hace clic
+            onClick={downloader}
           >
             <SimCardDownloadIcon />
           </Button>

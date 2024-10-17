@@ -7,8 +7,10 @@ import {
     CardHeader,
     InputLabel,
     TextField,
+    Typography
   } from "@mui/material";
   import { useState } from "react";
+  import FeedIcon from '@mui/icons-material/Feed';
   import { useDispatch, useSelector } from "react-redux";
   import { useParams, useNavigate } from "react-router-dom";
   import { createFormLogistica } from "../api/formsAPI";
@@ -101,9 +103,18 @@ import {
           }}
         >
           <CardHeader
-            title="Formulario Logística"
-            sx={{ background: "#0b2f6d", color: "white" }}
-          />
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+              FORMULARIO LOGISTICA
+            </Typography>
+          }
+          avatar={<FeedIcon/>}
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
+        />
   
           <CardContent
             sx={{

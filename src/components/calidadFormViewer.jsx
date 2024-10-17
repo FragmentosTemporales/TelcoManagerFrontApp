@@ -37,13 +37,13 @@ function CalidadViewer({ data }) {
     >
       {data && data["N° Petición"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           N° Petición:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["N° Petición"]}`}
           </Typography>
@@ -52,13 +52,13 @@ function CalidadViewer({ data }) {
 
       {data && data["Fecha Auditoria"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Fecha Auditoria:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Fecha Auditoria"]}`}
           </Typography>
@@ -67,13 +67,13 @@ function CalidadViewer({ data }) {
 
       {data && data["Fecha Evento"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Fecha Evento:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Fecha Evento"]}`}
           </Typography>
@@ -82,13 +82,13 @@ function CalidadViewer({ data }) {
 
       {data && data["Dirección"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Dirección:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Dirección"]}`}
           </Typography>
@@ -97,13 +97,13 @@ function CalidadViewer({ data }) {
 
       {data && data["Declaración"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Declaración:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Declaración"]}`}
           </Typography>
@@ -112,7 +112,7 @@ function CalidadViewer({ data }) {
 
       {data && data["Archivo"] !== "None" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
             Archivo:
           </Typography>
           <Tooltip title="Descargar Archivo" placement="right">

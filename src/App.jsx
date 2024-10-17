@@ -16,6 +16,7 @@ import NotificacionesView from "./views/Notificaciones";
 import ReversaView from "./views/Reversa";
 import Charts from "./views/Charts";
 import CreateZone from "./views/CreateZone";
+import ObjetivosView from "./views/Objetivos";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/notificaciones" element={<NotificacionesView />} />
           <Route path="/reversa" element={<ReversaView />} />
           <Route path="/createzone" element={<CreateZone />} />
+          <Route path="/objetivos" element={<ObjetivosView />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>

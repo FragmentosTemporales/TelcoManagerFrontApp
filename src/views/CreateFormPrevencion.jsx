@@ -7,7 +7,9 @@ import {
   CardHeader,
   InputLabel,
   TextField,
+  Typography
 } from "@mui/material";
+import FeedIcon from '@mui/icons-material/Feed';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
@@ -115,8 +117,17 @@ function FormPrevencion() {
         }}
       >
         <CardHeader
-          title="Formulario Prevención"
-          sx={{ background: "#0b2f6d", color: "white" }}
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+              FORMULARIO PREVENCION
+            </Typography>
+          }
+          avatar={<FeedIcon/>}
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
         />
 
         <CardContent

@@ -17,7 +17,6 @@ import { getNotificaciones } from "../api/notificacionesAPI";
 import { onLoad, onLoading } from "../slices/notificacionSlice";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Whatsapp from "./wsp";
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -97,7 +96,6 @@ function Navbar() {
                 </IconButton>
                 </Tooltip>
               </Link>
-
               <Link
                 to="/notificaciones"
                 style={{
@@ -108,14 +106,13 @@ function Navbar() {
                 <Tooltip title="Ver Notificaciones" placement="left">
                   <Badge badgeContent={badgelen} color="primary">
                     <Typography
-                      variant="body1"
+                      variant="body1" sx={{fontFamily:'monospace'}}
                     >
                       ¡Hola, {nameBar}!
                     </Typography>
                   </Badge>
                 </Tooltip>
               </Link>
-
               <Box>
                 <Tooltip title="Cerrar Sesión" placement="left">
                   <Button
@@ -128,12 +125,10 @@ function Navbar() {
                   </Button>
                 </Tooltip>
               </Box>
-
             </>
           )}
         </Toolbar>
       </AppBar>
-      <Whatsapp />
     </Box>
   );
 }

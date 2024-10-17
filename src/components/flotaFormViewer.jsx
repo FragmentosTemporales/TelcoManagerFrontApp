@@ -36,13 +36,13 @@ function FlotaViewer({ data }) {
     >
       {data && data["Fecha Evento"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
             Fecha Evento:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Fecha Evento"]}`}
           </Typography>
@@ -51,13 +51,13 @@ function FlotaViewer({ data }) {
 
       {data && data["Fecha Asignación"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
             Fecha Asignación:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Fecha Asignación"]}`}
           </Typography>
@@ -66,13 +66,13 @@ function FlotaViewer({ data }) {
 
       {data && data["Modelo Vehículo"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Modelo Vehículo:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Modelo Vehículo"]}`}
           </Typography>
@@ -81,13 +81,13 @@ function FlotaViewer({ data }) {
 
       {data && data["Patente"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Patente:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Patente"]}`}
           </Typography>
@@ -96,13 +96,13 @@ function FlotaViewer({ data }) {
 
       {data && data["Velocidad"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Velocidad:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Velocidad"]}`}
           </Typography>
@@ -111,13 +111,13 @@ function FlotaViewer({ data }) {
 
       {data && data["Ubicación"] != "Sin información" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
           Ubicación:
           </Typography>
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "text.secondary", pl: 1 }}
+            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
           >
             {`${data["Ubicación"]}`}
           </Typography>
@@ -126,7 +126,7 @@ function FlotaViewer({ data }) {
 
       {data && data["Archivo"] !== "None" ? (
         <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
             Archivo:
           </Typography>
           <Tooltip title="Descargar Archivo" placement="right">
@@ -134,7 +134,7 @@ function FlotaViewer({ data }) {
               variant="contained"
               color="info"
               sx={{ fontWeight: "bold", ml: 2 }}
-              onClick={downloader} // Llamamos a la función cuando se hace clic
+              onClick={downloader}
             >
               <SimCardDownloadIcon />
             </Button>

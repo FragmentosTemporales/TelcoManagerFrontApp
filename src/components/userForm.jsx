@@ -9,14 +9,16 @@ import {
   InputLabel,
   TextField,
   FormControlLabel,
+  Typography
 } from "@mui/material";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { createUser } from "../api/authAPI";
 
 function UserForm() {
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
+  const { token, } = authState;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(false);
@@ -26,7 +28,6 @@ function UserForm() {
     correo: "",
     numDoc: "",
     clave: "",
-    admin: false,
   });
 
   const handleClose = () => setOpen(false);
@@ -97,13 +98,16 @@ function UserForm() {
         }}
       >
         <CardHeader
-          title="CREAR USUARIO"
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+              CREAR USUARIO
+            </Typography>
+          }
+          avatar={<AccountBoxIcon/>}
           sx={{
-            backgroundColor: "#0b2f6d",
+            background: "#0b2f6d",
             color: "white",
-            padding: "10px",
-            borderBottom: "1px solid #ddd",
-            fontWeight: "bold",
+            textAlign: "end",
           }}
         />
         <CardContent
@@ -166,18 +170,6 @@ function UserForm() {
                 onChange={handleChange}
               />
             </Box>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={form.admin}
-                  onChange={handleCheckBox}
-                  name="admin"
-                  color="primary"
-                />
-              }
-              label="Administrador" // Etiqueta del checkbox
-              sx={{ mb: 2 }}
-            />
 
             <Box sx={{ textAlign: "center" }}>
               <Button

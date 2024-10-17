@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Alert,
   Card,
   CardActions,
   CardContent,
@@ -13,19 +12,13 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
 
-function Home({ open, handleClose, message }) {
+function Home() {
   const authState = useSelector((state) => state.auth);
   const { permisos } = authState;
-
-  const renderAlert = () => (
-    <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
-      {message}
-    </Alert>
-  );
 
   const secciones = [
     {
@@ -52,7 +45,7 @@ function Home({ open, handleClose, message }) {
       title: "Listado de Solicitudes de Amonestación",
       link: "/solicitudes",
       body: "Acá encontrarás la lista de Amonestaciones solicitadas",
-      estado: false,
+      estado: true,
       moduloID: 3,
     },
     {
@@ -61,15 +54,24 @@ function Home({ open, handleClose, message }) {
       title: "Espacio de Creación",
       link: "/createzone",
       body: "Acá podrás crear Usuarios y editar preferencias",
-      estado: false,
+      estado: true,
       moduloID: 4,
     },
+    {
+      head: "Objetivos OnNet",
+      icono: <SportsScoreIcon />,
+      title: "Espacio para definir los objetivos por zona",
+      link: "/objetivos",
+      body: "Acá podrás definir los objetivos mensuales según la zona a elegir",
+      estado: false,
+      moduloID: 5,
+    },
   ];
-  
+
   const accesos = secciones.filter((seccion) => 
     permisos.some(permiso => permiso.moduloID === seccion.moduloID && permiso.access)
   );
-  
+
 
   return (
     <Box
@@ -82,7 +84,6 @@ function Home({ open, handleClose, message }) {
         mt: 2,
       }}
     >
-      {open && renderAlert()}
       {accesos && accesos.length > 0 ? (
         <Grid container spacing={2} sx={{ width: "80%" }}>
           {accesos.map((acceso, index) => (
@@ -96,7 +97,7 @@ function Home({ open, handleClose, message }) {
               >
                 <CardHeader
                   title={
-                    <Typography fontWeight="bold">{acceso.head}</Typography>
+                    <Typography fontWeight="bold" sx={{fontFamily:'monospace'}} >{acceso.head}</Typography>
                   }
                   avatar={acceso.icono}
                   sx={{
@@ -111,12 +112,14 @@ function Home({ open, handleClose, message }) {
                     component="div"
                     fontSize={"18px"}
                     fontWeight={"bold"}
+                    fontFamily={'monospace'}
                     sx={{ minHeight: "60px", textAlign: "center" }}
                   >
                     {acceso.title}
                   </Typography>
                   <Typography
                     variant="body2"
+                    fontFamily={'monospace'}
                     sx={{
                       color: "text.secondary",
                       p: 2,
@@ -128,6 +131,7 @@ function Home({ open, handleClose, message }) {
                   </Typography>
                   <Typography
                     variant="body2"
+                    fontFamily={'monospace'}
                     sx={{
                       p: 2,
                       minHeight: "10px",

@@ -19,7 +19,10 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Typography
 } from "@mui/material";
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import Checkbox from "@mui/material/Checkbox";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -281,14 +284,16 @@ function ReversaView() {
       <CardContent>
         <Card>
           <CardHeader
-            title="LISTA DE REVERSAS PENDIENTES"
+            title={
+              <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                LISTA DE REVERSAS PENDIENTES
+              </Typography>
+            }
+            avatar={<PlaylistRemoveIcon/>}
             sx={{
-              backgroundColor: "#0b2f6d",
+              background: "#0b2f6d",
               color: "white",
-              padding: "10px",
-              borderBottom: "1px solid #ddd",
-              fontWeight: "bold",
-              textAlign: "center",
+              textAlign: "end",
             }}
           />
           <TableContainer
@@ -325,14 +330,16 @@ function ReversaView() {
       <CardContent>
         <Card>
           <CardHeader
-            title="LISTA DE REVERSAS ENTREGADAS"
+            title={
+              <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                LISTA DE REVERSAS ENTREGADAS
+              </Typography>
+            }
+            avatar={<PlaylistAddCheckIcon/>}
             sx={{
-              backgroundColor: "#0b2f6d",
+              background: "#0b2f6d",
               color: "white",
-              padding: "10px",
-              borderBottom: "1px solid #ddd",
-              fontWeight: "bold",
-              textAlign: "center",
+              textAlign: "end",
             }}
           />
           <TableContainer

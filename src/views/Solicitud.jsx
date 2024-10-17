@@ -44,7 +44,7 @@ import FlotaViewer from "../components/flotaFormViewer";
 function Solicitud() {
   const { solicitud_id } = useParams();
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
+  const { token, user_id } = authState;
 
   const [data, setData] = useState(null);
   const [dataGestiones, setDataGestiones] = useState(null);
@@ -106,11 +106,10 @@ function Solicitud() {
     const { nav_path, descri, userID } = notificacion;
     try {
       const response = await createSG({ logID, solicitudEstadoID }, token);
-      const notifRes = await createNotificacion(
+      await createNotificacion(
         { nav_path, descri, userID },
         token
       );
-      console.log(notifRes);
       setMessage(response.message);
       setOpen(true);
       fetchData();
@@ -295,15 +294,17 @@ function Solicitud() {
           break;
 
         case "SOLICITUD DE ANULACION":
+          if (user_id == 4 || user_id == 1 || user_id == 2) {
           const transformedOptions7 = estadoData8.map((item) => ({
             value: item.solicitudEstadoID,
             label: item.descri,
           }));
-          setOptions(transformedOptions7);
+          setOptions(transformedOptions7);}
+          else {null}
           break;
 
         default:
-          console.log("Estado no reconocido");
+          null
           break;
       }
     } else {
@@ -327,10 +328,10 @@ function Solicitud() {
         case 6:
           return <FlotaViewer data={data.form} />;
         default:
-          console.log("Formulario no reconocido");
+          null
       }
     } else {
-      console.log("No hay Formulario para mostrar");
+      null
     }
   };
 
@@ -351,7 +352,7 @@ function Solicitud() {
                   <Typography
                     variant="body1"
                     component="div"
-                    sx={{ color: "text.secondary", pb: 6 }}
+                    sx={{ color: "text.secondary", pb: 6, fontFamily: "monospace" }}
                   >
                     Sin información
                   </Typography>
@@ -393,14 +394,14 @@ function Solicitud() {
                   <Typography
                     variant="h6"
                     component="div"
-                    sx={{ fontWeight: "bold" }}
+                    sx={{ fontWeight: "bold", fontFamily: "monospace" }}
                   >
                     {item.label}
                   </Typography>
                   <Typography
-                    variant="body1"
+                    variant="h6"
                     component="div"
-                    sx={{ color: "text.secondary", pl: 1 }}
+                    sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
                   >
                     {item.value}
                   </Typography>
@@ -506,51 +507,59 @@ function Solicitud() {
             }}
           >
             <CardHeader
-              title={title}
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                  {title}
+                </Typography>
+              }
               sx={{
-                backgroundColor: "#0b2f6d",
+                background: "#0b2f6d",
                 color: "white",
-                padding: "16px",
-                borderBottom: "1px solid #ddd",
-                textAlign: "center",
+                textAlign: "start",
               }}
             />
 
             {setSolicitudView()}
 
             <CardHeader
-              title="DETALLES"
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                  DETALLES
+                </Typography>
+              }
               sx={{
-                backgroundColor: "#0b2f6d",
+                background: "#0b2f6d",
                 color: "white",
-                padding: "16px",
-                borderBottom: "1px solid #ddd",
-                textAlign: "center",
+                textAlign: "start",
               }}
             />
 
             {setDetallesView()}
 
             <CardHeader
-              title={tableTitle}
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                  {tableTitle}
+                </Typography>
+              }
               sx={{
-                backgroundColor: "#0b2f6d",
+                background: "#0b2f6d",
                 color: "white",
-                padding: "16px",
-                borderBottom: "1px solid #ddd",
-                textAlign: "center",
+                textAlign: "start",
               }}
             />
             {setTableEstado()}
 
             <CardHeader
-              title="AGREGAR GESTION"
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                  AGREGAR GESTION
+                </Typography>
+              }
               sx={{
-                backgroundColor: "#0b2f6d",
+                background: "#0b2f6d",
                 color: "white",
-                padding: "16px",
-                borderBottom: "1px solid #ddd",
-                textAlign: "center",
+                textAlign: "start",
               }}
             />
             {setFormNotif()}

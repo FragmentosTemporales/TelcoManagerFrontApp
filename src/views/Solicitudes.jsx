@@ -16,12 +16,15 @@ import {
   TableHead,
   TableRow,
   Tooltip,
+  Typography,
   CardContent,
 } from "@mui/material";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
+import SearchIcon from '@mui/icons-material/Search';
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,20 +42,24 @@ function Solicitudes() {
   const [options, setOptions] = useState([]);
   const [page, setPage] = useState(1);
   const [filterID, setFilterID] = useState(undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleClose = () => setOpen(false);
 
   const fetchData = async () => {
     try {
       dispatch(onLoading());
+      setIsSubmitting(true)
       const res =
         filterID === undefined
           ? await getSolicitudes(token, page)
           : await getFilteredSolicitudes(token, filterID, page);
       dispatch(onLoad(res));
+      setIsSubmitting(false)
     } catch (error) {
       dispatch(setMessage("Información no encontrada."));
       setOpen(true);
+      setIsSubmitting(false)
     }
   };
 
@@ -111,13 +118,16 @@ function Solicitudes() {
         }}
       >
         <CardHeader
-          title="FILTRAR SOLICITUDES SEGUN ESTADO"
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+              FILTRAR SOLICITUDES SEGUN ESTADO
+            </Typography>
+          }
+          avatar={<SearchIcon/>}
           sx={{
-            backgroundColor: "#0b2f6d",
+            background: "#0b2f6d",
             color: "white",
-            padding: "10px",
-            borderBottom: "1px solid #ddd",
-            fontWeight: "bold",
+            textAlign: "end",
           }}
         />
         <CardContent>
@@ -168,8 +178,9 @@ function Solicitudes() {
                   minWidth: "200px",
                   height: "40px",
                 }}
+                disabled={isSubmitting}
               >
-                ACTUALIZAR
+                {isSubmitting ? "Procesando..." : "Actualizar"}
               </Button>
             </Box>
           </form>
@@ -335,13 +346,16 @@ function Solicitudes() {
             }}
           >
             <CardHeader
-              title="LISTA DE SOLICITUDES DE AMONESTACION"
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                  LISTA DE SOLICITUDES DE AMONESTACION
+                </Typography>
+              }
+              avatar={<FormatListBulletedIcon/>}
               sx={{
-                backgroundColor: "#0b2f6d",
+                background: "#0b2f6d",
                 color: "white",
-                padding: "10px",
-                borderBottom: "1px solid #ddd",
-                fontWeight: "bold",
+                textAlign: "end",
               }}
             />
             <TableContainer
