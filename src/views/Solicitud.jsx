@@ -8,6 +8,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  Modal,
   Skeleton,
   Table,
   TableContainer,
@@ -44,7 +45,7 @@ import FlotaViewer from "../components/flotaFormViewer";
 function Solicitud() {
   const { solicitud_id } = useParams();
   const authState = useSelector((state) => state.auth);
-  const { token, user_id } = authState;
+  const { token, user_id, permisos } = authState;
 
   const [data, setData] = useState(null);
   const [dataGestiones, setDataGestiones] = useState(null);
@@ -56,10 +57,13 @@ function Solicitud() {
   const [message, setMessage] = useState("");
   const [logID, setLogID] = useState(undefined);
   const [options, setOptions] = useState([]);
+  const [moduloPermisos, setModuloPermisos] = useState(undefined);
+  const [openModal, setOpenModal] = useState(false);
   const [form, setForm] = useState({
     logID: logID,
     solicitudEstadoID: "",
   });
+  const [validateUser, setValidateUser] = useState(undefined);
 
   const [notificacion, setNotificacion] = useState({
     nav_path: "",
@@ -67,11 +71,90 @@ function Solicitud() {
     userID: "",
   });
 
+  const anularSolicitud = async (e) => {
+    e.preventDefault();
+
+    const formAnulacion = { logID, solicitudEstadoID: 8 };
+    const { nav_path, descri } = notificacion;
+    const userID = 4;
+
+    try {
+      const response = await createSG(formAnulacion, token);
+
+      await createNotificacion({ nav_path, descri, userID }, token);
+
+      setMessage(response.message);
+      setOpen(true);
+      fetchData();
+      setOpenModal(false)
+    } catch (error) {
+      setMessage("Error al crear la gestión.");
+      setOpen(true);
+    }
+  };
+
+  const setModal = () => (
+    <>
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box sx={{ textAlign:'center', pb: 2}}>
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            fontFamily={"monospace"}
+            sx={{ pt: 2 }}
+          >
+            ¿Quieres solicitar la anulación de esta Amonestación?
+          </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={anularSolicitud}
+              color='error'
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Aceptar"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  const botonAnular = () => (
+    <>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={() => setOpenModal(true)}
+      >
+        ANULAR SOLICITUD
+      </Button>
+    </>
+  );
+
   const title = `SOLICITUD DE AMONESTACIÓN N° ${solicitud_id}`;
   const tableTitle = `REGISTRO DE GESTIONES`;
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   useEffect(() => {
@@ -91,6 +174,7 @@ function Solicitud() {
       setDataGestiones(res.gestiones);
       setDataForm(res.form);
       setLogID(res.logID);
+      setValidateUser(res.userID);
       setIsLoading(false);
       setIsSubmitting(false);
     } catch (error) {
@@ -106,10 +190,7 @@ function Solicitud() {
     const { nav_path, descri, userID } = notificacion;
     try {
       const response = await createSG({ logID, solicitudEstadoID }, token);
-      await createNotificacion(
-        { nav_path, descri, userID },
-        token
-      );
+      await createNotificacion({ nav_path, descri, userID }, token);
       setMessage(response.message);
       setOpen(true);
       fetchData();
@@ -133,19 +214,19 @@ function Solicitud() {
                   sx={{ background: "#d8d8d8", fontWeight: "bold" }}
                   align="center"
                 >
-                  FECHA
+                  <Typography fontFamily="monospace">FECHA</Typography>
                 </TableCell>
                 <TableCell
                   sx={{ background: "#d8d8d8", fontWeight: "bold" }}
                   align="center"
                 >
-                  ESTADO
+                  <Typography fontFamily="monospace">ESTADO</Typography>
                 </TableCell>
                 <TableCell
                   sx={{ background: "#d8d8d8", fontWeight: "bold" }}
                   align="center"
                 >
-                  GESTIONADO POR
+                  <Typography fontFamily="monospace">GESTIONADO POR</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -154,16 +235,28 @@ function Solicitud() {
                 dataGestiones.map((row, index) => (
                   <TableRow key={index}>
                     <TableCell align="center">
-                      {extractDate(row.fecha)}
+                      <Typography fontFamily="monospace">
+                        {extractDate(row.fecha)}
+                      </Typography>
                     </TableCell>
-                    <TableCell align="center">{row.estado}</TableCell>
-                    <TableCell align="center">{row.responsable}</TableCell>
+                    <TableCell align="center">
+                      <Typography fontFamily="monospace">
+                        {row.estado}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography fontFamily="monospace">
+                        {row.responsable}
+                      </Typography>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
                   <TableCell colSpan={3} align="center">
-                    Sin gestiones registradas
+                    <Typography fontFamily="monospace">
+                      Sin gestiones registradas
+                    </Typography>
                   </TableCell>
                 </TableRow>
               )}
@@ -180,7 +273,9 @@ function Solicitud() {
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
             <FormControl variant="filled">
-              <InputLabel id="estado-label">Estado</InputLabel>
+              <InputLabel id="estado-label">
+                <Typography fontFamily="monospace">Estado</Typography>
+              </InputLabel>
               <Select
                 required
                 labelId="estado-label"
@@ -196,7 +291,9 @@ function Solicitud() {
               >
                 {options.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                    <Typography fontFamily="monospace">
+                      {option.label}
+                    </Typography>
                   </MenuItem>
                 ))}
               </Select>
@@ -204,7 +301,9 @@ function Solicitud() {
           </Box>
           <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
             <FormControl variant="filled">
-              <InputLabel id="user-label">Notificar a</InputLabel>
+              <InputLabel id="user-label">
+                <Typography fontFamily="monospace">Notificar a</Typography>
+              </InputLabel>
               <Select
                 required
                 labelId="user-label"
@@ -220,7 +319,9 @@ function Solicitud() {
               >
                 {users.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                    <Typography fontFamily="monospace">
+                      {option.label}
+                    </Typography>
                   </MenuItem>
                 ))}
               </Select>
@@ -295,16 +396,18 @@ function Solicitud() {
 
         case "SOLICITUD DE ANULACION":
           if (user_id == 4 || user_id == 1 || user_id == 2) {
-          const transformedOptions7 = estadoData8.map((item) => ({
-            value: item.solicitudEstadoID,
-            label: item.descri,
-          }));
-          setOptions(transformedOptions7);}
-          else {null}
+            const transformedOptions7 = estadoData8.map((item) => ({
+              value: item.solicitudEstadoID,
+              label: item.descri,
+            }));
+            setOptions(transformedOptions7);
+          } else {
+            null;
+          }
           break;
 
         default:
-          null
+          null;
           break;
       }
     } else {
@@ -328,88 +431,88 @@ function Solicitud() {
         case 6:
           return <FlotaViewer data={data.form} />;
         default:
-          null
+          null;
       }
     } else {
-      null
+      null;
     }
   };
 
   const setDetallesView = () => (
     <>
-    <CardContent sx={{ p: 4 }}>
-              {dataForm !== false && dataForm !== null ? (
-                setFormViewer()
-              ) : (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography
-                    variant="body1"
-                    component="div"
-                    sx={{ color: "text.secondary", pb: 6, fontFamily: "monospace" }}
-                  >
-                    Sin información
-                  </Typography>
-                  <Link to={`/${data.area}/${data.logID}`}>
-                    <Button variant="contained" sx={{ background: "#0b2f6d" }}>
-                      Crear Formulario
-                    </Button>
-                  </Link>
-                </Box>
-              )}
-            </CardContent>
+      <CardContent sx={{ p: 4 }}>
+        {dataForm !== false && dataForm !== null ? (
+          setFormViewer()
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              variant="body1"
+              component="div"
+              sx={{ color: "text.secondary", pb: 6, fontFamily: "monospace" }}
+            >
+              Sin información
+            </Typography>
+            <Link to={`/${data.area}/${data.logID}`}>
+              <Button variant="contained" sx={{ background: "#0b2f6d" }}>
+                Crear Formulario
+              </Button>
+            </Link>
+          </Box>
+        )}
+      </CardContent>
     </>
-  )
+  );
 
   const setSolicitudView = () => (
     <>
-    <CardContent sx={{ p: 4 }}>
-              {[
-                { label: "Fecha Solicitud :", value: data.fechaSolicitud },
-                { label: "Solicitante :", value: data.solicitante },
-                { label: "Rut Solicitante :", value: data.rutSolicitante },
-                { label: "Tipo Formulario :", value: data.area },
-                { label: "Motivo :", value: data.motivo },
-                { label: "Submotivo :", value: data.submotivo },
-                { label: "Amonestado :", value: data.amonestado },
-                {
-                  label: "Rut Amonestado :",
-                  value: data.rutAmonestado,
-                },
-              ].map((item, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    mb: 2,
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    component="div"
-                    sx={{ fontWeight: "bold", fontFamily: "monospace" }}
-                  >
-                    {item.label}
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    component="div"
-                    sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
-                  >
-                    {item.value}
-                  </Typography>
-                </Box>
-              ))}
-            </CardContent>
+      <CardContent sx={{ p: 4 }}>
+        {[
+          { label: "Fecha Solicitud :", value: data.fechaSolicitud },
+          { label: "Solicitante :", value: data.solicitante },
+          { label: "Rut Solicitante :", value: data.rutSolicitante },
+          { label: "Tipo Formulario :", value: data.area },
+          { label: "Motivo :", value: data.motivo },
+          { label: "Submotivo :", value: data.submotivo },
+          { label: "Amonestado :", value: data.amonestado },
+          {
+            label: "Rut Amonestado :",
+            value: data.rutAmonestado,
+          },
+        ].map((item, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 2,
+            }}
+          >
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ fontWeight: "bold", fontFamily: "monospace" }}
+            >
+              {item.label}
+            </Typography>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
+            >
+              {item.value}
+            </Typography>
+          </Box>
+        ))}
+      </CardContent>
     </>
-  )
+  );
 
   useEffect(() => {
     fetchData();
@@ -438,6 +541,13 @@ function Solicitud() {
     }
   }, [dataGestiones]);
 
+  useEffect(() => {
+    if (permisos && permisos != null) {
+      const modulo = permisos.find((permiso) => permiso.moduloID === 3);
+      setModuloPermisos(modulo);
+    }
+  }, [permisos]);
+
   return (
     <Box
       sx={{
@@ -450,6 +560,7 @@ function Solicitud() {
         padding: 8,
       }}
     >
+      {openModal && setModal()}
       {open && (
         <Alert
           onClose={handleClose}
@@ -550,20 +661,30 @@ function Solicitud() {
             />
             {setTableEstado()}
 
-            <CardHeader
-              title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
-                  AGREGAR GESTION
-                </Typography>
-              }
-              sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "start",
-              }}
-            />
-            {setFormNotif()}
+            {moduloPermisos && moduloPermisos.edit ? (
+              <>
+                <CardHeader
+                  title={
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ fontFamily: "monospace" }}
+                    >
+                      AGREGAR GESTION
+                    </Typography>
+                  }
+                  sx={{
+                    background: "#0b2f6d",
+                    color: "white",
+                    textAlign: "start",
+                  }}
+                />
+                {setFormNotif()}
+              </>
+            ) : null}
           </Card>
+          <Box sx={{ pt: 2, width:"800px" }}>
+            {(user_id == validateUser) & (dataGestiones[0].estado != "ANULADA" ) ? botonAnular() : null}
+          </Box>
         </>
       )}
     </Box>

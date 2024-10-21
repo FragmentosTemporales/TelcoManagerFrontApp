@@ -9,7 +9,6 @@ import {
   InputAdornment,
   Typography
 } from "@mui/material";
-import InputIcon from '@mui/icons-material/Input';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LockIcon from '@mui/icons-material/Lock';
 import { useEffect, useState } from "react";

@@ -117,8 +117,8 @@ function Navbar() {
                 <Tooltip title="Cerrar Sesión" placement="left">
                   <Button
                     variant="contained"
-                    color="info"
-                    sx={{ height: "40px", fontWeight: "bold" }}
+                    color="error"
+                    sx={{ height: "40px", fontWeight: "bold", borderRadius:'25px' }}
                     onClick={handleLogout}
                   >
                     <LogoutIcon />

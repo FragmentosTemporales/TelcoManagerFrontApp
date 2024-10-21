@@ -13,6 +13,7 @@ import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SportsScoreIcon from '@mui/icons-material/SportsScore';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -63,8 +64,17 @@ function Home() {
       title: "Espacio para definir los objetivos por zona",
       link: "/objetivos",
       body: "Acá podrás definir los objetivos mensuales según la zona a elegir",
-      estado: false,
+      estado: true,
       moduloID: 5,
+    },
+    {
+      head: "Proyectos OnNet",
+      icono: <AccountTreeIcon />,
+      title: "Espacio para crear Proyectos",
+      link: "/objetivos",
+      body: "Acá podrás crear Proyectos y asociarlos a empresas contratistas",
+      estado: false,
+      moduloID: 6,
     },
   ];
 
@@ -85,14 +95,26 @@ function Home() {
       }}
     >
       {accesos && accesos.length > 0 ? (
-        <Grid container spacing={2} sx={{ width: "80%" }}>
+        <Grid 
+          container 
+          spacing={2} 
+          sx={{ width: "80%" }}
+          justifyContent="center"
+          alignItems="center"
+        >
           {accesos.map((acceso, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card
                 sx={{
-                  minHeight: "250px",
+                  minHeight: "400px",
                   backgroundColor: "#f5f5f5",
                   borderRadius: 0,
+                  position: "relative",
+                  transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                  "&:hover": {
+                    transform: "translateY(-10px)",
+                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+                  },
                 }}
               >
                 <CardHeader
@@ -113,7 +135,7 @@ function Home() {
                     fontSize={"18px"}
                     fontWeight={"bold"}
                     fontFamily={'monospace'}
-                    sx={{ minHeight: "60px", textAlign: "center" }}
+                    sx={{ minHeight: "80px", textAlign: "center" }}
                   >
                     {acceso.title}
                   </Typography>
@@ -123,7 +145,7 @@ function Home() {
                     sx={{
                       color: "text.secondary",
                       p: 2,
-                      minHeight: "60px",
+                      minHeight: "80px",
                       textAlign: "center",
                     }}
                   >
@@ -134,7 +156,7 @@ function Home() {
                     fontFamily={'monospace'}
                     sx={{
                       p: 2,
-                      minHeight: "10px",
+                      minHeight: "20px",
                       textAlign: "center",
                     }}
                   >
@@ -146,8 +168,8 @@ function Home() {
                     <Link to={acceso.link}>
                       <Button
                         variant="contained"
-                        color="info"
-                        sx={{ width: "200px" }}
+                        
+                        sx={{ width: "150px", borderRadius:0, background:"#0b2f6d" }}
                       >
                         IR
                       </Button>
@@ -161,6 +183,7 @@ function Home() {
       ) : null}
     </Box>
   );
+  
 }
 
 export default Home;

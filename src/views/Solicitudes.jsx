@@ -236,7 +236,9 @@ function Solicitudes() {
               align="center"
               sx={{ background: "#d8d8d8", fontWeight: "bold" }}
             >
+              <Typography fontFamily="monospace">
               {header}
+              </Typography>
             </TableCell>
           ))}
         </TableRow>
@@ -324,7 +326,9 @@ function Solicitudes() {
         ) : (
           <TableRow>
             <TableCell colSpan={6} align="center">
+            <Typography fontFamily="monospace">
               No hay datos disponibles
+              </Typography>
             </TableCell>
           </TableRow>
         )}

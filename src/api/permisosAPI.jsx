@@ -16,3 +16,34 @@ export const createPermiso = async (payload, token) => {
       throw error.message;
     }
   };
+
+  export const getPermisos = async (token, id) => {
+    try {
+      const url = `${baseUrl}/get-permisos/${id}`;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.message;
+    }
+  };
+
+  export const updatePermiso = async (token, payload, id) => {
+    try {
+      const url = `${baseUrl}/update-permiso/${id}`;
+      const response = await axios.put(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error updating notifications:", error);
+      throw new Error("Failed in update notifications");
+    }
+  }

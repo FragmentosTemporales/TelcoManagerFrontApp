@@ -60,6 +60,10 @@ export { estadoData7 };
 
 const estadoData8 = [
   {
+    solicitudEstadoID: "2",
+    descri: "ENVIAR A RRHH",
+  },
+  {
     solicitudEstadoID: "9",
     descri: "ANULADA",
   },

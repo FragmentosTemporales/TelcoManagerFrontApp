@@ -99,12 +99,15 @@ function Charts({ open, handleClose, message }) {
               }}
             >
               <CardHeader
-                title="ESTADISTICA SEGUN ESTADOS"
+                title={
+                  <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                    ESTADISTICA SEGUN ESTADO
+                  </Typography>
+                }
                 sx={{
                   background: "#0b2f6d",
                   color: "white",
-                  textAlign: "center",
-                  padding: "8px 16px",
+                  textAlign: "start",
                 }}
               />
               <Box sx={{ flex: 1, display: "flex", overflow: "auto" }}>
@@ -126,12 +129,15 @@ function Charts({ open, handleClose, message }) {
               }}
             >
               <CardHeader
-                title="ESTADISTICA SEGUN AREAS"
+                title={
+                  <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                   ESTADISTICA SEGUN AREAS
+                  </Typography>
+                }
                 sx={{
                   background: "#0b2f6d",
                   color: "white",
-                  textAlign: "center",
-                  padding: "8px 16px",
+                  textAlign: "start",
                 }}
               />
               <Box sx={{ flex: 1, display: "flex", overflow: "auto" }}>
@@ -153,12 +159,15 @@ function Charts({ open, handleClose, message }) {
               }}
             >
               <CardHeader
-                title="ESTADISTICA SEGUN MOTIVOS"
+                title={
+                  <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                   ESTADISTICA SEGUN MOTIVOS
+                  </Typography>
+                }
                 sx={{
                   background: "#0b2f6d",
                   color: "white",
-                  textAlign: "center",
-                  padding: "8px 16px",
+                  textAlign: "start",
                 }}
               />
               <Box sx={{ flex: 1, display: "flex", overflow: "auto" }}>

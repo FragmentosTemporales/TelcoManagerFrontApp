@@ -21,7 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 import { getObjetivos, updateObjetivo } from "../api/dataAPI";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -36,7 +36,7 @@ function ObjetivosView() {
   const [id, setID] = useState(undefined);
   const [value, setValue] = useState(undefined);
   const [openModal, setOpenModal] = useState(false);
-  const [habilitado, setHabilitado] = useState(false)
+  const [habilitado, setHabilitado] = useState(false);
 
   const [mesOptions, setMesOption] = useState([
     {
@@ -102,16 +102,17 @@ function ObjetivosView() {
 
   const ActualizarObjetivo = async () => {
     try {
-      const exec = await updateObjetivo(token, id, { value: value });
-      setOpenModal(false)
-
+      setIsSubmitting(true);
+      await updateObjetivo(token, id, { value: value });
       const res = await getObjetivos(token, gerencia, mes);
-      setData(res);
-      
-    } catch(error){
-      console.log(error)
-    }
 
+      setOpenModal(false);
+      setData(res);
+      setIsSubmitting(false);
+      setValue(undefined)
+    } catch (error) {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -270,24 +271,23 @@ function ObjetivosView() {
               <TableCell align="center" sx={{ fontSize: "16px" }}>
                 {row.editable ? (
                   <Tooltip title="Editar">
-                  <Button
-                    variant="contained"
-                    color="info"
-                    onClick={() => {
-                      setID(row.id);
-                      setOpenModal(true);
-                    }}
-                  >
-                    <EditIcon/>
-                  </Button>
+                    <Button
+                      variant="contained"
+                      color="info"
+                      onClick={() => {
+                        setID(row.id);
+                        setOpenModal(true);
+                      }}
+                    >
+                      <EditIcon />
+                    </Button>
                   </Tooltip>
                 ) : (
                   <Tooltip title="Editar">
-                  <Button disabled variant="contained" color="info">
-                    <EditIcon/>
-                  </Button>
+                    <Button disabled variant="contained" color="info">
+                      <EditIcon />
+                    </Button>
                   </Tooltip>
-                    
                 )}
               </TableCell>
             </TableRow>
@@ -327,7 +327,7 @@ function ObjetivosView() {
           >
             {`Editar Info de Objetivo con ID #${id}`}
           </Typography>
-          <Divider sx={{mt:1}}/>
+          <Divider sx={{ mt: 1 }} />
           <Box sx={{ mb: 2, pt: 2 }}>
             <InputLabel id="value-label">Nuevo Valor</InputLabel>
             <TextField
@@ -341,28 +341,30 @@ function ObjetivosView() {
               onChange={(e) => setValue(e.target.value)}
             />
           </Box>
-          <Button variant="contained" onClick={ActualizarObjetivo} sx={{backgroundColor:'#0b2f6d'}}>
-            Actualizar
+          <Button
+            variant="contained"
+            onClick={ActualizarObjetivo}
+            sx={{ backgroundColor: "#0b2f6d" }}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Procesando..." : "Actualizar"}
           </Button>
         </Box>
       </Modal>
     </>
   );
 
+  // VALIDACION PARA USUARIO
 
-// VALIDACION PARA USUARIO 
-
-  useEffect(()=>{
-    if (user_id && user_id == 14){
-      setGerencia("Metropolitana")
-      setHabilitado(true)
-    }else if (user_id && user_id == 15){
-      setGerencia("Biobío")
-      setHabilitado(true)
-    }else(
-      null
-    )
-  },[user_id])
+  useEffect(() => {
+    if (user_id && user_id == 14) {
+      setGerencia("Metropolitana");
+      setHabilitado(true);
+    } else if (user_id && user_id == 15) {
+      setGerencia("Biobío");
+      setHabilitado(true);
+    } else null;
+  }, [user_id]);
 
   return (
     <Box

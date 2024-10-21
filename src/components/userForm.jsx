@@ -45,13 +45,6 @@ function UserForm() {
     });
   };
 
-  const handleCheckBox = (e) => {
-    setForm({
-      ...form,
-      admin: e.target.checked,
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -91,7 +84,6 @@ function UserForm() {
         sx={{
           borderRadius: "0px",
           width: {lg:"50%", xs:"90%", md:"70%"},
-          height: "580px",
           overflow: "auto",
           boxShadow: 5,
           textAlign: "center",
@@ -119,7 +111,7 @@ function UserForm() {
         >
           <form onSubmit={handleSubmit} style={{ width: "80%" }}>
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="auditor-label">Nombre</InputLabel>
+              <InputLabel id="auditor-label" sx={{ fontFamily: "monospace" }}>Nombre</InputLabel>
               <TextField
                 fullWidth
                 required
@@ -132,7 +124,7 @@ function UserForm() {
               />
             </Box>
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="auditor-label">Correo</InputLabel>
+              <InputLabel id="auditor-label" sx={{ fontFamily: "monospace" }}>Correo</InputLabel>
               <TextField
                 fullWidth
                 required
@@ -145,7 +137,7 @@ function UserForm() {
               />
             </Box>
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="auditor-label">Rut</InputLabel>
+              <InputLabel id="auditor-label" sx={{ fontFamily: "monospace" }}>Rut</InputLabel>
               <TextField
                 fullWidth
                 required
@@ -158,7 +150,7 @@ function UserForm() {
               />
             </Box>
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="auditor-label">Clave</InputLabel>
+              <InputLabel id="auditor-label" sx={{ fontFamily: "monospace" }}>Clave</InputLabel>
               <TextField
                 fullWidth
                 required
@@ -178,7 +170,9 @@ function UserForm() {
                 sx={{ background: "#0b2f6d", fontWeight: "bold" }}
                 disabled={isSubmitting}
               >
+                <Typography sx={{ fontFamily: "monospace" }}>
                 {isSubmitting ? "Procesando..." : "Crear"}
+                </Typography>
               </Button>
             </Box>
           </form>
