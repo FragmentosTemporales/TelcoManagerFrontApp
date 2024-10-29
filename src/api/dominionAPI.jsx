@@ -58,3 +58,18 @@ export const getReversas = async (token, rut) => {
       throw error.message;
     }
   };
+
+  export const getNumeros = async (token) => {
+    try {
+      const url = `${baseUrl}/get_fila`;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.message;
+    }
+  };

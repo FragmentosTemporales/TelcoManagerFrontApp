@@ -43,6 +43,7 @@ function ReversaView() {
   const [tecnicos, setTecnicos] = useState([]);
   const [frecuencia, setFrecuencia] = useState("");
 
+
   const renderAlert = () => (
     <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
       {domMessage}
@@ -140,9 +141,7 @@ function ReversaView() {
             align="center"
             sx={{ background: "#d8d8d8", fontWeight: "bold" }}
           >
-            <Typography fontFamily="monospace">
-            {header}
-            </Typography>
+            <Typography fontFamily="monospace">{header}</Typography>
           </TableCell>
         ))}
       </TableRow>
@@ -159,29 +158,19 @@ function ReversaView() {
             return (
               <TableRow key={item.id}>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography fontFamily="monospace">
-                  {item.fecha}
-                  </Typography>
+                  <Typography fontFamily="monospace">{item.fecha}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography fontFamily="monospace">
-                  {item.orden}
-                  </Typography>
+                  <Typography fontFamily="monospace">{item.orden}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography fontFamily="monospace">
-                  {item.ANI}
-                </Typography>
+                  <Typography fontFamily="monospace">{item.ANI}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography fontFamily="monospace">
-                  {item.equipo}
-                  </Typography>
+                  <Typography fontFamily="monospace">{item.equipo}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography fontFamily="monospace">
-                  {item.serie}
-                  </Typography>
+                  <Typography fontFamily="monospace">{item.serie}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
                   <Checkbox
@@ -205,8 +194,8 @@ function ReversaView() {
         <TableBody>
           <TableRow>
             <TableCell colSpan={7} align="center">
-            <Typography fontFamily="monospace">
-              No hay datos disponibles
+              <Typography fontFamily="monospace">
+                No hay datos disponibles
               </Typography>
             </TableCell>
           </TableRow>
@@ -225,29 +214,19 @@ function ReversaView() {
             return (
               <TableRow key={item.id}>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography fontFamily="monospace">
-                  {item.fecha}
-                </Typography>
+                  <Typography fontFamily="monospace">{item.fecha}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography fontFamily="monospace">
-                  {item.orden}
-                  </Typography>  
+                  <Typography fontFamily="monospace">{item.orden}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography fontFamily="monospace">
-                {item.ANI}
-                </Typography>
+                  <Typography fontFamily="monospace">{item.ANI}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography fontFamily="monospace">
-                  {item.equipo}
-                  </Typography>
+                  <Typography fontFamily="monospace">{item.equipo}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography fontFamily="monospace">
-                  {item.serie}
-                  </Typography>
+                  <Typography fontFamily="monospace">{item.serie}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
                   <Checkbox checked={formattedItem.entrega === 1} disabled />
@@ -265,8 +244,8 @@ function ReversaView() {
         <TableBody>
           <TableRow>
             <TableCell colSpan={7} align="center">
-            <Typography fontFamily="monospace">
-              No hay datos disponibles
+              <Typography fontFamily="monospace">
+                No hay datos disponibles
               </Typography>
             </TableCell>
           </TableRow>
@@ -466,7 +445,7 @@ function ReversaView() {
               disabled={isSubmitting}
             >
               <Typography fontFamily="monospace">
-              {isSubmitting ? "Procesando..." : "Consultar"}
+                {isSubmitting ? "Procesando..." : "Consultar"}
               </Typography>
             </Button>
           </Box>

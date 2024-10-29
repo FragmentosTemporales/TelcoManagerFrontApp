@@ -5,9 +5,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  FormControl,
-  InputLabel,
-  MenuItem,
   Modal,
   Skeleton,
   Table,
@@ -17,7 +14,6 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  Select,
   Typography,
 } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
@@ -27,14 +23,6 @@ import { getUniqueSolicitud } from "../api/solicitudAPI";
 import { createNotificacion } from "../api/notificacionesAPI";
 import extractDate from "../helpers/main";
 import { createSG } from "../api/sgAPI";
-import {
-  estadoData2,
-  estadoData3,
-  estadoData4,
-  estadoData7,
-  estadoData8,
-} from "../data/estadoData";
-import userData from "../data/userData";
 import RrhhViewer from "../components/rrhhFormViewer";
 import PrevencionViewer from "../components/prevencionFormViewer";
 import CalidadViewer from "../components/calidadFormViewer";
@@ -45,7 +33,7 @@ import FlotaViewer from "../components/flotaFormViewer";
 function Solicitud() {
   const { solicitud_id } = useParams();
   const authState = useSelector((state) => state.auth);
-  const { token, user_id, permisos } = authState;
+  const { token, user_id } = authState;
 
   const [data, setData] = useState(null);
   const [dataGestiones, setDataGestiones] = useState(null);
@@ -53,49 +41,43 @@ function Solicitud() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [users, setUsers] = useState(false);
   const [message, setMessage] = useState("");
+
   const [logID, setLogID] = useState(undefined);
-  const [options, setOptions] = useState([]);
-  const [moduloPermisos, setModuloPermisos] = useState(undefined);
-  const [openModal, setOpenModal] = useState(false);
-  const [form, setForm] = useState({
-    logID: logID,
-    solicitudEstadoID: "",
-  });
-  const [validateUser, setValidateUser] = useState(undefined);
+  const [estadoID, setEstadoID] = useState(undefined);
+
+  // SET MODALES
+  const [openModalAprobar, setOpenModalAprobar] = useState(false);
+  const [openModalRechazar, setOpenModalRechazar] = useState(false);
+  const [openModalLegal, setOpenModalLegal] = useState(false);
+  const [openModalEmpleador, setOpenModalEmpleador] = useState(false);
+  const [openModalTrabajador, setOpenModalTrabajador] = useState(false);
+  const [openModalLicencia, setOpenModalLicencia] = useState(false);
+  const [openModalVacaciones, setOpenModalVacaciones] = useState(false);
+  const [openModalFirmada, setOpenModalFirmada] = useState(false);
+  const [openModalNoFirmada, setOpenModalNoFirmada] = useState(false);
+  const [openModalCorreo, setOpenModalCorreo] = useState(false);
+
+  // VARIABLE CON ID DEL USUARIO CREADOR DE LA SOLICITUD
+  const [validate, setValidate] = useState(undefined);
+
+  const [toNotif, setToNotif] = useState(undefined)
+
 
   const [notificacion, setNotificacion] = useState({
     nav_path: "",
     descri: "",
-    userID: "",
+    userID: toNotif || ""
   });
 
-  const anularSolicitud = async (e) => {
-    e.preventDefault();
+  const title = `SOLICITUD DE AMONESTACIÓN N° ${solicitud_id}`;
+  const tableTitle = `REGISTRO DE GESTIONES`;
 
-    const formAnulacion = { logID, solicitudEstadoID: 8 };
-    const { nav_path, descri } = notificacion;
-    const userID = 4;
+  // MODALES
 
-    try {
-      const response = await createSG(formAnulacion, token);
-
-      await createNotificacion({ nav_path, descri, userID }, token);
-
-      setMessage(response.message);
-      setOpen(true);
-      fetchData();
-      setOpenModal(false)
-    } catch (error) {
-      setMessage("Error al crear la gestión.");
-      setOpen(true);
-    }
-  };
-
-  const setModal = () => (
+  const setModalRechazar = () => (
     <>
-      <Modal open={openModal} onClose={handleCloseModal}>
+      <Modal open={openModalRechazar} onClose={handleCloseModal}>
         <Box
           sx={{
             position: "absolute",
@@ -108,22 +90,22 @@ function Solicitud() {
             p: 4,
           }}
         >
-          <Box sx={{ textAlign:'center', pb: 2}}>
-          <Typography
-            variant="h5"
-            fontWeight="bold"
-            fontFamily={"monospace"}
-            sx={{ pt: 2 }}
-          >
-            ¿Quieres solicitar la anulación de esta Amonestación?
-          </Typography>
+          <Box sx={{ textAlign: "center", pb: 2 }}>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontFamily="monospace"
+              sx={{ pt: 2 }}
+            >
+              ¿Quieres Anular esta Amonestación?
+            </Typography>
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
             <Button
               variant="contained"
-              onClick={anularSolicitud}
-              color='error'
+              onClick={gestionarSolicitud}
+              color="error"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
@@ -134,47 +116,842 @@ function Solicitud() {
     </>
   );
 
-  const botonAnular = () => (
+  const setModalAprobar = () => (
+    <>
+      <Modal open={openModalAprobar} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box sx={{ textAlign: "center", pb: 2 }}>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontFamily="monospace"
+              sx={{ pt: 2 }}
+            >
+              ¿Quieres Aprobar esta Amonestación?
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={gestionarSolicitud}
+              color="error"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Aceptar"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  const setModalLegal = () => (
+    <>
+      <Modal open={openModalLegal} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box sx={{ textAlign: "center", pb: 2 }}>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontFamily="monospace"
+              sx={{ pt: 2 }}
+            >
+              ¿Quieres definir como Pendiente de Evaluación Legal?
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={gestionarSolicitud}
+              color="error"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Aceptar"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  const setModalEmpleador = () => (
+    <>
+      <Modal open={openModalEmpleador} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box sx={{ textAlign: "center", pb: 2 }}>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontFamily="monospace"
+              sx={{ pt: 2 }}
+            >
+              ¿Quieres definir como Pendiente de Firma Empleador?
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={gestionarSolicitud}
+              color="error"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Aceptar"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  const setModalTrabajador = () => (
+    <>
+      <Modal open={openModalTrabajador} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box sx={{ textAlign: "center", pb: 2 }}>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontFamily="monospace"
+              sx={{ pt: 2 }}
+            >
+              ¿Quieres definir como Pendiente de Firma Trabajador?
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={gestionarSolicitud}
+              color="error"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Aceptar"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  const setModalLicencia = () => (
+    <>
+      <Modal open={openModalLicencia} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box sx={{ textAlign: "center", pb: 2 }}>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontFamily="monospace"
+              sx={{ pt: 2 }}
+            >
+              ¿Quieres definir como Trabajador con Licencia?
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={gestionarSolicitud}
+              color="error"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Aceptar"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  const setModalVacaciones = () => (
+    <>
+      <Modal open={openModalVacaciones} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box sx={{ textAlign: "center", pb: 2 }}>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontFamily="monospace"
+              sx={{ pt: 2 }}
+            >
+              ¿Quieres definir como Trabajador con Vacaciones?
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={gestionarSolicitud}
+              color="error"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Aceptar"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  const setModalFirmada = () => (
+    <>
+      <Modal open={openModalFirmada} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box sx={{ textAlign: "center", pb: 2 }}>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontFamily="monospace"
+              sx={{ pt: 2 }}
+            >
+              ¿Quieres definir como Firmada por el Trabajador?
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={gestionarSolicitud}
+              color="error"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Aceptar"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  const setModalNoFirmada = () => (
+    <>
+      <Modal open={openModalNoFirmada} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box sx={{ textAlign: "center", pb: 2 }}>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontFamily="monospace"
+              sx={{ pt: 2 }}
+            >
+              ¿Quieres definir como No Firmada por el Trabajador?
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={gestionarSolicitud}
+              color="error"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Aceptar"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  const setModalCorreo = () => (
+    <>
+      <Modal open={openModalCorreo} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box sx={{ textAlign: "center", pb: 2 }}>
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontFamily="monospace"
+              sx={{ pt: 2 }}
+            >
+              ¿Quieres definir como Enviada por Correo?
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={gestionarSolicitud}
+              color="error"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Aceptar"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  // BOTONES DE ACCION PARA MODALES
+
+  const btnAprobar = () => (
+    <>
+      <Button
+        variant="contained"
+        color="info"
+        onClick={() => {
+          setEstadoID(2);
+          setOpenModalAprobar(true);
+          setToNotif(3)
+        }}
+      >
+        <Typography fontFamily="monospace">APROBAR AMONESTACION</Typography>
+      </Button>
+    </>
+  );
+  const btnRechazar = () => (
     <>
       <Button
         variant="contained"
         color="error"
-        onClick={() => setOpenModal(true)}
+        onClick={() => {
+          setEstadoID(9);
+          setOpenModalAprobar(true);
+          setToNotif(validate)
+        }}
       >
-        ANULAR SOLICITUD
+        <Typography fontFamily="monospace">ANULAR AMONESTACION</Typography>
+      </Button>
+    </>
+  );
+  const btnRequiereLegal = () => (
+    <>
+      <Button
+        variant="contained"
+        color="info"
+        onClick={() => {
+          setEstadoID(3);
+          setOpenModalLegal(true);
+          setToNotif(3)
+        }}
+      >
+        <Typography fontFamily="monospace">REQUIERE LEGAL</Typography>
+      </Button>
+    </>
+  );
+  const btnFirmaEmpleador = () => (
+    <>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={() => {
+          setEstadoID(4);
+          setOpenModalEmpleador(true);
+          setToNotif(3)
+        }}
+      >
+        <Typography fontFamily="monospace">FIRMA EMPLEADOR</Typography>
+      </Button>
+    </>
+  );
+  const btnFirmaTrabajador = () => (
+    <>
+      <Button
+        variant="contained"
+        color="info"
+        onClick={() => {
+          setEstadoID(7);
+          setOpenModalTrabajador(true);
+          setToNotif(validate)
+        }}
+        sx={{ width: "200px" }}
+      >
+        <Typography fontFamily="monospace">FIRMA TRABAJADOR</Typography>
+      </Button>
+    </>
+  );
+  const btnLicenciaMedica = () => (
+    <>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={() => {
+          setEstadoID(5);
+          setOpenModalLicencia(true);
+          setToNotif(3)
+        }}
+        sx={{ width: "200px" }}
+      >
+        <Typography fontFamily="monospace">LICENCIA MEDICA</Typography>
+      </Button>
+    </>
+  );
+  const btnVacaciones = () => (
+    <>
+      <Button
+        variant="contained"
+        color="success"
+        onClick={() => {
+          setEstadoID(6);
+          setOpenModalVacaciones(true);
+          setToNotif(3)
+        }}
+        sx={{ width: "200px" }}
+      >
+        <Typography fontFamily="monospace">VACACIONES</Typography>
+      </Button>
+    </>
+  );
+  const btnEnviadaCorreo = () => (
+    <>
+      <Button
+        variant="contained"
+        color="info"
+        onClick={() => {
+          setEstadoID(13);
+          setOpenModalCorreo(true);
+          setToNotif(validate)
+        }}
+        sx={{ width: "200px" }}
+      >
+        <Typography fontFamily="monospace">ENVIADA POR CORREO</Typography>
+      </Button>
+    </>
+  );
+  const btnFirmada = () => (
+    <>
+      <Button
+        variant="contained"
+        color="info"
+        onClick={() => {
+          setEstadoID(10);
+          setOpenModalFirmada(true);
+          setToNotif(validate)
+        }}
+        sx={{ width: "200px" }}
+      >
+        <Typography fontFamily="monospace">FIRMADA</Typography>
+      </Button>
+    </>
+  );
+  const btnNoFirmada = () => (
+    <>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={() => {
+          setEstadoID(12);
+          setOpenModalNoFirmada(true);
+          setToNotif(3)
+        }}
+        sx={{ width: "200px" }}
+      >
+        <Typography fontFamily="monospace">NO FIRMA</Typography>
       </Button>
     </>
   );
 
-  const title = `SOLICITUD DE AMONESTACIÓN N° ${solicitud_id}`;
-  const tableTitle = `REGISTRO DE GESTIONES`;
+  // BTN GROUP
+
+  const componenteAprobacion = () => (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "800px",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        borderRadius: "0",
+        mt: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            ACCIONES
+          </Typography>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "start",
+        }}
+      />
+      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+        {btnAprobar()}
+
+        {btnRechazar()}
+      </CardContent>
+    </Card>
+  );
+
+  const componenteRequiereLegal = () => (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "800px",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        borderRadius: "0",
+        mt: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            ACCIONES
+          </Typography>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "start",
+        }}
+      />
+      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+        {btnRequiereLegal()}
+
+        {btnFirmaEmpleador()}
+      </CardContent>
+    </Card>
+  );
+
+  const componenteRequiereEmpleador = () => (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "800px",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        borderRadius: "0",
+        mt: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            ACCIONES
+          </Typography>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "start",
+        }}
+      />
+      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+        {btnFirmaEmpleador()}
+      </CardContent>
+    </Card>
+  );
+
+  const componenteOperativo = () => (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "800px",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        borderRadius: "0",
+        mt: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            ACCIONES
+          </Typography>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "start",
+        }}
+      />
+      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+        {btnFirmaTrabajador()}
+        {btnLicenciaMedica()}
+        {btnVacaciones()}
+      </CardContent>
+    </Card>
+  );
+
+  const componenteLicencia = () => (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "800px",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        borderRadius: "0",
+        mt: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            ACCIONES
+          </Typography>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "start",
+        }}
+      />
+      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+        {btnFirmaTrabajador()}
+        {btnVacaciones()}
+      </CardContent>
+    </Card>
+  );
+
+  const componenteVacaciones = () => (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "800px",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        borderRadius: "0",
+        mt: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            ACCIONES
+          </Typography>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "start",
+        }}
+      />
+      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+        {btnFirmaTrabajador()}
+        {btnLicenciaMedica()}
+      </CardContent>
+    </Card>
+  );
+
+  const componenteNoFirmada = () => (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "800px",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        borderRadius: "0",
+        mt: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            ACCIONES
+          </Typography>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "start",
+        }}
+      />
+      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+        {btnEnviadaCorreo()}
+      </CardContent>
+    </Card>
+  );
+
+  const componenteFirmada = () => (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "800px",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        borderRadius: "0",
+        mt: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            ACCIONES
+          </Typography>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "start",
+        }}
+      />
+      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+        {btnFirmada()}
+        {btnNoFirmada()}
+      </CardContent>
+    </Card>
+  );
+
+  // FUNCIONES DESDE AQUI
+
+  const gestionarSolicitud = async (e) => {
+    e.preventDefault();
+    
+    const formAnulacion = { logID, solicitudEstadoID: estadoID };
+    const { nav_path, descri, userID } = notificacion;
+  
+    try {
+      // Crear solicitud de gestión
+      const response = await createSG(formAnulacion, token);
+      
+      // Crear notificación después de la solicitud de gestión
+      await createNotificacion({ nav_path, descri, userID }, token);
+      
+      // Actualizar mensaje y abrir diálogo de éxito
+      setMessage(response.message || "Gestión creada exitosamente.");
+      setOpen(true);
+      
+      // Refrescar datos y cerrar modales al terminar
+      fetchData();
+      handleCloseModal();
+    } catch (error) {
+      // Manejo de errores más específico para depuración y UX
+      console.error("Error al gestionar la solicitud:", error);
+      setMessage("Error al crear la gestión. Inténtalo nuevamente.");
+      setOpen(true);
+      handleCloseModal();
+    }
+  };
+  
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleCloseModal = () => {
-    setOpenModal(false);
+    setOpenModalAprobar(false);
+    setOpenModalRechazar(false);
+    setOpenModalLegal(false);
+    setOpenModalEmpleador(false);
+    setOpenModalTrabajador(false);
+    setOpenModalLicencia(false);
+    setOpenModalVacaciones(false);
+    setOpenModalFirmada(false);
+    setOpenModalNoFirmada(false);
+    setOpenModalCorreo(false);
   };
-
-  useEffect(() => {
-    if (data && data !== null) {
-      setNotificacion({
-        nav_path: `/solicitud/${solicitud_id}`,
-        descri: `Tienes una nueva actualización para la amonestación con folio N° ${solicitud_id}`,
-        userID: "",
-      });
-    }
-  }, [data]);
 
   const fetchData = async () => {
     try {
       const res = await getUniqueSolicitud(token, solicitud_id);
       setData(res);
+      setValidate(res.userID);
       setDataGestiones(res.gestiones);
       setDataForm(res.form);
       setLogID(res.logID);
-      setValidateUser(res.userID);
       setIsLoading(false);
       setIsSubmitting(false);
     } catch (error) {
@@ -183,22 +960,7 @@ function Solicitud() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    const { logID, solicitudEstadoID } = form;
-    const { nav_path, descri, userID } = notificacion;
-    try {
-      const response = await createSG({ logID, solicitudEstadoID }, token);
-      await createNotificacion({ nav_path, descri, userID }, token);
-      setMessage(response.message);
-      setOpen(true);
-      fetchData();
-    } catch (error) {
-      setMessage("Error al crear la gestión.");
-      setOpen(true);
-    }
-  };
+  // COMPONENTES GENERALES DESDE AQUI
 
   const setTableEstado = () => (
     <>
@@ -266,154 +1028,6 @@ function Solicitud() {
       </CardContent>
     </>
   );
-
-  const setFormNotif = () => (
-    <>
-      <CardContent>
-        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-          <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
-            <FormControl variant="filled">
-              <InputLabel id="estado-label">
-                <Typography fontFamily="monospace">Estado</Typography>
-              </InputLabel>
-              <Select
-                required
-                labelId="estado-label"
-                id="estado-select"
-                sx={{ width: "350px" }}
-                value={form.solicitudEstadoID || ""}
-                onChange={(event) => {
-                  setForm((prevForm) => ({
-                    ...prevForm,
-                    solicitudEstadoID: event.target.value,
-                  }));
-                }}
-              >
-                {options.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    <Typography fontFamily="monospace">
-                      {option.label}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
-            <FormControl variant="filled">
-              <InputLabel id="user-label">
-                <Typography fontFamily="monospace">Notificar a</Typography>
-              </InputLabel>
-              <Select
-                required
-                labelId="user-label"
-                id="user-select"
-                sx={{ width: "350px" }}
-                value={notificacion.userID || ""}
-                onChange={(event) => {
-                  setNotificacion((prevForm) => ({
-                    ...prevForm,
-                    userID: event.target.value,
-                  }));
-                }}
-              >
-                {users.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    <Typography fontFamily="monospace">
-                      {option.label}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-
-          <Box sx={{ textAlign: "center" }}>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ background: "#0b2f6d", fontWeight: "bold" }}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Procesando..." : "Crear"}
-            </Button>
-          </Box>
-        </form>
-      </CardContent>
-    </>
-  );
-
-  const setDataOptions = () => {
-    if (dataGestiones[0] && dataGestiones[0].estado) {
-      switch (dataGestiones[0].estado) {
-        case "ENVIADA A RRHH":
-          const transformedOptions = estadoData2.map((item) => ({
-            value: item.solicitudEstadoID,
-            label: item.descri,
-          }));
-          setOptions(transformedOptions);
-          break;
-
-        case "EVALUACION LEGAL":
-          const transformedOptions2 = estadoData3.map((item) => ({
-            value: item.solicitudEstadoID,
-            label: item.descri,
-          }));
-          setOptions(transformedOptions2);
-          break;
-
-        case "PENDIENTE FIRMA EMPLEADOR":
-          const transformedOptions3 = estadoData4.map((item) => ({
-            value: item.solicitudEstadoID,
-            label: item.descri,
-          }));
-          setOptions(transformedOptions3);
-          break;
-
-        case "LICENCIA MEDICA":
-          const transformedOptions4 = estadoData7.map((item) => ({
-            value: item.solicitudEstadoID,
-            label: item.descri,
-          }));
-          setOptions(transformedOptions4);
-          break;
-
-        case "VACACIONES":
-          const transformedOptions5 = estadoData7.map((item) => ({
-            value: item.solicitudEstadoID,
-            label: item.descri,
-          }));
-          setOptions(transformedOptions5);
-          break;
-
-        case "PENDIENTE FIRMA TRABAJADOR":
-          const transformedOptions6 = estadoData7.map((item) => ({
-            value: item.solicitudEstadoID,
-            label: item.descri,
-          }));
-          setOptions(transformedOptions6);
-          break;
-
-        case "SOLICITUD DE ANULACION":
-          if (user_id == 4 || user_id == 1 || user_id == 2) {
-            const transformedOptions7 = estadoData8.map((item) => ({
-              value: item.solicitudEstadoID,
-              label: item.descri,
-            }));
-            setOptions(transformedOptions7);
-          } else {
-            null;
-          }
-          break;
-
-        default:
-          null;
-          break;
-      }
-    } else {
-      console.log("No hay estado disponible en dataGestiones[0]");
-    }
-  };
 
   const setFormViewer = () => {
     if (data?.form !== "None") {
@@ -514,39 +1128,28 @@ function Solicitud() {
     </>
   );
 
+  // USEEFFECTS DESDE AQUI
+
   useEffect(() => {
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (logID !== undefined) {
-      setForm((prevForm) => ({
-        ...prevForm,
-        logID: logID,
-      }));
+    if (data && data !== null) {
+      setNotificacion({
+        nav_path: `/solicitud/${solicitud_id}`,
+        descri: `Tienes una nueva actualización para la amonestación con folio N° ${solicitud_id}`,
+        userID: "",
+      });
     }
-  }, [logID]);
+  }, [data]);
 
   useEffect(() => {
-    const transformedOptions = userData.map((item) => ({
-      value: item.userID,
-      label: item.nombre,
+    setNotificacion((prevNotificacion) => ({
+      ...prevNotificacion,
+      userID: toNotif || ""
     }));
-    setUsers(transformedOptions);
-  }, []);
-
-  useEffect(() => {
-    if (dataGestiones && dataGestiones.length > 0) {
-      setDataOptions();
-    }
-  }, [dataGestiones]);
-
-  useEffect(() => {
-    if (permisos && permisos != null) {
-      const modulo = permisos.find((permiso) => permiso.moduloID === 3);
-      setModuloPermisos(modulo);
-    }
-  }, [permisos]);
+  }, [toNotif]);
 
   return (
     <Box
@@ -560,7 +1163,37 @@ function Solicitud() {
         padding: 8,
       }}
     >
-      {openModal && setModal()}
+      {/* COMPONENTE MODAL PARA APROBAR AMONESTACION */}
+      {openModalAprobar && setModalAprobar()}
+
+      {/* COMPONENTE MODAL PARA RECHAZAR AMONESTACION */}
+      {openModalRechazar && setModalRechazar()}
+
+      {/* COMPONENTE MODAL PARA DEFINIR COMO PENDIENTE DE EVALUACION LEGAL */}
+      {openModalLegal && setModalLegal()}
+
+      {/* COMPONENTE MODAL PARA DEFINIR COMO PENDIENTE DE FIRMA EMPLEADOR */}
+      {openModalEmpleador && setModalEmpleador()}
+
+      {/* COMPONENTE MODAL PARA DEFINIR COMO PENDIENTE DE FIRMA TRABAJADOR */}
+      {openModalTrabajador && setModalTrabajador()}
+
+      {/* COMPONENTE MODAL PARA DEFINIR COMO TRABAJADOR CON LICENCIA */}
+      {openModalLicencia && setModalLicencia()}
+
+      {/* COMPONENTE MODAL PARA DEFINIR COMO TRABAJADOR CON VACACIONES */}
+      {openModalVacaciones && setModalVacaciones()}
+
+      {/* COMPONENTE MODAL PARA DEFINIR COMO FIRMADA */}
+      {openModalFirmada && setModalFirmada()}
+
+      {/* COMPONENTE MODAL PARA DEFINIR COMO NO FIRMADA */}
+      {openModalNoFirmada && setModalNoFirmada()}
+
+      {/* COMPONENTE MODAL PARA DEFINIR COMO ENVIADA POR CORREO */}
+      {openModalCorreo && setModalCorreo()}
+
+      {/* COMPONENTE DE ALERTA */}
       {open && (
         <Alert
           onClose={handleClose}
@@ -660,30 +1293,65 @@ function Solicitud() {
               }}
             />
             {setTableEstado()}
-
-            {moduloPermisos && moduloPermisos.edit ? (
-              <>
-                <CardHeader
-                  title={
-                    <Typography
-                      fontWeight="bold"
-                      sx={{ fontFamily: "monospace" }}
-                    >
-                      AGREGAR GESTION
-                    </Typography>
-                  }
-                  sx={{
-                    background: "#0b2f6d",
-                    color: "white",
-                    textAlign: "start",
-                  }}
-                />
-                {setFormNotif()}
-              </>
-            ) : null}
           </Card>
-          <Box sx={{ pt: 2, width:"800px" }}>
-            {(user_id == validateUser) & (dataGestiones[0].estado != "ANULADA" ) ? botonAnular() : null}
+
+          {/* BOX PARA APROBAR O RECHAZAR AMONESTACIONES */}
+          <Box sx={{ width: "800px" }}>
+            {(user_id == 4) &
+            (dataGestiones[0].estado == "PENDIENTE DE APROBACION")
+              ? componenteAprobacion()
+              : null}
+          </Box>
+
+          {/* BOX PARA EVALUACION LEGAL */}
+          <Box sx={{ width: "800px" }}>
+            {(user_id == 3) & (dataGestiones[0].estado == "ENVIADA A RRHH")
+              ? componenteRequiereLegal()
+              : null}
+          </Box>
+
+          {/* BOX PARA EVALUACION LEGAL */}
+          <Box sx={{ width: "800px" }}>
+            {(user_id == 3) & (dataGestiones[0].estado == "EVALUACION LEGAL")
+              ? componenteRequiereEmpleador()
+              : null}
+          </Box>
+
+          {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
+          <Box sx={{ width: "800px" }}>
+            {(user_id == 3) &
+            (dataGestiones[0].estado == "PENDIENTE FIRMA EMPLEADOR")
+              ? componenteOperativo()
+              : null}
+          </Box>
+
+          {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
+          <Box sx={{ width: "800px" }}>
+            {(user_id == 3) & (dataGestiones[0].estado == "LICENCIA MEDICA")
+              ? componenteLicencia()
+              : null}
+          </Box>
+
+          {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
+          <Box sx={{ width: "800px" }}>
+            {(user_id == 3) & (dataGestiones[0].estado == "VACACIONES")
+              ? componenteVacaciones()
+              : null}
+          </Box>
+
+          {/* BOX PARA DEFINIR ESTADO DE FIRMA */}
+          <Box sx={{ width: "800px" }}>
+            {(user_id == validate) &
+            (dataGestiones[0].estado == "PENDIENTE FIRMA TRABAJADOR")
+              ? componenteFirmada()
+              : null}
+          </Box>
+
+          {/* BOX PARA DEFINIR ESTADO DE NO FIRMADA */}
+          <Box sx={{ width: "800px" }}>
+            {(user_id == 3) & (dataGestiones[0].estado == "NO FIRMADA")
+              ? componenteNoFirmada()
+              : null}
           </Box>
         </>
       )}
