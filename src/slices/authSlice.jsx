@@ -10,6 +10,7 @@ const state = {
   user_id: localStorage.getItem('user_id') || null,
   correo: localStorage.getItem('correo') || null,
   permisos: JSON.parse(localStorage.getItem('permisos')) || null,
+  empresa: JSON.parse(localStorage.getItem('empresa')) || null,
   message: null,
 };
 
@@ -32,6 +33,7 @@ export const authSlice = createSlice({
       localStorage.removeItem('token');
       localStorage.removeItem('user_id');
       localStorage.removeItem('permisos');
+      localStorage.removeItem('empresa');
     },
     onLoading: (state) => {
       state.is_loading = true;
@@ -39,6 +41,7 @@ export const authSlice = createSlice({
     },
     onLoad: (state, action) => {
       const payload = action.payload;
+
       state.token = payload.token;
       const usuario = payload.usuario
 
@@ -47,6 +50,7 @@ export const authSlice = createSlice({
       state.nombre = usuario.nombre; 
       state.numDoc = usuario.numDoc; 
       state.permisos = usuario.permisos
+      state.empresa = usuario.empresa
       state.is_loading = false;
       state.is_load = true;
 
@@ -55,6 +59,7 @@ export const authSlice = createSlice({
       localStorage.setItem('user_id', usuario.userID);
       localStorage.setItem('nombre', usuario.nombre);
       localStorage.setItem('permisos', JSON.stringify(usuario.permisos));
+      localStorage.setItem('empresa', JSON.stringify(usuario.empresa));
     },
     setMessage: (state, action) => {
       state.message = action.payload;

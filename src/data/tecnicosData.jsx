@@ -10,6 +10,71 @@ const tecnicosData = [
     frecuencia: "MARTES",
   },
   {
+    label: "27472856-6 ANGEL GABRIEL PEREZ PEREZ",
+    value: "27472856-6",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "18746332-7 DIEGO FRANCISCO ALFARO VILLABLANCA",
+    value: "18746332-7",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "26798995-8 FRANCISCO JAVIER UZTARIZ LORETO",
+    value: "26798995-8",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "25973145-3 JONATHAN DAVID CARABALLO MARTINEZ",
+    value: "25973145-3",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "17840112-2 PATRICIO ANDRES ACEVEDO VARGAS",
+    value: "17840112-2",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "26452143-2 CIPRIANI ALEXANDER SALAVARRIA NORIEGA",
+    value: "26452143-2",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "15648746-5 JORGE CEBALLOS HERNANDEZ",
+    value: "15648746-5",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "19163163-3 JORGE LUIS REYES TOLOZA",
+    value: "19163163-3",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "18441863-0 SERGIO FABIAN LAZCANO CISTERNA",
+    value: "18441863-0",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "26909268-8 YOHAN EDUARDO OSTOS GUZMAN",
+    value: "26909268-8",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "17304573-5 CARLOS JAVIER GUTIERREZ QUEZADA",
+    value: "17304573-5",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "19583862-3 FRANCISCO JAVIER CEA HUENOPIL",
+    value: "19583862-3",
+    frecuencia: "MARTES",
+  },
+  {
+    label: "12875808-9 MAURICIO JOSE BASAI AVILA",
+    value: "12875808-9",
+    frecuencia: "MARTES",
+  },
+  {
     label: "26578437-2 ALEXANDER JOSE ANGULO",
     value: "26578437-2",
     frecuencia: "MIERCOLES",

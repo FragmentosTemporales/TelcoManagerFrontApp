@@ -12,14 +12,35 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import SportsScoreIcon from '@mui/icons-material/SportsScore';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import SportsScoreIcon from "@mui/icons-material/SportsScore";
+import BallotIcon from "@mui/icons-material/Ballot";
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import DvrIcon from '@mui/icons-material/Dvr';
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import { onLoad, onLoading, setMessage } from "../slices/proyectosSlice";
+import {
+  onLoad as onLoadAsignados,
+  onLoading as onLoadingAsignados,
+} from "../slices/asignadosSlice";
+
+import {
+  getProyectos,
+  getAsignados,
+  getaLLAsignados,
+} from "../api/proyectoAPI";
+import { useEffect, useState } from "react";
 
 function Home() {
   const authState = useSelector((state) => state.auth);
-  const { permisos } = authState;
+  const proyectoState = useSelector((state) => state.proyectos);
+  const asignadosState = useSelector((state) => state.asignados);
+  const { permisos, token, empresa } = authState;
+  const { data: dataProyecto } = proyectoState;
+  const { data: dataAsignadosState } = asignadosState;
+
+  const dispatch = useDispatch();
 
   const secciones = [
     {
@@ -68,20 +89,85 @@ function Home() {
       moduloID: 5,
     },
     {
-      head: "Proyectos OnNet",
-      icono: <AccountTreeIcon />,
-      title: "Espacio para crear Proyectos",
-      link: "/objetivos",
-      body: "Acá podrás crear Proyectos y asociarlos a empresas contratistas",
-      estado: false,
+      head: "Asignados OnNet",
+      icono: <BallotIcon />,
+      title: "Espacio para visualizar Proyectos Asignados",
+      link: "/asignados",
+      body: "Acá podrás gestionar los proyectos asignados",
+      estado: true,
       moduloID: 6,
     },
+    {
+      head: "Gestión Formularios AST",
+      icono: <DvrIcon />,
+      title: "Espacio para gestionar los formulario AST",
+      link: "/form-ast-list",
+      body: "Acá podrás gestionar los formularios enviados por los trabajadores",
+      estado: true,
+      moduloID: 7,
+    },
+    {
+      head: "Prevencion AST",
+      icono: <FormatListNumberedIcon/>,
+      title: "Espacio para completar formulario AST",
+      link: "/form-ast",
+      body: "Acá podrás completar tu formulario y enviarlo directamente a la base de datos",
+      estado: true,
+      moduloID: 8,
+    }
   ];
 
-  const accesos = secciones.filter((seccion) => 
-    permisos.some(permiso => permiso.moduloID === seccion.moduloID && permiso.access)
+  const accesos = secciones.filter((seccion) =>
+    permisos.some(
+      (permiso) => permiso.moduloID === seccion.moduloID && permiso.access
+    )
   );
 
+  const fetchData = async () => {
+    if (dataProyecto == null) {
+      try {
+        dispatch(onLoading());
+        const res = await getProyectos(token);
+        dispatch(onLoad(res));
+      } catch (error) {
+        dispatch(setMessage("Información no encontrada."));
+      }
+    }
+  };
+
+  const fetchAsignados = async () => {
+    try {
+      dispatch(onLoadingAsignados());
+      const res = await getAsignados(token);
+      dispatch(onLoadAsignados(res));
+    } catch (error) {
+      dispatch(setMessage("Información no encontrada."));
+    }
+  };
+
+  const fetchAllAsignados = async () => {
+    try {
+      dispatch(onLoadingAsignados());
+      const res = await getaLLAsignados(token);
+      dispatch(onLoadAsignados(res));
+    } catch (error) {
+      dispatch(setMessage("Información no encontrada."));
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (empresa) {
+      if (empresa.empresaID == 1) {
+        fetchAllAsignados();
+      } else {
+        fetchAsignados();
+      }
+    }
+  }, [empresa]);
 
   return (
     <Box
@@ -95,9 +181,9 @@ function Home() {
       }}
     >
       {accesos && accesos.length > 0 ? (
-        <Grid 
-          container 
-          spacing={2} 
+        <Grid
+          container
+          spacing={2}
           sx={{ width: "80%" }}
           justifyContent="center"
           alignItems="center"
@@ -107,10 +193,12 @@ function Home() {
               <Card
                 sx={{
                   minHeight: "400px",
+                  maxWidth: "400px",
                   backgroundColor: "#f5f5f5",
-                  borderRadius: 0,
+                  borderRadius: "0px",
                   position: "relative",
-                  transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                  transition:
+                    "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
                   "&:hover": {
                     transform: "translateY(-10px)",
                     boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
@@ -119,7 +207,12 @@ function Home() {
               >
                 <CardHeader
                   title={
-                    <Typography fontWeight="bold" sx={{fontFamily:'monospace'}} >{acceso.head}</Typography>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ fontFamily: "initial" }}
+                    >
+                      {acceso.head}
+                    </Typography>
                   }
                   avatar={acceso.icono}
                   sx={{
@@ -128,54 +221,46 @@ function Home() {
                     textAlign: "end",
                   }}
                 />
-                <CardContent>
-                  <Typography
-                    variant="h6"
-                    component="div"
-                    fontSize={"18px"}
-                    fontWeight={"bold"}
-                    fontFamily={'monospace'}
-                    sx={{ minHeight: "80px", textAlign: "center" }}
-                  >
-                    {acceso.title}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    fontFamily={'monospace'}
-                    sx={{
-                      color: "text.secondary",
-                      p: 2,
-                      minHeight: "80px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {acceso.body}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    fontFamily={'monospace'}
-                    sx={{
-                      p: 2,
-                      minHeight: "20px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {acceso.estado ? "Funcionando" : "Modo Prueba"}
-                  </Typography>
-                  <CardActions
-                    sx={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <Link to={acceso.link}>
-                      <Button
-                        variant="contained"
-                        
-                        sx={{ width: "150px", borderRadius:0, background:"#0b2f6d" }}
-                      >
-                        IR
-                      </Button>
-                    </Link>
-                  </CardActions>
-                </CardContent>
+                <Link to={acceso.link} style={{ textDecoration: "none" }}>
+                  <CardContent>
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      fontSize={"18px"}
+                      fontWeight={"bold"}
+                      fontFamily={"initial"}
+                      sx={{ minHeight: "80px", textAlign: "center" }}
+                    >
+                      {acceso.title}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      fontFamily={"initial"}
+                      sx={{
+                        color: "text.secondary",
+                        p: 2,
+                        minHeight: "80px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {acceso.body}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      fontFamily={"initial"}
+                      sx={{
+                        p: 2,
+                        minHeight: "20px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {acceso.estado ? "Funcionando" : "Modo Prueba"}
+                    </Typography>
+                    <CardActions
+                      sx={{ display: "flex", justifyContent: "center" }}
+                    ></CardActions>
+                  </CardContent>
+                </Link>
               </Card>
             </Grid>
           ))}
@@ -183,7 +268,6 @@ function Home() {
       ) : null}
     </Box>
   );
-  
 }
 
 export default Home;

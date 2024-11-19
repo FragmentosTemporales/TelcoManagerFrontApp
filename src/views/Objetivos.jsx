@@ -239,32 +239,32 @@ function ObjetivosView() {
           data.map((row, index) => (
             <TableRow key={index}>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"monospace"} variant="secondary">
+                <Typography fontFamily={"initial"} variant="secondary">
                   {row.gerencia ? row.gerencia : "Sin Información"}
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"monospace"} variant="secondary">
+                <Typography fontFamily={"initial"} variant="secondary">
                   {row.sector ? row.sector : "Sin Información"}
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"monospace"} variant="secondary">
+                <Typography fontFamily={"initial"} variant="secondary">
                   {row.origen ? row.origen : "Sin Información"}
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"monospace"} variant="secondary">
+                <Typography fontFamily={"initial"} variant="secondary">
                   {row.fuente ? row.fuente : "Sin Información"}
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"monospace"} variant="secondary">
+                <Typography fontFamily={"initial"} variant="secondary">
                   {row.tipo ? row.tipo : "Sin Información"}
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"monospace"} variant="secondary">
+                <Typography fontFamily={"initial"} variant="secondary">
                   {row.facilidades ? row.facilidades : "Sin Información"}
                 </Typography>
               </TableCell>
@@ -322,7 +322,7 @@ function ObjetivosView() {
           <Typography
             variant="h5"
             fontWeight="bold"
-            fontFamily={"monospace"}
+            fontFamily={"initial"}
             sx={{ pt: 2 }}
           >
             {`Editar Info de Objetivo con ID #${id}`}
@@ -381,7 +381,7 @@ function ObjetivosView() {
       <Card sx={{ width: "90%", borderRadius: "0" }}>
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               OBJETIVOS ONNET
             </Typography>
           }

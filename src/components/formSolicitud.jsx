@@ -274,7 +274,7 @@ function FormSolicitud() {
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               FORMULARIO SOLICITUD
             </Typography>
           }

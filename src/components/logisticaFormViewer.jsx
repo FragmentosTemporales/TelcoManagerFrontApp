@@ -1,5 +1,11 @@
-import { Box, Button, Tooltip, Typography } from "@mui/material";
-import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+import {
+  Box,
+  Button,
+  CardContent,
+  Paper,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { downloadFile } from "../api/downloadApi";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -27,47 +33,60 @@ function LogisticaViewer({ data }) {
   }, [data]);
 
   return (
-    <Box
-      sx={{
-        display: "column",
-        alignItems: "flex-start",
-        mb: 2,
-        width: "100%",
-      }}
-    >
+    <>
+      <CardContent >
+        <Paper sx={{ width: "100%", textAlign: "start" }}>
       {data && data["Fecha Evento"] != "Sin información" ? (
-        <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
-            Fecha Evento:
-          </Typography>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography
-            variant="h6"
-            component="div"
-            sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
-          >
+                fontWeight="bold"
+                sx={{
+                  fontFamily: "initial",
+                  background: "#e8e8e8",
+                  p: 1,
+                  width: "30%",
+                }}
+              >Fecha Evento:
+          </Typography>
+          <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
             {`${data["Fecha Evento"]}`}
           </Typography>
         </Box>
       ) : null}
 
       {data && data["Archivo"] !== "None" ? (
-        <Box sx={{ display: "flex", p: 2 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontFamily: "monospace" }}>
-            Archivo:
-          </Typography>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography
+          fontWeight="bold"
+          sx={{
+            fontFamily: "initial",
+            background: "#e8e8e8",
+            p: 1,
+            width: "30%",
+          }}
+        >
+          Archivo:
+        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", width: "70%", p: 1 }}>
           <Tooltip title="Descargar Archivo" placement="right">
-          <Button
-            variant="contained"
-            color="info"
-            sx={{ fontWeight: "bold", ml: 2 }}
-            onClick={downloader} // Llamamos a la función cuando se hace clic
-          >
-            <SimCardDownloadIcon />
-          </Button>
+            <Button
+              onClick={downloader}
+              size="small"
+              sx={{
+                textDecoration: "none",
+                color: "#1976d2",
+                fontWeight: "bold",
+              }}
+            >
+              Descargar
+            </Button>
           </Tooltip>
         </Box>
+      </Box>
       ) : null}
-    </Box>
+    </Paper>
+      </CardContent>
+    </>
   );
 }
 

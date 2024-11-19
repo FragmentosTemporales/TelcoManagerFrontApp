@@ -115,7 +115,7 @@ function FormFlota() {
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               FORMULARIO FLOTA
             </Typography>
           }
@@ -222,6 +222,7 @@ function FormFlota() {
             <Box sx={{ mb: 2 }}>
               <InputLabel id="file-label">Archivo</InputLabel>
               <TextField
+                required
                 fullWidth
                 id="file"
                 type="file"

@@ -100,7 +100,7 @@ function Charts({ open, handleClose, message }) {
             >
               <CardHeader
                 title={
-                  <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                  <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
                     ESTADISTICA SEGUN ESTADO
                   </Typography>
                 }
@@ -130,7 +130,7 @@ function Charts({ open, handleClose, message }) {
             >
               <CardHeader
                 title={
-                  <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                  <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
                    ESTADISTICA SEGUN AREAS
                   </Typography>
                 }
@@ -160,7 +160,7 @@ function Charts({ open, handleClose, message }) {
             >
               <CardHeader
                 title={
-                  <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                  <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
                    ESTADISTICA SEGUN MOTIVOS
                   </Typography>
                 }
@@ -209,7 +209,7 @@ function Charts({ open, handleClose, message }) {
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               REPORTES
             </Typography>
           }

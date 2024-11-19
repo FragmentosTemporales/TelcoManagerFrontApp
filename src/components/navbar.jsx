@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  IconButton,
   Typography,
   AppBar,
   Toolbar,
@@ -29,7 +28,7 @@ function Navbar() {
 
   const handleLogout = () => {
     dispatch(setLogout());
-    dispatch(domsetLogout())
+    dispatch(domsetLogout());
   };
 
   const getFirstName = (nombre) => {
@@ -85,17 +84,23 @@ function Navbar() {
                   fontWeight: "bold",
                 }}
               >
-                <Tooltip title="Aplicaciones" placement="right">
-                <IconButton
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
+                <Button
+                  variant="contained"
+                  sx={{
+                    height: "40px",
+                    width: "40px",
+                    fontWeight: "bold",
+                    background: "#124fb9",
+                    borderRadius: "10px",
+                    border: "1px solid #1b86ff"
+                  }}
                 >
-                  <AppsIcon />
-                </IconButton>
-                </Tooltip>
+                  <Tooltip title="Aplicaciones" placement="right">
+                    <AppsIcon />
+                  </Tooltip>
+                </Button>
               </Link>
+
               <Link
                 to="/notificaciones"
                 style={{
@@ -106,7 +111,8 @@ function Navbar() {
                 <Tooltip title="Ver Notificaciones" placement="left">
                   <Badge badgeContent={badgelen} color="primary">
                     <Typography
-                      variant="body1" sx={{fontFamily:'monospace'}}
+                      variant="body1"
+                      sx={{ fontFamily: "initial" }}
                     >
                       ¡Hola, {nameBar}!
                     </Typography>
@@ -118,7 +124,12 @@ function Navbar() {
                   <Button
                     variant="contained"
                     color="error"
-                    sx={{ height: "40px", fontWeight: "bold", borderRadius:'25px' }}
+                    sx={{
+                      height: "40px",
+                      fontWeight: "bold",
+                      borderRadius: "10px",
+                      border:'1px solid #ff4e32'
+                    }}
                     onClick={handleLogout}
                   >
                     <LogoutIcon />

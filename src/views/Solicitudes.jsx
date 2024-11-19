@@ -119,7 +119,7 @@ function Solicitudes() {
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               FILTRAR SOLICITUDES SEGUN ESTADO
             </Typography>
           }
@@ -236,7 +236,7 @@ function Solicitudes() {
               align="center"
               sx={{ background: "#d8d8d8", fontWeight: "bold" }}
             >
-              <Typography fontFamily="monospace">
+              <Typography fontFamily="initial">
               {header}
               </Typography>
             </TableCell>
@@ -326,7 +326,7 @@ function Solicitudes() {
         ) : (
           <TableRow>
             <TableCell colSpan={6} align="center">
-            <Typography fontFamily="monospace">
+            <Typography fontFamily="initial">
               No hay datos disponibles
               </Typography>
             </TableCell>
@@ -351,7 +351,7 @@ function Solicitudes() {
           >
             <CardHeader
               title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
                   LISTA DE SOLICITUDES DE AMONESTACION
                 </Typography>
               }

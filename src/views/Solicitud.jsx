@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Divider,
   Modal,
   Skeleton,
   Table,
@@ -43,6 +44,8 @@ function Solicitud() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
 
+  const [alertInfo, setAlertInfo] = useState("error");
+
   const [logID, setLogID] = useState(undefined);
   const [estadoID, setEstadoID] = useState(undefined);
 
@@ -61,13 +64,12 @@ function Solicitud() {
   // VARIABLE CON ID DEL USUARIO CREADOR DE LA SOLICITUD
   const [validate, setValidate] = useState(undefined);
 
-  const [toNotif, setToNotif] = useState(undefined)
-
+  const [toNotif, setToNotif] = useState(undefined);
 
   const [notificacion, setNotificacion] = useState({
     nav_path: "",
     descri: "",
-    userID: toNotif || ""
+    userID: toNotif || "",
   });
 
   const title = `SOLICITUD DE AMONESTACIÓN N° ${solicitud_id}`;
@@ -94,7 +96,7 @@ function Solicitud() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontFamily="monospace"
+              fontFamily="initial"
               sx={{ pt: 2 }}
             >
               ¿Quieres Anular esta Amonestación?
@@ -135,7 +137,7 @@ function Solicitud() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontFamily="monospace"
+              fontFamily="initial"
               sx={{ pt: 2 }}
             >
               ¿Quieres Aprobar esta Amonestación?
@@ -176,7 +178,7 @@ function Solicitud() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontFamily="monospace"
+              fontFamily="initial"
               sx={{ pt: 2 }}
             >
               ¿Quieres definir como Pendiente de Evaluación Legal?
@@ -217,7 +219,7 @@ function Solicitud() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontFamily="monospace"
+              fontFamily="initial"
               sx={{ pt: 2 }}
             >
               ¿Quieres definir como Pendiente de Firma Empleador?
@@ -258,7 +260,7 @@ function Solicitud() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontFamily="monospace"
+              fontFamily="initial"
               sx={{ pt: 2 }}
             >
               ¿Quieres definir como Pendiente de Firma Trabajador?
@@ -299,7 +301,7 @@ function Solicitud() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontFamily="monospace"
+              fontFamily="initial"
               sx={{ pt: 2 }}
             >
               ¿Quieres definir como Trabajador con Licencia?
@@ -340,7 +342,7 @@ function Solicitud() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontFamily="monospace"
+              fontFamily="initial"
               sx={{ pt: 2 }}
             >
               ¿Quieres definir como Trabajador con Vacaciones?
@@ -381,7 +383,7 @@ function Solicitud() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontFamily="monospace"
+              fontFamily="initial"
               sx={{ pt: 2 }}
             >
               ¿Quieres definir como Firmada por el Trabajador?
@@ -422,7 +424,7 @@ function Solicitud() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontFamily="monospace"
+              fontFamily="initial"
               sx={{ pt: 2 }}
             >
               ¿Quieres definir como No Firmada por el Trabajador?
@@ -463,7 +465,7 @@ function Solicitud() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontFamily="monospace"
+              fontFamily="initial"
               sx={{ pt: 2 }}
             >
               ¿Quieres definir como Enviada por Correo?
@@ -495,10 +497,10 @@ function Solicitud() {
         onClick={() => {
           setEstadoID(2);
           setOpenModalAprobar(true);
-          setToNotif(3)
+          setToNotif(3);
         }}
       >
-        <Typography fontFamily="monospace">APROBAR AMONESTACION</Typography>
+        <Typography fontFamily="initial">APROBAR AMONESTACION</Typography>
       </Button>
     </>
   );
@@ -509,11 +511,11 @@ function Solicitud() {
         color="error"
         onClick={() => {
           setEstadoID(9);
-          setOpenModalAprobar(true);
-          setToNotif(validate)
+          setOpenModalRechazar(true);
+          setToNotif(validate);
         }}
       >
-        <Typography fontFamily="monospace">ANULAR AMONESTACION</Typography>
+        <Typography fontFamily="initial">ANULAR AMONESTACION</Typography>
       </Button>
     </>
   );
@@ -525,10 +527,10 @@ function Solicitud() {
         onClick={() => {
           setEstadoID(3);
           setOpenModalLegal(true);
-          setToNotif(3)
+          setToNotif(3);
         }}
       >
-        <Typography fontFamily="monospace">REQUIERE LEGAL</Typography>
+        <Typography fontFamily="initial">REQUIERE LEGAL</Typography>
       </Button>
     </>
   );
@@ -540,10 +542,10 @@ function Solicitud() {
         onClick={() => {
           setEstadoID(4);
           setOpenModalEmpleador(true);
-          setToNotif(3)
+          setToNotif(3);
         }}
       >
-        <Typography fontFamily="monospace">FIRMA EMPLEADOR</Typography>
+        <Typography fontFamily="initial">FIRMA EMPLEADOR</Typography>
       </Button>
     </>
   );
@@ -555,11 +557,11 @@ function Solicitud() {
         onClick={() => {
           setEstadoID(7);
           setOpenModalTrabajador(true);
-          setToNotif(validate)
+          setToNotif(validate);
         }}
         sx={{ width: "200px" }}
       >
-        <Typography fontFamily="monospace">FIRMA TRABAJADOR</Typography>
+        <Typography fontFamily="initial">FIRMA TRABAJADOR</Typography>
       </Button>
     </>
   );
@@ -571,11 +573,11 @@ function Solicitud() {
         onClick={() => {
           setEstadoID(5);
           setOpenModalLicencia(true);
-          setToNotif(3)
+          setToNotif(3);
         }}
         sx={{ width: "200px" }}
       >
-        <Typography fontFamily="monospace">LICENCIA MEDICA</Typography>
+        <Typography fontFamily="initial">LICENCIA MEDICA</Typography>
       </Button>
     </>
   );
@@ -587,11 +589,11 @@ function Solicitud() {
         onClick={() => {
           setEstadoID(6);
           setOpenModalVacaciones(true);
-          setToNotif(3)
+          setToNotif(3);
         }}
         sx={{ width: "200px" }}
       >
-        <Typography fontFamily="monospace">VACACIONES</Typography>
+        <Typography fontFamily="initial">VACACIONES</Typography>
       </Button>
     </>
   );
@@ -603,11 +605,11 @@ function Solicitud() {
         onClick={() => {
           setEstadoID(13);
           setOpenModalCorreo(true);
-          setToNotif(validate)
+          setToNotif(validate);
         }}
         sx={{ width: "200px" }}
       >
-        <Typography fontFamily="monospace">ENVIADA POR CORREO</Typography>
+        <Typography fontFamily="initial">ENVIADA POR CORREO</Typography>
       </Button>
     </>
   );
@@ -619,11 +621,11 @@ function Solicitud() {
         onClick={() => {
           setEstadoID(10);
           setOpenModalFirmada(true);
-          setToNotif(validate)
+          setToNotif(validate);
         }}
         sx={{ width: "200px" }}
       >
-        <Typography fontFamily="monospace">FIRMADA</Typography>
+        <Typography fontFamily="initial">FIRMADA</Typography>
       </Button>
     </>
   );
@@ -635,11 +637,11 @@ function Solicitud() {
         onClick={() => {
           setEstadoID(12);
           setOpenModalNoFirmada(true);
-          setToNotif(3)
+          setToNotif(3);
         }}
         sx={{ width: "200px" }}
       >
-        <Typography fontFamily="monospace">NO FIRMA</Typography>
+        <Typography fontFamily="initial">NO FIRMA</Typography>
       </Button>
     </>
   );
@@ -660,7 +662,7 @@ function Solicitud() {
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
             ACCIONES
           </Typography>
         }
@@ -673,6 +675,36 @@ function Solicitud() {
       <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
         {btnAprobar()}
 
+        {btnRechazar()}
+      </CardContent>
+    </Card>
+  );
+
+  const componenteAnulacion = () => (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "800px",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        borderRadius: "0",
+        mt: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            ACCIONES
+          </Typography>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "start",
+        }}
+      />
+      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
         {btnRechazar()}
       </CardContent>
     </Card>
@@ -692,7 +724,7 @@ function Solicitud() {
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
             ACCIONES
           </Typography>
         }
@@ -724,7 +756,7 @@ function Solicitud() {
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
             ACCIONES
           </Typography>
         }
@@ -754,7 +786,7 @@ function Solicitud() {
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
             ACCIONES
           </Typography>
         }
@@ -786,7 +818,7 @@ function Solicitud() {
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
             ACCIONES
           </Typography>
         }
@@ -817,7 +849,7 @@ function Solicitud() {
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
             ACCIONES
           </Typography>
         }
@@ -848,7 +880,7 @@ function Solicitud() {
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
             ACCIONES
           </Typography>
         }
@@ -878,7 +910,7 @@ function Solicitud() {
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
             ACCIONES
           </Typography>
         }
@@ -899,33 +931,39 @@ function Solicitud() {
 
   const gestionarSolicitud = async (e) => {
     e.preventDefault();
-    
+
+    setIsSubmitting(true);
+
     const formAnulacion = { logID, solicitudEstadoID: estadoID };
     const { nav_path, descri, userID } = notificacion;
-  
+
     try {
       // Crear solicitud de gestión
       const response = await createSG(formAnulacion, token);
-      
+
       // Crear notificación después de la solicitud de gestión
       await createNotificacion({ nav_path, descri, userID }, token);
-      
+
+      setAlertInfo("success");
+
       // Actualizar mensaje y abrir diálogo de éxito
       setMessage(response.message || "Gestión creada exitosamente.");
       setOpen(true);
-      
+
       // Refrescar datos y cerrar modales al terminar
-      fetchData();
+      await fetchData();
       handleCloseModal();
+      setIsSubmitting(false);
     } catch (error) {
       // Manejo de errores más específico para depuración y UX
       console.error("Error al gestionar la solicitud:", error);
       setMessage("Error al crear la gestión. Inténtalo nuevamente.");
+      setAlertInfo("error");
       setOpen(true);
       handleCloseModal();
+      setIsSubmitting(false);
     }
   };
-  
 
   const handleClose = () => {
     setOpen(false);
@@ -976,19 +1014,19 @@ function Solicitud() {
                   sx={{ background: "#d8d8d8", fontWeight: "bold" }}
                   align="center"
                 >
-                  <Typography fontFamily="monospace">FECHA</Typography>
+                  <Typography fontFamily="initial">FECHA</Typography>
                 </TableCell>
                 <TableCell
                   sx={{ background: "#d8d8d8", fontWeight: "bold" }}
                   align="center"
                 >
-                  <Typography fontFamily="monospace">ESTADO</Typography>
+                  <Typography fontFamily="initial">ESTADO</Typography>
                 </TableCell>
                 <TableCell
                   sx={{ background: "#d8d8d8", fontWeight: "bold" }}
                   align="center"
                 >
-                  <Typography fontFamily="monospace">GESTIONADO POR</Typography>
+                  <Typography fontFamily="initial">GESTIONADO POR</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -997,17 +1035,17 @@ function Solicitud() {
                 dataGestiones.map((row, index) => (
                   <TableRow key={index}>
                     <TableCell align="center">
-                      <Typography fontFamily="monospace">
+                      <Typography fontFamily="initial">
                         {extractDate(row.fecha)}
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Typography fontFamily="monospace">
+                      <Typography fontFamily="initial">
                         {row.estado}
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Typography fontFamily="monospace">
+                      <Typography fontFamily="initial">
                         {row.responsable}
                       </Typography>
                     </TableCell>
@@ -1016,7 +1054,7 @@ function Solicitud() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={3} align="center">
-                    <Typography fontFamily="monospace">
+                    <Typography fontFamily="initial">
                       Sin gestiones registradas
                     </Typography>
                   </TableCell>
@@ -1069,7 +1107,7 @@ function Solicitud() {
             <Typography
               variant="body1"
               component="div"
-              sx={{ color: "text.secondary", pb: 6, fontFamily: "monospace" }}
+              sx={{ color: "text.secondary", pb: 6, fontFamily: "initial" }}
             >
               Sin información
             </Typography>
@@ -1087,43 +1125,49 @@ function Solicitud() {
   const setSolicitudView = () => (
     <>
       <CardContent sx={{ p: 4 }}>
-        {[
-          { label: "Fecha Solicitud :", value: data.fechaSolicitud },
-          { label: "Solicitante :", value: data.solicitante },
-          { label: "Rut Solicitante :", value: data.rutSolicitante },
-          { label: "Tipo Formulario :", value: data.area },
-          { label: "Motivo :", value: data.motivo },
-          { label: "Submotivo :", value: data.submotivo },
-          { label: "Amonestado :", value: data.amonestado },
-          {
-            label: "Rut Amonestado :",
-            value: data.rutAmonestado,
-          },
-        ].map((item, index) => (
-          <Box
-            key={index}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              mb: 2,
-            }}
-          >
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ fontWeight: "bold", fontFamily: "monospace" }}
+        <Paper>
+          {[
+            { label: "Fecha Solicitud :", value: data.fechaSolicitud },
+            { label: "Solicitante :", value: data.solicitante },
+            { label: "Rut Solicitante :", value: data.rutSolicitante },
+            { label: "Tipo Formulario :", value: data.area },
+            { label: "Motivo :", value: data.motivo },
+            { label: "Submotivo :", value: data.submotivo },
+            { label: "Amonestado :", value: data.amonestado },
+            { label: "Rut Amonestado :", value: data.rutAmonestado },
+          ].map((item, index) => (
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                borderRadius: 1,
+              }}
             >
-              {item.label}
-            </Typography>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ color: "text.secondary", pl: 1, fontFamily: "monospace" }}
-            >
-              {item.value}
-            </Typography>
-          </Box>
-        ))}
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                  fontFamily: "initial",
+                  width: "30%",
+                  background: "#e8e8e8",
+                  p: 1,
+                }}
+              >
+                {item.label}
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "initial",
+                  color: "text.secondary",
+                  width: "70%",
+                  p: 1,
+                }}
+              >
+                {item.value || "Sin Información"}
+              </Typography>
+            </Box>
+          ))}
+        </Paper>
       </CardContent>
     </>
   );
@@ -1147,7 +1191,7 @@ function Solicitud() {
   useEffect(() => {
     setNotificacion((prevNotificacion) => ({
       ...prevNotificacion,
-      userID: toNotif || ""
+      userID: toNotif || "",
     }));
   }, [toNotif]);
 
@@ -1197,7 +1241,7 @@ function Solicitud() {
       {open && (
         <Alert
           onClose={handleClose}
-          severity="error"
+          severity={alertInfo}
           sx={{ mb: 3, width: "90%" }}
         >
           {message}
@@ -1252,7 +1296,7 @@ function Solicitud() {
           >
             <CardHeader
               title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
                   {title}
                 </Typography>
               }
@@ -1267,7 +1311,7 @@ function Solicitud() {
 
             <CardHeader
               title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
                   DETALLES
                 </Typography>
               }
@@ -1282,7 +1326,7 @@ function Solicitud() {
 
             <CardHeader
               title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
                   {tableTitle}
                 </Typography>
               }
@@ -1300,6 +1344,14 @@ function Solicitud() {
             {(user_id == 4) &
             (dataGestiones[0].estado == "PENDIENTE DE APROBACION")
               ? componenteAprobacion()
+              : null}
+          </Box>
+
+          {/* BOX PARA ANULAR AMONESTACIONES */}
+          <Box sx={{ width: "800px" }}>
+            {(user_id == 4) &
+            (dataGestiones[0].estado != "PENDIENTE DE APROBACION")
+              ? componenteAnulacion()
               : null}
           </Box>
 

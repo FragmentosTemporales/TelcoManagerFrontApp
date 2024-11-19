@@ -118,7 +118,7 @@ function FormPrevencion() {
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               FORMULARIO PREVENCION
             </Typography>
           }
@@ -233,6 +233,7 @@ function FormPrevencion() {
             <Box sx={{ mb: 2 }}>
               <InputLabel id="file-label">Archivo</InputLabel>
               <TextField
+                required
                 fullWidth
                 id="file"
                 type="file"

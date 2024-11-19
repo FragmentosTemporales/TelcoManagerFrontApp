@@ -5,6 +5,7 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 export const getObjetivos = async (token, gerencia, mes) => {
   try {
     const url = `${baseUrl}/get-objetivos/${gerencia}/${mes}`;
+
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -10,6 +10,8 @@ import sgReducer from "../slices/sgSlice"
 import formReducer from "../slices/formSlice"
 import notificacionReducer from "../slices/notificacionSlice"
 import dominionReducer from "../slices/dominionSlice"
+import proyectosReducer from "../slices/proyectosSlice"
+import asignadosReducer from "../slices/asignadosSlice"
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +25,8 @@ export const store = configureStore({
     sg: sgReducer,
     form: formReducer,
     notificacion: notificacionReducer,
-    dominion: dominionReducer
+    dominion: dominionReducer,
+    proyectos: proyectosReducer,
+    asignados: asignadosReducer
   },
 });

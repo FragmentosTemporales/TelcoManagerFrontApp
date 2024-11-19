@@ -49,6 +49,21 @@ const filterData = [
     descri: "FIRMADA",
     hab: "1",
   },
+  {
+    solicitudEstadoID: "11",
+    descri: "PENDIENTE DE APROBACION",
+    hab: "1",
+  },
+  {
+    solicitudEstadoID: "12",
+    descri: "NO FIRMADA",
+    hab: "1",
+  },
+  {
+    solicitudEstadoID: "13",
+    descri: "ENVIADA POR CORREO",
+    hab: "1",
+  }
 ];
 
 export default filterData;

@@ -17,6 +17,12 @@ import ReversaView from "./views/Reversa";
 import Charts from "./views/Charts";
 import CreateZone from "./views/CreateZone";
 import ObjetivosView from "./views/Objetivos";
+import ProyectosView from "./views/Proyectos";
+import AsignadosView from "./views/AsignadosView";
+import Asignado from "./views/AsignadoView";
+import FormAstCreate from "./views/FormAstView";
+import FormAstList from "./views/AstListView";
+import AstViewer from "./views/AstFormView";
 
 function App() {
   return (
@@ -39,6 +45,12 @@ function App() {
           <Route path="/reversa" element={<ReversaView />} />
           <Route path="/createzone" element={<CreateZone />} />
           <Route path="/objetivos" element={<ObjetivosView />} />
+          <Route path="/proyectos" element={<ProyectosView />} />
+          <Route path="/asignados" element={<AsignadosView />} />
+          <Route path="/asignado/:proyectoID" element={<Asignado />} />
+          <Route path="/form-ast" element={<FormAstCreate />} />
+          <Route path="/form-ast-list" element={<FormAstList />} />
+          <Route path="/formulario-ast/:formID" element={<AstViewer />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>

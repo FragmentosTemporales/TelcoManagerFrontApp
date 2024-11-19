@@ -183,7 +183,7 @@ function PermisosList() {
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               PERMISOS
             </Typography>
           }
@@ -201,7 +201,7 @@ function PermisosList() {
           >
             <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
               <FormControl variant="filled">
-                <InputLabel id="user-label" sx={{ fontFamily: "monospace" }}>
+                <InputLabel id="user-label" sx={{ fontFamily: "initial" }}>
                   Usuario
                 </InputLabel>
                 <Select
@@ -221,7 +221,7 @@ function PermisosList() {
                     <MenuItem key={option.value} value={option.value}>
                       <Typography
                         fontWeight="bold"
-                        sx={{ fontFamily: "monospace" }}
+                        sx={{ fontFamily: "initial" }}
                       >
                         {option.label}
                       </Typography>
@@ -233,7 +233,7 @@ function PermisosList() {
 
             <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
               <FormControl variant="filled">
-                <InputLabel id="modulo-label" sx={{ fontFamily: "monospace" }}>
+                <InputLabel id="modulo-label" sx={{ fontFamily: "initial" }}>
                   Modulo
                 </InputLabel>
                 <Select
@@ -253,7 +253,7 @@ function PermisosList() {
                     <MenuItem key={option.value} value={option.value}>
                       <Typography
                         fontWeight="bold"
-                        sx={{ fontFamily: "monospace" }}
+                        sx={{ fontFamily: "initial" }}
                       >
                         {option.label}
                       </Typography>
@@ -273,7 +273,7 @@ function PermisosList() {
                 />
               }
               label={
-                <Typography sx={{ fontFamily: "monospace" }}>Acceso</Typography>
+                <Typography sx={{ fontFamily: "initial" }}>Acceso</Typography>
               }
               sx={{ mb: 2 }}
             />
@@ -288,7 +288,7 @@ function PermisosList() {
                 />
               }
               label={
-                <Typography sx={{ fontFamily: "monospace" }}>Leer</Typography>
+                <Typography sx={{ fontFamily: "initial" }}>Leer</Typography>
               }
               sx={{ mb: 2 }}
             />
@@ -303,7 +303,7 @@ function PermisosList() {
                 />
               }
               label={
-                <Typography sx={{ fontFamily: "monospace" }}>Editar</Typography>
+                <Typography sx={{ fontFamily: "initial" }}>Editar</Typography>
               }
               sx={{ mb: 2 }}
             />
@@ -315,7 +315,7 @@ function PermisosList() {
                 sx={{ background: "#0b2f6d", fontWeight: "bold" }}
                 disabled={isSubmitting}
               >
-                <Typography sx={{ fontFamily: "monospace" }}>
+                <Typography sx={{ fontFamily: "initial" }}>
                   {isSubmitting ? "Procesando..." : "Crear"}
                 </Typography>
               </Button>
@@ -339,7 +339,7 @@ function PermisosList() {
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               GESTIONAR PERMISOS POR USUARIO
             </Typography>
           }
@@ -357,7 +357,7 @@ function PermisosList() {
           >
             <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
               <FormControl variant="filled">
-                <InputLabel id="user-label" sx={{ fontFamily: "monospace" }}>
+                <InputLabel id="user-label" sx={{ fontFamily: "initial" }}>
                   Usuario
                 </InputLabel>
                 <Select
@@ -370,7 +370,7 @@ function PermisosList() {
                 >
                   {dataUsers.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
-                      <Typography fontFamily="monospace">
+                      <Typography fontFamily="initial">
                         {option.label}
                       </Typography>
                     </MenuItem>
@@ -386,7 +386,7 @@ function PermisosList() {
                 sx={{ background: "#0b2f6d", fontWeight: "bold" }}
                 disabled={isSubmitting}
               >
-                <Typography fontFamily="monospace">
+                <Typography fontFamily="initial">
                   {isSubmitting ? "Procesando..." : "Consultar"}
                 </Typography>
               </Button>
@@ -408,7 +408,7 @@ function PermisosList() {
                 align="center"
                 sx={{ background: "#d8d8d8", fontWeight: "bold" }}
               >
-                <Typography fontFamily="monospace">{header}</Typography>
+                <Typography fontFamily="initial">{header}</Typography>
               </TableCell>
             )
           )}
@@ -429,12 +429,12 @@ function PermisosList() {
           dataPermisos.map((row, index) => (
             <TableRow key={index}>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"monospace"} variant="secondary">
+                <Typography fontFamily={"initial"} variant="secondary">
                   {row.modulo ? row.modulo.nombre : "Sin Información"}
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"monospace"} variant="secondary">
+                <Typography fontFamily={"initial"} variant="secondary">
                   {row.access ? (
                     <Chip label="SI" color="success" />
                   ) : (
@@ -443,7 +443,7 @@ function PermisosList() {
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"monospace"} variant="secondary">
+                <Typography fontFamily={"initial"} variant="secondary">
                   {row.edit ? (
                     <Chip label="SI" color="success" />
                   ) : (
@@ -452,7 +452,7 @@ function PermisosList() {
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"monospace"} variant="secondary">
+                <Typography fontFamily={"initial"} variant="secondary">
                   {row.read ? (
                     <Chip label="SI" color="success" />
                   ) : (
@@ -486,7 +486,7 @@ function PermisosList() {
         ) : (
           <TableRow>
             <TableCell colSpan={5} align="center">
-              <Typography fontFamily="monospace">
+              <Typography fontFamily="initial">
                 No hay datos disponibles
               </Typography>
             </TableCell>
@@ -541,7 +541,7 @@ function PermisosList() {
           <Typography
             variant="h5"
             fontWeight="bold"
-            fontFamily={"monospace"}
+            fontFamily={"initial"}
             sx={{ pt: 2 }}
           >
             {`Editar Info de Permiso con ID #${id}`}

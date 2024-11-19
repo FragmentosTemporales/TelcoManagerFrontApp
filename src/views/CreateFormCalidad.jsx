@@ -82,9 +82,7 @@ import {
         setOpen(true);
       }
     };
-  
-    useEffect(()=>{console.log(form)},[form])
-  
+    
     return (
       <Box
         sx={{
@@ -113,7 +111,7 @@ import {
         >
           <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               FORMULARIO CALIDAD
             </Typography>
           }
@@ -206,6 +204,7 @@ import {
               <Box sx={{ mb: 2 }}>
                 <InputLabel id="file-label">Archivo</InputLabel>
                 <TextField
+                  required
                   fullWidth
                   id="file"
                   type="file"

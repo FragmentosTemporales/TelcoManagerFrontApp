@@ -88,7 +88,7 @@ function Login() {
       <Card sx={{ width: {lg:"30%", md:"70%", xs:"90%" }, borderRadius: "0px", boxShadow: 5, minWidth: "450px" }}>
       <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               INICIAR SESION
             </Typography>
           }

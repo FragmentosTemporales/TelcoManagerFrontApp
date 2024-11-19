@@ -104,7 +104,7 @@ import {
         >
           <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "monospace" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               FORMULARIO LOGISTICA
             </Typography>
           }
@@ -140,6 +140,7 @@ import {
               <Box sx={{ mb: 2 }}>
                 <InputLabel id="file-label">Archivo</InputLabel>
                 <TextField
+                  required
                   fullWidth
                   id="file"
                   type="file"
