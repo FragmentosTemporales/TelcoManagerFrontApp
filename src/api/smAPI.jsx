@@ -13,7 +13,7 @@ export const createSubMotivo = async (payload, token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -28,7 +28,7 @@ export const getSubMotivo = async (token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -44,7 +44,7 @@ export const getUniqueSubMotivo = async (token, submotivo_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -60,7 +60,7 @@ export const getSubMotivoList = async (token, motivo_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -77,7 +77,7 @@ export const updateSubMotivo = async (token, motivo_id, payload) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -93,6 +93,6 @@ export const deleteSubMotivo = async (token, motivo_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };

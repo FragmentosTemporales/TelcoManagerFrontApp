@@ -5,8 +5,8 @@ const state = {
   is_load: false,
   domMessage: null,
   data: null,
-  domToken: localStorage.getItem("domToken") || null,
-  domTokenType: localStorage.getItem("domTokenType") || null,
+  domToken: null,
+  domTokenType: null,
 };
 
 export const dominionSlice = createSlice({
@@ -28,9 +28,6 @@ export const dominionSlice = createSlice({
       state.domMessage = payload.message;
       state.domToken = payload.token;
       state.domTokenType = payload.token_type;
-
-      localStorage.setItem("domToken", payload.token);
-      localStorage.setItem("domTokenType", payload.token_type);
     },
     domLoad: (state, action) => {
       const payload = action.payload;

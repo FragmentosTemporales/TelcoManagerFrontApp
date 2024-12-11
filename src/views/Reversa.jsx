@@ -373,6 +373,7 @@ function ReversaView() {
         justifyContent: "center",
         alignItems: "center",
         height: "100%",
+        minHeight: "85vh",
         width: "100%",
         paddingTop: 8,
         mt: 2,

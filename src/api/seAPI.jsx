@@ -13,7 +13,7 @@ export const createSolicitudEstado = async (payload, token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -28,7 +28,7 @@ export const getSolicitudEstado = async (token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -44,7 +44,7 @@ export const getUniqueSolicitudEstado = async (token, se_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -61,7 +61,7 @@ export const updateSolicitudEstado = async (token, se_id, payload) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -77,6 +77,6 @@ export const deleteSolicitudEstado = async (token, se_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };

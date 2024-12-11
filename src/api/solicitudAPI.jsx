@@ -13,7 +13,7 @@ export const createSolicitud = async (payload, token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -29,7 +29,7 @@ export const getSolicitudes = async (token, page) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -46,7 +46,7 @@ export const getFilteredSolicitudes = async (token, estadoID, page) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -62,7 +62,7 @@ export const getUniqueSolicitud = async (token, solicitud_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -79,7 +79,7 @@ export const updateSolicitud = async (token, solicitud_id, payload) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -95,6 +95,6 @@ export const deleteSolicitud = async (token, solicitud_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };

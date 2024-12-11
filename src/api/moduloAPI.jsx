@@ -13,7 +13,6 @@ export const getModulos = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error);
-    throw new Error("Failed to fetch notifications");
+    throw error.response.data.error;
   }
 };

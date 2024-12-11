@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Card,
   Chip,
   CardHeader,
@@ -15,23 +16,30 @@ import {
   Typography,
 } from "@mui/material";
 import BallotIcon from "@mui/icons-material/Ballot";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import {
+  onLoad as onLoadAsignados,
+  onLoading as onLoadingAsignados,
+} from "../slices/asignadosSlice";
+import {
+  getAsignados,
+  getaLLAsignados,
+} from "../api/proyectoAPI";
 
 function AsignadosView() {
-  const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
   const asignadosState = useSelector((state) => state.asignados);
-  const { token, permisos } = authState;
-  const { data } = asignadosState;
+  const { permisos, token, empresa } = authState;
+  const { data, pages } = asignadosState;
   const [moduloPermiso, setModuloPermiso] = useState(null);
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const info = permisos.find((item) => item.moduloID == 6);
@@ -73,6 +81,68 @@ function AsignadosView() {
     </>
   );
 
+  const handlePage = (newPage) => setPage(newPage);
+
+  const getButtons = () => (
+    <>
+      <Button
+        key="prev"
+        variant="contained"
+        onClick={() => handlePage(page - 1)}
+        disabled={page === 1}
+        sx={{ background: "#0b2f6d" }}
+      >
+        <ArrowBackIosIcon />
+      </Button>
+      <Button key="current" variant="contained" sx={{ background: "#0b2f6d" }}>
+        {page}
+      </Button>
+      <Button
+        key="next"
+        variant="contained"
+        onClick={() => handlePage(page + 1)}
+        disabled={page === pages}
+        sx={{ background: "#0b2f6d" }}
+      >
+        <ArrowForwardIosIcon />
+      </Button>
+    </>
+  );
+
+  const fetchAsignados = async () => {
+    try {
+      dispatch(onLoadingAsignados());
+      const res = await getAsignados(token, page);
+      dispatch(onLoadAsignados(res));
+    } catch (error) {
+      dispatch(setMessage("Información no encontrada."));
+    }
+  };
+
+  const fetchAllAsignados = async () => {
+    try {
+      dispatch(onLoadingAsignados());
+      const res = await getaLLAsignados(token, page);
+      dispatch(onLoadAsignados(res));
+    } catch (error) {
+      dispatch(setMessage("Información no encontrada."));
+    }
+  };
+
+  const fetchData = async () => {
+    if (empresa) {
+      if (empresa.empresaID == 1) {
+        fetchAllAsignados();
+      } else {
+        fetchAsignados();
+      }
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [page]);
+
   return (
     <Box
       sx={{
@@ -85,6 +155,7 @@ function AsignadosView() {
         overflow: "auto",
         paddingTop: 8,
         paddingBottom: "50px",
+        minHeight: "80vh",
       }}
     >
       <>
@@ -150,17 +221,65 @@ function AsignadosView() {
                           ? row.empresa.nombre
                           : "Sin Información"}
                       </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{ fontFamily: "initial" }}
-                      >
+                      <TableCell align="center" sx={{ fontFamily: "initial" }}>
                         {row.proyectoID ? row.proyectoID : "Sin Información"}
                       </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        <Chip color="success" />
+                      <TableCell align="center" sx={{ fontFamily: "initial" }}>
+                        {row.estado && row.estado.descri ? (
+                          (() => {
+                            switch (row.estado.descri) {
+                              case "Iniciado":
+                                return (
+                                  <Chip
+                                    color="success"
+                                    label="Iniciado"
+                                    sx={{ width: "200px" }}
+                                  />
+                                );
+                              case "Asignado contratista":
+                                return (
+                                  <Chip
+                                    color="primary"
+                                    label="Asignado contratista"
+                                    sx={{ width: "200px" }}
+                                  />
+                                );
+                              case "Asignado componente":
+                                return (
+                                  <Chip
+                                    color="warning"
+                                    label="Asignado componente"
+                                    sx={{ width: "200px" }}
+                                  />
+                                );
+                              case "En Ejecucion":
+                                return (
+                                  <Chip
+                                    color="info"
+                                    label="En Ejecución"
+                                    sx={{ width: "200px" }}
+                                  />
+                                );
+                              case "Finalizado":
+                                return (
+                                  <Chip
+                                    color="secondary"
+                                    label="Finalizado"
+                                    sx={{ width: "200px" }}
+                                  />
+                                );
+                              default:
+                                return (
+                                  <Chip
+                                    color="default"
+                                    label="Estado Desconocido"
+                                  />
+                                );
+                            }
+                          })()
+                        ) : (
+                          <Chip color="default" label="Sin Estado" />
+                        )}
                       </TableCell>
 
                       <TableCell align="center">
@@ -207,6 +326,13 @@ function AsignadosView() {
             </Table>
           </TableContainer>
         </Card>
+        <ButtonGroup
+            size="small"
+            aria-label="pagination-button-group"
+            sx={{ p: 2 }}
+          >
+            {getButtons()}
+          </ButtonGroup>
       </>
     </Box>
   );

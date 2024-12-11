@@ -13,7 +13,7 @@ export const createPersona = async (payload, token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -28,7 +28,7 @@ export const getPersona = async (token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -44,7 +44,7 @@ export const getUniquePersona = async (token, persona_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -62,7 +62,7 @@ export const updatePersona = async (token, persona_id, payload) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -78,6 +78,6 @@ export const deletePersona = async (token, persona_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };

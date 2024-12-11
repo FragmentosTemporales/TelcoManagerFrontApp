@@ -13,7 +13,7 @@ export const createSG = async (payload, token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -28,7 +28,7 @@ export const getSG = async (token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -44,7 +44,7 @@ export const getUniqueSG = async (token, sg_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -60,7 +60,7 @@ export const getSGList = async (token, logID) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -77,7 +77,7 @@ export const updateSG = async (token, sg_id, payload) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -93,6 +93,6 @@ export const deleteSG = async (token, motivo_id) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };

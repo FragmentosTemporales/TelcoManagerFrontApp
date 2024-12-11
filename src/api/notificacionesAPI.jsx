@@ -13,7 +13,7 @@ export const createNotificacion = async (payload, token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -28,8 +28,7 @@ export const getNotificaciones = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error); // Log the full error object
-    throw new Error("Failed to fetch notifications");
+    throw error.response.data.error;
   }
 };
 
@@ -45,7 +44,6 @@ export const updateNotificacion = async (token, payload, id) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error updating notifications:", error);
-    throw new Error("Failed in update notifications");
+    throw error.response.data.error;
   }
 }

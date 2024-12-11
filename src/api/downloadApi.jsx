@@ -32,3 +32,23 @@ export const downloadFile = async (payload, token) => {
   }
 };
 
+export const fetchFileUrl = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/view-image`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      responseType: "blob",
+    });
+
+    // Crea un objeto URL temporal
+    const fileUrl = URL.createObjectURL(response.data);
+    return fileUrl;
+
+  } catch (error) {
+    console.error("Error al obtener el archivo:", error.message);
+    throw error;
+  }
+};

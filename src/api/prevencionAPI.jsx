@@ -13,7 +13,7 @@ export const createAST = async (payload, token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -29,8 +29,7 @@ export const getAstList = async (token, page) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching AST List:", error);
-    throw new Error("Failed to fetch AST List");
+    throw error.response.data.error;
   }
 };
 
@@ -46,8 +45,7 @@ export const getAstListUser  = async (token, ID, page) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error);
-    throw new Error("Failed to fetch notifications");
+    throw error.response.data.error;
   }
 };
 
@@ -63,7 +61,6 @@ export const getAst  = async (token, ID) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error);
-    throw new Error("Failed to fetch notifications");
+    throw error.response.data.error;
   }
 };

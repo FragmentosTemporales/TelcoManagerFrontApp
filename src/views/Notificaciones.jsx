@@ -11,14 +11,17 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from "@mui/material";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
-import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { onLoad, onLoading } from "../slices/notificacionSlice";
-import { updateNotificacion, getNotificaciones } from "../api/notificacionesAPI";
+import {
+  updateNotificacion,
+  getNotificaciones,
+} from "../api/notificacionesAPI";
 
 function NotificacionesView() {
   const dispatch = useDispatch();
@@ -31,7 +34,7 @@ function NotificacionesView() {
     try {
       const data = { read: true };
       await updateNotificacion(token, data, id);
-      fetchData()
+      fetchData();
     } catch (error) {
       console.log(error);
     }
@@ -55,6 +58,7 @@ function NotificacionesView() {
         alignItems: "center",
         justifyContent: "center",
         height: "100%",
+        minHeight: "85vh",
         width: "100%",
         overflow: "auto",
         paddingTop: 8,
@@ -83,18 +87,18 @@ function NotificacionesView() {
           }}
         >
           <CardHeader
-          title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              NOTIFICACIONES
-            </Typography>
-          }
-          avatar={<CircleNotificationsIcon/>}
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "end",
-          }}
-        />
+            title={
+              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                NOTIFICACIONES
+              </Typography>
+            }
+            avatar={<CircleNotificationsIcon />}
+            sx={{
+              background: "#0b2f6d",
+              color: "white",
+              textAlign: "end",
+            }}
+          />
           <TableContainer
             component={Paper}
             sx={{ width: "100%", height: "100%", overflow: "auto" }}
@@ -102,7 +106,7 @@ function NotificacionesView() {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {["FECHA", "DESCRIPCION", "ESTADO","IR"].map((header) => (
+                  {["FECHA", "DESCRIPCION", "ESTADO", "IR"].map((header) => (
                     <TableCell
                       key={header}
                       align="center"
@@ -120,11 +124,11 @@ function NotificacionesView() {
                       <TableCell align="center">{row.fecha}</TableCell>
                       <TableCell align="center">{row.descri}</TableCell>
                       <TableCell align="center">
-              <Chip
-                label={row.read ? "Leído" : "No leído"}
-                color={row.read ? "success" : "warning"}
-              />
-            </TableCell>
+                        <Chip
+                          label={row.read ? "Leído" : "No leído"}
+                          color={row.read ? "success" : "warning"}
+                        />
+                      </TableCell>
                       <TableCell align="center">
                         <Link to={row.nav_path}>
                           <Button

@@ -12,7 +12,7 @@ const tecnicosData = [
   {
     label: "27472856-6 ANGEL GABRIEL PEREZ PEREZ",
     value: "27472856-6",
-    frecuencia: "MARTES",
+    frecuencia: "JUEVES",
   },
   {
     label: "18746332-7 DIEGO FRANCISCO ALFARO VILLABLANCA",
@@ -27,7 +27,7 @@ const tecnicosData = [
   {
     label: "25973145-3 JONATHAN DAVID CARABALLO MARTINEZ",
     value: "25973145-3",
-    frecuencia: "MARTES",
+    frecuencia: "JUEVES",
   },
   {
     label: "17840112-2 PATRICIO ANDRES ACEVEDO VARGAS",
@@ -37,7 +37,7 @@ const tecnicosData = [
   {
     label: "26452143-2 CIPRIANI ALEXANDER SALAVARRIA NORIEGA",
     value: "26452143-2",
-    frecuencia: "MARTES",
+    frecuencia: "JUEVES",
   },
   {
     label: "15648746-5 JORGE CEBALLOS HERNANDEZ",
@@ -57,7 +57,7 @@ const tecnicosData = [
   {
     label: "26909268-8 YOHAN EDUARDO OSTOS GUZMAN",
     value: "26909268-8",
-    frecuencia: "MARTES",
+    frecuencia: "MIERCOLES",
   },
   {
     label: "17304573-5 CARLOS JAVIER GUTIERREZ QUEZADA",
@@ -493,6 +493,76 @@ const tecnicosData = [
     label: "18854981-0 SEBASTIAN EDUARDO SANHUEZA VARGAS",
     value: "18854981-0",
     frecuencia: "VIERNES",
+  },
+  {
+    label: "26799095-6 GUSTAVO DAVID GUDIÑO SIRIT",
+    value: "26799095-6",
+    frecuencia: "MIERCOLES",
+  },
+  {
+    label: "21186855-4 JORGE ARMANDO ALFARO MORENO",
+    value: "21186855-4",
+    frecuencia: "VIERNES",
+  },
+  {
+    label: "26170863-9 KEVIN ANTHONY GARCIA BARRENO",
+    value: "26170863-9",
+    frecuencia: "MIERCOLES",
+  },
+  {
+    label: "26967919-0 MANUEL DAVID MOLINA TACHAU",
+    value: "26967919-0",
+    frecuencia: "JUEVES",
+  },
+  {
+    label: "27330685-4 XAVIER JESUS ALTAMAR TORREALBA",
+    value: "27330685-4",
+    frecuencia: "JUEVES",
+  },
+  {
+    label: "26897630-2 REFFERSON DEMOSTHENE",
+    value: "26897630-2",
+    frecuencia: "MIERCOLES",
+  },
+  {
+    label: "17666364-2 RAPHAEL NICOLAS MOLINA BENITEZ",
+    value: "17666364-2",
+    frecuencia: "JUEVES",
+  },
+  {
+    label: "25070287-6 WILLIAM HOYOS",
+    value: "25070287-6",
+    frecuencia: "VIERNES",
+  },
+  {
+    label: "26667986-6 YOSCAR YIBARO RIOS LIMONCHE",
+    value: "26667986-6",
+    frecuencia: "VIERNES",
+  },
+  {
+    label: "26115347-5 LUIS ANTONIO ORTEGA BARRENO",
+    value: "26115347-5",
+    frecuencia: "VIERNES",
+  },
+  {
+    label: "28230433-3 JULIO RAMON RAMIREZ CONTRERAS",
+    value: "28230433-3",
+    frecuencia: "VIERNES",
+  },
+  {
+    label: "26591976-6 JUAN CARLOS PARRA DIAZ",
+    value: "26591976-6",
+    frecuencia: "VIERNES",
+  },
+  {
+    label: "27012031-8 JESUS RICARDO ACOSTA COLINA",
+    value: "27012031-8",
+    frecuencia: "VIERNES",
+  },
+  {
+    label: "19731733-7 DIEGO MOISES PINTO FIGUEROA",
+    value: "19731733-7",
+    frecuencia: "JUEVES",
   },
 ];
 export default tecnicosData;

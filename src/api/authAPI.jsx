@@ -34,7 +34,7 @@ export const onLoginDominion = async (payload) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -50,7 +50,7 @@ export const createUser = async (payload, token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
 
@@ -65,7 +65,22 @@ export const getUsers = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error);
-    throw new Error("Failed to fetch notifications");
+    throw error.response.data.error;
   }
 };
+
+export const updatePass = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/update-password`;
+    const response = await axios.put(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response)
+    return response;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+}

@@ -4,6 +4,8 @@ const state = {
   is_loading: false,
   is_load: false,
   data: null,
+  pages: null,
+  message: null,
 };
 
 export const asignadosSlice = createSlice({
@@ -17,7 +19,8 @@ export const asignadosSlice = createSlice({
     },
     onLoad: (state, action ) => {
       const payload = action.payload;
-      state.data = payload
+      state.data = payload.data,
+      state.pages = payload.pages
       state.is_loading = false,
       state.is_load = true;
     },

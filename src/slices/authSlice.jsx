@@ -4,13 +4,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const state = {
   is_loading: false,
   is_load: false,
-  token: localStorage.getItem('token') || null,
-  nombre: localStorage.getItem('nombre') || null,
-  numDoc: localStorage.getItem('numDoc') || null,
-  user_id: localStorage.getItem('user_id') || null,
-  correo: localStorage.getItem('correo') || null,
-  permisos: JSON.parse(localStorage.getItem('permisos')) || null,
-  empresa: JSON.parse(localStorage.getItem('empresa')) || null,
+  token: null,
+  nombre: null,
+  numDoc: null,
+  user_id: null,
+  correo: null,
+  permisos: null,
+  empresa: null,
   message: null,
 };
 
@@ -53,13 +53,6 @@ export const authSlice = createSlice({
       state.empresa = usuario.empresa
       state.is_loading = false;
       state.is_load = true;
-
-      localStorage.setItem('correo', usuario.correo);
-      localStorage.setItem('token', usuario.token);
-      localStorage.setItem('user_id', usuario.userID);
-      localStorage.setItem('nombre', usuario.nombre);
-      localStorage.setItem('permisos', JSON.stringify(usuario.permisos));
-      localStorage.setItem('empresa', JSON.stringify(usuario.empresa));
     },
     setMessage: (state, action) => {
       state.message = action.payload;

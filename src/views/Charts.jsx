@@ -190,6 +190,7 @@ function Charts({ open, handleClose, message }) {
         justifyContent: "center",
         alignItems: "center",
         height: "100%",
+        minHeight: "85vh",
         paddingTop: 8,
         mt: 2,
       }}

@@ -14,7 +14,7 @@ export const getSGEstados = async (token) => {
       });
       return response.data;
     } catch (error) {
-      throw error.message;
+      throw error.response.data.error;
     }
   };
 
@@ -30,7 +30,7 @@ export const getAreaStats = async (token) => {
       });
       return response.data;
     } catch (error) {
-      throw error.message;
+      throw error.response.data.error;
     }
   };
 
@@ -46,6 +46,6 @@ export const getMotivoStats = async (token) => {
       });
       return response.data;
     } catch (error) {
-      throw error.message;
+      throw error.response.data.error;
     }
   };

@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import BarChartIcon from "@mui/icons-material/BarChart";
+import SettingsIcon from '@mui/icons-material/Settings';
 import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
@@ -35,10 +36,8 @@ import { useEffect, useState } from "react";
 function Home() {
   const authState = useSelector((state) => state.auth);
   const proyectoState = useSelector((state) => state.proyectos);
-  const asignadosState = useSelector((state) => state.asignados);
   const { permisos, token, empresa } = authState;
   const { data: dataProyecto } = proyectoState;
-  const { data: dataAsignadosState } = asignadosState;
 
   const dispatch = useDispatch();
 
@@ -138,7 +137,7 @@ function Home() {
   const fetchAsignados = async () => {
     try {
       dispatch(onLoadingAsignados());
-      const res = await getAsignados(token);
+      const res = await getAsignados(token, 1);
       dispatch(onLoadAsignados(res));
     } catch (error) {
       dispatch(setMessage("Información no encontrada."));
@@ -148,7 +147,7 @@ function Home() {
   const fetchAllAsignados = async () => {
     try {
       dispatch(onLoadingAsignados());
-      const res = await getaLLAsignados(token);
+      const res = await getaLLAsignados(token, 1);
       dispatch(onLoadAsignados(res));
     } catch (error) {
       dispatch(setMessage("Información no encontrada."));

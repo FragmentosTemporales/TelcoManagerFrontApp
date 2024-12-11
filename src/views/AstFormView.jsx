@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -49,6 +50,20 @@ function AstViewer() {
         padding: 8,
       }}
     >
+      <Box
+            sx={{
+              width: "90%",
+              overflow: "hidden",
+              borderRadius: "0",
+              mt: 3,
+            }}
+          >
+            <Link to="/form-ast-list">
+              <Button variant="contained" sx={{ background: "#0b2f6d", borderRadius: "0", }}>
+                Volver
+              </Button>
+            </Link>
+          </Box>
       {isLoading ? (
         <Box
           sx={{
@@ -140,7 +155,8 @@ function AstViewer() {
                   { label: "¿Existe riesgo de una descarga eléctrica?", value: data.descargaElectrica },
                   { label: "¿Existe riesgo de una caída en altura?", value: data.caidaAltura },
                   { label: "¿Existe riesgo de tropiezo?", value: data.tropiezo },
-                  { label: "¿Existe la posibilidad de una distensión muscular, producto de un levantamiento, flexión o dislocación?", value: data.distensionMuscular }
+                  { label: "¿Existe la posibilidad de una distensión muscular, producto de un levantamiento, flexión o dislocación?", value: data.distensionMuscular },
+                  { label: "Medidas de control definidas", value: data.observacion }
                 ].map((item, index) => (
                   <Box>
                     <Typography

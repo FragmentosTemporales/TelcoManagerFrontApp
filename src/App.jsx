@@ -23,6 +23,10 @@ import Asignado from "./views/AsignadoView";
 import FormAstCreate from "./views/FormAstView";
 import FormAstList from "./views/AstListView";
 import AstViewer from "./views/AstFormView";
+import SuccessView from "./views/SuccessView";
+import ComponenteAsignadoView from "./views/ComponenteAsignadoView";
+import Footer from "./components/footer";
+import Settings from "./views/Settings";
 
 function App() {
   return (
@@ -51,9 +55,13 @@ function App() {
           <Route path="/form-ast" element={<FormAstCreate />} />
           <Route path="/form-ast-list" element={<FormAstList />} />
           <Route path="/formulario-ast/:formID" element={<AstViewer />} />
+          <Route path="/success" element={<SuccessView/>} />
+          <Route path="/configuraciones" element={<Settings/>} />
+          <Route path="/componente-asignado/:componenteID" element={<ComponenteAsignadoView/>} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>
+      <Footer/>
     </BrowserRouter>
   );
 }

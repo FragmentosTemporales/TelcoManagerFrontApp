@@ -1,4 +1,5 @@
 import {
+  Alert,
   Autocomplete,
   Box,
   Button,
@@ -6,6 +7,8 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Grid,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -18,12 +21,13 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SearchIcon from "@mui/icons-material/Search";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { getUsers } from "../api/authAPI";
 import { getAstList, getAstListUser } from "../api/prevencionAPI";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
+import astData from "../data/astData.jsx"
 
 function FormAstList() {
   const authState = useSelector((state) => state.auth);
@@ -34,12 +38,15 @@ function FormAstList() {
   const [tecnicoID, setTecnicoID] = useState("");
   const [page, setPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [open,setOpen] = useState(false)
+  const [mensaje, setMensaje] = useState(undefined)
   const handlePage = (newPage) => setPage(newPage);
 
   const fetchData = async () => {
     try {
       setIsSubmitting(true);
+      setIsLoading(true)
       const res =
         tecnicoID === ""
           ? await getAstList(token, page)
@@ -47,9 +54,12 @@ function FormAstList() {
       setData(res.data);
       setPages(res.pages);
       setIsSubmitting(false);
+      setIsLoading(false);
     } catch (error) {
-      console.log(error);
+
+      setIsLoading(false);
       setIsSubmitting(false);
+      setOpen(true)
     }
   };
   const setTable = () => (
@@ -64,10 +74,14 @@ function FormAstList() {
       </TableContainer>
     </>
   );
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   const handleClear = async (e) => {
     e.preventDefault();
-    setTecnicoID("");
+    setTecnicoID(undefined);
   };
 
   const getButtons = () => (
@@ -125,21 +139,24 @@ function FormAstList() {
         />
         {dataUsers ? (
           <CardContent>
-            <form>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                }}
-              >
+          <form>
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                justifyContent: "space-around",
+                alignItems: "center",
+              }}
+            >
+              <Grid item xs={12} md={12} lg={6} sx={{width:'100%'}}>
                 <Autocomplete
                   value={
-                    dataUsers.find((option) => option.value === tecnicoID) ||
-                    null
-                  } // Aseguramos que el valor sea un objeto o null
+                    dataUsers.find((option) => option.value === tecnicoID) || null
+                  }
                   onChange={(event, newValue) => {
-                    setTecnicoID(newValue ? newValue.value : ""); // Si newValue es null, asignamos una cadena vacía
+                    setTecnicoID(newValue ? newValue.value : "");
                   }}
                   options={dataUsers}
                   getOptionLabel={(option) => option.label}
@@ -148,40 +165,46 @@ function FormAstList() {
                       {...params}
                       label="Trabajador"
                       required
-                      sx={{ minWidth: "200px", height: "40px" }}
+                      sx={{ width: "100%" }}
                     />
                   )}
                 />
-
+              </Grid>
+        
+              <Grid item xs={12} md={12} lg={3} sx={{width:'100%'}}>
                 <Button
                   variant="contained"
                   onClick={handleClear}
                   sx={{
                     fontWeight: "bold",
                     background: "#0b2f6d",
-                    minWidth: "200px",
+                    width: "100%",
                     height: "40px",
                   }}
                 >
                   LIMPIAR FILTROS
                 </Button>
-
+              </Grid>
+        
+              <Grid item xs={12} md={12} lg={3} sx={{width:'100%'}}>
                 <Button
                   variant="contained"
                   onClick={fetchData}
                   sx={{
                     fontWeight: "bold",
                     background: "#0b2f6d",
-                    minWidth: "200px",
+                    width: "100%",
                     height: "40px",
                   }}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Procesando..." : "Actualizar"}
                 </Button>
-              </Box>
-            </form>
-          </CardContent>
+              </Grid>
+            </Grid>
+          </form>
+        </CardContent>
+        
         ) : null}
       </Card>
     </>
@@ -204,6 +227,7 @@ function FormAstList() {
       </TableHead>
     </>
   );
+
   const setTableBody = () => (
     <>
       <TableBody
@@ -236,12 +260,9 @@ function FormAstList() {
                 <Link to={`/formulario-ast/${row.formID}`}>
                   <Button
                     variant="contained"
-                    color="info"
-                    onClick={() => {
-                      console.log("PRESIONADO");
-                    }}
+                    sx={{ background: "#0b2f6d", borderRadius: 0 }}
                   >
-                    ver
+                    <VisibilityIcon />
                   </Button>
                 </Link>
               </TableCell>
@@ -259,12 +280,7 @@ function FormAstList() {
   );
 
   const fetchUsers = async () => {
-    const res = await getUsers(token);
-    const data = res.map((item) => ({
-      value: item.userID,
-      label: item.nombre,
-    }));
-    setDataUsers(data);
+      setDataUsers(astData);
   };
 
   useEffect(() => {
@@ -291,31 +307,57 @@ function FormAstList() {
         height: "100%",
       }}
     >
+      {open && (
+          <Alert onClose={handleClose} sx={{ marginBottom: 3 }}>
+            {message}
+          </Alert>
+        )}
       {filterCard()}
-
-      <Card sx={{ width: "70%", borderRadius: "0", boxShadow: 5 }}>
-        <CardHeader
-          title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              REGISTROS FORMULARIO AST
-            </Typography>
-          }
+      {isLoading ? (
+        <Box
           sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "end",
+            width: "100%",
+            height: "90vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
+        >
+          <Skeleton
+            variant="rounded"
+            width={"70%"}
+            height={"100%"}
+          />
+        </Box>
+      ) : (
+        <>
+          <Card sx={{ width: "70%", borderRadius: "0", boxShadow: 5 }}>
+            <CardHeader
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                  REGISTROS FORMULARIO AST
+                </Typography>
+              }
+              sx={{
+                background: "#0b2f6d",
+                color: "white",
+                textAlign: "end",
+              }}
+            />
 
-        <CardContent>{setTable()}</CardContent>
-      </Card>
-      <ButtonGroup
-        size="small"
-        aria-label="pagination-button-group"
-        sx={{ p: 2 }}
-      >
-        {getButtons()}
-      </ButtonGroup>
+            <CardContent>{setTable()}</CardContent>
+          </Card>
+
+          <ButtonGroup
+            size="small"
+            aria-label="pagination-button-group"
+            sx={{ p: 2 }}
+          >
+            {getButtons()}
+          </ButtonGroup>
+        </>
+      )}
     </Box>
   );
 }

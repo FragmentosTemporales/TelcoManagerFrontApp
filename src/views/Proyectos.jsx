@@ -65,7 +65,7 @@ function ProyectosView() {
   };
 
   const createproyecto = async () => {
-    const form = { proyectoID: proyectoID, empresaID: externo };
+    const form = { proyectoID: proyectoID, empresaID: externo, proyectoEstadoID: 2 };
     try {
       setIsSubmitting(true);
       const res = await createProject(form, token);

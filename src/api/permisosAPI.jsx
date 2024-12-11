@@ -13,7 +13,7 @@ export const createPermiso = async (payload, token) => {
       });
       return response.data;
     } catch (error) {
-      throw error.message;
+      throw error.response.data.error;
     }
   };
 
@@ -28,7 +28,7 @@ export const createPermiso = async (payload, token) => {
       });
       return response.data;
     } catch (error) {
-      throw error.message;
+      throw error.response.data.error;
     }
   };
 
@@ -43,7 +43,6 @@ export const createPermiso = async (payload, token) => {
       });
       return response.data;
     } catch (error) {
-      console.error("Error updating notifications:", error);
-      throw new Error("Failed in update notifications");
+      throw error.response.data.error;
     }
   }

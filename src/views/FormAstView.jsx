@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { createAST } from "../api/prevencionAPI";
 
@@ -20,6 +21,7 @@ function FormAstCreate() {
   const authState = useSelector((state) => state.auth);
   const { token, user_id } = authState;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("info");
@@ -34,16 +36,20 @@ function FormAstCreate() {
     caidaAltura: "",
     tropiezo: "",
     distensionMuscular: "",
+    observacion: "",
   });
 
   const handleClose = () => setOpen(false);
 
   const renderAlert = () => (
-    <Alert onClose={handleClose} severity={alertSeverity} sx={{ marginBottom: 3 }}>
+    <Alert
+      onClose={handleClose}
+      severity={alertSeverity}
+      sx={{ marginBottom: 3 }}
+    >
       {message}
     </Alert>
   );
-
 
   const handleChange = (e) => {
     setForm({
@@ -61,6 +67,7 @@ function FormAstCreate() {
       const res = await createAST(payload, token);
       setMessage(res.message);
       setAlertSeverity("success");
+      navigate("/success");
       setOpen(true);
       setForm({
         actividad: "",
@@ -94,6 +101,7 @@ function FormAstCreate() {
       }}
     >
       {open && renderAlert()}
+
       <Box
         sx={{
           display: "flex",
@@ -108,7 +116,7 @@ function FormAstCreate() {
             overflow: "auto",
             boxShadow: 5,
             textAlign: "center",
-            background:"#f5f5f5"
+            background: "#f5f5f5",
           }}
         >
           <CardHeader
@@ -141,10 +149,7 @@ function FormAstCreate() {
                   justifyContent: "center",
                 }}
               >
-                <InputLabel
-                  id="actividad-label"
-                  sx={{ fontFamily: "initial" }}
-                >
+                <InputLabel id="actividad-label" sx={{ fontFamily: "initial" }}>
                   Actividad
                 </InputLabel>
                 <TextField
@@ -153,7 +158,7 @@ function FormAstCreate() {
                     whiteSpace: "normal",
                     width: { lg: "70%", xs: "100%", md: "100%" },
                     textAlign: "center",
-                    background: "#ffffff"
+                    background: "#ffffff",
                   }}
                   fullWidth
                   required
@@ -192,7 +197,7 @@ function FormAstCreate() {
                     whiteSpace: "normal",
                     width: { lg: "70%", xs: "100%", md: "100%" },
                     textAlign: "center",
-                    background: "#ffffff"
+                    background: "#ffffff",
                   }}
                   required
                   id="lugar"
@@ -230,7 +235,7 @@ function FormAstCreate() {
                     whiteSpace: "normal",
                     width: { lg: "70%", xs: "100%", md: "100%" },
                     textAlign: "center",
-                    background: "#ffffff"
+                    background: "#ffffff",
                   }}
                   required
                   id="ot"
@@ -268,7 +273,7 @@ function FormAstCreate() {
                     whiteSpace: "normal",
                     width: { lg: "70%", xs: "100%", md: "100%" },
                     textAlign: "center",
-                    background: "#ffffff"
+                    background: "#ffffff",
                   }}
                   labelId="golpeadoPor-label"
                   id="golpeadoPor"
@@ -317,7 +322,7 @@ function FormAstCreate() {
                     whiteSpace: "normal",
                     width: { lg: "70%", xs: "100%", md: "100%" },
                     textAlign: "center",
-                    background: "#ffffff"
+                    background: "#ffffff",
                   }}
                   required
                   id="descargaElectrica"
@@ -365,7 +370,7 @@ function FormAstCreate() {
                     whiteSpace: "normal",
                     width: { lg: "70%", xs: "100%", md: "100%" },
                     textAlign: "center",
-                    background: "#ffffff"
+                    background: "#ffffff",
                   }}
                   required
                   id="caidaAltura"
@@ -413,7 +418,7 @@ function FormAstCreate() {
                     whiteSpace: "normal",
                     width: { lg: "70%", xs: "100%", md: "100%" },
                     textAlign: "center",
-                    background: "#ffffff"
+                    background: "#ffffff",
                   }}
                   required
                   id="tropiezo"
@@ -462,7 +467,7 @@ function FormAstCreate() {
                     whiteSpace: "normal",
                     width: { lg: "70%", xs: "100%", md: "100%" },
                     textAlign: "center",
-                    background: "#ffffff"
+                    background: "#ffffff",
                   }}
                   required
                   id="distensionMuscular"
@@ -482,6 +487,43 @@ function FormAstCreate() {
                     NO APLICA
                   </MenuItem>
                 </Select>
+              </Box>
+              <Box
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <InputLabel
+                  id="ot-label"
+                  sx={{
+                    fontFamily: "initial",
+                    whiteSpace: "normal",
+                    maxWidth: "70%",
+                    textAlign: "center",
+                  }}
+                >
+                  Medidas de Control
+                </InputLabel>
+                <TextField
+                  required
+                  sx={{
+                    fontFamily: "initial",
+                    whiteSpace: "normal",
+                    width: { lg: "70%", xs: "100%", md: "100%" },
+                    textAlign: "center",
+                    background: "#ffffff",
+                  }}
+                  id="observacion"
+                  type="text"
+                  name="observacion"
+                  variant="outlined"
+                  value={form.observacion}
+                  onChange={handleChange}
+                />
               </Box>
 
               <Box sx={{ textAlign: "center" }}>

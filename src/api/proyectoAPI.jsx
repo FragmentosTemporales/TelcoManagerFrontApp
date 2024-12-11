@@ -14,8 +14,7 @@ export const getProyectos = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error);
-    throw new Error("Failed to fetch notifications");
+    throw error.response.data.error;
   }
 };
 
@@ -31,8 +30,39 @@ export const getProyectoUnico = async (token, proyectoID) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error);
-    throw new Error("Failed to fetch notifications");
+    throw error.response.data.error;
+  }
+};
+
+export const getComponenteUnico = async (token, componenteID) => {
+  try {
+    const url = `${baseUrl}/unique-component/${componenteID}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getFormComponente = async (token, tipoComponenteID) => {
+  try {
+    const url = `${baseUrl}/form-component/${tipoComponenteID}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
   }
 };
 
@@ -48,14 +78,13 @@ export const getEmpresas = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching :", error);
-    throw new Error("Failed to fetch");
+    throw error.response.data.error;
   }
 };
 
-export const getAsignados = async (token) => {
+export const getAsignados = async (token, page) => {
   try {
-    const url = `${baseUrl}/get-proyectos-asignados`;
+    const url = `${baseUrl}/get-proyectos-asignados/${page}`;
 
     const response = await axios.get(url, {
       headers: {
@@ -65,14 +94,13 @@ export const getAsignados = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching asignados:", error);
-    throw new Error("Failed to fetch asignados");
+    throw error.response.data.error;
   }
 };
 
-export const getaLLAsignados = async (token) => {
+export const getaLLAsignados = async (token, page) => {
   try {
-    const url = `${baseUrl}/get-all-proyectos-asignados`;
+    const url = `${baseUrl}/get-all-proyectos-asignados/${page}`;
 
     const response = await axios.get(url, {
       headers: {
@@ -82,8 +110,7 @@ export const getaLLAsignados = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching asignados:", error);
-    throw new Error("Failed to fetch asignados");
+    throw error.response.data.error;
   }
 };
 
@@ -97,6 +124,62 @@ export const createProject = async (payload, token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
+  }
+};
+
+export const createComponentList = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/create-componente`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const createRecurso = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/create-recurso`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const deleteRecurso = async (recursoID, token) => {
+  try {
+    const url = `${baseUrl}/delete-recurso/${recursoID}`;
+    const response = await axios.delete(url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const createMedicionCTO = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/create-medicioncto`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
   }
 };

@@ -14,8 +14,7 @@ export const getObjetivos = async (token, gerencia, mes) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error);
-    throw new Error("Failed to fetch notifications");
+    throw error.response.data.error;
   }
 };
 
@@ -32,6 +31,6 @@ export const updateObjetivo = async (token, objetivoID, payload) => {
     });
     return response.data;
   } catch (error) {
-    throw error.message;
+    throw error.response.data.error;
   }
 };
