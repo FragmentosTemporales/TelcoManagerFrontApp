@@ -28,12 +28,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
 import InfoIcon from "@mui/icons-material/Info";
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import { useSelector } from "react-redux";
 import {
   getComponenteUnico,
   createRecurso,
   deleteRecurso,
+  deleteMedicion,
   createMedicionCTO
 } from "../api/proyectoAPI";
 import { fetchFileUrl } from "../api/downloadApi";
@@ -50,11 +51,13 @@ function ComponenteAsignadoView() {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [openModalDeleteMedicion, setOpenModalDeleteMedicion] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [title, setTitle] = useState("Title");
   const [filterForm, setFilterForm] = useState(undefined);
   const [toDelete, setToDelete] = useState(undefined);
+  const [toDeleteMedicion, setToDeleteMedicion] = useState(undefined);
   const [medicionCTO, setMedicionCTO] = useState(undefined);
 
   const [existCTO, setExistCTO] = useState(false);
@@ -97,6 +100,7 @@ function ComponenteAsignadoView() {
     try {
       const res = await getComponenteUnico(token, componenteID);
       setData(res);
+      console.log(res)
       setMedicionCTO(res.medicioncto[0]);
       setProyectoID(res.proyectoID);
       setRecurso(res.recurso);
@@ -137,6 +141,22 @@ function ComponenteAsignadoView() {
     }
   };
 
+  const deletingMedicion = async () => {
+    setIsSubmitting(true);
+    try {
+      const res = await deleteMedicion(toDeleteMedicion, token);
+      setIsSubmitting(false);
+      handleCloseModal();
+      setMedicionCTO(undefined)
+      setExistCTO(false)
+      fetchData();
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+      handleCloseModal();
+    }
+  };
+
   useEffect(() => {
     if (recurso) {
       fetchIMAGEN();
@@ -167,13 +187,22 @@ function ComponenteAsignadoView() {
   const handleCloseModal = () => {
     setOpenModal(false);
     setOpenModalDelete(false);
+    setOpenModalDeleteMedicion(false);
   };
 
   const handleFileChange = (e) => {
-    setForm({
-      ...form,
-      file: e.target.files[0],
-    });
+    const file = e.target.files[0];
+    const maxSize = 2.5 * 1024 * 1024; // 1 MB en bytes
+
+    if (file && file.size > maxSize) {
+      alert('El tamaño del archivo supera 2.5 MB. Por favor, elige un archivo más pequeño.');
+      e.target.value = null; // Reinicia el input file
+    } else {
+      setForm({
+        ...form,
+        file: file,
+      });
+    }
   };
 
   const handleChange = (e) => {
@@ -605,6 +634,50 @@ function ComponenteAsignadoView() {
     </>
   );
 
+  const setModalDeleteMedicion = () => (
+    <>
+      <Modal open={openModalDeleteMedicion} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            textAlign: "center",
+          }}
+        >
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            ¿DESEAS ELIMINAR ESTE REGISTRO?
+          </Typography>
+          <Box sx={{ textAlign: "center", p: 2 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+              <Button
+                variant="contained"
+                onClick={deletingMedicion}
+                disabled={isSubmitting}
+                sx={{
+                  width: 200,
+                  height: 40,
+                  fontWeight: "bold",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  background: "#c62828",
+                  borderRadius: "0px",
+                }}
+              >
+                {isSubmitting ? "Procesando..." : "Eliminar"}
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+
   const cardRecurso = () => (
     <>
       <Card
@@ -822,6 +895,7 @@ function ComponenteAsignadoView() {
                       justifyContent: "space-around",
                       background: "#0b2f6d",
                       borderRadius: "0px",
+                      margin:'20px'
                     }}
                   >
                     {isSubmitting ? "Procesando..." : "Enviar"}
@@ -909,6 +983,17 @@ function ComponenteAsignadoView() {
                   </Grid>
                 ))}
             </Grid>
+            <Divider sx={{margin:2}} />
+            <Tooltip title='Borrar registros'>
+            <Button
+                              variant="contained"
+                              sx={{ background: "#c62828", borderRadius: 0 }}
+                              onClick={() => {
+                                setToDeleteMedicion(medicionCTO.medicionctoID),
+                                  setOpenModalDeleteMedicion(true);
+                              }}
+                            ><DeleteIcon/></Button>
+            </Tooltip>
           </CardContent>
         </Card>
       ) : null}
@@ -935,6 +1020,7 @@ function ComponenteAsignadoView() {
       )}
       {openModal && setModal()}
       {openModalDelete && setModalDelete()}
+      {openModalDeleteMedicion && setModalDeleteMedicion()}
       <Box
         sx={{
           width: { lg: "70%", xs: "100%", md: "100%" },

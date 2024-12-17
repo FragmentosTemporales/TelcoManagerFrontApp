@@ -117,7 +117,7 @@ import { domsetLogout } from "../slices/dominionSlice";
           justifyContent: "center",
           background: "white",
           alignItems: "center",
-          height: "100vh",
+          minHeight: "100vh",
         }}
       >
         {open && renderAlert()}
@@ -126,7 +126,8 @@ import { domsetLogout } from "../slices/dominionSlice";
             width: { lg: "30%", md: "70%", xs: "90%" },
             borderRadius: "0px",
             boxShadow: 5,
-            minWidth: "450px",
+            minWidth: "400px",
+            marginTop:'80px'
           }}
         >
           <CardHeader

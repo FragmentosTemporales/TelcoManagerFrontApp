@@ -96,7 +96,6 @@ function Asignado() {
 
     try {
       const res = await createComponentList(combinedData, token);
-      console.log(res);
       setIsSubmitting(false);
       navigate("/success");
     } catch (error) {

@@ -27,6 +27,7 @@ import SuccessView from "./views/SuccessView";
 import ComponenteAsignadoView from "./views/ComponenteAsignadoView";
 import Footer from "./components/footer";
 import Settings from "./views/Settings";
+import AsignadosViewUser from "./views/AsignadosUserEsp";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
           <Route path="/objetivos" element={<ObjetivosView />} />
           <Route path="/proyectos" element={<ProyectosView />} />
           <Route path="/asignados" element={<AsignadosView />} />
+          <Route path="/asignados-user" element={<AsignadosViewUser />} />
           <Route path="/asignado/:proyectoID" element={<Asignado />} />
           <Route path="/form-ast" element={<FormAstCreate />} />
           <Route path="/form-ast-list" element={<FormAstList />} />

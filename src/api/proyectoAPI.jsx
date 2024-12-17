@@ -98,6 +98,22 @@ export const getAsignados = async (token, page) => {
   }
 };
 
+export const getAsignadosUser = async (token) => {
+  try {
+    const url = `${baseUrl}/get-asignados-by-user`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const getaLLAsignados = async (token, page) => {
   try {
     const url = `${baseUrl}/get-all-proyectos-asignados/${page}`;
@@ -174,6 +190,20 @@ export const createMedicionCTO = async (payload, token) => {
   try {
     const url = `${baseUrl}/create-medicioncto`;
     const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const deleteMedicion = async (medicionctoID, token) => {
+  try {
+    const url = `${baseUrl}/delete-medicioncto/${medicionctoID}`;
+    const response = await axios.delete(url, {
       headers: {
         Authorization: `Bearer ${token}`
       },

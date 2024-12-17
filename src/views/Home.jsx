@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import SettingsIcon from '@mui/icons-material/Settings';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
@@ -31,7 +31,7 @@ import {
   getAsignados,
   getaLLAsignados,
 } from "../api/proyectoAPI";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 function Home() {
   const authState = useSelector((state) => state.auth);
@@ -91,8 +91,8 @@ function Home() {
       head: "Asignados OnNet",
       icono: <BallotIcon />,
       title: "Espacio para visualizar Proyectos Asignados",
-      link: "/asignados",
-      body: "Acá podrás gestionar los proyectos asignados",
+      link: "/asignados-user",
+      body: "Acá podrás gestionar los proyectos asignados a tu Usuario",
       estado: true,
       moduloID: 6,
     },
@@ -113,7 +113,25 @@ function Home() {
       body: "Acá podrás completar tu formulario y enviarlo directamente a la base de datos",
       estado: true,
       moduloID: 8,
-    }
+    },
+    {
+      head: "Gestión Bodega",
+      icono: <InventoryIcon/>,
+      title: "Espacio para gestión de atención en bodega",
+      link: "/",
+      body: "Acá podrás ver los números de atención y gestionar procesos internos",
+      estado: true,
+      moduloID: 10,
+    },
+    {
+      head: "Asignados OnNet General",
+      icono: <BallotIcon />,
+      title: "Espacio para visualizar Proyectos Asignados",
+      link: "/asignados",
+      body: "Acá podrás gestionar los proyectos asignados a los diferentes usuarios.",
+      estado: true,
+      moduloID: 11,
+    },
   ];
 
   const accesos = secciones.filter((seccion) =>

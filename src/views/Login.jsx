@@ -7,10 +7,10 @@ import {
   Button,
   TextField,
   InputAdornment,
-  Typography
+  Typography,
 } from "@mui/material";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import LockIcon from '@mui/icons-material/Lock';
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import LockIcon from "@mui/icons-material/Lock";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,13 +47,12 @@ function Login() {
       dispatch(onLoad(response));
       navigate("/");
 
-      const usuario = response.usuario
+      const usuario = response.usuario;
 
       const payload2 = { username: usuario.numDoc, password: form.clave };
 
-      const res = await onLoginDominion(payload2)
+      const res = await onLoginDominion(payload2);
       dispatch(domLoadAuth(res));
-
     } catch (error) {
       dispatch(setMessage(error));
       setIsSubmitting(false);
@@ -67,11 +66,11 @@ function Login() {
     </Alert>
   );
 
-  useEffect(()=>{
-    if (token && token != null){
-      navigate("/")
+  useEffect(() => {
+    if (token && token != null) {
+      navigate("/");
     }
-  },[token])
+  }, [token]);
 
   return (
     <Box
@@ -85,14 +84,20 @@ function Login() {
       }}
     >
       {open && renderAlert()}
-      <Card sx={{ width: {lg:"30%", md:"70%", xs:"90%" }, borderRadius: "0px", boxShadow: 5, minWidth: "450px" }}>
-      <CardHeader
+      <Card
+        sx={{
+          width: { lg: "30%", md: "70%", xs: "90%" },
+          borderRadius: "0px",
+          boxShadow: 5,
+          minWidth: "400px",
+        }}
+      >
+        <CardHeader
           title={
             <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
               INICIAR SESION
             </Typography>
           }
-
           sx={{
             background: "#0b2f6d",
             color: "white",
@@ -104,7 +109,7 @@ function Login() {
             <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
               <TextField
                 required
-                sx={{ minWidth: "400px" }}
+                sx={{ minWidth: "370px" }}
                 id="correo"
                 label="Correo"
                 type="email"
@@ -124,7 +129,7 @@ function Login() {
             <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
               <TextField
                 required
-                sx={{ minWidth: "400px" }}
+                sx={{ minWidth: "370px" }}
                 id="clave"
                 label="Clave"
                 type="password"
@@ -142,8 +147,13 @@ function Login() {
               />
             </Box>
             <Box sx={{ textAlign: "center" }}>
-              <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ background: "#0b2f6d" }}>
-              {isSubmitting ? "Cargando..." : "Ingresar"}
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={isSubmitting}
+                sx={{ background: "#0b2f6d" }}
+              >
+                {isSubmitting ? "Cargando..." : "Ingresar"}
               </Button>
             </Box>
           </form>

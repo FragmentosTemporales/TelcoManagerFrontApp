@@ -69,6 +69,21 @@ export const getUsers = async (token) => {
   }
 };
 
+export const getUsersEmpresa = async (token, empresaID) => {
+  try {
+    const url = `${baseUrl}/get-trabajadores/${empresaID}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const updatePass = async (payload, token) => {
   try {
     const url = `${baseUrl}/update-password`;

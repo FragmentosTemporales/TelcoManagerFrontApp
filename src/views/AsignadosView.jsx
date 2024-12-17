@@ -28,14 +28,13 @@ import {
   onLoading as onLoadingAsignados,
 } from "../slices/asignadosSlice";
 import {
-  getAsignados,
   getaLLAsignados,
 } from "../api/proyectoAPI";
 
 function AsignadosView() {
   const authState = useSelector((state) => state.auth);
   const asignadosState = useSelector((state) => state.asignados);
-  const { permisos, token, empresa } = authState;
+  const { permisos, token } = authState;
   const { data, pages } = asignadosState;
   const [moduloPermiso, setModuloPermiso] = useState(null);
   const dispatch = useDispatch();
@@ -109,16 +108,6 @@ function AsignadosView() {
     </>
   );
 
-  const fetchAsignados = async () => {
-    try {
-      dispatch(onLoadingAsignados());
-      const res = await getAsignados(token, page);
-      dispatch(onLoadAsignados(res));
-    } catch (error) {
-      dispatch(setMessage("Información no encontrada."));
-    }
-  };
-
   const fetchAllAsignados = async () => {
     try {
       dispatch(onLoadingAsignados());
@@ -129,19 +118,7 @@ function AsignadosView() {
     }
   };
 
-  const fetchData = async () => {
-    if (empresa) {
-      if (empresa.empresaID == 1) {
-        fetchAllAsignados();
-      } else {
-        fetchAsignados();
-      }
-    }
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [page]);
+  useEffect(() => { fetchAllAsignados(); }, [page])
 
   return (
     <Box
@@ -192,7 +169,7 @@ function AsignadosView() {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {["EMPRESA", "PROYECTO", "ESTADO", "ACCIONES"].map(
+                  {["EMPRESA", "USUARIO", "PROYECTO", "ESTADO", "ACCIONES"].map(
                     (header) => (
                       <TableCell
                         key={header}
@@ -219,6 +196,14 @@ function AsignadosView() {
                       >
                         {row.empresa && row.empresa.nombre != null
                           ? row.empresa.nombre
+                          : "Sin Información"}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontWeight: "bold", fontFamily: "initial" }}
+                      >
+                        {row.user && row.user.nombre != null
+                          ? row.user.nombre
                           : "Sin Información"}
                       </TableCell>
                       <TableCell align="center" sx={{ fontFamily: "initial" }}>
