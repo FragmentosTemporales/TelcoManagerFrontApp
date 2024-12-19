@@ -59,24 +59,9 @@ function ComponenteAsignadoView() {
   const [toDelete, setToDelete] = useState(undefined);
   const [toDeleteMedicion, setToDeleteMedicion] = useState(undefined);
   const [medicionCTO, setMedicionCTO] = useState(undefined);
-
   const [existCTO, setExistCTO] = useState(false);
-
   const [existPowerMetter, setExistPowerMetter] = useState(false);
-
   const [elementos, setElementos] = useState([]);
-
-  useEffect(() => {
-    const existeRecurso = elementos.some(
-      (obj) => obj.pregunta === "Medición Power Metter"
-    );
-    if (existeRecurso) {
-      setExistPowerMetter(true);
-    } else {
-      setExistPowerMetter(false);
-    }
-  }, [elementos]);
-
   const [form, setForm] = useState({
     respuesta: "",
     formComponenteID: "",
@@ -157,29 +142,6 @@ function ComponenteAsignadoView() {
     }
   };
 
-  useEffect(() => {
-    if (recurso) {
-      fetchIMAGEN();
-    } else {
-      null;
-    }
-  }, [recurso]);
-
-  useEffect(() => {
-    medicionCTO ? setExistCTO(true) : null;
-  }, [medicionCTO]);
-
-  useEffect(() => {
-    const filteredData = formulario.filter(
-      (item) =>
-        !recurso.some(
-          (recursoItem) =>
-            recursoItem.formComponenteID === item.formComponenteID
-        )
-    );
-    setFilterForm(filteredData);
-  }, [formulario, recurso]);
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -192,12 +154,27 @@ function ComponenteAsignadoView() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    const maxSize = 2.5 * 1024 * 1024; // 1 MB en bytes
-
-    if (file && file.size > maxSize) {
-      alert('El tamaño del archivo supera 2.5 MB. Por favor, elige un archivo más pequeño.');
-      e.target.value = null; // Reinicia el input file
-    } else {
+    const maxSize = 2.5 * 1024 * 1024; // 2.5 MB en bytes
+  
+    if (file) {
+      // Validar que el archivo sea una imagen
+      const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!validImageTypes.includes(file.type)) {
+        alert("Por favor, sube un archivo de imagen válido (JPEG, PNG, GIF).");
+        e.target.value = null; // Reinicia el input file
+        return;
+      }
+  
+      // Validar el tamaño del archivo
+      if (file.size > maxSize) {
+        alert(
+          "El tamaño del archivo supera 2.5 MB. Por favor, elige un archivo más pequeño."
+        );
+        e.target.value = null; // Reinicia el input file
+        return;
+      }
+  
+      // Actualizar el estado si pasa todas las validaciones
       setForm({
         ...form,
         file: file,
@@ -290,6 +267,40 @@ function ComponenteAsignadoView() {
         })
       : null;
   }, [data]);
+
+  useEffect(() => {
+    if (recurso) {
+      fetchIMAGEN();
+    } else {
+      null;
+    }
+  }, [recurso]);
+
+  useEffect(() => {
+    medicionCTO ? setExistCTO(true) : null;
+  }, [medicionCTO]);
+
+  useEffect(() => {
+    const filteredData = formulario.filter(
+      (item) =>
+        !recurso.some(
+          (recursoItem) =>
+            recursoItem.formComponenteID === item.formComponenteID
+        )
+    );
+    setFilterForm(filteredData);
+  }, [formulario, recurso]);
+
+  useEffect(() => {
+    const existeRecurso = elementos.some(
+      (obj) => obj.pregunta === "Medición Power Metter"
+    );
+    if (existeRecurso) {
+      setExistPowerMetter(true);
+    } else {
+      setExistPowerMetter(false);
+    }
+  }, [elementos]);
 
   //COMPONENTE PARA RETORNAR LA INFORMACION GENERAL DEL COMPONENTE ASIGNADO
   const infoCard = () => (
@@ -999,7 +1010,6 @@ function ComponenteAsignadoView() {
       ) : null}
     </>
   );
-  
 
   return (
     <Box

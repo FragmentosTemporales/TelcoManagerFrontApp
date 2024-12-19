@@ -172,9 +172,37 @@ export const createRecurso = async (payload, token) => {
   }
 };
 
+export const createAvance = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/create-avance`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const deleteRecurso = async (recursoID, token) => {
   try {
     const url = `${baseUrl}/delete-recurso/${recursoID}`;
+    const response = await axios.delete(url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const deleteAvance = async (avanceID, token) => {
+  try {
+    const url = `${baseUrl}/delete-avance/${avanceID}`;
     const response = await axios.delete(url, {
       headers: {
         Authorization: `Bearer ${token}`

@@ -5,10 +5,10 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CircularProgress,
   Chip,
   Grid,
   InputLabel,
+  Modal,
   Paper,
   Skeleton,
   Table,
@@ -24,11 +24,18 @@ import {
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
 import AddIcon from "@mui/icons-material/Add";
-import { getProyectoUnico, createComponentList } from "../api/proyectoAPI";
+import {
+  getProyectoUnico,
+  createComponentList,
+  createAvance,
+  deleteAvance
+} from "../api/proyectoAPI";
 import { useNavigate } from "react-router-dom";
+import { downloadFile } from "../api/downloadApi";
 
 function Asignado() {
   const { proyectoID } = useParams();
@@ -38,6 +45,7 @@ function Asignado() {
   const { data } = proyectoState;
   const navigate = useNavigate();
   const [dataEmpresa, setDataEmpresa] = useState(undefined);
+  const [dataAvance, setDataAvance] = useState(undefined);
   const [dataEstado, setDataEstado] = useState(undefined);
   const [dataComponentes, setDataComponentes] = useState(undefined);
   const [proyecto, setProyecto] = useState(undefined);
@@ -51,16 +59,32 @@ function Asignado() {
   const [cdpeForm, setCdpeForm] = useState(undefined);
   const [mduForm, setMduForm] = useState(undefined);
   const [mufaForm, setMufaForm] = useState(undefined);
+  const [ferreteriaForm, setFerreteriaForm] = useState(undefined);
+  const [fibraForm, setFibraForm] = useState(undefined);
   const [ctoData, setCtoData] = useState([]);
   const [cdpiData, setCdpiData] = useState([]);
   const [cdpeData, setCdpeData] = useState([]);
   const [mduData, setMduData] = useState([]);
   const [mufaData, setMufaData] = useState([]);
+  const [fibraData, setFibraData] = useState([]);
+  const [ferreteriaData, setFerreteriaData] = useState([]);
   const [id, setId] = useState(undefined);
+  const [openModal, setOpenModal] = useState(false);
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [toDeleteAvance, setToDeleteAvance] = useState(undefined)
+
+  const [form, setForm] = useState({
+    proyectoID: "",
+    file: null,
+  });
+
+  //FUNCIONES DEL COMPONENTE
 
   const fetchData = async () => {
     try {
       const res = await getProyectoUnico(token, proyectoID);
+      console.log(res.avance[0]);
+      setDataAvance(res.avance[0]);
       setDataEmpresa(res.empresa);
       setDataEstado(res.estado);
       setDataComponentes(res.componente);
@@ -71,13 +95,6 @@ function Asignado() {
       setOpen(true);
     }
   };
-
-  useEffect(() => {
-    if (data && id) {
-      const p = data.find((item) => item.proyecto === id);
-      setProyecto(p);
-    }
-  }, [data, id]);
 
   const handleClose = () => {
     setOpen(false);
@@ -92,10 +109,13 @@ function Asignado() {
       ...cdpeData,
       ...mduData,
       ...mufaData,
+      ...fibraData,
+      ...ferreteriaData,
     ];
 
     try {
       const res = await createComponentList(combinedData, token);
+      console.log(res);
       setIsSubmitting(false);
       navigate("/success");
     } catch (error) {
@@ -138,6 +158,17 @@ function Asignado() {
     setCdpeData(updatedCdpeData);
   };
 
+  const handleChangeMDU = (e, index) => {
+    const updatedMduData = [...mduData];
+    updatedMduData[index] = {
+      ...updatedMduData[index],
+      [e.target.name]: e.target.value,
+      ["tipoComponenteID"]: 4,
+      ["proyectoID"]: proyectoID,
+    };
+    setMduData(updatedMduData);
+  };
+
   const handleChangeMUFA = (e, index) => {
     const updatedMufaData = [...mufaData];
     updatedMufaData[index] = {
@@ -149,15 +180,26 @@ function Asignado() {
     setMufaData(updatedMufaData);
   };
 
-  const handleChangeMDU = (e, index) => {
-    const updatedMduData = [...mduData];
-    updatedMduData[index] = {
-      ...updatedMduData[index],
+  const handleChangeFerreteria = (e, index) => {
+    const updatedFerreteriaData = [...ferreteriaData];
+    updatedFerreteriaData[index] = {
+      ...updatedFerreteriaData[index],
       [e.target.name]: e.target.value,
-      ["tipoComponenteID"]: 4,
+      ["tipoComponenteID"]: 6,
       ["proyectoID"]: proyectoID,
     };
-    setMduData(updatedMduData);
+    setFerreteriaData(updatedFerreteriaData);
+  };
+
+  const handleChangeFibra = (e, index) => {
+    const updatedFibraData = [...fibraData];
+    updatedFibraData[index] = {
+      ...updatedFibraData[index],
+      [e.target.name]: e.target.value,
+      ["tipoComponenteID"]: 7,
+      ["proyectoID"]: proyectoID,
+    };
+    setFibraData(updatedFibraData);
   };
 
   const handleChangeCtoValue = (e) => {
@@ -179,6 +221,106 @@ function Asignado() {
   const handleChangeMufaValue = (e) => {
     setMufaForm(e.target.value);
   };
+
+  const handleChangeFerreteriaValue = (e) => {
+    setFerreteriaForm(e.target.value);
+  };
+
+  const handleChangeFibraValue = (e) => {
+    setFibraForm(e.target.value);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const maxSize = 2.5 * 1024 * 1024;
+
+    if (file) {
+      const validExcelTypes = [
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-excel",
+      ];
+
+      if (!validExcelTypes.includes(file.type)) {
+        alert("Por favor, sube un archivo de Excel válido (.xls, .xlsx).");
+        e.target.value = null;
+        return;
+      }
+
+      if (file.size > maxSize) {
+        alert(
+          "El tamaño del archivo supera 2.5 MB. Por favor, elige un archivo más pequeño."
+        );
+        e.target.value = null;
+        return;
+      }
+
+      setForm({
+        ...form,
+        file: file,
+      });
+    }
+  };
+
+  const downloader = async () => {
+    try {
+      const payload = { file_path: dataAvance.file };
+      await downloadFile(payload, token);
+      console.log("Archivo descargado exitosamente");
+    } catch (error) {
+      console.error("Error descargando el archivo:", error);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setOpenModalDelete(false);
+  };
+
+  const handleSubmitAvance = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const formData = new FormData();
+    formData.append("proyectoID", id);
+    if (form.file) {
+      formData.append("file", form.file);
+    }
+    try {
+      const respuesta = await createAvance(formData, token);
+      console.log(respuesta);
+      setIsSubmitting(false);
+      setOpenModal(false);
+      setForm({
+        proyectoID: "",
+        file: null,
+      });
+      fetchData();
+    } catch (error) {
+      setMessage("Error al enviar el formulario:", error);
+      setOpen(true);
+      setIsSubmitting(false);
+      setForm({
+        proyectoID: "",
+        file: null,
+      });
+      setOpenModal(false);
+    }
+  };
+
+  const handleDeleteAvance = async (e) => {
+    e.preventDefault()
+    try {
+      setIsSubmitting(true)
+      const response = await deleteAvance(toDeleteAvance, token)
+      fetchData()
+      
+    } catch(error) {
+      console.log(error)
+    }
+    handleCloseModal()
+    setIsSubmitting(false)
+  }
+
+  //COMPONENTES DESDE AQUI
 
   const proyectoCard = () => (
     <Box sx={{ pt: 2, display: "flex", justifyContent: "center" }}>
@@ -470,6 +612,18 @@ function Asignado() {
                   value: mufaForm,
                   onChange: handleChangeMufaValue,
                 },
+                {
+                  label: "FERRETERIA",
+                  id: "ferreteria",
+                  value: ferreteriaForm,
+                  onChange: handleChangeFerreteriaValue,
+                },
+                {
+                  label: "FIBRA",
+                  id: "fibra",
+                  value: fibraForm,
+                  onChange: handleChangeFibraValue,
+                },
               ].map((field) => (
                 <Grid
                   key={field.id}
@@ -510,10 +664,6 @@ function Asignado() {
     }
     return null;
   };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const setCtoCard = () => {
     const textFields = [];
@@ -779,6 +929,136 @@ function Asignado() {
     );
   };
 
+  const setFerreteriaCard = () => {
+    const textFields = [];
+    for (let i = 0; i < ferreteriaForm; i++) {
+      textFields.push(
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "400px",
+            alignItems: "center",
+          }}
+        >
+          <InputLabel>FERRETERIA # </InputLabel>
+          <TextField
+            required
+            key={i}
+            label={`Referencia ${i + 1}`}
+            variant="outlined"
+            name="referencia"
+            sx={{ marginBottom: 2, width: "300px" }}
+            value={ferreteriaData[i]?.referencia || ""}
+            onChange={(e) => handleChangeFerreteria(e, i)}
+          />
+        </Box>
+      );
+    }
+    return (
+      <>
+        {ferreteriaForm > 0 ? (
+          <Box sx={{ width: "60%" }}>
+            <Card>
+              <CardHeader
+                avatar={<FormatAlignJustifyIcon />}
+                title={
+                  <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                    DEFINIENDO REFERENCIAS PARA FERRETERIA
+                  </Typography>
+                }
+                sx={{
+                  background: "#0b2f6d",
+                  color: "white",
+                  textAlign: "end",
+                }}
+              />
+              <CardContent>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexWrap: "nowrap",
+                    gap: 2,
+                  }}
+                >
+                  {textFields}
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+        ) : null}
+      </>
+    );
+  };
+
+  const setFibraCard = () => {
+    const textFields = [];
+    for (let i = 0; i < fibraForm; i++) {
+      textFields.push(
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "400px",
+            alignItems: "center",
+          }}
+        >
+          <InputLabel>FIBRA # </InputLabel>
+          <TextField
+            required
+            key={i}
+            label={`Referencia ${i + 1}`}
+            variant="outlined"
+            name="referencia"
+            sx={{ marginBottom: 2, width: "300px" }}
+            value={fibraData[i]?.referencia || ""}
+            onChange={(e) => handleChangeFibra(e, i)}
+          />
+        </Box>
+      );
+    }
+    return (
+      <>
+        {fibraForm > 0 ? (
+          <Box sx={{ width: "60%" }}>
+            <Card>
+              <CardHeader
+                avatar={<FormatAlignJustifyIcon />}
+                title={
+                  <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                    DEFINIENDO REFERENCIAS PARA FIBRA
+                  </Typography>
+                }
+                sx={{
+                  background: "#0b2f6d",
+                  color: "white",
+                  textAlign: "end",
+                }}
+              />
+              <CardContent>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexWrap: "nowrap",
+                    gap: 2,
+                  }}
+                >
+                  {textFields}
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+        ) : null}
+      </>
+    );
+  };
+
   const setMduCard = () => {
     const textFields = [];
     for (let i = 0; i < mduForm; i++) {
@@ -961,6 +1241,225 @@ function Asignado() {
     </>
   );
 
+  const componenteAvanceProyecto = () => (
+    <>
+      <Card
+        sx={{
+          width: "90%",
+          overflow: "hidden",
+          backgroundColor: "#f5f5f5",
+          boxShadow: 5,
+          textAlign: "center",
+          borderRadius: "0px",
+          mt: 2,
+          mb: 2,
+        }}
+      >
+        <CardHeader
+          avatar={<FolderOpenIcon />}
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+              RESPALDO AVANCE PROYECTO #{proyectoID}
+            </Typography>
+          }
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
+        />
+        <CardContent sx={{ display: "flex", justifyContent: "center" }}>
+          {dataAvance ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-around",
+                width: "100%",
+                p: 1
+              }}
+            >
+              <Tooltip title="Descargar Archivo" placement="right">
+                <Button
+                  onClick={downloader}
+                  size="small"
+                  variant="contained"
+                  sx={{
+                    background: "#0b2f6d",
+                    borderRadius: "0px",
+                    minWidth: "200px",
+                  }}
+                >
+                  Descargar
+                </Button>
+              </Tooltip>
+
+              <Tooltip title="Eliminar Archivo" placement="right">
+                <Button
+                  onClick={()=>{
+                    setToDeleteAvance(dataAvance.avanceID)
+                    setOpenModalDelete(true)
+                  }}
+                  size="small"
+                  variant="contained"
+                  color="error"
+                  sx={{
+                    borderRadius: "0px",
+                    minWidth: "200px",
+                  }}
+                >
+                  Eliminar
+                </Button>
+              </Tooltip>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                p: 2,
+                width: { lg: "30%", xs: "100%", md: "100%" },
+              }}
+            >
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setOpenModal(true);
+                }}
+              >
+                <InputLabel id="file-label">Avance</InputLabel>
+                <TextField
+                  required
+                  id="file"
+                  type="file"
+                  name="file"
+                  variant="outlined"
+                  onChange={handleFileChange}
+                  sx={{
+                    whiteSpace: "normal",
+                    width: "100%",
+                    textAlign: "center",
+                    background: "#ffffff",
+                    marginBottom: "20px",
+                  }}
+                />
+                <Button
+                  variant="contained"
+                  sx={{
+                    background: "#0b2f6d",
+                    borderRadius: "0px",
+                    minWidth: "200px",
+                  }}
+                  type="submit"
+                >
+                  CARGAR
+                </Button>
+              </form>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+    </>
+  );
+
+  const setModal = () => (
+    <Modal open={openModal} onClose={handleCloseModal}>
+      <form onSubmit={handleSubmitAvance}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            textAlign: "center",
+          }}
+        >
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            ¿Deseas adjuntar este archivo como avance?
+          </Typography>
+  
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={isSubmitting}
+              sx={{
+                width: 200,
+                height: 40,
+                fontWeight: "bold",
+                display: "flex",
+                justifyContent: "space-around",
+                background: "#0b2f6d",
+                borderRadius: "0px",
+              }}
+            >
+              {isSubmitting ? "Procesando..." : "Enviar"}
+            </Button>
+          </Box>
+        </Box>
+      </form>
+    </Modal>
+  );
+
+  const setModalDelete = () => (
+    <Modal open={openModalDelete} onClose={handleCloseModal}>
+      <form onSubmit={handleDeleteAvance}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            textAlign: "center",
+          }}
+        >
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            ¿Deseas eliminar este archivo?
+          </Typography>
+  
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={isSubmitting}
+              color="error"
+              sx={{
+                width: 200,
+                height: 40,
+                fontWeight: "bold",
+                display: "flex",
+                justifyContent: "space-around",
+                borderRadius: "0px",
+              }}
+            >
+              {isSubmitting ? "Eliminando..." : "Eliminar"}
+            </Button>
+          </Box>
+        </Box>
+      </form>
+    </Modal>
+  );
+
+  //USEEFFECTS DESDE AQUI
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (data && id) {
+      const p = data.find((item) => item.proyecto === id);
+      setProyecto(p);
+    }
+  }, [data, id]);
+
+  //COMPONENTE RETORNADO
+
   return (
     <>
       <Box
@@ -973,6 +1472,8 @@ function Asignado() {
           padding: 8,
         }}
       >
+        {openModal && setModal()}
+        {openModalDelete && setModalDelete()}
         {open && (
           <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
             {message}
@@ -1044,6 +1545,8 @@ function Asignado() {
                 {setCdpeCard()}
                 {setMduCard()}
                 {setMufaCard()}
+                {setFerreteriaCard()}
+                {setFibraCard()}
                 {dataEstado && dataEstado.proyectoEstadoID == 2 ? (
                   <Box sx={{ mt: 3 }}>
                     <Button
@@ -1067,10 +1570,12 @@ function Asignado() {
             {dataEstado && dataEstado.proyectoEstadoID == 3
               ? componenteTable()
               : null}
+            {componenteAvanceProyecto()}
           </>
         )}
       </Box>
     </>
   );
 }
+
 export default Asignado;
