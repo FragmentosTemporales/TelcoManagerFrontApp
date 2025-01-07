@@ -1,6 +1,4 @@
 import { Box } from "@mui/material";
-import UserForm from "../components/userForm";
-import UserList from "../components/userList";
 import PermisosList from "../components/permisosForm";
 
 function CreateZone() {
@@ -8,11 +6,10 @@ function CreateZone() {
     <Box
       sx={{
         height: "100%",
+        marginTop: "60px",
       }}
     >
-      <UserForm />
-      <PermisosList/>
-      {/*<UserList/>*/}
+      <PermisosList />
     </Box>
   );
 }

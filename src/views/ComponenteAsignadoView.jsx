@@ -85,7 +85,6 @@ function ComponenteAsignadoView() {
     try {
       const res = await getComponenteUnico(token, componenteID);
       setData(res);
-      console.log(res)
       setMedicionCTO(res.medicioncto[0]);
       setProyectoID(res.proyectoID);
       setRecurso(res.recurso);
@@ -154,7 +153,7 @@ function ComponenteAsignadoView() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    const maxSize = 2.5 * 1024 * 1024; // 2.5 MB en bytes
+    const maxSize = 5 * 2048 * 2048;
   
     if (file) {
       // Validar que el archivo sea una imagen
@@ -168,7 +167,7 @@ function ComponenteAsignadoView() {
       // Validar el tamaño del archivo
       if (file.size > maxSize) {
         alert(
-          "El tamaño del archivo supera 2.5 MB. Por favor, elige un archivo más pequeño."
+          "El tamaño del archivo supera 5 MB. Por favor, elige un archivo más pequeño."
         );
         e.target.value = null; // Reinicia el input file
         return;

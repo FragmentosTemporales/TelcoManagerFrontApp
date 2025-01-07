@@ -51,7 +51,6 @@ export const getReversas = async (token, rut) => {
           "Content-Type": "application/json",
         },
       });
-  
       return response.data;
     } catch (error) {
       console.error("Error response:", error.response ? error.response.data : error.message);

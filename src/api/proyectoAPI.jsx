@@ -158,6 +158,20 @@ export const createComponentList = async (payload, token) => {
   }
 };
 
+export const createUniqueComponent = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/create-unique-componente`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const createRecurso = async (payload, token) => {
   try {
     const url = `${baseUrl}/create-recurso`;

@@ -6,6 +6,7 @@ import {
   Chip,
   CardHeader,
   Paper,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -27,15 +28,13 @@ import {
   onLoad as onLoadAsignados,
   onLoading as onLoadingAsignados,
 } from "../slices/asignadosSlice";
-import {
-  getaLLAsignados,
-} from "../api/proyectoAPI";
+import { getaLLAsignados } from "../api/proyectoAPI";
 
 function AsignadosView() {
   const authState = useSelector((state) => state.auth);
   const asignadosState = useSelector((state) => state.asignados);
   const { permisos, token } = authState;
-  const { data, pages } = asignadosState;
+  const { data, pages, is_loading, is_load } = asignadosState;
   const [moduloPermiso, setModuloPermiso] = useState(null);
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
@@ -118,7 +117,10 @@ function AsignadosView() {
     }
   };
 
-  useEffect(() => { fetchAllAsignados(); }, [page])
+
+  useEffect(() => {
+    fetchAllAsignados();
+  }, [page]);
 
   return (
     <Box
@@ -137,8 +139,8 @@ function AsignadosView() {
     >
       <>
         {createNew()}
-        <Card
-          sx={{
+        {is_loading ? (
+          <Skeleton variant="rectangular"sx={{
             width: "60%",
             overflow: "hidden",
             backgroundColor: "#f5f5f5",
@@ -147,30 +149,47 @@ function AsignadosView() {
             borderRadius: "0px",
             minHeight: "250px",
             mt: 2,
-          }}
-        >
-          <CardHeader
-            title={
-              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                ASIGNADOS
-              </Typography>
-            }
-            avatar={<BallotIcon />}
+          }} />
+        ) : (
+          <Card
             sx={{
-              background: "#0b2f6d",
-              color: "white",
-              textAlign: "end",
+              width: "60%",
+              overflow: "hidden",
+              backgroundColor: "#f5f5f5",
+              boxShadow: 5,
+              textAlign: "center",
+              borderRadius: "0px",
+              minHeight: "250px",
+              mt: 2,
             }}
-          />
-          <TableContainer
-            component={Paper}
-            sx={{ width: "100%", height: "100%", overflow: "auto" }}
           >
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  {["EMPRESA", "USUARIO", "PROYECTO", "ESTADO", "ACCIONES"].map(
-                    (header) => (
+            <CardHeader
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                  ASIGNADOS
+                </Typography>
+              }
+              avatar={<BallotIcon />}
+              sx={{
+                background: "#0b2f6d",
+                color: "white",
+                textAlign: "end",
+              }}
+            />
+            <TableContainer
+              component={Paper}
+              sx={{ width: "100%", height: "100%", overflow: "auto" }}
+            >
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    {[
+                      "EMPRESA",
+                      "USUARIO",
+                      "PROYECTO",
+                      "ESTADO",
+                      "ACCIONES",
+                    ].map((header) => (
                       <TableCell
                         key={header}
                         align="center"
@@ -182,142 +201,149 @@ function AsignadosView() {
                       >
                         {header}
                       </TableCell>
-                    )
-                  )}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data && data.length > 0 ? (
-                  data.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell
-                        align="center"
-                        sx={{ fontWeight: "bold", fontFamily: "initial" }}
-                      >
-                        {row.empresa && row.empresa.nombre != null
-                          ? row.empresa.nombre
-                          : "Sin Información"}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{ fontWeight: "bold", fontFamily: "initial" }}
-                      >
-                        {row.user && row.user.nombre != null
-                          ? row.user.nombre
-                          : "Sin Información"}
-                      </TableCell>
-                      <TableCell align="center" sx={{ fontFamily: "initial" }}>
-                        {row.proyectoID ? row.proyectoID : "Sin Información"}
-                      </TableCell>
-                      <TableCell align="center" sx={{ fontFamily: "initial" }}>
-                        {row.estado && row.estado.descri ? (
-                          (() => {
-                            switch (row.estado.descri) {
-                              case "Iniciado":
-                                return (
-                                  <Chip
-                                    color="success"
-                                    label="Iniciado"
-                                    sx={{ width: "200px" }}
-                                  />
-                                );
-                              case "Asignado contratista":
-                                return (
-                                  <Chip
-                                    color="primary"
-                                    label="Asignado contratista"
-                                    sx={{ width: "200px" }}
-                                  />
-                                );
-                              case "Asignado componente":
-                                return (
-                                  <Chip
-                                    color="warning"
-                                    label="Asignado componente"
-                                    sx={{ width: "200px" }}
-                                  />
-                                );
-                              case "En Ejecucion":
-                                return (
-                                  <Chip
-                                    color="info"
-                                    label="En Ejecución"
-                                    sx={{ width: "200px" }}
-                                  />
-                                );
-                              case "Finalizado":
-                                return (
-                                  <Chip
-                                    color="secondary"
-                                    label="Finalizado"
-                                    sx={{ width: "200px" }}
-                                  />
-                                );
-                              default:
-                                return (
-                                  <Chip
-                                    color="default"
-                                    label="Estado Desconocido"
-                                  />
-                                );
-                            }
-                          })()
-                        ) : (
-                          <Chip color="default" label="Sin Estado" />
-                        )}
-                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {data && data.length > 0 ? (
+                    data.map((row, index) => (
+                      <TableRow key={index}>
+                        <TableCell
+                          align="center"
+                          sx={{ fontWeight: "bold", fontFamily: "initial" }}
+                        >
+                          {row.user.empresa && row.user.empresa.nombre != null
+                            ? row.user.empresa.nombre
+                            : "Sin Información"}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          sx={{ fontWeight: "bold", fontFamily: "initial" }}
+                        >
+                          {row.user && row.user.nombre != null
+                            ? row.user.nombre
+                            : "Sin Información"}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          sx={{ fontFamily: "initial" }}
+                        >
+                          {row.proyectoID ? row.proyectoID : "Sin Información"}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          sx={{ fontFamily: "initial" }}
+                        >
+                          {row.estado && row.estado.descri ? (
+                            (() => {
+                              switch (row.estado.descri) {
+                                case "Iniciado":
+                                  return (
+                                    <Chip
+                                      color="success"
+                                      label="Iniciado"
+                                      sx={{ width: "200px" }}
+                                    />
+                                  );
+                                case "Asignado contratista":
+                                  return (
+                                    <Chip
+                                      color="primary"
+                                      label="Asignado contratista"
+                                      sx={{ width: "200px" }}
+                                    />
+                                  );
+                                case "Asignado componente":
+                                  return (
+                                    <Chip
+                                      color="warning"
+                                      label="Asignado componente"
+                                      sx={{ width: "200px" }}
+                                    />
+                                  );
+                                case "En Ejecucion":
+                                  return (
+                                    <Chip
+                                      color="info"
+                                      label="En Ejecución"
+                                      sx={{ width: "200px" }}
+                                    />
+                                  );
+                                case "Finalizado":
+                                  return (
+                                    <Chip
+                                      color="secondary"
+                                      label="Finalizado"
+                                      sx={{ width: "200px" }}
+                                    />
+                                  );
+                                default:
+                                  return (
+                                    <Chip
+                                      color="default"
+                                      label="Estado Desconocido"
+                                    />
+                                  );
+                              }
+                            })()
+                          ) : (
+                            <Chip color="default" label="Sin Estado" />
+                          )}
+                        </TableCell>
 
-                      <TableCell align="center">
-                        <Tooltip title="Agregar Componentes">
-                          <Button
-                            variant="contained"
-                            sx={{
-                              width: 30,
-                              height: 30,
-                              minWidth: 30,
-                              padding: 0,
-                              background: "#0b2f6d",
-                            }}
-                          >
-                            <Link
-                              style={{
-                                color: "white",
-                                textDecoration: "none",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
+                        <TableCell align="center">
+                          <Tooltip title="Agregar Componentes">
+                            <Button
+                              variant="contained"
+                              sx={{
+                                width: 30,
+                                height: 30,
+                                minWidth: 30,
+                                padding: 0,
+                                background: "#0b2f6d",
                               }}
-                              to={`/asignado/${row.proyectoID}`}
                             >
-                              <LibraryAddIcon />
-                            </Link>
-                          </Button>
-                        </Tooltip>
+                              <Link
+                                style={{
+                                  color: "white",
+                                  textDecoration: "none",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                                to={`/asignado/${row.proyectoID}`}
+                              >
+                                <LibraryAddIcon />
+                              </Link>
+                            </Button>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={6}
+                        align="center"
+                        sx={{ fontFamily: "initial" }}
+                      >
+                        No hay datos disponibles
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={6}
-                      align="center"
-                      sx={{ fontFamily: "initial" }}
-                    >
-                      No hay datos disponibles
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Card>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
+        )}
+
         <ButtonGroup
-            size="small"
-            aria-label="pagination-button-group"
-            sx={{ p: 2 }}
-          >
-            {getButtons()}
-          </ButtonGroup>
+          size="small"
+          aria-label="pagination-button-group"
+          sx={{ p: 2 }}
+        >
+          {getButtons()}
+        </ButtonGroup>
       </>
     </Box>
   );

@@ -86,10 +86,10 @@ function Login() {
       {open && renderAlert()}
       <Card
         sx={{
-          width: { lg: "30%", md: "70%", xs: "90%" },
-          borderRadius: "0px",
+          width: { lg: "30%", md: "60%", xs: "80%" },
+          borderRadius: "10px",
           boxShadow: 5,
-          minWidth: "400px",
+          minWidth: "370px",
         }}
       >
         <CardHeader
@@ -109,7 +109,7 @@ function Login() {
             <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
               <TextField
                 required
-                sx={{ minWidth: "370px" }}
+                sx={{ minWidth: "350px" }}
                 id="correo"
                 label="Correo"
                 type="email"
@@ -129,7 +129,7 @@ function Login() {
             <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
               <TextField
                 required
-                sx={{ minWidth: "370px" }}
+                sx={{ minWidth: "350px" }}
                 id="clave"
                 label="Clave"
                 type="password"

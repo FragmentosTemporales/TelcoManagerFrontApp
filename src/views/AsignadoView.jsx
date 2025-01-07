@@ -6,8 +6,10 @@ import {
   CardContent,
   CardHeader,
   Chip,
+  FormControl,
   Grid,
   InputLabel,
+  MenuItem,
   Modal,
   Paper,
   Skeleton,
@@ -20,6 +22,7 @@ import {
   TextField,
   Typography,
   Tooltip,
+  Select,
 } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -32,7 +35,8 @@ import {
   getProyectoUnico,
   createComponentList,
   createAvance,
-  deleteAvance
+  deleteAvance,
+  createUniqueComponent
 } from "../api/proyectoAPI";
 import { useNavigate } from "react-router-dom";
 import { downloadFile } from "../api/downloadApi";
@@ -71,7 +75,23 @@ function Asignado() {
   const [id, setId] = useState(undefined);
   const [openModal, setOpenModal] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
-  const [toDeleteAvance, setToDeleteAvance] = useState(undefined)
+  const [toDeleteAvance, setToDeleteAvance] = useState(undefined);
+
+  const componenteTipo = [
+    { value: 1, label: "CTO" },
+    { value: 2, label: "CDPI" },
+    { value: 3, label: "CDPE" },
+    { value: 4, label: "MDU" },
+    { value: 5, label: "MUFA" },
+    { value: 6, label: "FERRETERIA" },
+    { value: 7, label: "FIBRA" },
+  ];
+
+  const [componentForm, setComponentForm] = useState({
+    tipoComponenteID: "",
+    referencia: "",
+    proyectoID: "",
+  });
 
   const [form, setForm] = useState({
     proyectoID: "",
@@ -83,7 +103,7 @@ function Asignado() {
   const fetchData = async () => {
     try {
       const res = await getProyectoUnico(token, proyectoID);
-      console.log(res.avance[0]);
+      console.log(res);
       setDataAvance(res.avance[0]);
       setDataEmpresa(res.empresa);
       setDataEstado(res.estado);
@@ -115,7 +135,6 @@ function Asignado() {
 
     try {
       const res = await createComponentList(combinedData, token);
-      console.log(res);
       setIsSubmitting(false);
       navigate("/success");
     } catch (error) {
@@ -123,6 +142,28 @@ function Asignado() {
       setOpen(true);
       setIsSubmitting(false);
     }
+  };
+
+  const handleSubmitUnique = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const proyectoID = id;
+    const payload = { ...componentForm, proyectoID };
+
+    try {
+      const res = await createUniqueComponent(payload, token);
+      setMessage(res.message);
+    } catch (error) {
+      setMessage(error);
+    }
+    setOpen(true);
+    fetchData()
+    setIsSubmitting(false);
+    setComponentForm({
+      tipoComponenteID: "",
+      referencia: "",
+      proyectoID: "",
+    })
   };
 
   const handleChangeCTO = (e, index) => {
@@ -307,18 +348,17 @@ function Asignado() {
   };
 
   const handleDeleteAvance = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      setIsSubmitting(true)
-      const response = await deleteAvance(toDeleteAvance, token)
-      fetchData()
-      
-    } catch(error) {
-      console.log(error)
+      setIsSubmitting(true);
+      const response = await deleteAvance(toDeleteAvance, token);
+      fetchData();
+    } catch (error) {
+      console.log(error);
     }
-    handleCloseModal()
-    setIsSubmitting(false)
-  }
+    handleCloseModal();
+    setIsSubmitting(false);
+  };
 
   //COMPONENTES DESDE AQUI
 
@@ -1241,6 +1281,115 @@ function Asignado() {
     </>
   );
 
+  const addNuevoComponente = () => (
+    <>
+      <Card
+        sx={{
+          width: "90%",
+          overflow: "hidden",
+          backgroundColor: "#f5f5f5",
+          boxShadow: 5,
+          textAlign: "center",
+          borderRadius: "0px",
+          mt: 2,
+          mb: 2,
+        }}
+      >
+        <CardHeader
+          avatar={<AddIcon />}
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+              AGREGAR NUEVO COMPONENTE PARA PROYECTO #{proyectoID}
+            </Typography>
+          }
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
+        />
+        <CardContent>
+          <form onSubmit={handleSubmitUnique} style={{ width: "100%" }}>
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              justifyContent="center"
+            >
+              {/* Campo Tipo de Componente */}
+              <Grid item xs={12} sm={5}>
+                <FormControl fullWidth variant="filled">
+                  <Typography
+                    component="label"
+                    htmlFor="componente-select"
+                    sx={{ fontWeight: "bold", mb: 1 }}
+                  >
+                    Tipo de Componente
+                  </Typography>
+                  <Select
+                    required
+                    id="componente-select"
+                    value={componentForm.tipoComponenteID || ""}
+                    onChange={(event) =>
+                      setComponentForm((prevForm) => ({
+                        ...prevForm,
+                        tipoComponenteID: event.target.value,
+                      }))
+                    }
+                  >
+                    {componenteTipo.map((item) => (
+                      <MenuItem key={item.value} value={item.value}>
+                        <Typography fontWeight="bold">{item.label}</Typography>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* Campo Referencia */}
+              <Grid item xs={12} sm={5}>
+                <FormControl fullWidth variant="filled">
+                  <Typography
+                    component="label"
+                    htmlFor="referencia-input"
+                    sx={{ fontWeight: "bold", mb: 1 }}
+                  >
+                    Referencia
+                  </Typography>
+                  <TextField
+                    required
+                    id="referencia-input"
+                    variant="filled"
+                    value={componentForm.referencia || ""}
+                    onChange={(event) =>
+                      setComponentForm((prevForm) => ({
+                        ...prevForm,
+                        referencia: event.target.value,
+                      }))
+                    }
+                  />
+                </FormControl>
+              </Grid>
+
+              {/* Botón */}
+              <Grid item xs={12}>
+                <Box textAlign="center">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ background: "#0b2f6d", width: "200px", borderRadius:'0px' }}
+                  >
+                    Agregar
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
+    </>
+  );
+
   const componenteAvanceProyecto = () => (
     <>
       <Card
@@ -1275,7 +1424,7 @@ function Asignado() {
                 display: "flex",
                 justifyContent: "space-around",
                 width: "100%",
-                p: 1
+                p: 1,
               }}
             >
               <Tooltip title="Descargar Archivo" placement="right">
@@ -1295,9 +1444,9 @@ function Asignado() {
 
               <Tooltip title="Eliminar Archivo" placement="right">
                 <Button
-                  onClick={()=>{
-                    setToDeleteAvance(dataAvance.avanceID)
-                    setOpenModalDelete(true)
+                  onClick={() => {
+                    setToDeleteAvance(dataAvance.avanceID);
+                    setOpenModalDelete(true);
                   }}
                   size="small"
                   variant="contained"
@@ -1378,7 +1527,7 @@ function Asignado() {
           <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
             ¿Deseas adjuntar este archivo como avance?
           </Typography>
-  
+
           <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
             <Button
               variant="contained"
@@ -1421,7 +1570,7 @@ function Asignado() {
           <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
             ¿Deseas eliminar este archivo?
           </Typography>
-  
+
           <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
             <Button
               variant="contained"
@@ -1569,6 +1718,9 @@ function Asignado() {
             </form>
             {dataEstado && dataEstado.proyectoEstadoID == 3
               ? componenteTable()
+              : null}
+            {dataEstado && dataEstado.proyectoEstadoID == 3
+              ? addNuevoComponente()
               : null}
             {componenteAvanceProyecto()}
           </>

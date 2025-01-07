@@ -1,6 +1,6 @@
 const tecnicosData = [
   {
-    label: "25899420-5 FELIPE SALAMANCA URRUTIA",
+    label: "18292203-K FELIPE SALAMANCA URRUTIA",
     value: "18292203-K",
     frecuencia: "MARTES",
   },
@@ -557,6 +557,11 @@ const tecnicosData = [
   {
     label: "27012031-8 JESUS RICARDO ACOSTA COLINA",
     value: "27012031-8",
+    frecuencia: "VIERNES",
+  },
+  {
+    label: "12651362-3 MARCO REYES TOLOZA",
+    value: "12651362-3",
     frecuencia: "VIERNES",
   },
   {

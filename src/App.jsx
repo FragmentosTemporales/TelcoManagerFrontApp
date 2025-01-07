@@ -25,9 +25,12 @@ import FormAstList from "./views/AstListView";
 import AstViewer from "./views/AstFormView";
 import SuccessView from "./views/SuccessView";
 import ComponenteAsignadoView from "./views/ComponenteAsignadoView";
-import Footer from "./components/footer";
 import Settings from "./views/Settings";
 import AsignadosViewUser from "./views/AsignadosUserEsp";
+import BodegaViewer from "./views/BodegaView";
+import BodegaQuintaViewer from "./views/BodegaQuintaView";
+import AtencionTotem from "./views/AtencionTotem";
+import SupervisorViewRM from "./views/SupervisorViewRM";
 
 function App() {
   return (
@@ -36,7 +39,7 @@ function App() {
       <Routes>
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<Home />} />
-          <Route path="/charts" element={<Charts/>}/>
+          <Route path="/charts" element={<Charts />} />
           <Route path="/solicitudes" element={<Solicitudes />} />
           <Route path="/solicitud/:solicitud_id" element={<Solicitud />} />
           <Route path="/create" element={<CreateArea />} />
@@ -57,13 +60,19 @@ function App() {
           <Route path="/form-ast" element={<FormAstCreate />} />
           <Route path="/form-ast-list" element={<FormAstList />} />
           <Route path="/formulario-ast/:formID" element={<AstViewer />} />
-          <Route path="/success" element={<SuccessView/>} />
-          <Route path="/configuraciones" element={<Settings/>} />
-          <Route path="/componente-asignado/:componenteID" element={<ComponenteAsignadoView/>} />
+          <Route path="/success" element={<SuccessView />} />
+          <Route path="/configuraciones" element={<Settings />} />
+          <Route path="/totem" element={<AtencionTotem />} />
+          <Route path="/supervisor" element={<SupervisorViewRM />} />
+          <Route
+            path="/componente-asignado/:componenteID"
+            element={<ComponenteAsignadoView />}
+          />
         </Route>
+        <Route path="/bodegaRM" element={<BodegaViewer />} />
+        <Route path="/bodegaQuinta" element={<BodegaQuintaViewer />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-      <Footer/>
     </BrowserRouter>
   );
 }

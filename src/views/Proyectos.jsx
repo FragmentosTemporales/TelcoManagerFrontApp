@@ -59,6 +59,7 @@ function ProyectosView() {
 
   const fetchUsers = async (empresaID) => {
     const res = await getUsersEmpresa(token, empresaID);
+    console.log(res)
     const data = res.map((item) => ({
       value: item.userID,
       label: item.nombre,

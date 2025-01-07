@@ -8,6 +8,8 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
 import BarChartIcon from "@mui/icons-material/BarChart";
 import InventoryIcon from '@mui/icons-material/Inventory';
 import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
@@ -19,18 +21,8 @@ import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import DvrIcon from '@mui/icons-material/Dvr';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-
 import { onLoad, onLoading, setMessage } from "../slices/proyectosSlice";
-import {
-  onLoad as onLoadAsignados,
-  onLoading as onLoadingAsignados,
-} from "../slices/asignadosSlice";
-
-import {
-  getProyectos,
-  getAsignados,
-  getaLLAsignados,
-} from "../api/proyectoAPI";
+import {getProyectos} from "../api/proyectoAPI";
 import { useEffect } from "react";
 
 function Home() {
@@ -97,6 +89,15 @@ function Home() {
       moduloID: 6,
     },
     {
+      head: "Asignados OnNet General",
+      icono: <BallotIcon />,
+      title: "Espacio para visualizar Proyectos Asignados",
+      link: "/asignados",
+      body: "Acá podrás gestionar los proyectos asignados a los diferentes usuarios.",
+      estado: true,
+      moduloID: 11,
+    },
+    {
       head: "Gestión Formularios AST",
       icono: <DvrIcon />,
       title: "Espacio para gestionar los formulario AST",
@@ -115,22 +116,40 @@ function Home() {
       moduloID: 8,
     },
     {
-      head: "Gestión Bodega",
+      head: "Gestión Bodega RM",
       icono: <InventoryIcon/>,
-      title: "Espacio para gestión de atención en bodega",
-      link: "/",
+      title: "Espacio para gestión de atención en bodega en la Región Metropolitana",
+      link: "/bodegaRM",
       body: "Acá podrás ver los números de atención y gestionar procesos internos",
       estado: true,
       moduloID: 10,
     },
     {
-      head: "Asignados OnNet General",
-      icono: <BallotIcon />,
-      title: "Espacio para visualizar Proyectos Asignados",
-      link: "/asignados",
-      body: "Acá podrás gestionar los proyectos asignados a los diferentes usuarios.",
+      head: "Gestión Bodega Quinta",
+      icono: <InventoryIcon/>,
+      title: "Espacio para gestión de atención en bodega de la V Región",
+      link: "/bodegaQuinta",
+      body: "Acá podrás ver los números de atención y gestionar procesos internos",
       estado: true,
-      moduloID: 11,
+      moduloID: 12,
+    },
+    {
+      head: "Gestión Totem",
+      icono: <AutoAwesomeMosaicIcon/>,
+      title: "Espacio para gestión de atención",
+      link: "/totem",
+      body: "Acá podrás ver los números de atención y gestionar procesos internos",
+      estado: true,
+      moduloID: 13,
+    },
+    {
+      head: "Gestión Supervisor",
+      icono: <AssignmentIndIcon/>,
+      title: "Espacio para gestión de técnicos",
+      link: "/supervisor",
+      body: "Acá podrás ver el estado de los técnicos y gestionar sus procesos",
+      estado: true,
+      moduloID: 14,
     },
   ];
 
@@ -152,39 +171,10 @@ function Home() {
     }
   };
 
-  const fetchAsignados = async () => {
-    try {
-      dispatch(onLoadingAsignados());
-      const res = await getAsignados(token, 1);
-      dispatch(onLoadAsignados(res));
-    } catch (error) {
-      dispatch(setMessage("Información no encontrada."));
-    }
-  };
-
-  const fetchAllAsignados = async () => {
-    try {
-      dispatch(onLoadingAsignados());
-      const res = await getaLLAsignados(token, 1);
-      dispatch(onLoadAsignados(res));
-    } catch (error) {
-      dispatch(setMessage("Información no encontrada."));
-    }
-  };
-
   useEffect(() => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (empresa) {
-      if (empresa.empresaID == 1) {
-        fetchAllAsignados();
-      } else {
-        fetchAsignados();
-      }
-    }
-  }, [empresa]);
 
   return (
     <Box
@@ -212,7 +202,7 @@ function Home() {
                   minHeight: "400px",
                   maxWidth: "400px",
                   backgroundColor: "#f5f5f5",
-                  borderRadius: "0px",
+                  borderRadius: "10px",
                   position: "relative",
                   transition:
                     "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
