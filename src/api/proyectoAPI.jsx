@@ -200,6 +200,20 @@ export const createAvance = async (payload, token) => {
   }
 };
 
+export const createTraza = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/create-traza`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const deleteRecurso = async (recursoID, token) => {
   try {
     const url = `${baseUrl}/delete-recurso/${recursoID}`;
@@ -217,6 +231,21 @@ export const deleteRecurso = async (recursoID, token) => {
 export const deleteAvance = async (avanceID, token) => {
   try {
     const url = `${baseUrl}/delete-avance/${avanceID}`;
+    const response = await axios.delete(url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const deleteTraza = async (trazaID, token) => {
+  try {
+    const url = `${baseUrl}/delete-traza/${trazaID}`;
+    console.log(url)
     const response = await axios.delete(url, {
       headers: {
         Authorization: `Bearer ${token}`

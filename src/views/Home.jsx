@@ -8,6 +8,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
 import BarChartIcon from "@mui/icons-material/BarChart";
@@ -148,6 +149,15 @@ function Home() {
       title: "Espacio para gestión de técnicos",
       link: "/supervisor",
       body: "Acá podrás ver el estado de los técnicos y gestionar sus procesos",
+      estado: true,
+      moduloID: 14,
+    },
+    {
+      head: "Chat Soporte",
+      icono: <ContactSupportIcon/>,
+      title: "Espacio para consulta y soporte técnico",
+      link: "/supervisor",
+      body: "Acá podrás realizar preguntas a un chat destinado al apoyo para técnicos",
       estado: true,
       moduloID: 14,
     },

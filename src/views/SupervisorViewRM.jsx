@@ -19,9 +19,13 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getNumeros, darSalida, cancelarAtencion, getUserInfo } from "../api/totemAPI";
+import {
+  getNumeros,
+  darSalida,
+  cancelarAtencion,
+  getUserInfo,
+} from "../api/totemAPI";
 import { useSelector } from "react-redux";
-
 
 function SupervisorViewRM() {
   const authState = useSelector((state) => state.auth);
@@ -38,7 +42,9 @@ function SupervisorViewRM() {
     try {
       setIsSubmitting(true);
       const response = await getNumeros();
-      const filteredData = response.filter((item) => item.CENTRO === userData.CENTRO);
+      const filteredData = response.filter(
+        (item) => item.CENTRO == userData.CENTRO
+      );
       setData(filteredData);
     } catch (error) {
       console.log(error);
@@ -67,30 +73,30 @@ function SupervisorViewRM() {
   const handleSubmitSalida = async () => {
     try {
       setIsSubmittingModal(true);
-      await darSalida(token, trabajador.Rut )}
-    catch (error) {
+      await darSalida(token, trabajador.Rut);
+    } catch (error) {
       console.log(error);
     }
     setIsSubmittingModal(false);
-    setTrabajador(undefined)
-    setData([])
+    setTrabajador(undefined);
+    setData([]);
     handleClose();
-    fetchData()
-  }
+    fetchData();
+  };
 
   const handleSubmitCancelar = async () => {
     try {
       setIsSubmittingModal(true);
-      await cancelarAtencion(token, trabajador.Rut );}
-    catch (error) {
+      await cancelarAtencion(token, trabajador.Rut);
+    } catch (error) {
       console.log(error);
     }
     setIsSubmittingModal(false);
-    setTrabajador(undefined)
-    setData([])
+    setTrabajador(undefined);
+    setData([]);
     handleClose();
-    fetchData()
-  }
+    fetchData();
+  };
 
   const handleClose = () => {
     setOpenModalCancelar(false);
@@ -188,8 +194,9 @@ function SupervisorViewRM() {
     }
   }, [userData]);
 
-  useEffect(() => {fetchUserInfo()}, []);
-
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
 
   return (
     <Box
@@ -291,6 +298,18 @@ function SupervisorViewRM() {
                         height: "50px",
                       }}
                     >
+                      Centro:
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        fontSize: "1rem",
+                        paddingTop: "5px",
+                        paddingBot: "5px",
+                        height: "50px",
+                      }}
+                    >
                       Proceso:
                     </Typography>
                     <Typography
@@ -379,6 +398,18 @@ function SupervisorViewRM() {
                         height: "50px",
                       }}
                     >
+                      {trabajador.CENTRO ? trabajador.CENTRO : "Sin Centro"}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.primary"
+                      sx={{
+                        fontSize: "1rem",
+                        paddingTop: "5px",
+                        paddingBot: "5px",
+                        height: "50px",
+                      }}
+                    >
                       {trabajador.Proceso ? trabajador.Proceso : "Sin Proceso"}
                     </Typography>
                     <Typography
@@ -438,7 +469,7 @@ function SupervisorViewRM() {
                     CANCELAR
                   </Button>
                   <Button
-                  disabled={!validateSalida(trabajador)}
+                    disabled={!validateSalida(trabajador)}
                     variant="contained"
                     color="info"
                     sx={{ width: "150px", borderRadius: 0 }}

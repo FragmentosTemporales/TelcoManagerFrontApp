@@ -27,6 +27,7 @@ import {
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
@@ -35,8 +36,10 @@ import {
   getProyectoUnico,
   createComponentList,
   createAvance,
+  createTraza,
   deleteAvance,
-  createUniqueComponent
+  deleteTraza,
+  createUniqueComponent,
 } from "../api/proyectoAPI";
 import { useNavigate } from "react-router-dom";
 import { downloadFile } from "../api/downloadApi";
@@ -50,6 +53,7 @@ function Asignado() {
   const navigate = useNavigate();
   const [dataEmpresa, setDataEmpresa] = useState(undefined);
   const [dataAvance, setDataAvance] = useState(undefined);
+  const [dataTraza, setDataTraza] = useState({});
   const [dataEstado, setDataEstado] = useState(undefined);
   const [dataComponentes, setDataComponentes] = useState(undefined);
   const [proyecto, setProyecto] = useState(undefined);
@@ -74,8 +78,11 @@ function Asignado() {
   const [ferreteriaData, setFerreteriaData] = useState([]);
   const [id, setId] = useState(undefined);
   const [openModal, setOpenModal] = useState(false);
+  const [openModalTrazas, setOpenModalTrazas] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [openModalDeleteTraza, setOpenModalDeleteTraza] = useState(false);
   const [toDeleteAvance, setToDeleteAvance] = useState(undefined);
+  const [toDeleteTraza, setToDeleteTraza] = useState(undefined);
 
   const componenteTipo = [
     { value: 1, label: "CTO" },
@@ -103,8 +110,8 @@ function Asignado() {
   const fetchData = async () => {
     try {
       const res = await getProyectoUnico(token, proyectoID);
-      console.log(res);
       setDataAvance(res.avance[0]);
+      setDataTraza(res.traza[0]);
       setDataEmpresa(res.empresa);
       setDataEstado(res.estado);
       setDataComponentes(res.componente);
@@ -157,13 +164,13 @@ function Asignado() {
       setMessage(error);
     }
     setOpen(true);
-    fetchData()
+    fetchData();
     setIsSubmitting(false);
     setComponentForm({
       tipoComponenteID: "",
       referencia: "",
       proyectoID: "",
-    })
+    });
   };
 
   const handleChangeCTO = (e, index) => {
@@ -302,19 +309,52 @@ function Asignado() {
     }
   };
 
-  const downloader = async () => {
-    try {
-      const payload = { file_path: dataAvance.file };
-      await downloadFile(payload, token);
-      console.log("Archivo descargado exitosamente");
-    } catch (error) {
-      console.error("Error descargando el archivo:", error);
+  const handleFileChangePDF = (e) => {
+    const file = e.target.files[0];
+    const maxSize = 2.5 * 1024 * 1024;
+
+    if (file) {
+      const validPdfTypes = [
+        "application/pdf"
+      ];
+
+      if (!validPdfTypes.includes(file.type)) {
+        alert("Por favor, sube un archivo PDF válido (.pdf).");
+        e.target.value = null;
+        return;
+      }
+
+      if (file.size > maxSize) {
+        alert(
+          "El tamaño del archivo supera 2.5 MB. Por favor, elige un archivo más pequeño."
+        );
+        e.target.value = null;
+        return;
+      }
+
+      setForm({
+        ...form,
+        file: file,
+      });
     }
   };
 
+  const downloader = async (file_path) => {
+    try {
+        const payload = { file_path: file_path };
+        await downloadFile(payload, token);
+        console.log("Archivo descargado exitosamente");
+    } catch (error) {
+        console.error("Error descargando el archivo:", error);
+    }
+};
+
+
   const handleCloseModal = () => {
     setOpenModal(false);
+    setOpenModalTrazas(false);
     setOpenModalDelete(false);
+    setOpenModalDeleteTraza(false);
   };
 
   const handleSubmitAvance = async (e) => {
@@ -327,7 +367,7 @@ function Asignado() {
     }
     try {
       const respuesta = await createAvance(formData, token);
-      console.log(respuesta);
+      console.log(respuesta)
       setIsSubmitting(false);
       setOpenModal(false);
       setForm({
@@ -347,11 +387,54 @@ function Asignado() {
     }
   };
 
+  const handleSubmitTraza = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const formData = new FormData();
+    formData.append("proyectoID", id);
+    if (form.file) {
+      formData.append("file", form.file);
+    }
+    try {
+      const respuesta = await createTraza(formData, token);
+      console.log(respuesta)
+      setIsSubmitting(false);
+      setOpenModalTrazas(false);
+      setForm({
+        proyectoID: "",
+        file: null,
+      });
+      fetchData();
+    } catch (error) {
+      setMessage("Error al enviar el formulario:", error);
+      setOpen(true);
+      setIsSubmitting(false);
+      setForm({
+        proyectoID: "",
+        file: null,
+      });
+      setOpenModalTrazas(false);
+    }
+  };
+
   const handleDeleteAvance = async (e) => {
     e.preventDefault();
     try {
       setIsSubmitting(true);
       const response = await deleteAvance(toDeleteAvance, token);
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+    handleCloseModal();
+    setIsSubmitting(false);
+  };
+
+  const handleDeleteTraza = async (e) => {
+    e.preventDefault();
+    try {
+      setIsSubmitting(true);
+      const response = await deleteTraza(toDeleteTraza, token);
       fetchData();
     } catch (error) {
       console.log(error);
@@ -1377,7 +1460,11 @@ function Asignado() {
                   <Button
                     type="submit"
                     variant="contained"
-                    sx={{ background: "#0b2f6d", width: "200px", borderRadius:'0px' }}
+                    sx={{
+                      background: "#0b2f6d",
+                      width: "200px",
+                      borderRadius: "0px",
+                    }}
                   >
                     Agregar
                   </Button>
@@ -1390,7 +1477,7 @@ function Asignado() {
     </>
   );
 
-  const componenteAvanceProyecto = () => (
+  const componenteDocumentos = () => (
     <>
       <Card
         sx={{
@@ -1408,7 +1495,7 @@ function Asignado() {
           avatar={<FolderOpenIcon />}
           title={
             <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              RESPALDO AVANCE PROYECTO #{proyectoID}
+              RESPALDO DOCUMENTOS PROYECTO #{proyectoID}
             </Typography>
           }
           sx={{
@@ -1417,92 +1504,213 @@ function Asignado() {
             textAlign: "end",
           }}
         />
-        <CardContent sx={{ display: "flex", justifyContent: "center" }}>
-          {dataAvance ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-around",
-                width: "100%",
-                p: 1,
-              }}
-            >
-              <Tooltip title="Descargar Archivo" placement="right">
-                <Button
-                  onClick={downloader}
-                  size="small"
-                  variant="contained"
-                  sx={{
-                    background: "#0b2f6d",
-                    borderRadius: "0px",
-                    minWidth: "200px",
-                  }}
-                >
-                  Descargar
-                </Button>
-              </Tooltip>
-
-              <Tooltip title="Eliminar Archivo" placement="right">
-                <Button
-                  onClick={() => {
-                    setToDeleteAvance(dataAvance.avanceID);
-                    setOpenModalDelete(true);
-                  }}
-                  size="small"
-                  variant="contained"
-                  color="error"
-                  sx={{
-                    borderRadius: "0px",
-                    minWidth: "200px",
-                  }}
-                >
-                  Eliminar
-                </Button>
-              </Tooltip>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                p: 2,
-                width: { lg: "30%", xs: "100%", md: "100%" },
-              }}
-            >
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setOpenModal(true);
+        <CardContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ width: "100%", paddingTop:1 }}>
+            {dataAvance ? (
+              <Box
+                component={Paper}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                  padding: 1,
                 }}
               >
-                <InputLabel id="file-label">Avance</InputLabel>
-                <TextField
-                  required
-                  id="file"
-                  type="file"
-                  name="file"
-                  variant="outlined"
-                  onChange={handleFileChange}
-                  sx={{
-                    whiteSpace: "normal",
-                    width: "100%",
-                    textAlign: "center",
-                    background: "#ffffff",
-                    marginBottom: "20px",
+                <Typography sx={{ fontFamily: "initial", width:'200px' }}>CHECKLIST</Typography>
+                <Tooltip title="Descargar Archivo" placement="right">
+                  <Button
+                    onClick={() => downloader(dataAvance.file)}
+                    size="small"
+                    variant="contained"
+                    sx={{
+                      background: "#0b2f6d",
+                      borderRadius: "0px",
+                      minWidth: "200px",
+                    }}
+                  >
+                    Descargar
+                  </Button>
+                </Tooltip>
+
+                <Tooltip title="Eliminar Archivo" placement="right">
+                  <Button
+                    onClick={() => {
+                      setToDeleteAvance(dataAvance.avanceID);
+                      setOpenModalDelete(true);
+                    }}
+                    size="small"
+                    variant="contained"
+                    color="error"
+                    sx={{
+                      borderRadius: "0px",
+                      minWidth: "200px",
+                    }}
+                  >
+                    Eliminar
+                  </Button>
+                </Tooltip>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  width: { lg: "100%", xs: "100%", md: "100%" },
+                }}
+              >
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setOpenModal(true);
                   }}
-                />
-                <Button
-                  variant="contained"
-                  sx={{
-                    background: "#0b2f6d",
-                    borderRadius: "0px",
-                    minWidth: "200px",
-                  }}
-                  type="submit"
                 >
-                  CARGAR
-                </Button>
-              </form>
-            </Box>
-          )}
+                  <Box
+                    component={Paper}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-evenly",
+                      alignItems: "center",
+                      padding: 1,
+                    }}
+                  >
+                    <Typography sx={{ fontFamily: "initial", width:'200px' }}>
+                      CHECKLIST
+                    </Typography>
+                    <TextField
+                      required
+                      id="file"
+                      type="file"
+                      name="file"
+                      variant="outlined"
+                      onChange={handleFileChange}
+                      sx={{
+                        whiteSpace: "normal",
+                        textAlign: "center",
+                        background: "#ffffff",
+                        minWidth: "200px",
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      sx={{
+                        background: "#0b2f6d",
+                        borderRadius: "0px",
+                        minWidth: "200px",
+                        maxHeight: "40px",
+                      }}
+                      type="submit"
+                    >
+                      CARGAR
+                    </Button>
+                  </Box>
+                </form>
+              </Box>
+            )}
+          </Box>
+          <Box sx={{ width: "100%", paddingTop:1 }}>
+            {dataTraza && dataTraza.file ? (
+              <Box
+                component={Paper}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                  padding: 1,
+                }}
+              >
+                <Typography sx={{ fontFamily: "initial", width:'200px' }}>TRAZAS</Typography>
+                <Tooltip title="Descargar Archivo" placement="right">
+                  <Button
+                    onClick={() => downloader(dataTraza.file)}
+                    size="small"
+                    variant="contained"
+                    sx={{
+                      background: "#0b2f6d",
+                      borderRadius: "0px",
+                      minWidth: "200px",
+                    }}
+                  >
+                    Descargar
+                  </Button>
+                </Tooltip>
+
+                <Tooltip title="Eliminar Archivo" placement="right">
+                  <Button
+                    onClick={() => {
+                      setToDeleteTraza(dataTraza.trazaID);
+                      setOpenModalDeleteTraza(true);
+                    }}
+                    size="small"
+                    variant="contained"
+                    color="error"
+                    sx={{
+                      borderRadius: "0px",
+                      minWidth: "200px",
+                    }}
+                  >
+                    Eliminar
+                  </Button>
+                </Tooltip>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  width: { lg: "100%", xs: "100%", md: "100%" },
+                }}
+              >
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setOpenModalTrazas(true);
+                  }}
+                >
+                  <Box
+                    component={Paper}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-evenly",
+                      alignItems: "center",
+                      padding: 1,
+                    }}
+                  >
+                    <Typography sx={{ fontFamily: "initial", width:'200px' }}>
+                      TRAZAS
+                    </Typography>
+                    <TextField
+                      required
+                      id="file"
+                      type="file"
+                      name="file"
+                      variant="outlined"
+                      onChange={handleFileChangePDF}
+                      sx={{
+                        whiteSpace: "normal",
+                        textAlign: "center",
+                        background: "#ffffff",
+                        minWidth: "200px",
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      sx={{
+                        background: "#0b2f6d",
+                        borderRadius: "0px",
+                        minWidth: "200px",
+                        maxHeight: "40px",
+                      }}
+                      type="submit"
+                    >
+                      CARGAR
+                    </Button>
+                  </Box>
+                </form>
+              </Box>
+            )}
+          </Box>
         </CardContent>
       </Card>
     </>
@@ -1525,7 +1733,50 @@ function Asignado() {
           }}
         >
           <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            ¿Deseas adjuntar este archivo como avance?
+            ¿Deseas adjuntar este archivo como checklist?
+          </Typography>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={isSubmitting}
+              sx={{
+                width: 200,
+                height: 40,
+                fontWeight: "bold",
+                display: "flex",
+                justifyContent: "space-around",
+                background: "#0b2f6d",
+                borderRadius: "0px",
+              }}
+            >
+              {isSubmitting ? "Procesando..." : "Enviar"}
+            </Button>
+          </Box>
+        </Box>
+      </form>
+    </Modal>
+  );
+
+  const setModalTrazas = () => (
+    <Modal open={openModalTrazas} onClose={handleCloseModal}>
+      <form onSubmit={handleSubmitTraza}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            textAlign: "center",
+          }}
+        >
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            ¿Deseas adjuntar este archivo como trazas?
           </Typography>
 
           <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
@@ -1594,6 +1845,49 @@ function Asignado() {
     </Modal>
   );
 
+  const setModalDeleteTraza = () => (
+    <Modal open={openModalDeleteTraza} onClose={handleCloseModal}>
+      <form onSubmit={handleDeleteTraza}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "600px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            textAlign: "center",
+          }}
+        >
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            ¿Deseas eliminar este archivo?
+          </Typography>
+
+          <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={isSubmitting}
+              color="error"
+              sx={{
+                width: 200,
+                height: 40,
+                fontWeight: "bold",
+                display: "flex",
+                justifyContent: "space-around",
+                borderRadius: "0px",
+              }}
+            >
+              {isSubmitting ? "Eliminando..." : "Eliminar"}
+            </Button>
+          </Box>
+        </Box>
+      </form>
+    </Modal>
+  );
+
   //USEEFFECTS DESDE AQUI
 
   useEffect(() => {
@@ -1622,7 +1916,9 @@ function Asignado() {
         }}
       >
         {openModal && setModal()}
+        {openModalTrazas && setModalTrazas()}
         {openModalDelete && setModalDelete()}
+        {openModalDeleteTraza && setModalDeleteTraza()}
         {open && (
           <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
             {message}
@@ -1722,7 +2018,7 @@ function Asignado() {
             {dataEstado && dataEstado.proyectoEstadoID == 3
               ? addNuevoComponente()
               : null}
-            {componenteAvanceProyecto()}
+            {componenteDocumentos()}
           </>
         )}
       </Box>

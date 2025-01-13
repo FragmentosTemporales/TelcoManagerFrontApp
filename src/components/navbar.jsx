@@ -113,6 +113,7 @@ function Navbar() {
                     </Badge>
                   </Link>
                 </Tooltip>
+
                 <Tooltip title="Configuraciones" placement="left">
                   <Link to={"/configuraciones"}>
                     <Button
@@ -133,6 +134,7 @@ function Navbar() {
                     </Button>
                   </Link>
                 </Tooltip>
+
                 <Tooltip title="Cerrar Sesión" placement="left">
                   <Button
                     variant="contained"

@@ -22,6 +22,7 @@ import {
   getNumeros,
   getSiguiente,
   saltarNumero,
+  enAtencion,
 } from "../api/totemAPI";
 import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import { getReversas, updateReversas } from "../api/dominionAPI";
@@ -70,10 +71,10 @@ function AtencionTotem() {
   const renderBtn = () => {
     if (data && data.length > 0) {
       return (
-        <Box sx={{ textAlign: "center", marginTop: '20px' }}>
+        <Box sx={{ textAlign: "center", marginTop: "20px" }}>
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", width: "250px", borderRadius: '10px' }}
+            sx={{ background: "#0b2f6d", width: "250px", borderRadius: "10px" }}
             onClick={handleSubmitUpdate}
             disabled={isSubmitting}
           >
@@ -91,13 +92,13 @@ function AtencionTotem() {
     setIsSubmitting(true);
     try {
       const res = await updateReversas(domToken, formattedData);
-      console.log(res)
+      console.log(res);
       setIsSubmitting(false);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setIsSubmitting(false);
     }
-    fetchData()
+    fetchData();
   };
 
   const handleCheckboxChange = (id, type) => {
@@ -191,44 +192,43 @@ function AtencionTotem() {
         </CardContent>
       );
     }
-  
+
     // Corrige el condicional
     if (selectedEstacion && atencion) {
       return (
         <>
-        <Card sx={{ borderRadius: "10px" }}>
-          <CardHeader
-            title={
-              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                LISTA DE REVERSAS PENDIENTES
-              </Typography>
-            }
-            avatar={<PlaylistRemoveIcon />}
-            sx={{
-              background: "#0b2f6d",
-              color: "white",
-              textAlign: "end",
-            }}
-          />
-          <TableContainer
-            component={Paper}
-            sx={{ width: "100%", height: "100%", overflow: "auto" }}
-          >
-            <Table stickyHeader>
-              {renderTableHeaders()}
-              {renderTableBody()}
-            </Table>
-          </TableContainer>
-        </Card>
+          <Card sx={{ borderRadius: "10px" }}>
+            <CardHeader
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                  LISTA DE REVERSAS PENDIENTES
+                </Typography>
+              }
+              avatar={<PlaylistRemoveIcon />}
+              sx={{
+                background: "#0b2f6d",
+                color: "white",
+                textAlign: "end",
+              }}
+            />
+            <TableContainer
+              component={Paper}
+              sx={{ width: "100%", height: "100%", overflow: "auto" }}
+            >
+              <Table stickyHeader>
+                {renderTableHeaders()}
+                {renderTableBody()}
+              </Table>
+            </TableContainer>
+          </Card>
           {renderBtn()}
         </>
       );
     }
-  
+
     // Retorna null si no hay estación seleccionada
     return null;
   };
-  
 
   useEffect(() => {
     if (domToken && atencion) {
@@ -249,7 +249,6 @@ function AtencionTotem() {
     try {
       setIsSubmitting(true);
       const response = await getNumeros();
-
       const filteredDataEspera = response.filter(
         (item) => item.Estacion_ID === selectedEstacion.EstacionID
       );
@@ -307,16 +306,11 @@ function AtencionTotem() {
       : "linear-gradient(to right, #124fb9, #0b2f6d)";
   };
 
-
   useEffect(() => {
     const filteredDataEspera = fila.filter(
       (item) => item.Estado === "En espera"
     );
     setEspera(filteredDataEspera);
-    const filteredDataAtencion = fila.filter(
-      (item) => item.Estado === "En atención"
-    );
-    setAtencion(filteredDataAtencion[0]);
   }, [fila]);
 
   useEffect(() => {
@@ -358,6 +352,25 @@ function AtencionTotem() {
     }
     return () => clearInterval(timer);
   }, [isRunning]);
+
+  useEffect(() => {
+    getAtencion();
+  }, [fila]);
+
+  const getAtencion = async () => {
+    try {
+      if (selectedEstacion) {
+        const res = await enAtencion(
+          token,
+          selectedEstacion.EstacionID,
+          selectedEstacion.Modulo
+        );
+        setAtencion(res[0]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box
@@ -595,7 +608,9 @@ function AtencionTotem() {
                           fontSize: "1rem",
                         }}
                       >
-                        {atencion.Proceso ? atencion.Proceso : "Sin Proceso"}
+                        {atencion.Nombre_Proceso
+                          ? atencion.Nombre_Proceso
+                          : "Sin Proceso"}
                       </Typography>
                     </Box>
                   ) : (

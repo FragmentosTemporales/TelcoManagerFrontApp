@@ -28,10 +28,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { setDomMessage } from "../slices/dominionSlice";
 import { getReversas, updateReversas } from "../api/dominionAPI";
-import tecnicosData from "../data/tecnicosData";
+import { fetchReversas } from "../api/logisticaAPI"
 
 function ReversaView() {
   const { domToken, domMessage } = useSelector((state) => state.dominion);
+  const authState = useSelector((state) => state.auth);
+  const { token } = authState;
   const [rut, setRut] = useState("");
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -52,7 +54,8 @@ function ReversaView() {
 
   const fetchTecnicos = async () => {
     try {
-      const transformedOptions = tecnicosData.map((item) => ({
+      const response = await fetchReversas(token)
+      const transformedOptions = response.map((item) => ({
         value: item.value,
         label: item.label,
         frecuencia: item.frecuencia,

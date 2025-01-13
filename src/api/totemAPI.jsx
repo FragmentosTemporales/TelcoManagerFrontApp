@@ -92,3 +92,18 @@ export const cancelarAtencion = async (token, Rut) => {
     throw error.response.data.error;
   }
 };
+
+export const enAtencion = async (token, EstacionID, moduloID) => {
+  try {
+    const url = `${baseUrl}/get-atencion/${EstacionID}&&${moduloID}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
