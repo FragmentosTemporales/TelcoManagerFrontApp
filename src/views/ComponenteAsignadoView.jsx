@@ -28,14 +28,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
 import InfoIcon from "@mui/icons-material/Info";
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   getComponenteUnico,
   createRecurso,
   deleteRecurso,
   deleteMedicion,
-  createMedicionCTO
+  createMedicionCTO,
 } from "../api/proyectoAPI";
 import { fetchFileUrl } from "../api/downloadApi";
 
@@ -62,6 +62,7 @@ function ComponenteAsignadoView() {
   const [existCTO, setExistCTO] = useState(false);
   const [existPowerMetter, setExistPowerMetter] = useState(false);
   const [elementos, setElementos] = useState([]);
+
   const [form, setForm] = useState({
     respuesta: "",
     formComponenteID: "",
@@ -131,8 +132,8 @@ function ComponenteAsignadoView() {
       const res = await deleteMedicion(toDeleteMedicion, token);
       setIsSubmitting(false);
       handleCloseModal();
-      setMedicionCTO(undefined)
-      setExistCTO(false)
+      setMedicionCTO(undefined);
+      setExistCTO(false);
       fetchData();
     } catch (error) {
       console.log(error);
@@ -154,7 +155,7 @@ function ComponenteAsignadoView() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const maxSize = 5 * 2048 * 2048;
-  
+
     if (file) {
       // Validar que el archivo sea una imagen
       const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
@@ -163,7 +164,7 @@ function ComponenteAsignadoView() {
         e.target.value = null; // Reinicia el input file
         return;
       }
-  
+
       // Validar el tamaño del archivo
       if (file.size > maxSize) {
         alert(
@@ -172,7 +173,7 @@ function ComponenteAsignadoView() {
         e.target.value = null; // Reinicia el input file
         return;
       }
-  
+
       // Actualizar el estado si pasa todas las validaciones
       setForm({
         ...form,
@@ -218,7 +219,7 @@ function ComponenteAsignadoView() {
       fetchData();
     } catch (error) {
       setMessage("Error al enviar el formulario:", error);
-      setOpen(true)
+      setOpen(true);
       setIsSubmitting(false);
       setForm({
         respuesta: "",
@@ -240,7 +241,7 @@ function ComponenteAsignadoView() {
       fetchData();
     } catch (error) {
       setMessage("Error al enviar el formulario:", error);
-      setOpen(true)
+      setOpen(true);
       setIsSubmitting(false);
     }
   };
@@ -905,7 +906,7 @@ function ComponenteAsignadoView() {
                       justifyContent: "space-around",
                       background: "#0b2f6d",
                       borderRadius: "0px",
-                      margin:'20px'
+                      margin: "20px",
                     }}
                   >
                     {isSubmitting ? "Procesando..." : "Enviar"}
@@ -993,16 +994,18 @@ function ComponenteAsignadoView() {
                   </Grid>
                 ))}
             </Grid>
-            <Divider sx={{margin:2}} />
-            <Tooltip title='Borrar registros'>
-            <Button
-                              variant="contained"
-                              sx={{ background: "#c62828", borderRadius: 0 }}
-                              onClick={() => {
-                                setToDeleteMedicion(medicionCTO.medicionctoID),
-                                  setOpenModalDeleteMedicion(true);
-                              }}
-                            ><DeleteIcon/></Button>
+            <Divider sx={{ margin: 2 }} />
+            <Tooltip title="Borrar registros">
+              <Button
+                variant="contained"
+                sx={{ background: "#c62828", borderRadius: 0 }}
+                onClick={() => {
+                  setToDeleteMedicion(medicionCTO.medicionctoID),
+                    setOpenModalDeleteMedicion(true);
+                }}
+              >
+                <DeleteIcon />
+              </Button>
             </Tooltip>
           </CardContent>
         </Card>

@@ -64,3 +64,19 @@ export const getAst  = async (token, ID) => {
     throw error.response.data.error;
   }
 };
+
+
+export const getAstUsers  = async (token) => {
+  try {
+    const url = `${baseUrl}/get-ast-users`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};

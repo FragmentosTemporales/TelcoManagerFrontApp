@@ -1,21 +1,28 @@
 import {
   Alert,
+  Autocomplete,
   Box,
   Button,
   Card,
   CardContent,
   CardHeader,
   InputLabel,
+  Skeleton,
   TextField,
-  Autocomplete,
-  Typography
+  Typography,
 } from "@mui/material";
-import FeedIcon from '@mui/icons-material/Feed';
+import FeedIcon from "@mui/icons-material/Feed";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createSolicitud } from "../api/solicitudAPI";
-import { motivoData17, motivoData18, motivoData19, motivoData20, motivoData22 } from "../data/submotivoData";
+import {
+  motivoData17,
+  motivoData18,
+  motivoData19,
+  motivoData20,
+  motivoData22,
+} from "../data/submotivoData";
 import areaData from "../data/areaData";
 import {
   prevencionData,
@@ -26,6 +33,7 @@ import {
   flotaData,
 } from "../data/motivoData";
 import personaData from "../data/personaData";
+import { getPersona } from "../api/personaAPI";
 
 import { onLoad, onLoading, setMessage } from "../slices/solicitudSlice";
 
@@ -49,6 +57,8 @@ function FormSolicitud() {
   const [areaOptions, setAreaOptions] = useState([]);
   const [smOptions, setSmOptions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [data, setData] = useState([]);
+  const [isLoaging, setIsLoading] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -105,7 +115,6 @@ function FormSolicitud() {
       console.log("No hay submotivos disponible");
     }
   };
-
 
   const setMotivoData = () => {
     if (form.areaID && form.areaID != "") {
@@ -167,6 +176,17 @@ function FormSolicitud() {
     }
   };
 
+  const fetchPersonas = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getPersona(token);
+      setData(response);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
+  };
+
   const fetchArea = async () => {
     try {
       const transformedOptions = areaData.map((item) => ({
@@ -174,18 +194,6 @@ function FormSolicitud() {
         label: item.descri,
       }));
       setAreaOptions(transformedOptions);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchPersona = async () => {
-    try {
-      const transformedOptions = personaData.map((item) => ({
-        value: item.personaID,
-        label: item.nombre,
-      }));
-      setPersonaOptions(transformedOptions);
     } catch (error) {
       console.log(error);
     }
@@ -222,7 +230,6 @@ function FormSolicitud() {
 
   useEffect(() => {
     fetchArea();
-    fetchPersona();
   }, []);
 
   useEffect(() => {
@@ -238,11 +245,25 @@ function FormSolicitud() {
     }));
   }, [user_id]);
 
-  useEffect(()=>{
-    if (form.areaID && form.areaID != ""){
-      setMotivoData()
+  useEffect(() => {
+    if (form.areaID && form.areaID != "") {
+      setMotivoData();
     }
-  },[form.areaID])
+  }, [form.areaID]);
+
+  useEffect(() => {
+    fetchPersonas();
+  }, []);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      const transformedOptions = data.map((item) => ({
+        value: item.personaID,
+        label: item.RUT + " " + item.Nombre,
+      }));
+      setPersonaOptions(transformedOptions);
+    }
+  }, [data]);
 
   return (
     <Box
@@ -263,160 +284,186 @@ function FormSolicitud() {
           {message}
         </Alert>
       )}
-      <Card
-        sx={{
-          borderRadius: "0px",
-          width: "50%",
-          height: "530px",
-          overflow: "auto",
-          boxShadow: 5,
-        }}
-      >
-        <CardHeader
-          title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              FORMULARIO SOLICITUD
-            </Typography>
-          }
-          avatar={<FeedIcon/>}
+      {isLoaging ? (
+        <Box
           sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "end",
-          }}
-        />
-        <CardContent
-          sx={{
+            width: "50%",
+            height: "530px",
+            overflow: "hidden",
+            backgroundColor: "#f5f5f5",
+            boxShadow: 5,
+            borderRadius: "10px",
+            mt: 2,
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <form onSubmit={handleSubmit} style={{ width: "80%" }}>
-            <Box sx={{ mb: 2 }}>
-              <InputLabel id="area-select-label">Area</InputLabel>
-              <Autocomplete
-                options={areaOptions}
-                getOptionLabel={(option) => option.label}
-                value={
-                  areaOptions.find((option) => option.value === form.areaID) ||
-                  null
-                }
-                onChange={(event, newValue) => {
-                  setForm({
-                    ...form,
-                    areaID: newValue ? newValue.value : "",
-                  });
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Area"
-                    variant="filled"
-                    fullWidth
-                  />
-                )}
-              />
-            </Box>
+          <Skeleton
+            variant="rounded"
+            width={"90%"}
+            height={"400px"}
+            sx={{ p: 3, m: 3 }}
+          />
+        </Box>
+      ) : (
+        <Card
+          sx={{
+            borderRadius: "10px",
+            width: "50%",
+            height: "530px",
+            overflow: "auto",
+            boxShadow: 5,
+          }}
+        >
+          <CardHeader
+            title={
+              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                FORMULARIO SOLICITUD
+              </Typography>
+            }
+            avatar={<FeedIcon />}
+            sx={{
+              background: "#0b2f6d",
+              color: "white",
+              textAlign: "end",
+            }}
+          />
+          <CardContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <form onSubmit={handleSubmit} style={{ width: "80%" }}>
+              <Box sx={{ mb: 2 }}>
+                <InputLabel id="area-select-label">Area</InputLabel>
+                <Autocomplete
+                  options={areaOptions}
+                  getOptionLabel={(option) => option.label}
+                  value={
+                    areaOptions.find(
+                      (option) => option.value === form.areaID
+                    ) || null
+                  }
+                  onChange={(event, newValue) => {
+                    setForm({
+                      ...form,
+                      areaID: newValue ? newValue.value : "",
+                    });
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Area"
+                      variant="filled"
+                      fullWidth
+                    />
+                  )}
+                />
+              </Box>
 
-            <Box sx={{ mb: 2 }}>
-              <InputLabel id="persona-select-label">
-                Persona a amonestar
-              </InputLabel>
-              <Autocomplete
-                options={personaOptions}
-                getOptionLabel={(option) => option.label}
-                value={
-                  personaOptions.find(
-                    (option) => option.value === form.personaID
-                  ) || null
-                }
-                onChange={(event, newValue) => {
-                  setForm({
-                    ...form,
-                    personaID: newValue ? newValue.value : "",
-                  });
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Persona"
-                    variant="filled"
-                    fullWidth
-                  />
-                )}
-              />
-            </Box>
+              <Box sx={{ mb: 2 }}>
+                <InputLabel id="persona-select-label">
+                  Persona a amonestar
+                </InputLabel>
+                <Autocomplete
+                  options={personaOptions}
+                  getOptionLabel={(option) => option.label}
+                  value={
+                    personaOptions.find(
+                      (option) => option.value === form.personaID
+                    ) || null
+                  }
+                  onChange={(event, newValue) => {
+                    setForm({
+                      ...form,
+                      personaID: newValue ? newValue.value : "",
+                    });
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Persona"
+                      variant="filled"
+                      fullWidth
+                    />
+                  )}
+                />
+              </Box>
 
-            <Box sx={{ mb: 2 }}>
-              <InputLabel id="motivo-select-label">Motivo Asociado</InputLabel>
-              <Autocomplete
-                options={motivoOptions}
-                getOptionLabel={(option) => option.label}
-                value={
-                  motivoOptions.find(
-                    (option) => option.value === form.motivoID
-                  ) || null
-                }
-                onChange={(event, newValue) => {
-                  setForm({
-                    ...form,
-                    motivoID: newValue ? newValue.value : "",
-                  });
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Motivo"
-                    variant="filled"
-                    fullWidth
-                  />
-                )}
-              />
-            </Box>
+              <Box sx={{ mb: 2 }}>
+                <InputLabel id="motivo-select-label">
+                  Motivo Asociado
+                </InputLabel>
+                <Autocomplete
+                  options={motivoOptions}
+                  getOptionLabel={(option) => option.label}
+                  value={
+                    motivoOptions.find(
+                      (option) => option.value === form.motivoID
+                    ) || null
+                  }
+                  onChange={(event, newValue) => {
+                    setForm({
+                      ...form,
+                      motivoID: newValue ? newValue.value : "",
+                    });
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Motivo"
+                      variant="filled"
+                      fullWidth
+                    />
+                  )}
+                />
+              </Box>
 
-            <Box sx={{ mb: 2 }}>
-              <InputLabel id="motivo-select-label">
-                Submotivo Asociado
-              </InputLabel>
-              <Autocomplete
-                options={smOptions}
-                getOptionLabel={(option) => option.label}
-                value={
-                  smOptions.find(
-                    (option) => option.value === form.submotivoID
-                  ) || null
-                }
-                onChange={(event, newValue) => {
-                  setForm({
-                    ...form,
-                    submotivoID: newValue ? newValue.value : "",
-                  });
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Submotivo"
-                    variant="filled"
-                    fullWidth
-                  />
-                )}
-              />
-            </Box>
+              <Box sx={{ mb: 2 }}>
+                <InputLabel id="motivo-select-label">
+                  Submotivo Asociado
+                </InputLabel>
+                <Autocomplete
+                  options={smOptions}
+                  getOptionLabel={(option) => option.label}
+                  value={
+                    smOptions.find(
+                      (option) => option.value === form.submotivoID
+                    ) || null
+                  }
+                  onChange={(event, newValue) => {
+                    setForm({
+                      ...form,
+                      submotivoID: newValue ? newValue.value : "",
+                    });
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Submotivo"
+                      variant="filled"
+                      fullWidth
+                    />
+                  )}
+                />
+              </Box>
 
-            <Box sx={{ textAlign: "center" }}>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ background: "#0b2f6d", fontWeight: "bold" }}
-                disabled={isSubmitting} // Deshabilitar el botón cuando isSubmitting es true
-              >
-                {isSubmitting ? "Procesando..." : "Crear"}
-              </Button>
-            </Box>
-          </form>
-        </CardContent>
-      </Card>
+              <Box sx={{ textAlign: "center" }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                  disabled={isSubmitting} // Deshabilitar el botón cuando isSubmitting es true
+                >
+                  {isSubmitting ? "Procesando..." : "Crear"}
+                </Button>
+              </Box>
+            </form>
+          </CardContent>
+        </Card>
+      )}
     </Box>
   );
 }

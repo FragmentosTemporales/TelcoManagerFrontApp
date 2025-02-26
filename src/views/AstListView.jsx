@@ -24,23 +24,21 @@ import SearchIcon from "@mui/icons-material/Search";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { getAstList, getAstListUser } from "../api/prevencionAPI";
+import { getAstList, getAstListUser, getAstUsers } from "../api/prevencionAPI";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
-import astData from "../data/astData.jsx"
 
 function FormAstList() {
   const authState = useSelector((state) => state.auth);
   const { token } = authState;
   const [data, setData] = useState(undefined);
   const [pages, setPages] = useState(1);
-  const [dataUsers, setDataUsers] = useState(undefined);
+  const [dataUsers, setDataUsers] = useState([]);
   const [tecnicoID, setTecnicoID] = useState("");
   const [page, setPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [open,setOpen] = useState(false)
-  const [mensaje, setMensaje] = useState(undefined)
   const handlePage = (newPage) => setPage(newPage);
 
   const fetchData = async () => {
@@ -77,6 +75,15 @@ function FormAstList() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const fetchAstUsers = async () => {
+    try {
+      const res = await getAstUsers(token)
+      setDataUsers(res)
+    } catch(error){
+      console.log(error)
+    }
+  }
 
 
   const handleClear = async (e) => {
@@ -204,7 +211,7 @@ function FormAstList() {
             </Grid>
           </form>
         </CardContent>
-        
+
         ) : null}
       </Card>
     </>
@@ -279,16 +286,12 @@ function FormAstList() {
     </>
   );
 
-  const fetchUsers = async () => {
-      setDataUsers(astData);
-  };
-
   useEffect(() => {
     fetchData();
   }, []);
 
   useEffect(() => {
-    fetchUsers();
+    fetchAstUsers();
   }, []);
 
   useEffect(() => {

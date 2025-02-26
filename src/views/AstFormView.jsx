@@ -26,6 +26,7 @@ function AstViewer() {
   const fetchData = async () => {
     try {
       const res = await getAst(token, formID);
+      console.log(res)
       setData(res);
       setWorker(res.usuario);
       setIsLoading(false);
@@ -158,7 +159,7 @@ function AstViewer() {
                   { label: "¿Existe la posibilidad de una distensión muscular, producto de un levantamiento, flexión o dislocación?", value: data.distensionMuscular },
                   { label: "Medidas de control definidas", value: data.observacion }
                 ].map((item, index) => (
-                  <Box>
+                  <Box key={index}>
                     <Typography
                       sx={{
                         fontWeight: "bold",

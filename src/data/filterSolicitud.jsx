@@ -35,11 +35,6 @@ const filterData = [
     hab: "1",
   },
   {
-    solicitudEstadoID: "8",
-    descri: "SOLICITUD DE ANULACION",
-    hab: "1",
-  },
-  {
     solicitudEstadoID: "9",
     descri: "ANULADA",
     hab: "1",

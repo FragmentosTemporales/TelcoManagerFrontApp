@@ -41,36 +41,68 @@ function ObjetivosView() {
   const [mesOptions, setMesOption] = useState([
     {
       value: "2024-05-01",
-      label: "Mayo",
+      label: "Mayo 2024",
     },
     {
       value: "2024-06-01",
-      label: "Junio",
+      label: "Junio 2024",
     },
     {
       value: "2024-07-01",
-      label: "Julio",
+      label: "Julio 2024",
     },
     {
       value: "2024-08-01",
-      label: "Agosto",
+      label: "Agosto 2024",
     },
     {
       value: "2024-09-01",
-      label: "Septiembre",
+      label: "Septiembre 2024",
     },
     {
       value: "2024-10-01",
-      label: "Octubre",
+      label: "Octubre 2024",
     },
     {
       value: "2024-11-01",
-      label: "Noviembre",
+      label: "Noviembre 2024",
     },
     {
       value: "2024-12-01",
-      label: "Diciembre",
+      label: "Diciembre 2024",
     },
+    {
+      value: "2025-01-01",
+      label: "Enero 2025"
+    },
+    {
+      value: "2025-02-01",
+      label: "Febrero 2025"
+    },
+    {
+      value: "2025-03-01",
+      label: "Marzo 2025"
+    },
+    {
+      value: "2025-04-01",
+      label: "Abril 2025"
+    },
+    {
+      value: "2025-05-01",
+      label: "Mayo 2025"
+    },
+    {
+      value: "2025-06-01",
+      label: "Junio 2025"
+    },
+    {
+      value: "2025-06-01",
+      label: "Junio 2025"
+    },
+    {
+      value: "2025-07-01",
+      label: "Julio 2025"
+    }
   ]);
 
   const [gerenciaOptions, setGetenciaOptions] = useState([

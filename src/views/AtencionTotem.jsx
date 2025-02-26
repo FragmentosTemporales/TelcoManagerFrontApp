@@ -119,6 +119,12 @@ function AtencionTotem() {
             return (
               <TableRow key={item.id}>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
+                  <Typography fontFamily="initial">{item.fecha}</Typography>
+                </TableCell>
+                <TableCell align="center" sx={{ fontSize: "12px" }}>
+                  <Typography fontFamily="initial">{item.orden}</Typography>
+                </TableCell>
+                <TableCell align="center" sx={{ fontSize: "12px" }}>
                   <Typography fontFamily="initial">{item.ANI}</Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
@@ -127,13 +133,13 @@ function AtencionTotem() {
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
                   <Typography fontFamily="initial">{item.serie}</Typography>
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <TableCell align="center">
                   <Checkbox
                     checked={formattedItem.entrega === 1}
                     onChange={() => handleCheckboxChange(item.id, "entrega")}
                   />
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <TableCell align="center">
                   <Checkbox
                     checked={formattedItem.fuente === 1}
                     onChange={() => handleCheckboxChange(item.id, "fuente")}
@@ -162,7 +168,15 @@ function AtencionTotem() {
   const renderTableHeaders = () => (
     <TableHead>
       <TableRow>
-        {["ANI", "EQUIPO", "SERIE", "ENTREGADO", "FUENTE"].map((header) => (
+        {[
+          "FECHA",
+          "ORDEN",
+          "ANI",
+          "EQUIPO",
+          "SERIE",
+          "ENTREGADO",
+          "FUENTE",
+        ].map((header) => (
           <TableCell
             key={header}
             align="center"
@@ -389,7 +403,7 @@ function AtencionTotem() {
         {!selectedEstacion ? (
           <Card
             sx={{
-              width: { xs: "100%", sm: "80%", lg: "50%" },
+              width: { xs: "100%", sm: "80%", lg: "70%" },
               height: "100%",
               margin: "10px",
               borderRadius: "10px",
@@ -497,7 +511,7 @@ function AtencionTotem() {
         ) : (
           <Card
             sx={{
-              width: { xs: "100%", sm: "80%", lg: "50%" },
+              width: { xs: "100%", sm: "80%", lg: "70%" },
               height: "100%",
               margin: "10px",
               borderRadius: "10px",
@@ -799,7 +813,7 @@ function AtencionTotem() {
       </Box>
       {domToken && data.length > 0 ? (
         <Box
-          sx={{ width: { xs: "100%", sm: "80%", lg: "50%" }, margin: "10px" }}
+          sx={{ width: { xs: "100%", sm: "80%", lg: "70%" }, margin: "10px" }}
         >
           {renderTable()}
         </Box>

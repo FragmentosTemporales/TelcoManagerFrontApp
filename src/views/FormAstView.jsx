@@ -65,6 +65,7 @@ function FormAstCreate() {
 
     try {
       const res = await createAST(payload, token);
+      
       setMessage(res.message);
       setAlertSeverity("success");
       navigate("/success");

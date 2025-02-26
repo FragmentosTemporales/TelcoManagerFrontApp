@@ -19,9 +19,8 @@ function BodegaViewer() {
   const [atencionLogistica, setAtencionLogistica] = useState([]);
   const [esperaBodega, setEsperaBodega] = useState([]);
   const [esperaLogistica, setEsperaLogistica] = useState([]);
-  
-  const estilo = {fontSize: "1rem", paddingTop: "5px", paddingBot:"5px"}
 
+  const estilo = { fontSize: "1rem", paddingTop: "5px", paddingBot: "5px" };
 
   const fetchData = async () => {
     try {
@@ -39,6 +38,8 @@ function BodegaViewer() {
       console.log(error);
     }
   };
+
+  useEffect(()=>{console.log(atencionBodega)},[atencionBodega])
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -70,15 +71,21 @@ function BodegaViewer() {
 
   const verificarAtencion = (data, flag) => {
     if (flag === 1) {
-        if (JSON.stringify(atencionBodega) !== JSON.stringify(data) && JSON.stringify(data).length > 0) {
-            playAlertSound();
-        }
+      if (
+        JSON.stringify(atencionBodega) !== JSON.stringify(data) &&
+        JSON.stringify(data).length > 0
+      ) {
+        playAlertSound();
+      }
     } else if (flag === 2) {
-        if (JSON.stringify(atencionLogistica) !== JSON.stringify(data) && JSON.stringify(data).length > 0) {
-            playAlertSound();
-        }
+      if (
+        JSON.stringify(atencionLogistica) !== JSON.stringify(data) &&
+        JSON.stringify(data).length > 0
+      ) {
+        playAlertSound();
+      }
     }
-};
+  };
 
   const AtencionBodegaCard = ({ atencionBodega }) => (
     <Card
@@ -108,9 +115,8 @@ function BodegaViewer() {
         {atencionBodega && atencionBodega.length > 0 ? (
           <Grid container spacing={2}>
             {/* Primera columna */}
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               {atencionBodega
-                .filter((_, index) => index % 2 === 0)
                 .map((item, index) => (
                   <Paper
                     elevation={2}
@@ -122,88 +128,75 @@ function BodegaViewer() {
                     }}
                   >
                     <Grid container spacing={1}>
-                      <Grid item xs={4}>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Proceso:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Atiende:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Número:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Nombre:
+                    <Grid item xs={12}  sx={{display:'flex'}}>
+                      <Grid item xs={3}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={{
+                            fontSize: "2rem",
+                            paddingTop: "1px",
+                            paddingBot: "1px",
+                            textAlign: "center",
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          N° {item.Numero}
                         </Typography>
                       </Grid>
-                      <Grid item xs={8}>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Proceso}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Atendedor}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Numero}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
+                      <Grid item xs={9}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={{
+                            fontSize: "2rem",
+                            paddingTop: "3px",
+                            paddingBot: "3px",
+                            textAlign: "center",
+                          }}
+                        >
                           {item.nombre}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{
+                            fontSize: "1rem",
+                            paddingTop: "3px",
+                            paddingBot: "3px",
+                            textAlign: "center",
+                          }}
+                        >
+                          Proceso: {item.Proceso}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{
+                            fontSize: "1rem",
+                            paddingTop: "3px",
+                            paddingBot: "3px",
+                            textAlign: "center",
+                          }}
+                        >
+                          Atiende: {item.Atendedor}
                         </Typography>
                       </Grid>
                     </Grid>
-                  </Paper>
-                ))}
-            </Grid>
-            {/* Segunda columna */}
-            <Grid item xs={6}>
-              {atencionBodega
-                .filter((_, index) => index % 2 !== 0)
-                .map((item, index) => (
-                  <Paper
-                    elevation={2}
-                    key={`col2-${index}`}
-                    sx={{
-                      padding: "10px",
-                      margin: "10px auto",
-                      backgroundColor: "#f9f9f9",
-                    }}
-                  >
-                    <Grid container spacing={1}>
-                      <Grid item xs={4}>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Proceso:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Atiende:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Número:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Nombre:
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={8}>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Proceso}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Atendedor}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Numero}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.nombre}
-                        </Typography>
-                      </Grid>
-                    </Grid>
+                  </Grid>
                   </Paper>
                 ))}
             </Grid>
           </Grid>
         ) : (
-          <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: "1rem" }}
+          >
             No hay personas en atención
           </Typography>
         )}
@@ -238,103 +231,87 @@ function BodegaViewer() {
       <CardContent>
         {atencionLogistica && atencionLogistica.length > 0 ? (
           <Grid container spacing={2}>
-            {/* Primera columna */}
-            <Grid item xs={6}>
-              {atencionLogistica
-                .filter((_, index) => index % 2 === 0) // Filtra elementos en posiciones pares
-                .map((item, index) => (
-                  <Paper
-                    elevation={2}
-                    key={`col1-${index}`}
-                    sx={{
-                      padding: "10px",
-                      margin: "10px auto",
-                      backgroundColor: "#f9f9f9",
-                    }}
-                  >
-                    <Grid container spacing={1}>
-                      <Grid item xs={4}>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Proceso:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Atiende:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Número:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Nombre:
+            <Grid item xs={12}>
+              {atencionLogistica.map((item, index) => (
+                <Paper
+                  elevation={2}
+                  key={`col1-${index}`}
+                  sx={{
+                    padding: "10px",
+                    margin: "10px auto",
+                    backgroundColor: "#f9f9f9",
+                  }}
+                >
+                  <Grid container spacing={1}>
+                    <Grid item xs={12}  sx={{display:'flex'}}>
+                      <Grid item xs={3}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={{
+                            fontSize: "2rem",
+                            paddingTop: "1px",
+                            paddingBot: "1px",
+                            textAlign: "center",
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          N° {item.Numero}
                         </Typography>
                       </Grid>
-                      <Grid item xs={8}>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Proceso}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Atendedor}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Numero}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
+                      <Grid item xs={9}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={{
+                            fontSize: "2rem",
+                            paddingTop: "3px",
+                            paddingBot: "3px",
+                            textAlign: "center",
+                          }}
+                        >
                           {item.nombre}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{
+                            fontSize: "1rem",
+                            paddingTop: "3px",
+                            paddingBot: "3px",
+                            textAlign: "center",
+                          }}
+                        >
+                          Proceso: {item.Proceso}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{
+                            fontSize: "1rem",
+                            paddingTop: "3px",
+                            paddingBot: "3px",
+                            textAlign: "center",
+                          }}
+                        >
+                          Atiende: {item.Atendedor}
                         </Typography>
                       </Grid>
                     </Grid>
-                  </Paper>
-                ))}
-            </Grid>
-            {/* Segunda columna */}
-            <Grid item xs={6}>
-              {atencionLogistica
-                .filter((_, index) => index % 2 !== 0) // Filtra elementos en posiciones impares
-                .map((item, index) => (
-                  <Paper
-                    elevation={2}
-                    key={`col2-${index}`}
-                    sx={{
-                      padding: "10px",
-                      margin: "10px auto",
-                      backgroundColor: "#f9f9f9",
-                    }}
-                  >
-                    <Grid container spacing={1}>
-                      <Grid item xs={4}>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Proceso:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Atiende:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Número:
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
-                          Nombre:
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={8}>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Proceso}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Atendedor}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.Numero}
-                        </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
-                          {item.nombre}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                ))}
+                  </Grid>
+                </Paper>
+              ))}
             </Grid>
           </Grid>
         ) : (
-          <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: "1rem" }}
+          >
             No hay personas en atención
           </Typography>
         )}
@@ -385,24 +362,48 @@ function BodegaViewer() {
                   >
                     <Grid container spacing={1}>
                       <Grid item xs={4}>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Proceso:
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Número:
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Nombre:
                         </Typography>
                       </Grid>
                       <Grid item xs={8}>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.Proceso}
                         </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.Numero}
                         </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.nombre}
                         </Typography>
                       </Grid>
@@ -426,24 +427,48 @@ function BodegaViewer() {
                   >
                     <Grid container spacing={1}>
                       <Grid item xs={4}>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Proceso:
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Número:
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Nombre:
                         </Typography>
                       </Grid>
                       <Grid item xs={8}>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.Proceso}
                         </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.Numero}
                         </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.nombre}
                         </Typography>
                       </Grid>
@@ -453,7 +478,11 @@ function BodegaViewer() {
             </Grid>
           </Grid>
         ) : (
-          <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: "1rem" }}
+          >
             No hay personas en espera
           </Typography>
         )}
@@ -473,7 +502,7 @@ function BodegaViewer() {
         title={
           <Typography
             fontWeight="bold"
-            sx={{ fontFamily: "initial", fontSize: "1.5rem" }} 
+            sx={{ fontFamily: "initial", fontSize: "1.5rem" }}
           >
             EN ESPERA LOGÍSTICA
           </Typography>
@@ -504,24 +533,48 @@ function BodegaViewer() {
                   >
                     <Grid container spacing={1}>
                       <Grid item xs={4}>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Proceso:
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Número:
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Nombre:
                         </Typography>
                       </Grid>
                       <Grid item xs={8}>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.Proceso}
                         </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.Numero}
                         </Typography>
-                        <Typography variant="body2" color="text.primary" sx={estilo}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.nombre}
                         </Typography>
                       </Grid>
@@ -545,24 +598,48 @@ function BodegaViewer() {
                   >
                     <Grid container spacing={1}>
                       <Grid item xs={4}>
-                        <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Proceso:
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Número:
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={estilo}
+                        >
                           Nombre:
                         </Typography>
                       </Grid>
                       <Grid item xs={8}>
-                        <Typography variant="body2" color="text.primary">
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.Proceso}
                         </Typography>
-                        <Typography variant="body2" color="text.primary">
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.Numero}
                         </Typography>
-                        <Typography variant="body2" color="text.primary">
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          sx={estilo}
+                        >
                           {item.nombre}
                         </Typography>
                       </Grid>
@@ -572,7 +649,11 @@ function BodegaViewer() {
             </Grid>
           </Grid>
         ) : (
-          <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: "1rem" }}
+          >
             No hay personas en espera
           </Typography>
         )}
@@ -591,13 +672,14 @@ function BodegaViewer() {
         marginTop: "70px",
       }}
     >
-
-      <Box sx={{ display: "flex", justifyContent: "space-evenly", width: "100%" }}>
-        <CardContent sx={{width: "100%"}}>
+      <Box
+        sx={{ display: "flex", justifyContent: "space-evenly", width: "100%" }}
+      >
+        <CardContent sx={{ width: "100%" }}>
           <AtencionLogisticaCard atencionLogistica={atencionLogistica} />
           <EsperaLogisticaCard esperaLogistica={esperaLogistica} />
         </CardContent>
-        <CardContent sx={{width: "100%"}}>
+        <CardContent sx={{ width: "100%" }}>
           <AtencionBodegaCard atencionBodega={atencionBodega} />
           <EsperaBodegaCard esperaBodega={esperaBodega} />
         </CardContent>

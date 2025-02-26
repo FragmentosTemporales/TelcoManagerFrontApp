@@ -156,10 +156,10 @@ function Home() {
       head: "Chat Soporte",
       icono: <ContactSupportIcon/>,
       title: "Espacio para consulta y soporte técnico",
-      link: "/supervisor",
+      link: "/chatbot",
       body: "Acá podrás realizar preguntas a un chat destinado al apoyo para técnicos",
       estado: true,
-      moduloID: 14,
+      moduloID: 15,
     },
   ];
 

@@ -108,9 +108,8 @@ const AtencionBodegaCard = ({ atencionBodega }) => (
       {atencionBodega && atencionBodega.length > 0 ? (
         <Grid container spacing={2}>
           {/* Primera columna */}
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             {atencionBodega
-              .filter((_, index) => index % 2 === 0)
               .map((item, index) => (
                 <Paper
                   elevation={2}
@@ -122,88 +121,75 @@ const AtencionBodegaCard = ({ atencionBodega }) => (
                   }}
                 >
                   <Grid container spacing={1}>
-                    <Grid item xs={4}>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Proceso:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Atiende:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Número:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Nombre:
+                  <Grid item xs={12}  sx={{display:'flex'}}>
+                    <Grid item xs={3}>
+                      <Typography
+                        variant="body2"
+                        color="text.primary"
+                        sx={{
+                          fontSize: "2rem",
+                          paddingTop: "1px",
+                          paddingBot: "1px",
+                          textAlign: "center",
+                          height: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        N° {item.Numero}
                       </Typography>
                     </Grid>
-                    <Grid item xs={8}>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
-                        {item.Proceso}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
-                        {item.Atendedor}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
-                        {item.Numero}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
+                    <Grid item xs={9}>
+                      <Typography
+                        variant="body2"
+                        color="text.primary"
+                        sx={{
+                          fontSize: "2rem",
+                          paddingTop: "3px",
+                          paddingBot: "3px",
+                          textAlign: "center",
+                        }}
+                      >
                         {item.nombre}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          fontSize: "1rem",
+                          paddingTop: "3px",
+                          paddingBot: "3px",
+                          textAlign: "center",
+                        }}
+                      >
+                        Proceso: {item.Proceso}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          fontSize: "1rem",
+                          paddingTop: "3px",
+                          paddingBot: "3px",
+                          textAlign: "center",
+                        }}
+                      >
+                        Atiende: {item.Atendedor}
                       </Typography>
                     </Grid>
                   </Grid>
-                </Paper>
-              ))}
-          </Grid>
-          {/* Segunda columna */}
-          <Grid item xs={6}>
-            {atencionBodega
-              .filter((_, index) => index % 2 !== 0)
-              .map((item, index) => (
-                <Paper
-                  elevation={2}
-                  key={`col2-${index}`}
-                  sx={{
-                    padding: "10px",
-                    margin: "10px auto",
-                    backgroundColor: "#f9f9f9",
-                  }}
-                >
-                  <Grid container spacing={1}>
-                    <Grid item xs={4}>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Proceso:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Atiende:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Número:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Nombre:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={8}>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
-                        {item.Proceso}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
-                        {item.Atendedor}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
-                        {item.Numero}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
-                        {item.nombre}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                </Grid>
                 </Paper>
               ))}
           </Grid>
         </Grid>
       ) : (
-        <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: "1rem" }}
+        >
           No hay personas en atención
         </Typography>
       )}
@@ -238,103 +224,87 @@ const AtencionLogisticaCard = ({ atencionLogistica }) => (
     <CardContent>
       {atencionLogistica && atencionLogistica.length > 0 ? (
         <Grid container spacing={2}>
-          {/* Primera columna */}
-          <Grid item xs={6}>
-            {atencionLogistica
-              .filter((_, index) => index % 2 === 0) // Filtra elementos en posiciones pares
-              .map((item, index) => (
-                <Paper
-                  elevation={2}
-                  key={`col1-${index}`}
-                  sx={{
-                    padding: "10px",
-                    margin: "10px auto",
-                    backgroundColor: "#f9f9f9",
-                  }}
-                >
-                  <Grid container spacing={1}>
-                    <Grid item xs={4}>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Proceso:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Atiende:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Número:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>
-                        Nombre:
+          <Grid item xs={12}>
+            {atencionLogistica.map((item, index) => (
+              <Paper
+                elevation={2}
+                key={`col1-${index}`}
+                sx={{
+                  padding: "10px",
+                  margin: "10px auto",
+                  backgroundColor: "#f9f9f9",
+                }}
+              >
+                <Grid container spacing={1}>
+                  <Grid item xs={12}  sx={{display:'flex'}}>
+                    <Grid item xs={3}>
+                      <Typography
+                        variant="body2"
+                        color="text.primary"
+                        sx={{
+                          fontSize: "2rem",
+                          paddingTop: "1px",
+                          paddingBot: "1px",
+                          textAlign: "center",
+                          height: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        N° {item.Numero}
                       </Typography>
                     </Grid>
-                    <Grid item xs={8}>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
-                        {item.Proceso}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
-                        {item.Atendedor}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
-                        {item.Numero}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>
+                    <Grid item xs={9}>
+                      <Typography
+                        variant="body2"
+                        color="text.primary"
+                        sx={{
+                          fontSize: "2rem",
+                          paddingTop: "3px",
+                          paddingBot: "3px",
+                          textAlign: "center",
+                        }}
+                      >
                         {item.nombre}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          fontSize: "1rem",
+                          paddingTop: "3px",
+                          paddingBot: "3px",
+                          textAlign: "center",
+                        }}
+                      >
+                        Proceso: {item.Proceso}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          fontSize: "1rem",
+                          paddingTop: "3px",
+                          paddingBot: "3px",
+                          textAlign: "center",
+                        }}
+                      >
+                        Atiende: {item.Atendedor}
                       </Typography>
                     </Grid>
                   </Grid>
-                </Paper>
-              ))}
-          </Grid>
-          {/* Segunda columna */}
-          <Grid item xs={6}>
-            {atencionLogistica
-              .filter((_, index) => index % 2 !== 0) // Filtra elementos en posiciones impares
-              .map((item, index) => (
-                <Paper
-                  elevation={2}
-                  key={`col2-${index}`}
-                  sx={{
-                    padding: "10px",
-                    margin: "10px auto",
-                    backgroundColor: "#f9f9f9",
-                  }}
-                >
-                  <Grid container spacing={1}>
-                    <Grid item xs={4}>
-                      <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
-                        Proceso:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
-                        Atiende:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
-                        Número:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
-                        Nombre:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={8}>
-                      <Typography variant="body2" color="text.primary" sx={{fontSize: "1rem"}}>
-                        {item.Proceso}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={{fontSize: "1rem"}}>
-                        {item.Atendedor}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={{fontSize: "1rem"}}>
-                        {item.Numero}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary" sx={{fontSize: "1rem"}}>
-                        {item.nombre}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              ))}
+                </Grid>
+              </Paper>
+            ))}
           </Grid>
         </Grid>
       ) : (
-        <Typography variant="body2" color="text.secondary" sx={{fontSize: "1rem"}}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: "1rem" }}
+        >
           No hay personas en atención
         </Typography>
       )}

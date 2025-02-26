@@ -23,8 +23,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import FindInPageIcon from "@mui/icons-material/FindInPage";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,17 +48,17 @@ function Solicitudes() {
   const fetchData = async () => {
     try {
       dispatch(onLoading());
-      setIsSubmitting(true)
+      setIsSubmitting(true);
       const res =
         filterID === undefined
           ? await getSolicitudes(token, page)
           : await getFilteredSolicitudes(token, filterID, page);
       dispatch(onLoad(res));
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     } catch (error) {
       dispatch(setMessage("Información no encontrada."));
       setOpen(true);
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   };
 
@@ -113,7 +112,7 @@ function Solicitudes() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "0px",
+          borderRadius: "10px",
           mt: 2,
         }}
       >
@@ -123,7 +122,7 @@ function Solicitudes() {
               FILTRAR SOLICITUDES SEGUN ESTADO
             </Typography>
           }
-          avatar={<SearchIcon/>}
+          avatar={<SearchIcon />}
           sx={{
             background: "#0b2f6d",
             color: "white",
@@ -229,16 +228,9 @@ function Solicitudes() {
             "FORMULARIO",
             "SOLICITANTE",
             "AMONESTADO",
-            "ACCIONES",
           ].map((header) => (
-            <TableCell
-              key={header}
-              align="center"
-              sx={{ background: "#d8d8d8", fontWeight: "bold" }}
-            >
-              <Typography fontFamily="initial">
-              {header}
-              </Typography>
+            <TableCell key={header} align="center">
+              <Typography fontFamily="initial">{header}</Typography>
             </TableCell>
           ))}
         </TableRow>
@@ -251,12 +243,21 @@ function Solicitudes() {
       <TableBody>
         {data && data.length > 0 ? (
           data.map((row, index) => (
-            <TableRow key={index}>
+            <TableRow
+              key={index}
+              component={Link}
+              to={`/solicitud/${row.solicitudID}`}
+              sx={{
+                textDecoration: "none",
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+              }}
+            >
               <TableCell
                 align="center"
                 sx={{ fontSize: "12px", minHeight: "70px" }}
               >
-                {row.fechaSolicitud}
+                {row.fechaSolicitud ? row.fechaSolicitud : "Sin Información"}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
                 {row.solicitudID}
@@ -278,56 +279,16 @@ function Solicitudes() {
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
                 {row.persona && row.persona.Nombre
-                  ? row.persona.Nombre +
-                    " " +
-                    row.persona.ApellidoPaterno +
-                    " " +
-                    row.persona.ApellidoMaterno
+                  ? row.persona.Nombre
                   : "Sin Información"}
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center", //
-                  fontSize: "12px",
-                  minHeight: "70px",
-                }}
-              >
-                <Tooltip title="Visualizar Solicitud" placement="left">
-                  <Button
-                    variant="contained"
-                    sx={{
-                      width: 30,
-                      height: 30,
-                      minWidth: 30,
-                      padding: 0,
-                      background: "#0b2f6d",
-                    }}
-                  >
-                    <Link
-                      style={{
-                        color: "white",
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                      to={`/solicitud/${row.solicitudID}`}
-                    >
-                      <FindInPageIcon />
-                    </Link>
-                  </Button>
-                </Tooltip>
               </TableCell>
             </TableRow>
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan={6} align="center">
-            <Typography fontFamily="initial">
-              No hay datos disponibles
+            <TableCell colSpan={12} align="center">
+              <Typography fontFamily="initial">
+                No hay datos disponibles
               </Typography>
             </TableCell>
           </TableRow>
@@ -338,41 +299,41 @@ function Solicitudes() {
 
   const setTableCard = () => (
     <Card
-            sx={{
-              width: "80%",
-              overflow: "hidden",
-              backgroundColor: "#f5f5f5",
-              boxShadow: 5,
-              textAlign: "center",
-              borderRadius: "0px",
-              minHeight: "250px",
-              mt: 2,
-            }}
-          >
-            <CardHeader
-              title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                  LISTA DE SOLICITUDES DE AMONESTACION
-                </Typography>
-              }
-              avatar={<FormatListBulletedIcon/>}
-              sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "end",
-              }}
-            />
-            <TableContainer
-              component={Paper}
-              sx={{ width: "100%", height: "100%", overflow: "auto" }}
-            >
-              <Table stickyHeader>
-                {setTableHead()}
-                {setTableBody()}
-              </Table>
-            </TableContainer>
-          </Card>
-  )
+      sx={{
+        width: "80%",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        textAlign: "center",
+        borderRadius: "10px",
+        minHeight: "250px",
+        mt: 2,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            LISTA DE SOLICITUDES DE AMONESTACION
+          </Typography>
+        }
+        avatar={<FormatListBulletedIcon />}
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "end",
+        }}
+      />
+      <TableContainer
+        component={Paper}
+        sx={{ width: "100%", height: "100%", overflow: "auto" }}
+      >
+        <Table stickyHeader>
+          {setTableHead()}
+          {setTableBody()}
+        </Table>
+      </TableContainer>
+    </Card>
+  );
 
   useEffect(() => {
     fetchData();
@@ -414,7 +375,7 @@ function Solicitudes() {
             overflow: "hidden",
             backgroundColor: "#f5f5f5",
             boxShadow: 5,
-            borderRadius: "0px",
+            borderRadius: "10px",
             mt: 2,
             display: "flex",
             justifyContent: "center",

@@ -90,6 +90,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
+            borderRadius: "10px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -131,6 +132,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
+            borderRadius: "10px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -172,6 +174,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
+            borderRadius: "10px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -213,6 +216,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
+            borderRadius: "10px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -254,6 +258,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
+            borderRadius: "10px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -295,6 +300,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
+            borderRadius: "10px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -336,6 +342,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
+            borderRadius: "10px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -377,6 +384,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
+            borderRadius: "10px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -418,6 +426,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
+            borderRadius: "10px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -459,6 +468,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
+            borderRadius: "10px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -656,7 +666,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "0",
+        borderRadius: "10px",
         mt: 3,
       }}
     >
@@ -674,8 +684,6 @@ function Solicitud() {
       />
       <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
         {btnAprobar()}
-
-        {btnRechazar()}
       </CardContent>
     </Card>
   );
@@ -688,7 +696,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "0",
+        borderRadius: "10px",
         mt: 3,
       }}
     >
@@ -718,7 +726,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "0",
+        borderRadius: "10px",
         mt: 3,
       }}
     >
@@ -750,7 +758,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "0",
+        borderRadius: "10px",
         mt: 3,
       }}
     >
@@ -780,7 +788,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "0",
+        borderRadius: "10px",
         mt: 3,
       }}
     >
@@ -812,7 +820,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "0",
+        borderRadius: "10px",
         mt: 3,
       }}
     >
@@ -843,7 +851,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "0",
+        borderRadius: "10px",
         mt: 3,
       }}
     >
@@ -874,7 +882,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "0",
+        borderRadius: "10px",
         mt: 3,
       }}
     >
@@ -904,7 +912,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "0",
+        borderRadius: "10px",
         mt: 3,
       }}
     >
@@ -985,6 +993,7 @@ function Solicitud() {
   const fetchData = async () => {
     try {
       const res = await getUniqueSolicitud(token, solicitud_id);
+      console.log("RESPUESTA EN SOLICITUD = ", res);
       setData(res);
       setValidate(res.userID);
       setDataGestiones(res.gestiones);
@@ -1041,7 +1050,7 @@ function Solicitud() {
                     </TableCell>
                     <TableCell align="center">
                       <Typography fontFamily="initial">
-                        {row.estado}
+                        {row.estado ? row.estado : "Sin gestiones"}
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
@@ -1273,7 +1282,6 @@ function Solicitud() {
               width: "90%",
               maxWidth: "800px",
               overflow: "hidden",
-              borderRadius: "0",
               mt: 3,
             }}
           >
@@ -1283,6 +1291,7 @@ function Solicitud() {
               </Button>
             </Link>
           </Box>
+
           <Card
             sx={{
               width: "90%",
@@ -1290,7 +1299,7 @@ function Solicitud() {
               overflow: "hidden",
               backgroundColor: "#f5f5f5",
               boxShadow: 5,
-              borderRadius: "0",
+              borderRadius: "10px",
               mt: 3,
             }}
           >
@@ -1308,7 +1317,19 @@ function Solicitud() {
             />
 
             {setSolicitudView()}
+          </Card>
 
+          <Card
+            sx={{
+              width: "90%",
+              maxWidth: "800px",
+              overflow: "hidden",
+              backgroundColor: "#f5f5f5",
+              boxShadow: 5,
+              borderRadius: "10px",
+              mt: 3,
+            }}
+          >
             <CardHeader
               title={
                 <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
@@ -1323,7 +1344,19 @@ function Solicitud() {
             />
 
             {setDetallesView()}
+          </Card>
 
+          <Card
+            sx={{
+              width: "90%",
+              maxWidth: "800px",
+              overflow: "hidden",
+              backgroundColor: "#f5f5f5",
+              boxShadow: 5,
+              borderRadius: "10px",
+              mt: 3,
+            }}
+          >
             <CardHeader
               title={
                 <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
@@ -1350,7 +1383,7 @@ function Solicitud() {
           {/* BOX PARA ANULAR AMONESTACIONES */}
           <Box sx={{ width: "800px" }}>
             {(user_id == 4) &
-            (dataGestiones[0].estado != "PENDIENTE DE APROBACION")
+            (dataGestiones[0].estado != "ANULADA")
               ? componenteAnulacion()
               : null}
           </Box>

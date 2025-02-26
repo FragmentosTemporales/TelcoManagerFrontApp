@@ -23,18 +23,20 @@ import {
 } from "@mui/material";
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
+import SearchIcon from "@mui/icons-material/Search";
 import Checkbox from "@mui/material/Checkbox";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { setDomMessage } from "../slices/dominionSlice";
 import { getReversas, updateReversas } from "../api/dominionAPI";
-import { fetchReversas } from "../api/logisticaAPI"
+import { fetchReversas } from "../api/logisticaAPI";
 
 function ReversaView() {
   const { domToken, domMessage } = useSelector((state) => state.dominion);
   const authState = useSelector((state) => state.auth);
   const { token } = authState;
   const [rut, setRut] = useState("");
+  const [serie, setSerie] = useState("");
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(undefined);
@@ -45,7 +47,6 @@ function ReversaView() {
   const [tecnicos, setTecnicos] = useState([]);
   const [frecuencia, setFrecuencia] = useState("");
 
-
   const renderAlert = () => (
     <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
       {domMessage}
@@ -54,7 +55,7 @@ function ReversaView() {
 
   const fetchTecnicos = async () => {
     try {
-      const response = await fetchReversas(token)
+      const response = await fetchReversas(token);
       const transformedOptions = response.map((item) => ({
         value: item.value,
         label: item.label,
@@ -86,6 +87,7 @@ function ReversaView() {
 
       setData(response.data.filter((item) => item.entregado !== 1));
       setReversa(response.data.filter((item) => item.entregado !== 0));
+      setSerie("");
 
       const formatted = response.data.map((item) => ({
         print: 0,
@@ -120,6 +122,7 @@ function ReversaView() {
       dispatch(setDomMessage(res.detail));
       setIsSubmitting(false);
       setOpen(true);
+      setSerie("");
     } catch (error) {
       dispatch(setDomMessage(error));
       setOpen(true);
@@ -152,47 +155,7 @@ function ReversaView() {
   );
 
   const renderTableBody = () => {
-    if (data && data.length > 0) {
-      return (
-        <TableBody>
-          {data.map((item) => {
-            const formattedItem =
-              formattedData.find((i) => i.id === item.id) || {};
-            return (
-              <TableRow key={item.id}>
-                <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Typography fontFamily="initial">{item.fecha}</Typography>
-                </TableCell>
-                <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Typography fontFamily="initial">{item.orden}</Typography>
-                </TableCell>
-                <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Typography fontFamily="initial">{item.ANI}</Typography>
-                </TableCell>
-                <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Typography fontFamily="initial">{item.equipo}</Typography>
-                </TableCell>
-                <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Typography fontFamily="initial">{item.serie}</Typography>
-                </TableCell>
-                <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Checkbox
-                    checked={formattedItem.entrega === 1}
-                    onChange={() => handleCheckboxChange(item.id, "entrega")}
-                  />
-                </TableCell>
-                <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Checkbox
-                    checked={formattedItem.fuente === 1}
-                    onChange={() => handleCheckboxChange(item.id, "fuente")}
-                  />
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      );
-    } else {
+    if (!data || data.length === 0) {
       return (
         <TableBody>
           <TableRow>
@@ -205,6 +168,45 @@ function ReversaView() {
         </TableBody>
       );
     }
+
+    const renderRow = (item) => {
+      const formattedItem = formattedData.find((i) => i.id === item.id) || {};
+      return (
+        <TableRow key={item.id}>
+          <TableCell align="center" sx={{ fontSize: "12px" }}>
+            <Typography fontFamily="initial">{item.fecha}</Typography>
+          </TableCell>
+          <TableCell align="center" sx={{ fontSize: "12px" }}>
+            <Typography fontFamily="initial">{item.orden}</Typography>
+          </TableCell>
+          <TableCell align="center" sx={{ fontSize: "12px" }}>
+            <Typography fontFamily="initial">{item.ANI}</Typography>
+          </TableCell>
+          <TableCell align="center" sx={{ fontSize: "12px" }}>
+            <Typography fontFamily="initial">{item.equipo}</Typography>
+          </TableCell>
+          <TableCell align="center" sx={{ fontSize: "12px" }}>
+            <Typography fontFamily="initial">{item.serie}</Typography>
+          </TableCell>
+          <TableCell align="center">
+            <Checkbox
+              checked={formattedItem.entrega === 1}
+              onChange={() => handleCheckboxChange(item.id, "entrega")}
+            />
+          </TableCell>
+          <TableCell align="center">
+            <Checkbox
+              checked={formattedItem.fuente === 1}
+              onChange={() => handleCheckboxChange(item.id, "fuente")}
+            />
+          </TableCell>
+        </TableRow>
+      );
+    };
+
+    return (
+      <TableBody>{serie ? renderRow(serie) : data.map(renderRow)}</TableBody>
+    );
   };
 
   const renderTableBodyOk = () => {
@@ -260,14 +262,16 @@ function ReversaView() {
   const renderBtn = () => {
     if (data && data.length > 0) {
       return (
-        <Box sx={{ textAlign: "center" }}>
+        <Box sx={{ textAlign: "center", marginTop: 2 }}>
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", width: "250px" }}
+            sx={{ background: "#0b2f6d", width: "300px" }}
             onClick={handleSubmitUpdate}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Procesando..." : "Actualizar Información"}
+            <Typography fontFamily="initial">
+              {isSubmitting ? "Procesando..." : "Actualizar Información"}
+            </Typography>
           </Button>
         </Box>
       );
@@ -293,32 +297,30 @@ function ReversaView() {
       );
     }
     return (
-      <CardContent>
-        <Card>
-          <CardHeader
-            title={
-              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                LISTA DE REVERSAS PENDIENTES
-              </Typography>
-            }
-            avatar={<PlaylistRemoveIcon />}
-            sx={{
-              background: "#0b2f6d",
-              color: "white",
-              textAlign: "end",
-            }}
-          />
-          <TableContainer
-            component={Paper}
-            sx={{ width: "100%", height: "100%", overflow: "auto" }}
-          >
-            <Table stickyHeader>
-              {renderTableHeaders()}
-              {renderTableBody()}
-            </Table>
-          </TableContainer>
-        </Card>
-      </CardContent>
+      <Card sx={{ borderRadius: "10px" }}>
+        <CardHeader
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+              LISTA DE REVERSAS PENDIENTES
+            </Typography>
+          }
+          avatar={<PlaylistRemoveIcon />}
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
+        />
+        <TableContainer
+          component={Paper}
+          sx={{ width: "100%", height: "100%", overflow: "auto" }}
+        >
+          <Table stickyHeader>
+            {renderTableHeaders()}
+            {renderTableBody()}
+          </Table>
+        </TableContainer>
+      </Card>
     );
   };
 
@@ -339,34 +341,90 @@ function ReversaView() {
       );
     }
     return (
-      <CardContent>
-        <Card>
-          <CardHeader
-            title={
-              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                LISTA DE REVERSAS ENTREGADAS
-              </Typography>
-            }
-            avatar={<PlaylistAddCheckIcon />}
-            sx={{
-              background: "#0b2f6d",
-              color: "white",
-              textAlign: "end",
-            }}
-          />
-          <TableContainer
-            component={Paper}
-            sx={{ width: "100%", height: "100%", overflow: "auto" }}
-          >
-            <Table stickyHeader>
-              {renderTableHeaders()}
-              {renderTableBodyOk()}
-            </Table>
-          </TableContainer>
-        </Card>
-      </CardContent>
+      <Card sx={{ borderRadius: "10px" }}>
+        <CardHeader
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+              LISTA DE REVERSAS ENTREGADAS
+            </Typography>
+          }
+          avatar={<PlaylistAddCheckIcon />}
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
+        />
+        <TableContainer
+          component={Paper}
+          sx={{ width: "100%", height: "100%", overflow: "auto" }}
+        >
+          <Table stickyHeader>
+            {renderTableHeaders()}
+            {renderTableBodyOk()}
+          </Table>
+        </TableContainer>
+      </Card>
     );
   };
+
+  const filterReversa = () => (
+    <Card sx={{ borderRadius: "10px", marginBottom: 2 }}>
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            FILTRO SEGUN SERIE
+          </Typography>
+        }
+        avatar={<SearchIcon />}
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "end",
+        }}
+      />
+      <CardContent
+        sx={{
+          height: "100%",
+          overflow: "auto",
+          display: "flex",
+          justifyContent: "center",
+          margin: 1,
+        }}
+      >
+        <Box
+          sx={{
+            mb: 2,
+            display: "flex",
+            justifyContent: "center",
+            width: "500px",
+          }}
+        >
+          <FormControl fullWidth variant="filled">
+            <Autocomplete
+              fullWidth
+              options={data}
+              getOptionLabel={(option) => option.serie}
+              value={data.find((option) => option.serie === serie) || null}
+              onChange={(event, newValue) => setSerie(newValue || "")}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={<Typography fontFamily="initial">Series</Typography>}
+                  variant="filled"
+                  fullWidth
+                />
+              )}
+            />
+          </FormControl>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+
+  useEffect(() => {
+    console.log(serie);
+  }, [serie]);
 
   return (
     <Box
@@ -431,9 +489,7 @@ function ReversaView() {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label={
-                    <Typography fontFamily="initial">Técnico</Typography>
-                  }
+                  label={<Typography fontFamily="initial">Técnico</Typography>}
                   variant="filled"
                   fullWidth
                 />
@@ -455,6 +511,11 @@ function ReversaView() {
           </Box>
         </form>
       </CardContent>
+
+      <Box sx={{ width: { lg: "80%", md: "90%", xs: "100%" } }}>
+        {data && data.length > 0 ? filterReversa() : null}
+      </Box>
+
       <Box sx={{ width: { lg: "80%", md: "90%", xs: "100%" } }}>
         {renderTable()}
       </Box>
