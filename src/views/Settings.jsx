@@ -124,7 +124,7 @@ import { domsetLogout } from "../slices/dominionSlice";
         <Card
           sx={{
             width: { lg: "30%", md: "70%", xs: "90%" },
-            borderRadius: "0px",
+            borderRadius: "10px",
             boxShadow: 5,
             minWidth: "400px",
             marginTop:'80px'

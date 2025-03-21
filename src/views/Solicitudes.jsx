@@ -15,7 +15,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Tooltip,
   Typography,
   CardContent,
 } from "@mui/material";
@@ -223,7 +222,7 @@ function Solicitudes() {
         <TableRow>
           {[
             "FECHA SOLICITUD",
-            "N° SOLICITUD",
+            "N° FOLIO",
             "MOTIVO",
             "FORMULARIO",
             "SOLICITANTE",
@@ -260,7 +259,7 @@ function Solicitudes() {
                 {row.fechaSolicitud ? row.fechaSolicitud : "Sin Información"}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                {row.solicitudID}
+                {row.folio ? row.folio : "Sin Folio"}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
                 {row.motivo && row.motivo.descri

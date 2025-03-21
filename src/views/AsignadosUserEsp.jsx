@@ -63,7 +63,7 @@ import {
                   display: "flex",
                   justifyContent: "space-around",
                   background: "#0b2f6d",
-                  borderRadius: "0px",
+                  borderRadius: "10px",
                 }}
               >
                 <AddCircleOutlineIcon /> Crear Nueva
@@ -113,7 +113,7 @@ import {
               backgroundColor: "#f5f5f5",
               boxShadow: 5,
               textAlign: "center",
-              borderRadius: "0px",
+              borderRadius: "10px",
               minHeight: "250px",
               mt: 2,
             }}

@@ -6,6 +6,7 @@ import {
   CardContent,
   CardHeader,
   Divider,
+  InputLabel,
   Modal,
   Skeleton,
   Table,
@@ -15,12 +16,13 @@ import {
   TableHead,
   TableRow,
   TableCell,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getUniqueSolicitud } from "../api/solicitudAPI";
+import { getUniqueSolicitud, createFolio } from "../api/solicitudAPI";
 import { createNotificacion } from "../api/notificacionesAPI";
 import extractDate from "../helpers/main";
 import { createSG } from "../api/sgAPI";
@@ -30,11 +32,13 @@ import CalidadViewer from "../components/calidadFormViewer";
 import OperacionesViewer from "../components/operacionesFormViewer";
 import LogisticaViewer from "../components/logisticaFormViewer";
 import FlotaViewer from "../components/flotaFormViewer";
+import { downloadFile } from "../api/downloadApi";
 
 function Solicitud() {
   const { solicitud_id } = useParams();
   const authState = useSelector((state) => state.auth);
-  const { token, user_id } = authState;
+  const { token, user_id, area } = authState;
+  const filePath = "/home/ubuntu/telcomanager/app/data/Formato.docx"
 
   const [data, setData] = useState(null);
   const [dataGestiones, setDataGestiones] = useState(null);
@@ -50,7 +54,7 @@ function Solicitud() {
   const [estadoID, setEstadoID] = useState(undefined);
 
   // SET MODALES
-  const [openModalAprobar, setOpenModalAprobar] = useState(false);
+  const [openModalFinalizar, setOpenModalFinalizar] = useState(false);
   const [openModalRechazar, setOpenModalRechazar] = useState(false);
   const [openModalLegal, setOpenModalLegal] = useState(false);
   const [openModalEmpleador, setOpenModalEmpleador] = useState(false);
@@ -119,9 +123,9 @@ function Solicitud() {
     </>
   );
 
-  const setModalAprobar = () => (
+  const setModalFinalizar = () => (
     <>
-      <Modal open={openModalAprobar} onClose={handleCloseModal}>
+      <Modal open={openModalFinalizar} onClose={handleCloseModal}>
         <Box
           sx={{
             position: "absolute",
@@ -142,7 +146,7 @@ function Solicitud() {
               fontFamily="initial"
               sx={{ pt: 2 }}
             >
-              ¿Quieres Aprobar esta Amonestación?
+              ¿Quieres Finalizar esta Amonestación?
             </Typography>
           </Box>
 
@@ -499,21 +503,22 @@ function Solicitud() {
 
   // BOTONES DE ACCION PARA MODALES
 
-  const btnAprobar = () => (
+  const btnFinalizar = () => (
     <>
       <Button
         variant="contained"
         color="info"
         onClick={() => {
-          setEstadoID(2);
-          setOpenModalAprobar(true);
+          setEstadoID(14);
+          setOpenModalFinalizar(true);
           setToNotif(3);
         }}
       >
-        <Typography fontFamily="initial">APROBAR AMONESTACION</Typography>
+        <Typography fontFamily="initial">FINALIZAR AMONESTACION</Typography>
       </Button>
     </>
   );
+
   const btnRechazar = () => (
     <>
       <Button
@@ -529,6 +534,7 @@ function Solicitud() {
       </Button>
     </>
   );
+
   const btnRequiereLegal = () => (
     <>
       <Button
@@ -544,6 +550,7 @@ function Solicitud() {
       </Button>
     </>
   );
+
   const btnFirmaEmpleador = () => (
     <>
       <Button
@@ -559,6 +566,7 @@ function Solicitud() {
       </Button>
     </>
   );
+
   const btnFirmaTrabajador = () => (
     <>
       <Button
@@ -575,6 +583,7 @@ function Solicitud() {
       </Button>
     </>
   );
+
   const btnLicenciaMedica = () => (
     <>
       <Button
@@ -591,6 +600,7 @@ function Solicitud() {
       </Button>
     </>
   );
+
   const btnVacaciones = () => (
     <>
       <Button
@@ -607,6 +617,7 @@ function Solicitud() {
       </Button>
     </>
   );
+
   const btnEnviadaCorreo = () => (
     <>
       <Button
@@ -623,6 +634,7 @@ function Solicitud() {
       </Button>
     </>
   );
+
   const btnFirmada = () => (
     <>
       <Button
@@ -639,6 +651,7 @@ function Solicitud() {
       </Button>
     </>
   );
+
   const btnNoFirmada = () => (
     <>
       <Button
@@ -657,36 +670,6 @@ function Solicitud() {
   );
 
   // BTN GROUP
-
-  const componenteAprobacion = () => (
-    <Card
-      sx={{
-        width: "100%",
-        maxWidth: "800px",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: "10px",
-        mt: 3,
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#0b2f6d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
-        {btnAprobar()}
-      </CardContent>
-    </Card>
-  );
 
   const componenteAnulacion = () => (
     <Card
@@ -935,6 +918,36 @@ function Solicitud() {
     </Card>
   );
 
+  const componenteFinalizada = () => (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "800px",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        borderRadius: "10px",
+        mt: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            ACCIONES
+          </Typography>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "start",
+        }}
+      />
+      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+        {btnFinalizar()}
+      </CardContent>
+    </Card>
+  );
+
   // FUNCIONES DESDE AQUI
 
   const gestionarSolicitud = async (e) => {
@@ -978,7 +991,7 @@ function Solicitud() {
   };
 
   const handleCloseModal = () => {
-    setOpenModalAprobar(false);
+    setOpenModalFinalizar(false);
     setOpenModalRechazar(false);
     setOpenModalLegal(false);
     setOpenModalEmpleador(false);
@@ -993,9 +1006,8 @@ function Solicitud() {
   const fetchData = async () => {
     try {
       const res = await getUniqueSolicitud(token, solicitud_id);
-      console.log("RESPUESTA EN SOLICITUD = ", res);
       setData(res);
-      setValidate(res.userID);
+      setValidate(res);
       setDataGestiones(res.gestiones);
       setDataForm(res.form);
       setLogID(res.logID);
@@ -1006,6 +1018,16 @@ function Solicitud() {
       setOpen(true);
     }
   };
+
+  const downloadInforme = async () => {
+    try {
+      const payload = { file_path: filePath };
+      await downloadFile(payload, token);
+      console.log("Archivo descargado exitosamente");
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   // COMPONENTES GENERALES DESDE AQUI
 
@@ -1120,11 +1142,17 @@ function Solicitud() {
             >
               Sin información
             </Typography>
+            <Box paddingBottom={2}>
+            <Button variant="contained" sx={{ background: "#0b2f6d", width: '300px' }} onClick={()=>{downloadInforme()}}>
+                Descarga Plantilla Informe
+              </Button>
+            </Box>
             <Link to={`/${data.area}/${data.logID}`}>
-              <Button variant="contained" sx={{ background: "#0b2f6d" }}>
+            <Button variant="contained" sx={{ background: "#0b2f6d", width: '300px' }}>
                 Crear Formulario
               </Button>
             </Link>
+            
           </Box>
         )}
       </CardContent>
@@ -1137,6 +1165,7 @@ function Solicitud() {
         <Paper>
           {[
             { label: "Fecha Solicitud :", value: data.fechaSolicitud },
+            { label: "Folio :", value: data.folio },
             { label: "Solicitante :", value: data.solicitante },
             { label: "Rut Solicitante :", value: data.rutSolicitante },
             { label: "Tipo Formulario :", value: data.area },
@@ -1204,6 +1233,7 @@ function Solicitud() {
     }));
   }, [toNotif]);
 
+
   return (
     <Box
       sx={{
@@ -1217,7 +1247,7 @@ function Solicitud() {
       }}
     >
       {/* COMPONENTE MODAL PARA APROBAR AMONESTACION */}
-      {openModalAprobar && setModalAprobar()}
+      {openModalFinalizar && setModalFinalizar()}
 
       {/* COMPONENTE MODAL PARA RECHAZAR AMONESTACION */}
       {openModalRechazar && setModalRechazar()}
@@ -1277,6 +1307,7 @@ function Solicitud() {
         </Box>
       ) : (
         <>
+        {/* BOTON "IR A SOLICITUDES" */}
           <Box
             sx={{
               width: "90%",
@@ -1292,6 +1323,7 @@ function Solicitud() {
             </Link>
           </Box>
 
+          {/* COMPONENTE SOLICITUD */}
           <Card
             sx={{
               width: "90%",
@@ -1319,6 +1351,7 @@ function Solicitud() {
             {setSolicitudView()}
           </Card>
 
+          {/* COMPONENTE DETALLES */}
           <Card
             sx={{
               width: "90%",
@@ -1346,6 +1379,7 @@ function Solicitud() {
             {setDetallesView()}
           </Card>
 
+          {/* COMPONENTE GESTIONES */}
           <Card
             sx={{
               width: "90%",
@@ -1372,39 +1406,31 @@ function Solicitud() {
             {setTableEstado()}
           </Card>
 
-          {/* BOX PARA APROBAR O RECHAZAR AMONESTACIONES */}
-          <Box sx={{ width: "800px" }}>
-            {(user_id == 4) &
-            (dataGestiones[0].estado == "PENDIENTE DE APROBACION")
-              ? componenteAprobacion()
-              : null}
-          </Box>
-
           {/* BOX PARA ANULAR AMONESTACIONES */}
           <Box sx={{ width: "800px" }}>
             {(user_id == 4) &
-            (dataGestiones[0].estado != "ANULADA")
+            (dataGestiones[0].estado != "ANULADA" && dataGestiones[0].estado != "FINALIZADA" )
               ? componenteAnulacion()
               : null}
           </Box>
 
           {/* BOX PARA EVALUACION LEGAL */}
           <Box sx={{ width: "800px" }}>
-            {(user_id == 3) & (dataGestiones[0].estado == "ENVIADA A RRHH")
+            {(area && area.areaID === 5) & (dataGestiones[0].estado == "ENVIADA A RRHH")
               ? componenteRequiereLegal()
               : null}
           </Box>
 
           {/* BOX PARA EVALUACION LEGAL */}
           <Box sx={{ width: "800px" }}>
-            {(user_id == 3) & (dataGestiones[0].estado == "EVALUACION LEGAL")
+            {(area && area.areaID === 5) & (dataGestiones[0].estado == "EVALUACION LEGAL")
               ? componenteRequiereEmpleador()
               : null}
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
           <Box sx={{ width: "800px" }}>
-            {(user_id == 3) &
+            {(area && area.areaID === 5) &
             (dataGestiones[0].estado == "PENDIENTE FIRMA EMPLEADOR")
               ? componenteOperativo()
               : null}
@@ -1412,14 +1438,14 @@ function Solicitud() {
 
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
           <Box sx={{ width: "800px" }}>
-            {(user_id == 3) & (dataGestiones[0].estado == "LICENCIA MEDICA")
+            {(area && area.areaID === 5) & (dataGestiones[0].estado == "LICENCIA MEDICA")
               ? componenteLicencia()
               : null}
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
           <Box sx={{ width: "800px" }}>
-            {(user_id == 3) & (dataGestiones[0].estado == "VACACIONES")
+            {(area && area.areaID === 5) & (dataGestiones[0].estado == "VACACIONES")
               ? componenteVacaciones()
               : null}
           </Box>
@@ -1434,10 +1460,18 @@ function Solicitud() {
 
           {/* BOX PARA DEFINIR ESTADO DE NO FIRMADA */}
           <Box sx={{ width: "800px" }}>
-            {(user_id == 3) & (dataGestiones[0].estado == "NO FIRMADA")
+            {(area && area.areaID === 5) & (dataGestiones[0].estado == "NO FIRMADA")
               ? componenteNoFirmada()
               : null}
           </Box>
+
+          {/* BOX PARA DEFINIR ESTADO FINALIZADA */}
+          <Box sx={{ width: "800px" }}>
+            {(area && area.areaID === 5) & (dataGestiones[0].estado == "FIRMADA")
+              ? componenteFinalizada()
+              : null}
+          </Box>
+
         </>
       )}
     </Box>

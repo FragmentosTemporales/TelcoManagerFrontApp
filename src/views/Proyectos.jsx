@@ -459,7 +459,7 @@ function ProyectosView() {
                 createproyecto();
               }}
               sx={{
-                borderRadius: 0,
+                borderRadius: "10px",
                 background: "#0b2f6d",
               }}
               disabled={isSubmitting}

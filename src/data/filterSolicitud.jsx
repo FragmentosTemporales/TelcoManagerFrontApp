@@ -45,11 +45,6 @@ const filterData = [
     hab: "1",
   },
   {
-    solicitudEstadoID: "11",
-    descri: "PENDIENTE DE APROBACION",
-    hab: "1",
-  },
-  {
     solicitudEstadoID: "12",
     descri: "NO FIRMADA",
     hab: "1",
@@ -57,6 +52,11 @@ const filterData = [
   {
     solicitudEstadoID: "13",
     descri: "ENVIADA POR CORREO",
+    hab: "1",
+  },
+  {
+    solicitudEstadoID: "14",
+    descri: "FINALIZADA",
     hab: "1",
   }
 ];

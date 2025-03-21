@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Checkbox,
   Button,
   TextField,
   InputAdornment,
@@ -87,7 +88,7 @@ function Login() {
       <Card
         sx={{
           width: { lg: "30%", md: "60%", xs: "80%" },
-          borderRadius: "10px",
+          borderRadius: "20px",
           boxShadow: 5,
           minWidth: "370px",
         }}

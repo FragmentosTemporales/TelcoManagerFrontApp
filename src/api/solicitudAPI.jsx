@@ -98,3 +98,19 @@ export const deleteSolicitud = async (token, solicitud_id) => {
     throw error.response.data.error;
   }
 };
+
+export const createFolio = async (payload, token) => {
+  try {
+
+    const url = `${baseUrl}/create-folio`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};

@@ -88,7 +88,7 @@ function FormAstList() {
 
   const handleClear = async (e) => {
     e.preventDefault();
-    setTecnicoID(undefined);
+    setTecnicoID("");
   };
 
   const getButtons = () => (
@@ -126,7 +126,7 @@ function FormAstList() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "0px",
+          borderRadius: "10px",
           mt: 2,
           mb: 2,
         }}

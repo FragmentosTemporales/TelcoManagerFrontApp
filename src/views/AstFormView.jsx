@@ -92,7 +92,7 @@ function AstViewer() {
               backgroundColor: "#f5f5f5",
               boxShadow: 5,
               textAlign: "center",
-              borderRadius: "0px",
+              borderRadius: "10px",
               mt: 2,
               mb: 2,
             }}

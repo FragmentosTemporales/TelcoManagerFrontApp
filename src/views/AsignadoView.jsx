@@ -605,7 +605,7 @@ function Asignado() {
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
         textAlign: "center",
-        borderRadius: "0px",
+        borderRadius: "10px",
         mt: 2,
         mb: 2,
       }}
@@ -677,7 +677,7 @@ function Asignado() {
             backgroundColor: "#f5f5f5",
             boxShadow: 5,
             textAlign: "center",
-            borderRadius: "0px",
+            borderRadius: "10px",
             mt: 2,
             mb: 2,
           }}
@@ -1257,7 +1257,7 @@ function Asignado() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "0px",
+          borderRadius: "10px",
           mt: 2,
           mb: 2,
         }}
@@ -1373,7 +1373,7 @@ function Asignado() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "0px",
+          borderRadius: "10px",
           mt: 2,
           mb: 2,
         }}
@@ -1463,7 +1463,7 @@ function Asignado() {
                     sx={{
                       background: "#0b2f6d",
                       width: "200px",
-                      borderRadius: "0px",
+                      borderRadius: "10px",
                     }}
                   >
                     Agregar
@@ -1486,7 +1486,7 @@ function Asignado() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "0px",
+          borderRadius: "10px",
           mt: 2,
           mb: 2,
         }}
@@ -1530,7 +1530,7 @@ function Asignado() {
                     variant="contained"
                     sx={{
                       background: "#0b2f6d",
-                      borderRadius: "0px",
+                      borderRadius: "10px",
                       minWidth: "200px",
                     }}
                   >
@@ -1548,7 +1548,7 @@ function Asignado() {
                     variant="contained"
                     color="error"
                     sx={{
-                      borderRadius: "0px",
+                      borderRadius: "10px",
                       minWidth: "200px",
                     }}
                   >
@@ -1598,7 +1598,7 @@ function Asignado() {
                       variant="contained"
                       sx={{
                         background: "#0b2f6d",
-                        borderRadius: "0px",
+                        borderRadius: "10px",
                         minWidth: "200px",
                         maxHeight: "40px",
                       }}
@@ -1630,7 +1630,7 @@ function Asignado() {
                     variant="contained"
                     sx={{
                       background: "#0b2f6d",
-                      borderRadius: "0px",
+                      borderRadius: "10px",
                       minWidth: "200px",
                     }}
                   >
@@ -1648,7 +1648,7 @@ function Asignado() {
                     variant="contained"
                     color="error"
                     sx={{
-                      borderRadius: "0px",
+                      borderRadius: "10px",
                       minWidth: "200px",
                     }}
                   >
@@ -1698,7 +1698,7 @@ function Asignado() {
                       variant="contained"
                       sx={{
                         background: "#0b2f6d",
-                        borderRadius: "0px",
+                        borderRadius: "10px",
                         minWidth: "200px",
                         maxHeight: "40px",
                       }}
@@ -1748,7 +1748,7 @@ function Asignado() {
                 display: "flex",
                 justifyContent: "space-around",
                 background: "#0b2f6d",
-                borderRadius: "0px",
+                borderRadius: "10px",
               }}
             >
               {isSubmitting ? "Procesando..." : "Enviar"}
@@ -1791,7 +1791,7 @@ function Asignado() {
                 display: "flex",
                 justifyContent: "space-around",
                 background: "#0b2f6d",
-                borderRadius: "0px",
+                borderRadius: "10px",
               }}
             >
               {isSubmitting ? "Procesando..." : "Enviar"}
@@ -1834,7 +1834,7 @@ function Asignado() {
                 fontWeight: "bold",
                 display: "flex",
                 justifyContent: "space-around",
-                borderRadius: "0px",
+                borderRadius: "10px",
               }}
             >
               {isSubmitting ? "Eliminando..." : "Eliminar"}
@@ -1877,7 +1877,7 @@ function Asignado() {
                 fontWeight: "bold",
                 display: "flex",
                 justifyContent: "space-around",
-                borderRadius: "0px",
+                borderRadius: "10px",
               }}
             >
               {isSubmitting ? "Eliminando..." : "Eliminar"}
@@ -1955,7 +1955,7 @@ function Asignado() {
                     display: "flex",
                     justifyContent: "space-around",
                     background: "#0b2f6d",
-                    borderRadius: "0px",
+                    borderRadius: "10px",
                   }}
                 >
                   Volver a Asignados
@@ -2001,7 +2001,7 @@ function Asignado() {
                       sx={{
                         mt: 1,
                         background: "#0b2f6d",
-                        borderRadius: "0px",
+                        borderRadius: "10px",
                       }}
                     >
                       <Typography sx={{ fontFamily: "initial" }}>

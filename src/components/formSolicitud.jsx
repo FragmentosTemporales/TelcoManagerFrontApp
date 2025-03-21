@@ -22,6 +22,7 @@ import {
   motivoData19,
   motivoData20,
   motivoData22,
+  motivoData24
 } from "../data/submotivoData";
 import areaData from "../data/areaData";
 import {
@@ -32,7 +33,6 @@ import {
   recursoshumanosData,
   flotaData,
 } from "../data/motivoData";
-import personaData from "../data/personaData";
 import { getPersona } from "../api/personaAPI";
 
 import { onLoad, onLoading, setMessage } from "../slices/solicitudSlice";
@@ -105,6 +105,14 @@ function FormSolicitud() {
             label: item.descri,
           }));
           setSmOptions(transformedOptions5);
+          break;
+
+        case "24":
+          const transformedOptions6 = motivoData24.map((item) => ({
+            value: item.submotivoID,
+            label: item.descri,
+          }));
+          setSmOptions(transformedOptions6);
           break;
 
         default:

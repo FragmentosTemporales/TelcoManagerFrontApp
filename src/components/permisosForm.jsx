@@ -173,7 +173,7 @@ function PermisosList() {
     <>
       <Card
         sx={{
-          borderRadius: "0px",
+          borderRadius: "10px",
           width: { lg: "50%", xs: "90%", md: "70%" },
           overflow: "auto",
           boxShadow: 5,
@@ -330,7 +330,7 @@ function PermisosList() {
     <>
       <Card
         sx={{
-          borderRadius: "0px",
+          borderRadius: "10px",
           width: { lg: "50%", xs: "90%", md: "70%" },
           overflow: "auto",
           boxShadow: 5,
@@ -499,7 +499,7 @@ function PermisosList() {
   const setTable = () => (
     <Box
       sx={{
-        borderRadius: "0px",
+        borderRadius: "10px",
         width: { lg: "50%", xs: "90%", md: "70%" },
         overflow: "auto",
         boxShadow: 5,

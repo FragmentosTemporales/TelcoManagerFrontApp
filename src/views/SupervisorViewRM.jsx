@@ -230,7 +230,7 @@ function SupervisorViewRM() {
           {trabajador ? (
             <Card
               sx={{
-                borderRadius: 0,
+                borderRadius: "10px",
               }}
             >
               <CardHeader
@@ -246,7 +246,7 @@ function SupervisorViewRM() {
                   background: "#0b2f6d",
                   color: "white",
                   textAlign: "center",
-                  borderRadius: "0px",
+                  borderRadius: "10px",
                 }}
               />
               <CardContent>
@@ -484,7 +484,7 @@ function SupervisorViewRM() {
           {data.length > 0 ? (
             <Card
               sx={{
-                borderRadius: 0,
+                borderRadius: "10px",
                 mt: "20px",
               }}
             >
@@ -533,7 +533,7 @@ function SupervisorViewRM() {
                             sx={{
                               background: "#0b2f6d",
                               color: "white",
-                              borderRadius: 0,
+                              borderRadius: "10px",
                             }}
                             onClick={() => {
                               setTrabajador(item);

@@ -12,6 +12,7 @@ const state = {
   permisos: null,
   empresa: null,
   message: null,
+  area: null,
 };
 
 export const authSlice = createSlice({
@@ -43,14 +44,15 @@ export const authSlice = createSlice({
       const payload = action.payload;
 
       state.token = payload.token;
-      const usuario = payload.usuario
+      const usuario = payload.usuario;
 
       state.correo = usuario.correo;
       state.user_id = usuario.userID;
       state.nombre = usuario.nombre; 
       state.numDoc = usuario.numDoc; 
-      state.permisos = usuario.permisos
-      state.empresa = usuario.empresa
+      state.permisos = usuario.permisos;
+      state.empresa = usuario.empresa;
+      state.area = usuario.area;
       state.is_loading = false;
       state.is_load = true;
     },

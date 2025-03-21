@@ -57,3 +57,17 @@ const motivoData22 = [
   },
 ];
 export { motivoData22 };
+
+const motivoData24 = [
+  {
+    submotivoID: "9",
+    descri: "AST FUERA DE HORARIO",
+    motivoID: "24",
+  },
+  {
+    submotivoID: "10",
+    descri: "NO REALIZA AST",
+    motivoID: "24",
+  }
+];
+export { motivoData24 };

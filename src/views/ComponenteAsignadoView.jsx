@@ -312,7 +312,7 @@ function ComponenteAsignadoView() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "0px",
+          borderRadius: "10px",
           mt: 2,
           mb: 2,
         }}
@@ -479,7 +479,7 @@ function ComponenteAsignadoView() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "0px",
+          borderRadius: "10px",
           mt: 2,
           mb: 2,
         }}
@@ -588,7 +588,7 @@ function ComponenteAsignadoView() {
                     display: "flex",
                     justifyContent: "space-around",
                     background: "#0b2f6d",
-                    borderRadius: "0px",
+                    borderRadius: "10px",
                   }}
                 >
                   {isSubmitting ? "Procesando..." : "Enviar"}
@@ -633,7 +633,7 @@ function ComponenteAsignadoView() {
                   display: "flex",
                   justifyContent: "space-around",
                   background: "#c62828",
-                  borderRadius: "0px",
+                  borderRadius: "10px",
                 }}
               >
                 {isSubmitting ? "Procesando..." : "Eliminar"}
@@ -677,7 +677,7 @@ function ComponenteAsignadoView() {
                   display: "flex",
                   justifyContent: "space-around",
                   background: "#c62828",
-                  borderRadius: "0px",
+                  borderRadius: "10px",
                 }}
               >
                 {isSubmitting ? "Procesando..." : "Eliminar"}
@@ -698,7 +698,7 @@ function ComponenteAsignadoView() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "0px",
+          borderRadius: "10px",
           mt: 2,
           mb: 2,
         }}
@@ -832,7 +832,7 @@ function ComponenteAsignadoView() {
             backgroundColor: "#f5f5f5",
             boxShadow: 5,
             textAlign: "center",
-            borderRadius: "0px",
+            borderRadius: "10px",
             mt: 2,
             mb: 2,
           }}
@@ -905,7 +905,7 @@ function ComponenteAsignadoView() {
                       display: "flex",
                       justifyContent: "space-around",
                       background: "#0b2f6d",
-                      borderRadius: "0px",
+                      borderRadius: "10px",
                       margin: "20px",
                     }}
                   >
@@ -930,7 +930,7 @@ function ComponenteAsignadoView() {
             backgroundColor: "#f5f5f5",
             boxShadow: 5,
             textAlign: "center",
-            borderRadius: "0px",
+            borderRadius: "10px",
             mt: 2,
             mb: 2,
           }}
@@ -1054,7 +1054,7 @@ function ComponenteAsignadoView() {
                 display: "flex",
                 justifyContent: "space-around",
                 background: "#0b2f6d",
-                borderRadius: "0px",
+                borderRadius: "10px",
               }}
             >
               Volver

@@ -47,6 +47,12 @@ const prevencionData = [
     hab: "1",
     areaID: "1",
   },
+  {
+    motivoID: "24",
+    descri: "INCUMPLIMIENTO AST",
+    hab: "1",
+    areaID: "1",
+  },
 ];
 export { prevencionData };
 

@@ -112,7 +112,7 @@ function FormAstCreate() {
       >
         <Card
           sx={{
-            borderRadius: "0px",
+            borderRadius: "10px",
             width: { lg: "70%", xs: "100%", md: "100%" },
             overflow: "auto",
             boxShadow: 5,

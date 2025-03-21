@@ -8,22 +8,22 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import ContactSupportIcon from '@mui/icons-material/ContactSupport';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
+import ContactSupportIcon from "@mui/icons-material/ContactSupport";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import AutoAwesomeMosaicIcon from "@mui/icons-material/AutoAwesomeMosaic";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import InventoryIcon from '@mui/icons-material/Inventory';
+import InventoryIcon from "@mui/icons-material/Inventory";
 import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import BallotIcon from "@mui/icons-material/Ballot";
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import DvrIcon from '@mui/icons-material/Dvr';
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import DvrIcon from "@mui/icons-material/Dvr";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { onLoad, onLoading, setMessage } from "../slices/proyectosSlice";
-import {getProyectos} from "../api/proyectoAPI";
+import { getProyectos } from "../api/proyectoAPI";
 import { useEffect } from "react";
 
 function Home() {
@@ -107,6 +107,7 @@ function Home() {
       estado: true,
       moduloID: 7,
     },
+    /*
     {
       head: "Prevencion AST",
       icono: <FormatListNumberedIcon/>,
@@ -116,10 +117,12 @@ function Home() {
       estado: true,
       moduloID: 8,
     },
+    */
     {
       head: "Gestión Bodega RM",
-      icono: <InventoryIcon/>,
-      title: "Espacio para gestión de atención en bodega en la Región Metropolitana",
+      icono: <InventoryIcon />,
+      title:
+        "Espacio para gestión de atención en bodega en la Región Metropolitana",
       link: "/bodegaRM",
       body: "Acá podrás ver los números de atención y gestionar procesos internos",
       estado: true,
@@ -127,7 +130,7 @@ function Home() {
     },
     {
       head: "Gestión Bodega Quinta",
-      icono: <InventoryIcon/>,
+      icono: <InventoryIcon />,
       title: "Espacio para gestión de atención en bodega de la V Región",
       link: "/bodegaQuinta",
       body: "Acá podrás ver los números de atención y gestionar procesos internos",
@@ -136,7 +139,7 @@ function Home() {
     },
     {
       head: "Gestión Totem",
-      icono: <AutoAwesomeMosaicIcon/>,
+      icono: <AutoAwesomeMosaicIcon />,
       title: "Espacio para gestión de atención",
       link: "/totem",
       body: "Acá podrás ver los números de atención y gestionar procesos internos",
@@ -145,7 +148,7 @@ function Home() {
     },
     {
       head: "Gestión Supervisor",
-      icono: <AssignmentIndIcon/>,
+      icono: <AssignmentIndIcon />,
       title: "Espacio para gestión de técnicos",
       link: "/supervisor",
       body: "Acá podrás ver el estado de los técnicos y gestionar sus procesos",
@@ -154,7 +157,7 @@ function Home() {
     },
     {
       head: "Chat Soporte",
-      icono: <ContactSupportIcon/>,
+      icono: <ContactSupportIcon />,
       title: "Espacio para consulta y soporte técnico",
       link: "/chatbot",
       body: "Acá podrás realizar preguntas a un chat destinado al apoyo para técnicos",
@@ -184,7 +187,6 @@ function Home() {
   useEffect(() => {
     fetchData();
   }, []);
-
 
   return (
     <Box
@@ -262,17 +264,7 @@ function Home() {
                     >
                       {acceso.body}
                     </Typography>
-                    <Typography
-                      variant="body2"
-                      fontFamily={"initial"}
-                      sx={{
-                        p: 2,
-                        minHeight: "20px",
-                        textAlign: "center",
-                      }}
-                    >
-                      {acceso.estado ? "Funcionando" : "Modo Prueba"}
-                    </Typography>
+
                     <CardActions
                       sx={{ display: "flex", justifyContent: "center" }}
                     ></CardActions>

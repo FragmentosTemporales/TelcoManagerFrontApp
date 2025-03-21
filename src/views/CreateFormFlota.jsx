@@ -106,7 +106,7 @@ function FormFlota() {
       )}
       <Card
         sx={{
-          borderRadius: "0px",
+          borderRadius: "10px",
           width: "50%",
           height: "100%",
           overflow: "auto",

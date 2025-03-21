@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import EditIcon from "@mui/icons-material/Edit";
+import CalculateIcon from "@mui/icons-material/Calculate";
 import { getObjetivos, updateObjetivo } from "../api/dataAPI";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -31,14 +32,14 @@ function ObjetivosView() {
   const { token, user_id } = authState;
   const [gerencia, setGerencia] = useState(null);
   const [mes, setMes] = useState(null);
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [id, setID] = useState(undefined);
   const [value, setValue] = useState(undefined);
   const [openModal, setOpenModal] = useState(false);
   const [habilitado, setHabilitado] = useState(false);
 
-  const [mesOptions, setMesOption] = useState([
+  const mesOptions = [
     {
       value: "2024-05-01",
       label: "Mayo 2024",
@@ -73,39 +74,37 @@ function ObjetivosView() {
     },
     {
       value: "2025-01-01",
-      label: "Enero 2025"
+      label: "Enero 2025",
     },
     {
       value: "2025-02-01",
-      label: "Febrero 2025"
+      label: "Febrero 2025",
     },
     {
       value: "2025-03-01",
-      label: "Marzo 2025"
+      label: "Marzo 2025",
     },
     {
       value: "2025-04-01",
-      label: "Abril 2025"
+      label: "Abril 2025",
     },
     {
       value: "2025-05-01",
-      label: "Mayo 2025"
+      label: "Mayo 2025",
     },
     {
       value: "2025-06-01",
-      label: "Junio 2025"
-    },
-    {
-      value: "2025-06-01",
-      label: "Junio 2025"
+      label: "Junio 2025",
     },
     {
       value: "2025-07-01",
-      label: "Julio 2025"
-    }
-  ]);
+      label: "Julio 2025",
+    },
+  ];
 
-  const [gerenciaOptions, setGetenciaOptions] = useState([
+  const [origenes, setOrigenes] = useState([]);
+
+  const gerenciaOptions = [
     {
       value: "Biobío",
       label: "Biobío",
@@ -114,10 +113,11 @@ function ObjetivosView() {
       value: "Metropolitana",
       label: "Metropolitana",
     },
-  ]);
+  ];
 
   const fetchData = async () => {
     try {
+      setOrigenes([]);
       setIsSubmitting(true);
       const res = await getObjetivos(token, gerencia, mes);
       setData(res);
@@ -141,7 +141,7 @@ function ObjetivosView() {
       setOpenModal(false);
       setData(res);
       setIsSubmitting(false);
-      setValue(undefined)
+      setValue(undefined);
     } catch (error) {
       setIsSubmitting(false);
     }
@@ -297,7 +297,7 @@ function ObjetivosView() {
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
                 <Typography fontFamily={"initial"} variant="secondary">
-                  {row.facilidades ? row.facilidades : "Sin Información"}
+                  {row.facilidades ? row.facilidades : 0}
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "16px" }}>
@@ -386,13 +386,35 @@ function ObjetivosView() {
     </>
   );
 
+  useEffect(() => {
+    if (data && Object.keys(data).length > 0) {
+      const updatedOrigenes = Object.values(data).reduce((acc, value) => {
+        const existingIndex = acc.findIndex((o) => o.origen === value.origen);
+        if (existingIndex !== -1) {
+          acc[existingIndex].total += value.facilidades;
+        } else {
+          acc.push({ origen: value.origen, total: value.facilidades });
+        }
+        return acc;
+      }, [...origenes]); // Copia del estado actual
+
+      setOrigenes(updatedOrigenes);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (origenes && origenes.length > 0) {
+      console.log(origenes);
+    }
+  }, [origenes]);
+
   // VALIDACION PARA USUARIO
 
   useEffect(() => {
-    if (user_id && user_id == 14) {
+    if (user_id && user_id == 13) {
       setGerencia("Metropolitana");
       setHabilitado(true);
-    } else if (user_id && user_id == 15) {
+    } else if (user_id && user_id == 14) {
       setGerencia("Biobío");
       setHabilitado(true);
     } else null;
@@ -402,31 +424,131 @@ function ObjetivosView() {
     <Box
       sx={{
         display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        flexDirection: "column", // Coloca los hijos en columna
+        justifyContent: "center", // Centra verticalmente
+        alignItems: "center", // Centra horizontalmente
         minHeight: "90vh",
         paddingTop: { xs: 10, md: 8 },
         mt: 2,
       }}
     >
       {openModal && setModal()}
-      <Card sx={{ width: "90%", borderRadius: "0" }}>
-        <CardHeader
-          title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              OBJETIVOS ONNET
-            </Typography>
-          }
-          avatar={<SportsScoreIcon />}
+      {origenes && origenes.length > 0 ? (
+        <Box
           sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "end",
+            width: "100%",
+            borderRadius: "10",
+            display: "flex",
+            justifyContent: "center",
+            marginTop: 2,
+            marginBottom: 2
           }}
-        />
-        <CardContent>{setFilter()}</CardContent>
-        <CardContent>{setTable()}</CardContent>
-      </Card>
+        >
+          <Card sx={{ width: "40%", borderRadius: "10" }}>
+            <CardHeader
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                  TOTALES
+                </Typography>
+              }
+              avatar={<CalculateIcon />}
+              sx={{
+                background: "#0b2f6d",
+                color: "white",
+                textAlign: "end",
+              }}
+            />
+            <CardContent>
+              <TableContainer>
+                <Table
+                  sx={{
+                    width: "100%",
+                    display: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <TableHead>
+                    <TableRow>
+                      {["ORIGEN", "TOTAL"].map((header) => (
+                        <TableCell
+                          key={header}
+                          align="left"
+                          sx={{ background: "#d8d8d8", fontWeight: "bold" }}
+                        >
+                          {header}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody
+                    sx={{
+                      display: "column",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {origenes && origenes.length > 0 ? (
+                      origenes.map((row, index) => (
+                        <TableRow key={index}>
+                          <TableCell align="left" sx={{ fontSize: "16px" }}>
+                            <Typography
+                              fontFamily={"initial"}
+                              variant="secondary"
+                            >
+                              {row.origen ? row.origen : "Sin Información"}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="left" sx={{ fontSize: "16px" }}>
+                            <Typography
+                              fontFamily={"initial"}
+                              variant="secondary"
+                            >
+                              {row.total ? row.total : 0}
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={7} align="center">
+                          No hay datos disponibles
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
+        </Box>
+      ) : null}
+      <Box
+        sx={{
+          width: "100%",
+          borderRadius: "10",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Card sx={{ width: "90%", borderRadius: "10" }}>
+          <CardHeader
+            title={
+              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                OBJETIVOS ONNET
+              </Typography>
+            }
+            avatar={<SportsScoreIcon />}
+            sx={{
+              background: "#0b2f6d",
+              color: "white",
+              textAlign: "end",
+            }}
+          />
+          <CardContent>{setFilter()}</CardContent>
+          <CardContent>{setTable()}</CardContent>
+        </Card>
+      </Box>
+
+      
     </Box>
   );
 }

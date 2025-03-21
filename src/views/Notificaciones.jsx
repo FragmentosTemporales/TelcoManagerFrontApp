@@ -81,7 +81,7 @@ function NotificacionesView() {
             backgroundColor: "#f5f5f5",
             boxShadow: 5,
             textAlign: "center",
-            borderRadius: "0px",
+            borderRadius: "10px",
             minHeight: "250px",
             mt: 2,
           }}
@@ -151,7 +151,7 @@ function NotificacionesView() {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={6} align="center">
-                      No hay datos disponibles
+                      No hay notificaciones pendientes.
                     </TableCell>
                   </TableRow>
                 )}
