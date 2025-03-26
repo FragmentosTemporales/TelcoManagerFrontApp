@@ -1317,7 +1317,7 @@ function Solicitud() {
             }}
           >
             <Link to="/solicitudes">
-              <Button variant="contained" sx={{ background: "#0b2f6d" }}>
+              <Button variant="contained" sx={{ background: "#0b2f6d", borderRadius: "5px" }}>
                 Ir a Solicitudes
               </Button>
             </Link>

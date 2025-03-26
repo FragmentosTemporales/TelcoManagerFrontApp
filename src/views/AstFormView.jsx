@@ -26,7 +26,6 @@ function AstViewer() {
   const fetchData = async () => {
     try {
       const res = await getAst(token, formID);
-      console.log(res)
       setData(res);
       setWorker(res.usuario);
       setIsLoading(false);
@@ -52,19 +51,22 @@ function AstViewer() {
       }}
     >
       <Box
-            sx={{
-              width: "90%",
-              overflow: "hidden",
-              borderRadius: "0",
-              mt: 3,
-            }}
+        sx={{
+          width: "90%",
+          overflow: "hidden",
+          borderRadius: "10px",
+          mt: 3,
+        }}
+      >
+        <Link to="/form-ast-list">
+          <Button
+            variant="contained"
+            sx={{ background: "#0b2f6d", borderRadius: "10px" }}
           >
-            <Link to="/form-ast-list">
-              <Button variant="contained" sx={{ background: "#0b2f6d", borderRadius: "0", }}>
-                Volver
-              </Button>
-            </Link>
-          </Box>
+            Volver
+          </Button>
+        </Link>
+      </Box>
       {isLoading ? (
         <Box
           sx={{
@@ -116,14 +118,14 @@ function AstViewer() {
                   { label: "Nombre :", value: worker.nombre },
                   { label: "Rut :", value: worker.numDoc },
                   { label: "Empresa :", value: worker.empresa.nombre },
-                  { label: "Fecha :", value: extractDate(data.fechaForm) }
+                  { label: "Fecha :", value: extractDate(data.fechaForm) },
                 ].map((item, index) => (
                   <Box
                     key={index}
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
-                      borderRadius: 1,
+                      borderRadius: "10px",
                     }}
                   >
                     <Typography
@@ -150,14 +152,60 @@ function AstViewer() {
                   </Box>
                 ))}
               </Paper>
-              <Paper sx={{ display:'column', justifyContent:'center', mt:2}}>
+              <Paper
+                sx={{ display: "column", justifyContent: "center", mt: 2 }}
+              >
                 {[
-                  { label: "¿Existe riesgo de ser golpeado por un objeto?", value: data.golpeadoPor },
-                  { label: "¿Existe riesgo de una descarga eléctrica?", value: data.descargaElectrica },
-                  { label: "¿Existe riesgo de una caída en altura?", value: data.caidaAltura },
-                  { label: "¿Existe riesgo de tropiezo?", value: data.tropiezo },
-                  { label: "¿Existe la posibilidad de una distensión muscular, producto de un levantamiento, flexión o dislocación?", value: data.distensionMuscular },
-                  { label: "Medidas de control definidas", value: data.observacion }
+                  {
+                    label: "¿Existe riesgo de ser golpeado por un objeto?",
+                    value: data.golpeadoPor,
+                  },
+                  {
+                    label: "¿Existe riesgo de una descarga eléctrica?",
+                    value: data.descargaElectrica,
+                  },
+                  {
+                    label: "¿Existe riesgo de una caída en altura?",
+                    value: data.caidaAltura,
+                  },
+                  {
+                    label: "¿Existe riesgo de tropiezo?",
+                    value: data.tropiezo,
+                  },
+                  {
+                    label:
+                      "¿Existe la posibilidad de una distensión muscular, producto de un levantamiento, flexión o dislocación?",
+                    value: data.distensionMuscular,
+                  },
+                  {
+                    label:
+                      "¿Existe la posibilidad de ser colisionado por otro vehículo?",
+                    value: data.colicionadoPor,
+                  },
+                  {
+                    label:
+                      "¿Las condiciones del vehículo son adecuadas para desempeñar las labores diarias?",
+                    value: data.condicionVehicular,
+                  },
+                  {
+                    label:
+                      "¿Se han identificado en el área de trabajo los posibles riesgos como piso resbaladizos, obstáculos, etc?",
+                    value: data.areaTrabajo,
+                  },
+                  {
+                    label:
+                      "¿Se ha realizado la ventilación adecuada del espacio de trabajo en caso de realizar actividades en cámaras subterráneas?",
+                    value: data.ventilacionAdecuada,
+                  },
+                  {
+                    label:
+                      "¿Se ha delimitado correctamente el área con barreras físicas, cintas de seguridad, conos, vallas u otros elementos?",
+                    value: data.areaDelimitada,
+                  },
+                  {
+                    label: "Medidas de control definidas",
+                    value: data.observacion,
+                  },
                 ].map((item, index) => (
                   <Box key={index}>
                     <Typography

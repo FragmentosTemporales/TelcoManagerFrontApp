@@ -95,7 +95,7 @@ function Login() {
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            <Typography fontWeight="bold" >
               INICIAR SESION
             </Typography>
           }

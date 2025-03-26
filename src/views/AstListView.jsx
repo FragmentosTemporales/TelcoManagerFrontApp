@@ -267,7 +267,7 @@ function FormAstList() {
                 <Link to={`/formulario-ast/${row.formID}`}>
                   <Button
                     variant="contained"
-                    sx={{ background: "#0b2f6d", borderRadius: 0 }}
+                    sx={{ background: "#0b2f6d", borderRadius: "10px" }}
                   >
                     <VisibilityIcon />
                   </Button>
@@ -335,7 +335,7 @@ function FormAstList() {
         </Box>
       ) : (
         <>
-          <Card sx={{ width: "70%", borderRadius: "0", boxShadow: 5 }}>
+          <Card sx={{ width: "70%", borderRadius: "10px", boxShadow: 5 }}>
             <CardHeader
               title={
                 <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
