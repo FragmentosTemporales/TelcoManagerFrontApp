@@ -8,6 +8,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import NewspaperIcon from '@mui/icons-material/Newspaper';
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import AutoAwesomeMosaicIcon from "@mui/icons-material/AutoAwesomeMosaic";
@@ -61,6 +62,15 @@ function Home() {
       body: "Acá encontrarás la lista de Amonestaciones solicitadas",
       estado: true,
       moduloID: 3,
+    },
+    {
+      head: "Mis Solicitudes",
+      icono: <FormatListBulletedIcon />,
+      title: "Revisa el estado de las Solicitudes de Amonestación realizadas",
+      link: "/mis-solicitudes",
+      body: "Acá encontrarás la lista de Amonestaciones solicitadas",
+      estado: true,
+      moduloID: 20,
     },
     {
       head: "Área de Creación",
@@ -164,6 +174,15 @@ function Home() {
       estado: true,
       moduloID: 15,
     },
+    {
+      head: "Agendamiento",
+      icono: <NewspaperIcon />,
+      title: "Gestiona despachos y agendamientos",
+      link: "/agendamientos",
+      body: "Acá podrás gestionar órdenes de trabajo y agendamientos",
+      estado: true,
+      moduloID: 19,
+    },
   ];
 
   const accesos = secciones.filter((seccion) =>
@@ -214,7 +233,7 @@ function Home() {
                   minHeight: "400px",
                   maxWidth: "400px",
                   backgroundColor: "#f5f5f5",
-                  borderRadius: "10px",
+                  borderRadius: "20px",
                   position: "relative",
                   transition:
                     "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",

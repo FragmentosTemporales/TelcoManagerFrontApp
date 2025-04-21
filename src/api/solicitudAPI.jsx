@@ -33,6 +33,36 @@ export const getSolicitudes = async (token, page) => {
   }
 };
 
+export const getSolicitudesByUser = async (token, page) => {
+  try {
+    const url = `${baseUrl}/get-solicitudes-by-user/${page}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getSolicitudesFiltradas = async (token, payload, page) => {
+  try {
+    const url = `${baseUrl}/get-filtered-solicitudes/${page}`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const getFilteredSolicitudes = async (token, estadoID, page) => {
   try {
     const pagina = page

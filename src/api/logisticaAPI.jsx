@@ -17,3 +17,19 @@ export const fetchReversas = async (token) => {
     throw error.response.data.error;
   }
 };
+
+export const getReversas = async (token, rut) => {
+  try {
+    const url = `${baseUrl}/reversa-serie/${rut}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response)
+    return response;
+  } catch (error) {
+    throw error.message;
+  }
+};

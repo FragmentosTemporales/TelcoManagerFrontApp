@@ -28,7 +28,8 @@ import Checkbox from "@mui/material/Checkbox";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { setDomMessage } from "../slices/dominionSlice";
-import { getReversas, updateReversas } from "../api/dominionAPI";
+import { updateReversas } from "../api/dominionAPI";
+import { getReversas } from "../api/logisticaAPI";
 import { fetchReversas } from "../api/logisticaAPI";
 
 function ReversaView() {
@@ -83,7 +84,7 @@ function ReversaView() {
     setLoading(true);
     const payload = rut;
     try {
-      const response = await getReversas(domToken, payload);
+      const response = await getReversas(token, payload);
 
       setData(response.data.filter((item) => item.entregado !== 1));
       setReversa(response.data.filter((item) => item.entregado !== 0));

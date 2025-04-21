@@ -513,8 +513,9 @@ function Solicitud() {
           setOpenModalFinalizar(true);
           setToNotif(3);
         }}
-      >
-        <Typography fontFamily="initial">FINALIZAR AMONESTACION</Typography>
+        disabled={isSubmitting}
+        >
+          {isSubmitting ? "Procesando..." : "Finalizar Amonestación"}
       </Button>
     </>
   );
@@ -529,8 +530,8 @@ function Solicitud() {
           setOpenModalRechazar(true);
           setToNotif(validate);
         }}
-      >
-        <Typography fontFamily="initial">ANULAR AMONESTACION</Typography>
+        >
+          {isSubmitting ? "Procesando..." : "Anular Amonestación"}
       </Button>
     </>
   );
@@ -545,8 +546,8 @@ function Solicitud() {
           setOpenModalLegal(true);
           setToNotif(3);
         }}
-      >
-        <Typography fontFamily="initial">REQUIERE LEGAL</Typography>
+        >
+          {isSubmitting ? "Procesando..." : "Requiere Legal"}
       </Button>
     </>
   );
@@ -561,8 +562,8 @@ function Solicitud() {
           setOpenModalEmpleador(true);
           setToNotif(3);
         }}
-      >
-        <Typography fontFamily="initial">FIRMA EMPLEADOR</Typography>
+        >
+          {isSubmitting ? "Procesando..." : "Firma Empleador"}
       </Button>
     </>
   );
@@ -578,8 +579,8 @@ function Solicitud() {
           setToNotif(validate);
         }}
         sx={{ width: "200px" }}
-      >
-        <Typography fontFamily="initial">FIRMA TRABAJADOR</Typography>
+        >
+          {isSubmitting ? "Procesando..." : "Firma Trabajador"}
       </Button>
     </>
   );
@@ -595,8 +596,8 @@ function Solicitud() {
           setToNotif(3);
         }}
         sx={{ width: "200px" }}
-      >
-        <Typography fontFamily="initial">LICENCIA MEDICA</Typography>
+        >
+          {isSubmitting ? "Procesando..." : "Licencia Médica"}
       </Button>
     </>
   );
@@ -612,8 +613,8 @@ function Solicitud() {
           setToNotif(3);
         }}
         sx={{ width: "200px" }}
-      >
-        <Typography fontFamily="initial">VACACIONES</Typography>
+        >
+          {isSubmitting ? "Procesando..." : "Vacaciones"}
       </Button>
     </>
   );
@@ -629,8 +630,8 @@ function Solicitud() {
           setToNotif(validate);
         }}
         sx={{ width: "200px" }}
-      >
-        <Typography fontFamily="initial">ENVIADA POR CORREO</Typography>
+        >
+          {isSubmitting ? "Procesando..." : "Enviada por Correo"}
       </Button>
     </>
   );
@@ -646,8 +647,8 @@ function Solicitud() {
           setToNotif(validate);
         }}
         sx={{ width: "200px" }}
-      >
-        <Typography fontFamily="initial">FIRMADA</Typography>
+        >
+          {isSubmitting ? "Procesando..." : "Firmada"}
       </Button>
     </>
   );
@@ -663,8 +664,8 @@ function Solicitud() {
           setToNotif(3);
         }}
         sx={{ width: "200px" }}
-      >
-        <Typography fontFamily="initial">NO FIRMA</Typography>
+        >
+          {isSubmitting ? "Procesando..." : "No Firmada"}
       </Button>
     </>
   );
@@ -1007,7 +1008,7 @@ function Solicitud() {
     try {
       const res = await getUniqueSolicitud(token, solicitud_id);
       setData(res);
-      setValidate(res);
+      setValidate(res.userID);
       setDataGestiones(res.gestiones);
       setDataForm(res.form);
       setLogID(res.logID);

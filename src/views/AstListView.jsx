@@ -38,7 +38,6 @@ function FormAstList() {
   const [page, setPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [open,setOpen] = useState(false)
   const handlePage = (newPage) => setPage(newPage);
 
   const fetchData = async () => {
@@ -54,12 +53,12 @@ function FormAstList() {
       setIsSubmitting(false);
       setIsLoading(false);
     } catch (error) {
-
+      console.log(error)
       setIsLoading(false);
       setIsSubmitting(false);
-      setOpen(true)
     }
   };
+
   const setTable = () => (
     <>
       <TableContainer>
@@ -72,9 +71,6 @@ function FormAstList() {
       </TableContainer>
     </>
   );
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const fetchAstUsers = async () => {
     try {
@@ -84,7 +80,6 @@ function FormAstList() {
       console.log(error)
     }
   }
-
 
   const handleClear = async (e) => {
     e.preventDefault();
@@ -310,11 +305,6 @@ function FormAstList() {
         height: "100%",
       }}
     >
-      {open && (
-          <Alert onClose={handleClose} sx={{ marginBottom: 3 }}>
-            {message}
-          </Alert>
-        )}
       {filterCard()}
       {isLoading ? (
         <Box

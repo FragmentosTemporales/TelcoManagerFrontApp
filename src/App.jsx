@@ -32,6 +32,9 @@ import BodegaQuintaViewer from "./views/BodegaQuintaView";
 import AtencionTotem from "./views/AtencionTotem";
 import SupervisorViewRM from "./views/SupervisorViewRM";
 import ChatBotViewer from "./views/ChatbotView";
+import AgendamientoViewer from "./views/AgendamientoView";
+import AllAgendamientoViewer from "./views/AllAgendamientosView";
+import AmonesatacionesViewer from "./views/AmonestacionesUserView";
 
 function App() {
   return (
@@ -41,6 +44,7 @@ function App() {
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<Home />} />
           <Route path="/charts" element={<Charts />} />
+          <Route path="/mis-solicitudes" element={<AmonesatacionesViewer />} />
           <Route path="/solicitudes" element={<Solicitudes />} />
           <Route path="/solicitud/:solicitud_id" element={<Solicitud />} />
           <Route path="/create" element={<CreateArea />} />
@@ -66,6 +70,8 @@ function App() {
           <Route path="/totem" element={<AtencionTotem />} />
           <Route path="/supervisor" element={<SupervisorViewRM />} />
           <Route path="/chatbot" element={<ChatBotViewer />} />
+          <Route path="/agendamientos" element={<AgendamientoViewer />} />
+          <Route path="/all_agendamientos" element={<AllAgendamientoViewer />} />
           <Route
             path="/componente-asignado/:componenteID"
             element={<ComponenteAsignadoView />}

@@ -1,64 +1,52 @@
 const filterData = [
   {
-    solicitudEstadoID: "1",
-    descri: "FALTA INFORMACION",
-    hab: "1",
-  },
-  {
-    solicitudEstadoID: "2",
-    descri: "ENVIADA A RRHH",
-    hab: "1",
-  },
-  {
-    solicitudEstadoID: "3",
-    descri: "EVALUACION LEGAL",
-    hab: "1",
-  },
-  {
-    solicitudEstadoID: "4",
-    descri: "PENDIENTE FIRMA EMPLEADOR",
-    hab: "1",
-  },
-  {
-    solicitudEstadoID: "5",
-    descri: "LICENCIA MEDICA",
-    hab: "1",
-  },
-  {
-    solicitudEstadoID: "6",
-    descri: "VACACIONES",
-    hab: "1",
-  },
-  {
-    solicitudEstadoID: "7",
-    descri: "PENDIENTE FIRMA TRABAJADOR",
-    hab: "1",
-  },
-  {
-    solicitudEstadoID: "9",
     descri: "ANULADA",
     hab: "1",
   },
   {
-    solicitudEstadoID: "10",
+    descri: "FINALIZADA",
+    hab: "1",
+  },
+  {
+    descri: "FALTA INFORMACION",
+    hab: "1",
+  },
+  {
     descri: "FIRMADA",
     hab: "1",
   },
   {
-    solicitudEstadoID: "12",
+    descri: "VACACIONES",
+    hab: "1",
+  },
+  {
+    descri: "LICENCIA MEDICA",
+    hab: "1",
+  },
+  {
     descri: "NO FIRMADA",
     hab: "1",
   },
   {
-    solicitudEstadoID: "13",
-    descri: "ENVIADA POR CORREO",
+    descri: "PENDIENTE FIRMA EMPLEADOR",
     hab: "1",
   },
   {
-    solicitudEstadoID: "14",
-    descri: "FINALIZADA",
+    descri: "PENDIENTE FIRMA TRABAJADOR",
     hab: "1",
-  }
+  },
+  {
+    descri: "EVALUACION LEGAL",
+    hab: "1",
+  },
+  {
+    descri: "ENVIADA A RRHH",
+    hab: "1",
+  },
+  {
+    descri: "ENVIADA POR CORREO",
+    hab: "1",
+  },
 ];
 
 export default filterData;
