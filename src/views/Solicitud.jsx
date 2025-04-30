@@ -94,7 +94,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "10px"
+            borderRadius: "20px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -136,7 +136,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "10px"
+            borderRadius: "20px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -178,7 +178,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "10px"
+            borderRadius: "20px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -220,7 +220,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "10px"
+            borderRadius: "20px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -262,7 +262,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "10px"
+            borderRadius: "20px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -304,7 +304,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "10px"
+            borderRadius: "20px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -346,7 +346,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "10px"
+            borderRadius: "20px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -388,7 +388,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "10px"
+            borderRadius: "20px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -430,7 +430,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "10px"
+            borderRadius: "20px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -472,7 +472,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "10px"
+            borderRadius: "20px"
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -680,7 +680,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "10px",
+        borderRadius: "20px",
         mt: 3,
       }}
     >
@@ -710,7 +710,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "10px",
+        borderRadius: "20px",
         mt: 3,
       }}
     >
@@ -742,7 +742,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "10px",
+        borderRadius: "20px",
         mt: 3,
       }}
     >
@@ -772,7 +772,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "10px",
+        borderRadius: "20px",
         mt: 3,
       }}
     >
@@ -804,7 +804,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "10px",
+        borderRadius: "20px",
         mt: 3,
       }}
     >
@@ -835,7 +835,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "10px",
+        borderRadius: "20px",
         mt: 3,
       }}
     >
@@ -866,7 +866,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "10px",
+        borderRadius: "20px",
         mt: 3,
       }}
     >
@@ -896,7 +896,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "10px",
+        borderRadius: "20px",
         mt: 3,
       }}
     >
@@ -927,7 +927,7 @@ function Solicitud() {
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "10px",
+        borderRadius: "20px",
         mt: 3,
       }}
     >
@@ -1318,7 +1318,7 @@ function Solicitud() {
             }}
           >
             <Link to="/solicitudes">
-              <Button variant="contained" sx={{ background: "#0b2f6d", borderRadius: "5px" }}>
+              <Button variant="contained" sx={{ background: "#0b2f6d", borderRadius: "20px" }}>
                 Ir a Solicitudes
               </Button>
             </Link>
@@ -1332,7 +1332,7 @@ function Solicitud() {
               overflow: "hidden",
               backgroundColor: "#f5f5f5",
               boxShadow: 5,
-              borderRadius: "10px",
+              borderRadius: "20px",
               mt: 3,
             }}
           >
@@ -1360,7 +1360,7 @@ function Solicitud() {
               overflow: "hidden",
               backgroundColor: "#f5f5f5",
               boxShadow: 5,
-              borderRadius: "10px",
+              borderRadius: "20px",
               mt: 3,
             }}
           >
@@ -1388,7 +1388,7 @@ function Solicitud() {
               overflow: "hidden",
               backgroundColor: "#f5f5f5",
               boxShadow: 5,
-              borderRadius: "10px",
+              borderRadius: "20px",
               mt: 3,
             }}
           >

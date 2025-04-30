@@ -45,7 +45,7 @@ function Navbar() {
                     width: "40px",
                     fontWeight: "bold",
                     background: "#124fb9",
-                    borderRadius: "10px",
+                    borderRadius: "20px",
                     border: "1px solid #0b2f6d",
                   }}
                 >
@@ -67,7 +67,7 @@ function Navbar() {
                         width: "40px",
                         fontWeight: "bold",
                         background: "#124fb9",
-                        borderRadius: "10px",
+                        borderRadius: "20px",
                         border: "1px solid #0b2f6d",
                         marginLeft: "10px",
                         marginRight: "10px",
@@ -85,7 +85,7 @@ function Navbar() {
                     sx={{
                       height: "40px",
                       fontWeight: "bold",
-                      borderRadius: "10px",
+                      borderRadius: "20px",
                       border: "1px solid #c62828",
                       marginLeft: "10px",
                     }}

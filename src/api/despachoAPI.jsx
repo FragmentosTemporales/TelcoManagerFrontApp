@@ -48,24 +48,9 @@ export const getAllAgendamientos = async (token, page) => {
   }
 };
 
-export const getDataAgendamientos = async (token, dias) => {
+export const getDataAgendamientos = async (token, fecha) => {
   try {
-    const url = `${baseUrl}/get-data-agendamientos/${dias}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response.data.error;
-  }
-};
-
-export const getDataAgendamientosCC = async (token) => {
-  try {
-    const url = `${baseUrl}/agendamiento-cc-porcentual`;
+    const url = `${baseUrl}/get-data-agendamientos/${fecha}`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,

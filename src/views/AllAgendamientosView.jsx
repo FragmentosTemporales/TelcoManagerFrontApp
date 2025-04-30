@@ -19,11 +19,16 @@ import {
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import { getAllAgendamientos, filterAgendamiento } from "../api/despachoAPI";
 import { useSelector } from "react-redux";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
+import AgendamientoCharts from "../components/agendamientoCharts";
+import BarChartIcon from "@mui/icons-material/BarChart";
 
 function AllAgendamientoViewer() {
   const authState = useSelector((state) => state.auth);
@@ -37,6 +42,16 @@ function AllAgendamientoViewer() {
   const [page, setPage] = useState(1);
   const handlePage = (newPage) => setPage(newPage);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [showStats, setShowStats] = useState(false);
+
+  const toggleFilters = () => {
+    setShowFilters((prev) => !prev);
+  };
+
+  const toggleStats = () => {
+    setShowStats((prev) => !prev);
+  };
 
   const [form, setForm] = useState({
     fechaInicio: "",
@@ -273,7 +288,16 @@ function AllAgendamientoViewer() {
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold">Filtro por Fecha - Hora</Typography>
+            <Typography fontWeight="bold">Estadística</Typography>
+          }
+          avatar={<BarChartIcon />}
+          action={
+            <Button
+              onClick={toggleStats}
+              sx={{ color: "white", minWidth: "auto" }}
+            >
+              {showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </Button>
           }
           sx={{
             background: "#0b2f6d",
@@ -281,104 +305,140 @@ function AllAgendamientoViewer() {
             textAlign: "center",
           }}
         />
-        <CardContent sx={{ display: "grid" }}>
-          <form onSubmit={SubmitForm}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                flexWrap: "wrap",
-                gap: 2,
-              }}
+        {showStats && (
+          <CardContent sx={{ display: "grid" }}>
+            <AgendamientoCharts />
+          </CardContent>
+        )}
+      </Card>
+
+      <Card
+        sx={{
+          width: { lg: "80%", md: "60%", xs: "80%" },
+          borderRadius: "20px",
+          boxShadow: 5,
+          marginTop: 2,
+        }}
+      >
+        <CardHeader
+          title={
+            <Typography fontWeight="bold">Filtrar</Typography>
+          }
+          avatar={<SearchIcon />}
+          action={
+            <Button
+              onClick={toggleFilters}
+              sx={{ color: "white", minWidth: "auto" }}
             >
+              {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </Button>
+          }
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "center",
+          }}
+        />
+        {showFilters && (
+          <CardContent sx={{ display: "grid" }}>
+            <form onSubmit={SubmitForm}>
               <Box
                 sx={{
-                  mb: 2,
-                  width: "35%",
-                }}
-              >
-                <InputLabel id="fechaInicio-label">Fecha de Inicio</InputLabel>
-                <TextField
-                  required
-                  id="fechaInicio"
-                  type="datetime-local"
-                  name="fechaInicio"
-                  variant="outlined"
-                  value={form.fechaInicio}
-                  onChange={handleChange}
-                  sx={{ minWidth: "100%" }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  mb: 2,
-                  width: "35%",
-                }}
-              >
-                <InputLabel id="fechaFin-label">Fecha de Fin</InputLabel>
-                <TextField
-                  required
-                  id="fechaFin"
-                  type="datetime-local"
-                  name="fechaFin"
-                  variant="outlined"
-                  value={form.fechaFin}
-                  onChange={handleChange}
-                  sx={{ minWidth: "100%" }}
-                />
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                flexWrap: "wrap",
-                gap: 2,
-              }}
-            >
-              <Box
-                sx={{
-                  mb: 2,
-                  width: "20%",
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  justifyContent: "space-evenly",
+                  flexWrap: "wrap",
+                  gap: 2,
                 }}
               >
-                <Button
-                  variant="contained"
-                  type="submit"
-                  disabled={isSubmitting}
+                <Box
                   sx={{
-                    background: "#0b2f6d",
-                    height: 30,
-                    width: "100%",
-                    borderRadius: "20px",
+                    mb: 2,
+                    width: "35%",
                   }}
                 >
-                  {isSubmitting ? "Cargando..." : "Buscar"}
-                </Button>
+                  <InputLabel id="fechaInicio-label">Fecha de Inicio</InputLabel>
+                  <TextField
+                    required
+                    id="fechaInicio"
+                    type="datetime-local"
+                    name="fechaInicio"
+                    variant="outlined"
+                    value={form.fechaInicio}
+                    onChange={handleChange}
+                    sx={{ minWidth: "100%" }}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    mb: 2,
+                    width: "35%",
+                  }}
+                >
+                  <InputLabel id="fechaFin-label">Fecha de Fin</InputLabel>
+                  <TextField
+                    required
+                    id="fechaFin"
+                    type="datetime-local"
+                    name="fechaFin"
+                    variant="outlined"
+                    value={form.fechaFin}
+                    onChange={handleChange}
+                    sx={{ minWidth: "100%" }}
+                  />
+                </Box>
               </Box>
               <Box
                 sx={{
-                  mb: 2,
-                  width: "20%",
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  justifyContent: "space-evenly",
+                  flexWrap: "wrap",
+                  gap: 2,
                 }}
               >
-                <Button
-                  variant="outlined"
-                  onClick={clearFilter}
-                  sx={{ height: 30, width: "100%", borderRadius: "20px" }}
+                <Box
+                  sx={{
+                    mb: 2,
+                    width: "20%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 >
-                  Limpiar Filtro
-                </Button>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    disabled={isSubmitting}
+                    sx={{
+                      background: "#0b2f6d",
+                      height: 30,
+                      width: "100%",
+                      borderRadius: "20px",
+                    }}
+                  >
+                    {isSubmitting ? "Cargando..." : "Buscar"}
+                  </Button>
+                </Box>
+                <Box
+                  sx={{
+                    mb: 2,
+                    width: "20%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    onClick={clearFilter}
+                    sx={{ height: 30, width: "100%", borderRadius: "20px" }}
+                  >
+                    Limpiar Filtro
+                  </Button>
+                </Box>
               </Box>
-            </Box>
-          </form>
-        </CardContent>
+            </form>
+          </CardContent>
+        )}
       </Card>
 
       <Card

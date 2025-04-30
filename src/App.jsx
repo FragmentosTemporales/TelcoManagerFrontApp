@@ -35,6 +35,8 @@ import ChatBotViewer from "./views/ChatbotView";
 import AgendamientoViewer from "./views/AgendamientoView";
 import AllAgendamientoViewer from "./views/AllAgendamientosView";
 import AmonesatacionesViewer from "./views/AmonestacionesUserView";
+import CreateAuditoria from "./views/CreateAuditoria";
+import AuditoriasView from "./views/AllAuditoriasView";
 
 function App() {
   return (
@@ -71,7 +73,9 @@ function App() {
           <Route path="/supervisor" element={<SupervisorViewRM />} />
           <Route path="/chatbot" element={<ChatBotViewer />} />
           <Route path="/agendamientos" element={<AgendamientoViewer />} />
+          <Route path="/auditorias" element={<CreateAuditoria />} />
           <Route path="/all_agendamientos" element={<AllAgendamientoViewer />} />
+          <Route path="/all_auditorias" element={<AuditoriasView />} />
           <Route
             path="/componente-asignado/:componenteID"
             element={<ComponenteAsignadoView />}

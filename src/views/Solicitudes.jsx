@@ -19,6 +19,8 @@ import {
   CardContent,
   TextField,
 } from "@mui/material";
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import BarChartIcon from "@mui/icons-material/BarChart";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -29,9 +31,10 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSolicitudesFiltradas } from "../api/solicitudAPI";
+import { getSolicitudesFiltradas, getSolicitudesExcel } from "../api/solicitudAPI";
 import { onLoad, onLoading, setMessage } from "../slices/solicitudSlice";
 import filterData from "../data/filterSolicitud";
+import SolicitudCharts from "../components/solicitudesCharts";
 
 function Solicitudes() {
   const authState = useSelector((state) => state.auth);
@@ -44,6 +47,7 @@ function Solicitudes() {
   const [page, setPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [showStatistics, setShowStatistics] = useState(false);
 
   const [toFilter, setToFilter] = useState({ folio: "", estado: "" });
 
@@ -67,6 +71,10 @@ function Solicitudes() {
     fetchData();
   }, [page]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [toFilter]);
+
   const handleClear = async (e) => {
     e.preventDefault();
     try {
@@ -89,10 +97,22 @@ function Solicitudes() {
     setOptions(transformedOptions);
   };
 
+    const getExcel = async () => {
+      try {
+        await getSolicitudesExcel(token);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
   const handlePage = (newPage) => setPage(newPage);
 
   const toggleFilters = () => {
     setShowFilters((prev) => !prev);
+  };
+
+  const toggleStatistics = () => {
+    setShowStatistics((prev) => !prev);
   };
 
   const getButtons = () => (
@@ -236,6 +256,47 @@ function Solicitudes() {
     </Card>
   );
 
+  const statisticsCard = () => (
+    <Card
+      sx={{
+        width: "80%",
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        textAlign: "center",
+        borderRadius: "20px",
+        mt: 2,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            ESTADISTICAS DE SOLICITUDES
+          </Typography>
+        }
+        avatar={<BarChartIcon />}
+        action={
+          <Button
+            onClick={toggleStatistics}
+            sx={{ color: "white", minWidth: "auto" }}
+          >
+            {showStatistics ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </Button>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "end",
+        }}
+      />
+      {showStatistics && (
+        <CardContent>
+          <SolicitudCharts />
+        </CardContent>
+      )}
+    </Card>
+  );
+
   const createNew = () => (
     <Box
       sx={{
@@ -261,6 +322,33 @@ function Solicitudes() {
           <AddCircleOutlineIcon /> Crear Nueva
         </Button>
       </Link>
+    </Box>
+  );
+
+  const downloadExcel = () => (
+    <Box
+      sx={{
+        width: "80%",
+        mt: 2,
+        display: "flex",
+        justifyContent: "start",
+      }}
+    >
+        <Button
+          variant="contained"
+          onClick={getExcel}
+          sx={{
+            width: 200,
+            height: 40,
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-around",
+            borderRadius: "20px",
+            background: "#0b2f6d",
+          }}
+        >
+          <InsertDriveFileIcon /> Descargar
+        </Button>
     </Box>
   );
 
@@ -394,8 +482,10 @@ function Solicitudes() {
           {message}
         </Alert>
       )}
+      {statisticsCard()}
       {filterCard()}
       {createNew()}
+      {downloadExcel()}
       {is_loading && !is_load ? (
         <Box
           sx={{

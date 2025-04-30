@@ -16,9 +16,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { onLogin } from "../api/authAPI";
-import { onLoginDominion } from "../api/dominionAPI";
 import { onLoad, onLoading, setMessage } from "../slices/authSlice";
-import { domLoadAuth } from "../slices/dominionSlice";
 
 function Login() {
   const { message } = useSelector((state) => state.auth);
@@ -48,12 +46,6 @@ function Login() {
       dispatch(onLoad(response));
       navigate("/");
 
-      const usuario = response.usuario;
-
-      const payload2 = { username: usuario.numDoc, password: form.clave };
-
-      const res = await onLoginDominion(payload2);
-      dispatch(domLoadAuth(res));
     } catch (error) {
       dispatch(setMessage(error));
       setIsSubmitting(false);

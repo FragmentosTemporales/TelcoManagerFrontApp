@@ -30,7 +30,7 @@ import { useEffect } from "react";
 function Home() {
   const authState = useSelector((state) => state.auth);
   const proyectoState = useSelector((state) => state.proyectos);
-  const { permisos, token, empresa } = authState;
+  const { permisos, token } = authState;
   const { data: dataProyecto } = proyectoState;
 
   const dispatch = useDispatch();
@@ -42,7 +42,6 @@ function Home() {
       title: "Vista de Reportes",
       link: "/charts",
       body: "Acá encontrarás los diferentes reportes gestionados en PowerBI",
-      estado: false,
       moduloID: 1,
     },
     {
@@ -51,7 +50,6 @@ function Home() {
       title: "Listado de Reversas Pendientes",
       link: "reversa",
       body: "Acá encontrarás la lista de reversas pendientes y entregadas",
-      estado: true,
       moduloID: 2,
     },
     {
@@ -59,17 +57,15 @@ function Home() {
       icono: <FormatListBulletedIcon />,
       title: "Listado de Solicitudes de Amonestación",
       link: "/solicitudes",
-      body: "Acá encontrarás la lista de Amonestaciones solicitadas",
-      estado: true,
+      body: "Acá encontrarás la lista de todas las Amonestaciones solicitadas y sus estados.",
       moduloID: 3,
     },
     {
       head: "Mis Solicitudes",
       icono: <FormatListBulletedIcon />,
-      title: "Revisa el estado de las Solicitudes de Amonestación realizadas",
+      title: "Revisa el estado de tus solicitudes de Amonestación",
       link: "/mis-solicitudes",
-      body: "Acá encontrarás la lista de Amonestaciones solicitadas",
-      estado: true,
+      body: "Acá encontrarás la lista de Amonestaciones asociadas a tu usuario.",
       moduloID: 20,
     },
     {
@@ -78,7 +74,6 @@ function Home() {
       title: "Espacio de Creación",
       link: "/createzone",
       body: "Acá podrás crear Usuarios y editar preferencias",
-      estado: true,
       moduloID: 4,
     },
     {
@@ -87,7 +82,6 @@ function Home() {
       title: "Espacio para definir los objetivos por zona",
       link: "/objetivos",
       body: "Acá podrás definir los objetivos mensuales según la zona a elegir",
-      estado: true,
       moduloID: 5,
     },
     {
@@ -96,7 +90,6 @@ function Home() {
       title: "Espacio para visualizar Proyectos Asignados",
       link: "/asignados-user",
       body: "Acá podrás gestionar los proyectos asignados a tu Usuario",
-      estado: true,
       moduloID: 6,
     },
     {
@@ -105,7 +98,6 @@ function Home() {
       title: "Espacio para visualizar Proyectos Asignados",
       link: "/asignados",
       body: "Acá podrás gestionar los proyectos asignados a los diferentes usuarios.",
-      estado: true,
       moduloID: 11,
     },
     {
@@ -114,20 +106,8 @@ function Home() {
       title: "Espacio para gestionar los formulario AST",
       link: "/form-ast-list",
       body: "Acá podrás gestionar los formularios enviados por los trabajadores",
-      estado: true,
       moduloID: 7,
     },
-    /*
-    {
-      head: "Prevencion AST",
-      icono: <FormatListNumberedIcon/>,
-      title: "Espacio para completar formulario AST",
-      link: "/form-ast",
-      body: "Acá podrás completar tu formulario y enviarlo directamente a la base de datos",
-      estado: true,
-      moduloID: 8,
-    },
-    */
     {
       head: "Gestión Bodega RM",
       icono: <InventoryIcon />,
@@ -135,7 +115,6 @@ function Home() {
         "Espacio para gestión de atención en bodega en la Región Metropolitana",
       link: "/bodegaRM",
       body: "Acá podrás ver los números de atención y gestionar procesos internos",
-      estado: true,
       moduloID: 10,
     },
     {
@@ -144,7 +123,6 @@ function Home() {
       title: "Espacio para gestión de atención en bodega de la V Región",
       link: "/bodegaQuinta",
       body: "Acá podrás ver los números de atención y gestionar procesos internos",
-      estado: true,
       moduloID: 12,
     },
     {
@@ -153,7 +131,6 @@ function Home() {
       title: "Espacio para gestión de atención",
       link: "/totem",
       body: "Acá podrás ver los números de atención y gestionar procesos internos",
-      estado: true,
       moduloID: 13,
     },
     {
@@ -162,7 +139,6 @@ function Home() {
       title: "Espacio para gestión de técnicos",
       link: "/supervisor",
       body: "Acá podrás ver el estado de los técnicos y gestionar sus procesos",
-      estado: true,
       moduloID: 14,
     },
     {
@@ -171,7 +147,6 @@ function Home() {
       title: "Espacio para consulta y soporte técnico",
       link: "/chatbot",
       body: "Acá podrás realizar preguntas a un chat destinado al apoyo para técnicos",
-      estado: true,
       moduloID: 15,
     },
     {
@@ -180,8 +155,23 @@ function Home() {
       title: "Gestiona despachos y agendamientos",
       link: "/agendamientos",
       body: "Acá podrás gestionar órdenes de trabajo y agendamientos",
-      estado: true,
       moduloID: 19,
+    },
+    {
+      head: "Auditorías",
+      icono: <NewspaperIcon />,
+      title: "Gestiona y crea auditorías",
+      link: "/auditorias",
+      body: "Acá podrás gestionar, crear y visualizar auditorías",
+      moduloID: 21,
+    },
+    {
+      head: "Lista de Auditorías",
+      icono: <NewspaperIcon />,
+      title: "Gestiona y visualiza auditorías",
+      link: "/all_auditorias",
+      body: "Acá podrás gestionar, crear y visualizar todas las auditorías realizadas",
+      moduloID: 21,
     },
   ];
 

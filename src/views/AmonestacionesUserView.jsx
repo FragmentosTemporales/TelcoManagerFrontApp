@@ -18,6 +18,9 @@ import {
   Typography,
   CardContent,
 } from "@mui/material";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -27,6 +30,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSolicitudesByUser } from "../api/solicitudAPI";
 import { setMessage } from "../slices/solicitudSlice";
+import SolicitudChartsByUser from "../components/solicitudByUserChart";
 
 function AmonesatacionesViewer() {
   const authState = useSelector((state) => state.auth);
@@ -37,6 +41,7 @@ function AmonesatacionesViewer() {
   const [data, setData] = useState([]);
   const [pages, setPages] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showStatistics, setShowStatistics] = useState(false);
 
   const handleClose = () => setOpen(false);
 
@@ -44,7 +49,6 @@ function AmonesatacionesViewer() {
     try {
       setIsSubmitting(true);
       const res = await getSolicitudesByUser(token, page)
-      console.log(res)
       setData(res.data);
       setPages(res.pages);
       setIsSubmitting(false);
@@ -55,6 +59,9 @@ function AmonesatacionesViewer() {
     }
   };
 
+  const toggleStatistics = () => {
+    setShowStatistics((prev) => !prev);
+  };
 
   const handlePage = (newPage) => setPage(newPage);
 
@@ -84,7 +91,6 @@ function AmonesatacionesViewer() {
     </>
   );
 
-
   const createNew = () => (
     <>
       <Box
@@ -105,6 +111,7 @@ function AmonesatacionesViewer() {
               fontWeight: "bold",
               display: "flex",
               justifyContent: "space-around",
+              borderRadius: "20px",
             }}
           >
             <AddCircleOutlineIcon /> Crear Nueva
@@ -201,7 +208,7 @@ function AmonesatacionesViewer() {
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
         textAlign: "center",
-        borderRadius: "10px",
+        borderRadius: "20px",
         minHeight: "250px",
         mt: 2,
       }}
@@ -231,6 +238,47 @@ function AmonesatacionesViewer() {
     </Card>
   );
 
+    const statisticsCard = () => (
+      <Card
+        sx={{
+          width: "80%",
+          overflow: "hidden",
+          backgroundColor: "#f5f5f5",
+          boxShadow: 5,
+          textAlign: "center",
+          borderRadius: "20px",
+          mt: 2,
+        }}
+      >
+        <CardHeader
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+              ESTADISTICAS DE SOLICITUDES
+            </Typography>
+          }
+          avatar={<BarChartIcon />}
+          action={
+            <Button
+              onClick={toggleStatistics}
+              sx={{ color: "white", minWidth: "auto" }}
+            >
+              {showStatistics ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </Button>
+          }
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
+        />
+        {showStatistics && (
+          <CardContent>
+            <SolicitudChartsByUser />
+          </CardContent>
+        )}
+      </Card>
+    );
+
   useEffect(() => {
     fetchData();
   }, [page]);
@@ -258,6 +306,7 @@ function AmonesatacionesViewer() {
             <Typography fontFamily="initial" fontWeight="bold">Mensaje</Typography>
         </Alert>
       )}
+      {statisticsCard()}
       {createNew()}
       {isSubmitting ? (
         <Box

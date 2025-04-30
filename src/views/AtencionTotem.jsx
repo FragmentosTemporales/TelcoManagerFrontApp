@@ -25,12 +25,11 @@ import {
   enAtencion,
 } from "../api/totemAPI";
 import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
-import { getReversas, updateReversas } from "../api/dominionAPI";
+import { getReversas, updateReversas } from "../api/logisticaAPI";
 import { useSelector } from "react-redux";
 
 function AtencionTotem() {
   const authState = useSelector((state) => state.auth);
-  const { domToken } = useSelector((state) => state.dominion);
   const { token } = authState;
   const [estaciones, setEstaciones] = useState([]);
   const [selectedEstacion, setSelectedEstacion] = useState(undefined);
@@ -52,7 +51,7 @@ function AtencionTotem() {
     setIsSubmitting(true);
     const payload = atencion.Rut;
     try {
-      const response = await getReversas(domToken, payload);
+      const response = await getReversas(token, payload);
       setData(response.data.filter((item) => item.entregado !== 1));
       const formatted = response.data.map((item) => ({
         print: item.print !== undefined ? item.print : 1,
@@ -91,13 +90,11 @@ function AtencionTotem() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await updateReversas(domToken, formattedData);
-      console.log(res);
-      setIsSubmitting(false);
+      const res = await updateReversas(token, formattedData);
     } catch (error) {
       console.log(error);
-      setIsSubmitting(false);
     }
+    setIsSubmitting(false);
     fetchData();
   };
 
@@ -245,10 +242,10 @@ function AtencionTotem() {
   };
 
   useEffect(() => {
-    if (domToken && atencion) {
+    if (token && atencion) {
       handleSubmit();
     }
-  }, [atencion, domToken]);
+  }, [atencion, token]);
 
   const fetchUserInfo = async () => {
     try {
@@ -811,7 +808,7 @@ function AtencionTotem() {
           </Card>
         )}
       </Box>
-      {domToken && data.length > 0 ? (
+      {token && data.length > 0 ? (
         <Box
           sx={{ width: { xs: "100%", sm: "80%", lg: "70%" }, margin: "10px" }}
         >

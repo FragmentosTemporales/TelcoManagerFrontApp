@@ -21,24 +21,22 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import SearchIcon from "@mui/icons-material/Search";
 import Checkbox from "@mui/material/Checkbox";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { setDomMessage } from "../slices/dominionSlice";
-import { updateReversas } from "../api/dominionAPI";
-import { getReversas } from "../api/logisticaAPI";
-import { fetchReversas } from "../api/logisticaAPI";
+import { getReversas, updateReversas, fetchReversas } from "../api/logisticaAPI";
+import extractDate from "../helpers/main";
 
 function ReversaView() {
-  const { domToken, domMessage } = useSelector((state) => state.dominion);
   const authState = useSelector((state) => state.auth);
   const { token } = authState;
   const [rut, setRut] = useState("");
   const [serie, setSerie] = useState("");
-  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(undefined);
   const [reversa, setReversa] = useState(undefined);
@@ -47,12 +45,19 @@ function ReversaView() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [tecnicos, setTecnicos] = useState([]);
   const [frecuencia, setFrecuencia] = useState("");
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("info");
+  const [showTableOk, setShowTableOk] = useState(false);
 
   const renderAlert = () => (
-    <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
-      {domMessage}
+    <Alert onClose={handleClose} severity={severity} sx={{ marginBottom: 3 }}>
+      {message}
     </Alert>
   );
+
+  const toggleTableOK = () => {
+    setShowTableOk((prev) => !prev);
+  };
 
   const fetchTecnicos = async () => {
     try {
@@ -100,7 +105,8 @@ function ReversaView() {
       setLoading(false);
       setIsSubmitting(false);
     } catch (error) {
-      dispatch(setDomMessage("Se ha generado un error en el servidor"));
+      setSeverity("error");
+      setMessage("Error al obtener la información");
       setOpen(true);
       setIsSubmitting(false);
       setLoading(false);
@@ -119,13 +125,15 @@ function ReversaView() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await updateReversas(domToken, formattedData);
-      dispatch(setDomMessage(res.detail));
+      const res = await updateReversas(token, formattedData);
       setIsSubmitting(false);
+      setSeverity("success");
+      setMessage("Información actualizada correctamente");
       setOpen(true);
       setSerie("");
     } catch (error) {
-      dispatch(setDomMessage(error));
+      setSeverity("error");
+      setMessage("Error al actualizar la información");
       setOpen(true);
       setIsSubmitting(false);
     }
@@ -175,19 +183,29 @@ function ReversaView() {
       return (
         <TableRow key={item.id}>
           <TableCell align="center" sx={{ fontSize: "12px" }}>
-            <Typography fontFamily="initial">{item.fecha}</Typography>
+            <Typography fontFamily="initial">
+              {item.fecha ? extractDate(item.fecha) : "Sin Información"}
+            </Typography>
           </TableCell>
           <TableCell align="center" sx={{ fontSize: "12px" }}>
-            <Typography fontFamily="initial">{item.orden}</Typography>
+            <Typography fontFamily="initial">
+              {item.orden ? item.orden : "Sin Información"}
+            </Typography>
           </TableCell>
           <TableCell align="center" sx={{ fontSize: "12px" }}>
-            <Typography fontFamily="initial">{item.ANI}</Typography>
+            <Typography fontFamily="initial">
+              {item.ANI ? item.ANI : "Sin Información"}
+            </Typography>
           </TableCell>
           <TableCell align="center" sx={{ fontSize: "12px" }}>
-            <Typography fontFamily="initial">{item.equipo}</Typography>
+            <Typography fontFamily="initial">
+              {item.equipo ? item.equipo : "Sin Información"}
+            </Typography>
           </TableCell>
           <TableCell align="center" sx={{ fontSize: "12px" }}>
-            <Typography fontFamily="initial">{item.serie}</Typography>
+            <Typography fontFamily="initial">
+              {item.serie ? item.serie : "Sin Información"}
+            </Typography>
           </TableCell>
           <TableCell align="center">
             <Checkbox
@@ -220,19 +238,29 @@ function ReversaView() {
             return (
               <TableRow key={item.id}>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Typography fontFamily="initial">{item.fecha}</Typography>
+                  <Typography fontFamily="initial">
+                    {item.fecha ? extractDate(item.fecha) : "Sin información"}
+                  </Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Typography fontFamily="initial">{item.orden}</Typography>
+                  <Typography fontFamily="initial">
+                    {item.orden ? item.orden : "Sin información"}
+                  </Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Typography fontFamily="initial">{item.ANI}</Typography>
+                  <Typography fontFamily="initial">
+                    {item.ANI ? item.ANI : "Sin información"}
+                  </Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Typography fontFamily="initial">{item.equipo}</Typography>
+                  <Typography fontFamily="initial">
+                    {item.equipo ? item.equipo : "Sin información"}
+                  </Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
-                  <Typography fontFamily="initial">{item.serie}</Typography>
+                  <Typography fontFamily="initial">
+                    {item.serie ? item.serie : "Sin información"}
+                  </Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "12px" }}>
                   <Checkbox checked={formattedItem.entrega === 1} disabled />
@@ -266,7 +294,7 @@ function ReversaView() {
         <Box sx={{ textAlign: "center", marginTop: 2 }}>
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", width: "300px" }}
+            sx={{ background: "#0b2f6d", width: "300px", borderRadius: '20px' }}
             onClick={handleSubmitUpdate}
             disabled={isSubmitting}
           >
@@ -298,7 +326,7 @@ function ReversaView() {
       );
     }
     return (
-      <Card sx={{ borderRadius: "10px" }}>
+      <Card sx={{ borderRadius: "20px" }}>
         <CardHeader
           title={
             <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
@@ -342,7 +370,7 @@ function ReversaView() {
       );
     }
     return (
-      <Card sx={{ borderRadius: "10px" }}>
+      <Card sx={{ borderRadius: "20px" }}>
         <CardHeader
           title={
             <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
@@ -350,27 +378,37 @@ function ReversaView() {
             </Typography>
           }
           avatar={<PlaylistAddCheckIcon />}
+          action={
+            <Button
+              onClick={toggleTableOK}
+              sx={{ color: "white", minWidth: "auto" }}
+            >
+              {showTableOk ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </Button>
+          }
           sx={{
             background: "#0b2f6d",
             color: "white",
             textAlign: "end",
           }}
         />
-        <TableContainer
-          component={Paper}
-          sx={{ width: "100%", height: "100%", overflow: "auto" }}
-        >
-          <Table stickyHeader>
-            {renderTableHeaders()}
-            {renderTableBodyOk()}
-          </Table>
-        </TableContainer>
+        {showTableOk && (
+          <TableContainer
+            component={Paper}
+            sx={{ width: "100%", height: "100%", overflow: "auto" }}
+          >
+            <Table stickyHeader>
+              {renderTableHeaders()}
+              {renderTableBodyOk()}
+            </Table>
+          </TableContainer>
+        )}
       </Card>
     );
   };
 
   const filterReversa = () => (
-    <Card sx={{ borderRadius: "10px", marginBottom: 2 }}>
+    <Card sx={{ borderRadius: "20px", marginBottom: 2 }}>
       <CardHeader
         title={
           <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
@@ -423,10 +461,6 @@ function ReversaView() {
     </Card>
   );
 
-  useEffect(() => {
-    console.log(serie);
-  }, [serie]);
-
   return (
     <Box
       sx={{
@@ -442,78 +476,105 @@ function ReversaView() {
       }}
     >
       {open && renderAlert()}
-      <CardContent>
-        <form onSubmit={handleSubmit}>
-          <Box
-            sx={{
-              mb: 2,
-              display: "flex",
-              justifyContent: "center",
-              width: "500px",
-            }}
-          >
-            <FormControl fullWidth variant="filled">
-              <InputLabel>
-                <Typography fontFamily="initial">Frecuencia</Typography>
-              </InputLabel>
-              <Select
-                value={frecuencia}
-                onChange={(e) => setFrecuencia(e.target.value)}
-                label="Frecuencia"
-              >
-                <MenuItem value="">
-                  <em>Todos</em>
-                </MenuItem>
-                <MenuItem value="MARTES">MARTES</MenuItem>
-                <MenuItem value="MIERCOLES">MIÉRCOLES</MenuItem>
-                <MenuItem value="JUEVES">JUEVES</MenuItem>
-                <MenuItem value="VIERNES">VIERNES</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box
-            sx={{
-              mb: 2,
-              display: "flex",
-              justifyContent: "center",
-              width: "500px",
-            }}
-          >
-            <Autocomplete
-              fullWidth
-              options={filteredTecnicos}
-              getOptionLabel={(option) => option.label}
-              value={
-                filteredTecnicos.find((option) => option.value === rut) || null
-              }
-              onChange={(event, newValue) => setRut(newValue?.value || "")}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={<Typography fontFamily="initial">Técnico</Typography>}
-                  variant="filled"
-                  fullWidth
-                />
-              )}
-            />
-          </Box>
 
-          <Box sx={{ textAlign: "center" }}>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ background: "#0b2f6d" }}
-              disabled={isSubmitting}
-            >
-              <Typography fontFamily="initial">
-                {isSubmitting ? "Procesando..." : "Consultar"}
+      <Box
+        sx={{
+          width: { lg: "80%", md: "90%", xs: "100%" },
+        }}
+      >
+        <Card sx={{ borderRadius: "20px", width: "100%" }}>
+          <CardHeader
+            title={
+              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                BUSCAR SERIE
               </Typography>
-            </Button>
-          </Box>
-        </form>
-      </CardContent>
+            }
+            avatar={<SearchIcon />}
+            sx={{
+              background: "#0b2f6d",
+              color: "white",
+              textAlign: "end",
+            }}
+          />
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <Box
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <FormControl sx={{ width: "50%" }} variant="filled">
+                  <InputLabel>
+                    <Typography fontFamily="initial">Frecuencia</Typography>
+                  </InputLabel>
+                  <Select
+                    value={frecuencia}
+                    onChange={(e) => setFrecuencia(e.target.value)}
+                    label="Frecuencia"
+                  >
+                    <MenuItem value="">
+                      <em>Todos</em>
+                    </MenuItem>
+                    <MenuItem value="MARTES">MARTES</MenuItem>
+                    <MenuItem value="MIERCOLES">MIÉRCOLES</MenuItem>
+                    <MenuItem value="JUEVES">JUEVES</MenuItem>
+                    <MenuItem value="VIERNES">VIERNES</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
 
-      <Box sx={{ width: { lg: "80%", md: "90%", xs: "100%" } }}>
+              <Box
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                  alignContent: "center",
+                }}
+              >
+                <Autocomplete
+                  sx={{ width: "50%" }}
+                  options={filteredTecnicos}
+                  getOptionLabel={(option) => option.label}
+                  value={
+                    filteredTecnicos.find((option) => option.value === rut) ||
+                    null
+                  }
+                  onChange={(event, newValue) => setRut(newValue?.value || "")}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={
+                        <Typography fontFamily="initial">Técnico</Typography>
+                      }
+                      variant="filled"
+                      fullWidth
+                    />
+                  )}
+                />
+              </Box>
+
+              <Box sx={{ textAlign: "center" }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ background: "#0b2f6d" }}
+                  disabled={isSubmitting}
+                >
+                  <Typography fontFamily="initial">
+                    {isSubmitting ? "Procesando..." : "Consultar"}
+                  </Typography>
+                </Button>
+              </Box>
+            </form>
+          </CardContent>
+        </Card>
+      </Box>
+
+      <Box sx={{ width: { lg: "80%", md: "90%", xs: "100%" }, paddingTop: 2 }}>
         {data && data.length > 0 ? filterReversa() : null}
       </Box>
 

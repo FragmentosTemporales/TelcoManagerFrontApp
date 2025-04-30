@@ -48,6 +48,62 @@ export const getSolicitudesByUser = async (token, page) => {
   }
 };
 
+export const getSolicitudeStats = async (token) => {
+  try {
+    const url = `${baseUrl}/get-stats-solicitudes`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getSolicitudeStatsByUser = async (token) => {
+  try {
+    const url = `${baseUrl}/get-stats-solicitudes-by-user`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getSolicitudesExcel = async (token) => {
+  try {
+    const url = `${baseUrl}/get-all-solicitudes-excel`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      responseType: "blob", // Set the response type to "blob" to handle binary data
+    });
+
+    // Create a download link for the Excel file
+    const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = urlBlob;
+    link.setAttribute("download", "solicitudes.xlsx"); // Set the file name
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    return "Archivo descargado exitosamente."; // Optional success message
+  } catch (error) {
+    throw error.response?.data?.error || "Error al descargar el archivo.";
+  }
+};
+
 export const getSolicitudesFiltradas = async (token, payload, page) => {
   try {
     const url = `${baseUrl}/get-filtered-solicitudes/${page}`;
