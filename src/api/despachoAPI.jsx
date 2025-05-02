@@ -63,6 +63,21 @@ export const getDataAgendamientos = async (token, fecha) => {
   }
 };
 
+export const getDataHistoricaAgendamientos = async (token, fecha) => {
+  try {
+    const url = `${baseUrl}/get-data-historica-agendamiento`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const filterAgendamiento = async (token, fechaInicio, fechaFin) => {
   try {
     const url = `${baseUrl}/agendamientos-filtered/${fechaInicio}&${fechaFin}`;

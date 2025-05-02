@@ -171,7 +171,7 @@ function Home() {
       title: "Gestiona y visualiza auditorías",
       link: "/all_auditorias",
       body: "Acá podrás gestionar, crear y visualizar todas las auditorías realizadas",
-      moduloID: 21,
+      moduloID: 22,
     },
   ];
 

@@ -26,11 +26,13 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import SearchIcon from "@mui/icons-material/Search";
+import { BarChart } from "@mui/icons-material";
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getReversas, updateReversas, fetchReversas } from "../api/logisticaAPI";
 import extractDate from "../helpers/main";
+import ReversaCharts from "../components/reversaCharts";
 
 function ReversaView() {
   const authState = useSelector((state) => state.auth);
@@ -476,6 +478,32 @@ function ReversaView() {
       }}
     >
       {open && renderAlert()}
+
+      <Box
+        sx={{
+          width: { lg: "80%", md: "90%", xs: "100%" },
+          paddingBottom: 2,
+        }}
+      >
+        <Card sx={{ borderRadius: "20px", width: "100%" }}>
+          <CardHeader
+            title={
+              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                ESTADISTICAS
+              </Typography>
+            }
+            avatar={<BarChart />}
+            sx={{
+              background: "#0b2f6d",
+              color: "white",
+              textAlign: "end",
+            }}
+          />
+          <CardContent>
+            <ReversaCharts/>
+          </CardContent>
+        </Card>
+      </Box>
 
       <Box
         sx={{
