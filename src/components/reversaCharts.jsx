@@ -103,6 +103,17 @@ import {
                 marginBottom: { xs: 2, lg: 0 },
               }}
             >
+            <Box
+              sx={{
+                width: "100%",
+                textAlign: "center",
+                marginBottom: 2,
+              }}
+            >
+              <Typography variant="h6" fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                Reversas recibidas por día
+              </Typography>
+            </Box>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={data} layout="horizontal">
                 <CartesianGrid strokeDasharray="3 3" />
@@ -121,7 +132,7 @@ import {
                 />
                 <YAxis />
                 <Line dataKey="ATC" type="monotone" stroke="#FF5733" strokeWidth={2} /> 
-                <Line dataKey="VTR_RM" type="monotone" stroke="#33FF57" strokeWidth={2} /> 
+                <Line dataKey="VTR_RM" type="monotone" stroke="#345f78" strokeWidth={2} /> 
                 <Line dataKey="VTR_V_REGION" type="monotone" stroke="#3357FF" strokeWidth={2} /> 
               </LineChart>
             </ResponsiveContainer>

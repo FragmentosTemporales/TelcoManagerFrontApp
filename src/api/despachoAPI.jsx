@@ -63,7 +63,22 @@ export const getDataAgendamientos = async (token, fecha) => {
   }
 };
 
-export const getDataHistoricaAgendamientos = async (token, fecha) => {
+export const getDataFuturaAgendamientos = async (token) => {
+  try {
+    const url = `${baseUrl}/get-data-futura-agendamiento`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getDataHistoricaAgendamientos = async (token) => {
   try {
     const url = `${baseUrl}/get-data-historica-agendamiento`;
     const response = await axios.get(url, {

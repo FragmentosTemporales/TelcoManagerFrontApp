@@ -22,7 +22,11 @@ import {
   YAxis,
   Legend,
 } from "recharts";
-import { getDataAgendamientos, getDataHistoricaAgendamientos } from "../api/despachoAPI";
+import {
+  getDataAgendamientos,
+  getDataHistoricaAgendamientos,
+  getDataFuturaAgendamientos
+} from "../api/despachoAPI";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -32,6 +36,7 @@ function AgendamientoCharts() {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(undefined);
   const [dataHistorica, setDataHistorica] = useState(undefined);
+  const [dataFutura, setDataFutura] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fecha, setFecha] = useState(new Date().toISOString().slice(0, 10));
 
@@ -46,23 +51,49 @@ function AgendamientoCharts() {
     return formattedDate;
   };
 
+  const mergeDataByDate = (historicalData, futureData) => {
+    const mergedData = {};
+
+    historicalData.forEach((item) => {
+      mergedData[item.fecha] = { fecha: item.fecha, Q_diaria: item.Q_diaria };
+    });
+
+    futureData.forEach((item) => {
+      if (mergedData[item.fecha]) {
+        mergedData[item.fecha].Q_futura = item.Q_futura;
+      } else {
+        mergedData[item.fecha] = { fecha: item.fecha, Q_futura: item.Q_futura };
+      }
+    });
+
+    return Object.values(mergedData);
+  };
+
   const fetchData = async () => {
     setIsSubmitting(true);
     setIsLoading(true);
     try {
-      const [chartResponse, historicalResponse] = await Promise.all([
+      const [chartResponse, historicalResponse, futureResponse] = await Promise.all([
         getDataAgendamientos(token, fecha),
         getDataHistoricaAgendamientos(token),
+        getDataFuturaAgendamientos(token),
       ]);
-
       const sortedChartData = chartResponse.sort((a, b) => b.Q - a.Q);
+
       const processedHistoricalData = historicalResponse.map((item) => ({
-        ...item,
         fecha: extractDate(item.fecha),
+        Q_diaria: item.Q,
       }));
 
+      const processedFutureData = futureResponse.map((item) => ({
+        fecha: extractDate(item.fecha),
+        Q_futura: item.Q,
+      }));
+
+      const mergedData = mergeDataByDate(processedHistoricalData, processedFutureData);
+
       setData(sortedChartData);
-      setDataHistorica(processedHistoricalData);
+      setDataHistorica(mergedData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -73,6 +104,7 @@ function AgendamientoCharts() {
   useEffect(() => {
     fetchData();
   }, []);
+
 
   return (
     <Box
@@ -165,6 +197,21 @@ function AgendamientoCharts() {
               marginBottom: { xs: 2, lg: 0 },
             }}
           >
+            <Box
+              sx={{
+                width: "100%",
+                textAlign: "center",
+                marginBottom: 2,
+              }}
+            >
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ fontFamily: "initial" }}
+              >
+                Agendamientos por despachador
+              </Typography>
+            </Box>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={data} layout="horizontal">
                 <CartesianGrid strokeDasharray="5 5" />
@@ -177,7 +224,7 @@ function AgendamientoCharts() {
                     border: "1px solid #ccc",
                   }}
                 />
-                  
+
                 <Bar dataKey="Q" fill="#8884d8">
                   <LabelList
                     dataKey="Q"
@@ -195,14 +242,30 @@ function AgendamientoCharts() {
               marginTop: { xs: 2, lg: 0 },
             }}
           >
+            <Box
+              sx={{
+                width: "100%",
+                textAlign: "center",
+                marginBottom: 2,
+              }}
+            >
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ fontFamily: "initial" }}
+              >
+                Histórico de Agendamientos
+              </Typography>
+            </Box>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={dataHistorica} layout="horizontal">
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="fecha" 
+                <XAxis
+                  dataKey="fecha"
                   tick={{ angle: -45, textAnchor: "end", fontSize: 10 }} // Reduce font size
                   height={40} // Increase height to provide more space for labels
                 />
+                <Legend verticalAlign="top" height={36}/>
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#f5f5f5",
@@ -211,7 +274,18 @@ function AgendamientoCharts() {
                   }}
                 />
                 <YAxis />
-                <Line dataKey="Q" type="monotone" stroke="#8884d8" strokeWidth={2} /> 
+                <Line
+                  dataKey="Q_diaria"
+                  type="monotone"
+                  stroke="#8884d8"
+                  strokeWidth={2}
+                />
+                <Line
+                  dataKey="Q_futura"
+                  type="monotone"
+                  stroke="#FF0000" // Red tone
+                  strokeWidth={2}
+                />
               </LineChart>
             </ResponsiveContainer>
           </Box>

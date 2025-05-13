@@ -19,22 +19,6 @@ export const getSGEstados = async (token) => {
   };
 
 
-export const getAreaStats = async (token) => {
-    try {
-      const url = `${baseUrl}/get-solicitud/stats`;
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response.data.error;
-    }
-  };
-
-
 export const getMotivoStats = async (token) => {
     try {
       const url = `${baseUrl}/get-motivo/stats`;

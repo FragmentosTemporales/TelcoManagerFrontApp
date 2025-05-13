@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import NewspaperIcon from '@mui/icons-material/Newspaper';
+import SearchIcon from "@mui/icons-material/Search";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import AutoAwesomeMosaicIcon from "@mui/icons-material/AutoAwesomeMosaic";
@@ -19,7 +20,6 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import BallotIcon from "@mui/icons-material/Ballot";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -158,6 +158,14 @@ function Home() {
       moduloID: 19,
     },
     {
+      head: "Buscador de Ordenes",
+      icono: <SearchIcon />,
+      title: "Buscador de Ordenes de Trabajo",
+      link: "/orden_info",
+      body: "Acá podrás buscar órdenes de trabajo y gestiones por número de orden",
+      moduloID: 19,
+    },
+    {
       head: "Auditorías",
       icono: <NewspaperIcon />,
       title: "Gestiona y crea auditorías",
@@ -172,6 +180,14 @@ function Home() {
       link: "/all_auditorias",
       body: "Acá podrás gestionar, crear y visualizar todas las auditorías realizadas",
       moduloID: 22,
+    },
+    {
+      head: "Lista de Backlogs",
+      icono: <NewspaperIcon />,
+      title: "Gestiona y visualiza backlogs",
+      link: "/all_backlogs",
+      body: "Acá podrás gestionar, crear y visualizar todos los backlogs agendados",
+      moduloID: 23,
     },
   ];
 

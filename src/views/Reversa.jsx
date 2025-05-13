@@ -50,6 +50,7 @@ function ReversaView() {
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("info");
   const [showTableOk, setShowTableOk] = useState(false);
+  const [showStats, setShowStats] = useState(false);
 
   const renderAlert = () => (
     <Alert onClose={handleClose} severity={severity} sx={{ marginBottom: 3 }}>
@@ -59,6 +60,10 @@ function ReversaView() {
 
   const toggleTableOK = () => {
     setShowTableOk((prev) => !prev);
+  };
+
+  const toggleStats = () => {
+    setShowStats((prev) => !prev);
   };
 
   const fetchTecnicos = async () => {
@@ -493,15 +498,25 @@ function ReversaView() {
               </Typography>
             }
             avatar={<BarChart />}
+            action={
+              <Button
+                onClick={toggleStats}
+                sx={{ color: "white", minWidth: "auto" }}
+              >
+                {showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </Button>
+            }
             sx={{
               background: "#0b2f6d",
               color: "white",
               textAlign: "end",
             }}
           />
-          <CardContent>
-            <ReversaCharts/>
-          </CardContent>
+          {showStats && (
+            <CardContent>
+              <ReversaCharts/>
+            </CardContent>
+          )}
         </Card>
       </Box>
 

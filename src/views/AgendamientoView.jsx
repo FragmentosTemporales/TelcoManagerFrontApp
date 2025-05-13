@@ -6,6 +6,11 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Skeleton,
   Table,
   TableBody,
@@ -16,10 +21,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useEffect, useState } from "react";
-import { createAgendamiento, getAgendamientos } from "../api/despachoAPI";
+import { createBacklogEstado, getBacklogEstado } from "../api/backlogAPI";
+import { getBacklog } from "../api/backlogAPI";
 import { useSelector } from "react-redux";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
@@ -27,223 +31,140 @@ import { Link } from "react-router-dom";
 function AgendamientoViewer() {
   const authState = useSelector((state) => state.auth);
   const { token, user_id } = authState;
-  const contrato = "VTR";
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [alertType, setAlertType] = useState(undefined);
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState(undefined);
-  const [pages, setPages] = useState(1);
-  const [page, setPage] = useState(1);
-  const handlePage = (newPage) => setPage(newPage);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingBacklog, setIsLoadingBacklog] = useState(false);
+  const [isLoadingBacklogEstado, setIsLoadingBacklogEstado] = useState(false);
+  const [dataBacklog, setDataBacklog] = useState(undefined);
+  const [dataBacklogEstado, setDataBacklogEstado] = useState(undefined);
+  const zonas = [
+                        "Calera de Tango",
+                        "Cerrillos",
+                        "Cerro Navia",
+                        "Colina",
+                        "Conchali",
+                        "El Bosque",
+                        "El Monte",
+                        "Estacion Central",
+                        "Huechuraba",
+                        "Independencia",
+                        "La Cisterna",
+                        "La Florida",
+                        "La Granja",
+                        "La Reina",
+                        "Lampa",
+                        "Las Condes",
+                        "Lo Barnechea",
+                        "Lo Espejo",
+                        "Lo Prado",
+                        "Macul",
+                        "Maipu",
+                        "Melipilla",
+                        "Nunoa",
+                        "Padre Hurtado",
+                        "Pedro Aguirre Cerda",
+                        "Penaflor",
+                        "Penalolen",
+                        "Providencia",
+                        "Pudahuel",
+                        "Puente Alto",
+                        "Quilicura",
+                        "Quinta Normal",
+                        "Recoleta",
+                        "Renca",
+                        "San Bernardo",
+                        "San Joaquin",
+                        "San Miguel",
+                        "Santiago Centro",
+                        "Vitacura"
+                      ]
 
-  const [form, setForm] = useState({
+  const [formGetBacklog, setFormGetBacklog] = useState({ zona_de_trabajo: "" });
+
+  const [formBacklog, setFormBacklog] = useState({
     orden: "",
-    fechaAgendamiento: "",
+    nueva_cita: "",
+    sub_clasificacion: "",
+    estado_interno: "",
+    comentario: "",
+    userID: user_id,
   });
 
-  const SubmitForm = async (e) => {
+  const SubmitBacklockForm = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    // Remove all spaces from 'orden' and convert to lowercase
-    const sanitizedOrden = form.orden.replace(/\s+/g, "").toUpperCase();
-
-    // Validate that 'orden' starts with '1-'
-    if (!sanitizedOrden.startsWith("1-")) {
-      setAlertType("error");
-      setMessage("El campo 'ORDEN DE TRABAJO' debe comenzar con '1-'.");
-      setOpen(true);
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Show confirmation alert with sanitized 'orden' and entered date
-    const confirmation = window.confirm(
-      `¿Está seguro de que desea crear este agendamiento?\n\nORDEN DE TRABAJO: ${sanitizedOrden}\nFECHA: ${form.fechaAgendamiento}`
-    );
-    if (!confirmation) {
-      setIsSubmitting(false);
-      return;
-    }
-
-    const payload = {
-      userID: user_id,
-      orden: sanitizedOrden,
-      contrato: contrato,
-      fechaAgendamiento: form.fechaAgendamiento,
-    };
-
     try {
-      const response = await createAgendamiento(payload, token);
+      const response = await createBacklogEstado(formBacklog, token);
       setAlertType("success");
       setMessage(response.message);
       setOpen(true);
-      fetchData();
+      setFormBacklog({
+        orden: "",
+        nueva_cita: "",
+        sub_clasificacion: "",
+        estado_interno: "",
+        comentario: "",
+        userID: user_id,
+      });
+      setDataBacklogEstado(undefined);
     } catch (error) {
-      setMessage(error);
       setAlertType("error");
+      setMessage(error);
       setOpen(true);
     }
-
-    setForm({
-      orden: "",
-      fechaAgendamiento: "",
-    });
-    setIsSubmitting(false);
+    setDataBacklog(undefined);
   };
 
-  const fetchData = async () => {
-    setIsLoading(true);
+  const fetchBacklog = async () => {
+    setIsLoadingBacklog(true);
     try {
-      const response = await getAgendamientos(token, page);
-      setData(response.data);
-      setPages(response.pages);
+      const response = await getBacklog(formGetBacklog, token);
+      setDataBacklog(response);
     } catch (error) {
       setAlertType("error");
       setMessage(error);
       setOpen(true);
     }
-    setIsLoading(false);
+    setIsLoadingBacklog(false);
+  };
+
+  const fetchBacklogEstado = async (orden) => {
+    setIsLoadingBacklogEstado(true);
+    try {
+      const response = await getBacklogEstado(token, orden);
+      setDataBacklogEstado(response);
+    } catch (error) {
+      setAlertType("error");
+      setMessage(error);
+      setOpen(true);
+    }
+    setIsLoadingBacklogEstado(false);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleChange = (e) => {
+  const handleChangeGetBacklog = (e) => {
     const { name, value } = e.target;
-    setForm((prevForm) => ({ ...prevForm, [name]: value }));
+    setFormGetBacklog((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
-  const setTable = () => (
-    <>
-      <TableContainer>
-        <Table
-          sx={{ width: "100%", display: "column", justifyContent: "center" }}
-        >
-          {setTableHead()}
-          {setTableBody()}
-        </Table>
-      </TableContainer>
-    </>
-  );
-
-  const setTableHead = () => (
-    <>
-      <TableHead>
-        <TableRow>
-          {["FECHA CREACION", "ORDEN", "FECHA AGENDAMIENTO", "CONTRATO"].map(
-            (header) => (
-              <TableCell
-                key={header}
-                align="center"
-                sx={{
-                  background: "#d8d8d8",
-                  fontWeight: "bold",
-                  width: "33.33%",
-                }}
-              >
-                {header}
-              </TableCell>
-            )
-          )}
-        </TableRow>
-      </TableHead>
-    </>
-  );
-
-  const setTableBody = () => (
-    <>
-      <TableBody
-        sx={{
-          display: "column",
-          justifyContent: "center",
-        }}
-      >
-        {data && data.length > 0 ? (
-          data.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "33.33%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.fechaRegistro
-                    ? extractDate(row.fechaRegistro)
-                    : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "33.33%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.orden ? row.orden : "Sin Información"}
-                </Typography>
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "33.33%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.fechaAgendamiento
-                    ? extractDate(row.fechaAgendamiento)
-                    : "Sin Información"}
-                </Typography>
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "33.33%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.contrato ? row.contrato : "Sin Información"}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan={4} align="center" sx={{ width: "100%" }}>
-              No hay datos disponibles
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </>
-  );
-
-  const getButtons = () => (
-    <>
-      <Button
-        key="prev"
-        variant="contained"
-        onClick={() => handlePage(page - 1)}
-        disabled={page === 1}
-        sx={{ background: "#0b2f6d" }}
-      >
-        <ArrowBackIosIcon />
-      </Button>
-      <Button key="current" variant="contained" sx={{ background: "#0b2f6d" }}>
-        {page}
-      </Button>
-      <Button
-        key="next"
-        variant="contained"
-        onClick={() => handlePage(page + 1)}
-        disabled={page === pages}
-        sx={{ background: "#0b2f6d" }}
-      >
-        <ArrowForwardIosIcon />
-      </Button>
-    </>
-  );
+  const handleChangeBacklog = (e) => {
+    const { name, value } = e.target;
+    setFormBacklog((prevForm) => ({ ...prevForm, [name]: value }));
+  };
 
   useEffect(() => {
-    fetchData();
-  }, [page]);
+    if (dataBacklog) {
+      setFormBacklog((prevForm) => ({
+        ...prevForm,
+        userID: user_id,
+        orden: dataBacklog.orden_de_trabajo,
+      }));
+      fetchBacklogEstado(dataBacklog.orden_de_trabajo);
+    }
+  }, [dataBacklog]);
 
   return (
     <Box
@@ -252,7 +173,6 @@ function AgendamientoViewer() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "85vh",
         overflow: "auto",
         padding: 8,
       }}
@@ -266,16 +186,18 @@ function AgendamientoViewer() {
           {message}
         </Alert>
       )}
-      
+
+      {/* TARJETA DE INFORMACION BACKLOG */}
       <Card
         sx={{
-          width: { lg: "80%", md: "60%", xs: "80%" },
+          width: { lg: "80%", md: "100%", xs: "100%" },
           borderRadius: "20px",
           boxShadow: 5,
+          marginTop: 2,
         }}
       >
         <CardHeader
-          title={<Typography fontWeight="bold">Crear Agendamiento</Typography>}
+          title={<Typography fontWeight="bold">Información cliente</Typography>}
           sx={{
             background: "#0b2f6d",
             color: "white",
@@ -283,82 +205,471 @@ function AgendamientoViewer() {
           }}
         />
         <CardContent sx={{ display: "grid" }}>
-            <form onSubmit={SubmitForm}>
+          {isLoadingBacklog ? (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+              <CircularProgress />
+            </Box>
+          ) : dataBacklog ? (
+            <>
               <Box
                 sx={{
+                  textAlign: "center",
+                  p: 2,
                   display: "flex",
-                  justifyContent: "space-evenly",
-                  flexWrap: "wrap",
-                  gap: 2,
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
               >
                 <Box
                   sx={{
                     mb: 2,
-                    width: "35%",
+                    width: "30%",
                   }}
                 >
-                  <TextField
-                    required
-                    id="orden"
-                    label="ORDEN DE TRABAJO"
-                    type="text"
-                    name="orden"
-                    variant="outlined"
-                    value={form.orden}
-                    onChange={handleChange}
-                    sx={{ minWidth: "100%" }}
-                  />
+                  <FormControl fullWidth>
+                    <InputLabel id="zona_de_trabajo-label">
+                      Zona de Trabajo
+                    </InputLabel>
+                    <Select
+                      labelId="zona_de_trabajo-label"
+                      id="zona_de_trabajo"
+                      name="zona_de_trabajo"
+                      value={formGetBacklog?.zona_de_trabajo || ""}
+                      onChange={handleChangeGetBacklog}
+                    >
+                      {zonas.map((zona) => (
+                        <MenuItem key={zona} value={zona}>
+                          {zona}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Box>
-                <Box
+                <Button
+                  variant="contained"
+                  onClick={fetchBacklog}
                   sx={{
-                    mb: 2,
-                    width: "35%",
+                    width: "200px",
+                    background: "#0b2f6d",
+                    borderRadius: "20px",
                   }}
                 >
-                  <TextField
-                    required
-                    id="fechaAgendamiento"
-                    type="datetime-local"
-                    name="fechaAgendamiento"
-                    variant="outlined"
-                    value={form.fechaAgendamiento}
-                    onChange={handleChange}
-                    sx={{ minWidth: "100%" }}
-                    inputProps={{
-                      min: new Date(new Date().getTime() - 4 * 60 * 60 * 1000)
-                        .toISOString()
-                        .slice(0, 16),
-                    }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    mb: 2,
-                    width: "20%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    disabled={isSubmitting}
-                    sx={{ background: "#0b2f6d", height: 30, width: "100%" }}
-                  >
-                    {isSubmitting ? "Cargando..." : "Crear"}{" "}
-                  </Button>
-                </Box>
+                  Ver Cliente
+                </Button>
               </Box>
-              <Box sx={{ textAlign: "center" }}></Box>
-            </form>
+              <TableContainer>
+                <Table>
+                  <TableBody>
+                    {[
+                      ["Órden de Trabajo", dataBacklog.orden_de_trabajo],
+                      ["Nombre", dataBacklog.Cliente],
+                      ["Rut", dataBacklog.rut_cliente],
+                      ["Celular", dataBacklog.Celular],
+                      ["Zona", dataBacklog.zona_de_trabajo],
+                      ["Dirección", dataBacklog.direccion],
+                      ["Técnico", dataBacklog.tecnico],
+                      ["Actividad", dataBacklog.tipo_de_actividad],
+                      ["Fecha Agenda", dataBacklog.Fecha],
+                      ["Franja", dataBacklog.Franja],
+                      ["Código de Cierre", dataBacklog.codigo_de_cierre],
+                    ].map(([label, value], index) => (
+                      <TableRow key={index}>
+                        <TableCell sx={{ fontWeight: "bold" }}>
+                          {label}:
+                        </TableCell>
+                        <TableCell>
+                          {value ? value : "Sin Información"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          ) : (
+            <Box
+              sx={{
+                textAlign: "center",
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Box
+                sx={{
+                  mb: 2,
+                  width: "30%",
+                }}
+              >
+                <FormControl fullWidth>
+                  <InputLabel id="zona_de_trabajo-label">
+                    Zona de Trabajo
+                  </InputLabel>
+                  <Select
+                    labelId="zona_de_trabajo-label"
+                    id="zona_de_trabajo"
+                    name="zona_de_trabajo"
+                    value={formGetBacklog?.zona_de_trabajo || ""}
+                    onChange={handleChangeGetBacklog}
+                  >
+                    {zonas.map(
+                      (zona) => (
+                        <MenuItem key={zona} value={zona}>
+                          {zona}
+                        </MenuItem>
+                      )
+                    )}
+                  </Select>
+                </FormControl>
+              </Box>
+              <Button
+                variant="contained"
+                onClick={fetchBacklog}
+                sx={{
+                  width: "200px",
+                  background: "#0b2f6d",
+                  borderRadius: "20px",
+                }}
+              >
+                Ver Cliente
+              </Button>
+            </Box>
+          )}
         </CardContent>
       </Card>
 
+      {/* TARJETA PARA VER ESTADOS POR OT */}
+      {dataBacklogEstado && dataBacklogEstado.length > 0 ? (
+        <Card
+          sx={{
+            width: { lg: "80%", md: "100%", xs: "100%" },
+            borderRadius: "20px",
+            boxShadow: 5,
+            marginTop: 2,
+          }}
+        >
+          <CardHeader
+            title={
+              <Typography fontWeight="bold">
+                Gestiones por Orden de Trabajo
+              </Typography>
+            }
+            sx={{
+              background: "#0b2f6d",
+              color: "white",
+              textAlign: "center",
+            }}
+          />
+          <CardContent sx={{ display: "grid" }}>
+            {isLoadingBacklogEstado ? (
+              <Skeleton
+                variant="rectangular"
+                animation="wave"
+                sx={{
+                  width: "100%",
+                  height: "200px",
+                  borderRadius: "10px",
+                }}
+              />
+            ) : (
+              <TableContainer>
+                <Table
+                  sx={{
+                    width: "100%",
+                    display: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          background: "#d8d8d8",
+                          fontWeight: "bold",
+                          width: "15%",
+                        }}
+                      >
+                        ESTADO INTERNO
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          background: "#d8d8d8",
+                          fontWeight: "bold",
+                          width: "15%",
+                        }}
+                      >
+                        NUEVA FECHA
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          background: "#d8d8d8",
+                          fontWeight: "bold",
+                          width: "30%",
+                        }}
+                      >
+                        GESTIONADO POR
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          background: "#d8d8d8",
+                          fontWeight: "bold",
+                          width: "40%",
+                        }}
+                      >
+                        COMENTARIO
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {dataBacklogEstado.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell
+                        align="center"
+                        sx={{ fontSize: "16px", width: "15%" }} // Equal width
+                      >
+                        <Typography fontFamily={"initial"} variant="secondary">
+                          {row.estado_interno
+                            ? row.estado_interno
+                            : "Sin Información"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontSize: "16px", width: "15%" }} // Equal width
+                      >
+                        <Typography fontFamily={"initial"} variant="secondary">
+                          {row.nueva_cita
+                            ? extractDate(row.nueva_cita)
+                            : "Sin Información"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontSize: "16px", width: "30%" }} // Equal width
+                      >
+                        <Typography fontFamily={"initial"} variant="secondary">
+                          {row.usuario.nombre
+                            ? row.usuario.nombre
+                            : "Sin Información"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontSize: "16px", width: "40%" }} // Equal width
+                      >
+                        <Typography fontFamily={"initial"} variant="secondary">
+                          {row.comentario ? row.comentario : "Sin Información"}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </Table>
+              </TableContainer>
+            )}
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {/* TARJETA DE GESTION BACKLOG */}
+      <Card
+        sx={{
+          width: { lg: "80%", md: "100%", xs: "100%" },
+          borderRadius: "20px",
+          boxShadow: 5,
+          marginTop: 2,
+        }}
+      >
+        <CardHeader
+          title={<Typography fontWeight="bold">Gestion de Órdenes</Typography>}
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "center",
+          }}
+        />
+        <CardContent sx={{ display: "grid" }}>
+          <form onSubmit={SubmitBacklockForm}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                flexWrap: "wrap",
+                gap: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  mb: 2,
+                  width: "40%",
+                }}
+              >
+                <InputLabel>Orden de Trabajo</InputLabel>
+                <TextField
+                  required
+                  id="orden"
+                  type="text"
+                  name="orden"
+                  variant="outlined"
+                  value={formBacklog.orden}
+                  onChange={handleChangeBacklog}
+                  sx={{ minWidth: "100%" }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  mb: 2,
+                  width: "40%",
+                }}
+              >
+                <InputLabel>Fecha Cita</InputLabel>
+                <TextField
+                  id="nueva_cita"
+                  type="datetime-local"
+                  name="nueva_cita"
+                  variant="outlined"
+                  value={formBacklog.nueva_cita}
+                  onChange={handleChangeBacklog}
+                  sx={{ minWidth: "100%" }}
+                />
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                flexWrap: "wrap",
+                gap: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  mb: 2,
+                  width: "40%",
+                }}
+              >
+                <FormControl fullWidth>
+                  <InputLabel>Estado</InputLabel>
+                  <Select
+                    required
+                    id="estado-interno-select"
+                    value={formBacklog.estado_interno || ""}
+                    onChange={(event) =>
+                      setFormBacklog((prevForm) => ({
+                        ...prevForm,
+                        estado_interno: event.target.value,
+                      }))
+                    }
+                  >
+                    <MenuItem value="Carga otra EPS">Carga otra EPS</MenuItem>
+                    <MenuItem value="Efectiva">Efectiva</MenuItem>
+                    <MenuItem value="Futura">Futura</MenuItem>
+                    <MenuItem value="No Efectiva">No Efectiva</MenuItem>
+                    <MenuItem value="Sin Contacto">Sin Contacto</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box
+                sx={{
+                  mb: 2,
+                  width: "40%",
+                }}
+              >
+                <FormControl fullWidth>
+                  <InputLabel>Clasificacion</InputLabel>
+                  <Select
+                    id="sub-clasificacion-select"
+                    value={formBacklog.sub_clasificacion || ""}
+                    onChange={(event) =>
+                      setFormBacklog((prevForm) => ({
+                        ...prevForm,
+                        sub_clasificacion: event.target.value,
+                      }))
+                    }
+                  >
+                    <MenuItem value="Cambia agenda">Cambia agenda</MenuItem>
+                    <MenuItem value="Cancelado">Cancelado</MenuItem>
+                    <MenuItem value="Cliente adelanta">
+                      Cliente adelanta
+                    </MenuItem>
+                    <MenuItem value="Cliente desiste">Cliente desiste</MenuItem>
+                    <MenuItem value="Cliente mantiene agenda">
+                      Cliente mantiene agenda
+                    </MenuItem>
+                    <MenuItem value="Orden mal generada">
+                      Orden mal generada
+                    </MenuItem>
+                    <MenuItem value="Problema inicio más temprano">
+                      Problema inicio más temprano
+                    </MenuItem>
+                    <MenuItem value="Trabajo ya asignado">
+                      Trabajo ya asignado
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                flexWrap: "wrap",
+                gap: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  mb: 2,
+                  width: "88%",
+                }}
+              >
+                <InputLabel>Comentarios</InputLabel>
+                <TextField
+                  required
+                  id="comentario"
+                  type="text"
+                  name="comentario"
+                  variant="outlined"
+                  value={formBacklog.comentario}
+                  onChange={handleChangeBacklog}
+                  sx={{ minWidth: "100%" }}
+                />
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                flexWrap: "wrap",
+                gap: 2,
+              }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  width: "200px",
+                  background: "#0b2f6d",
+                  borderRadius: "20px",
+                }}
+              >
+                CREAR
+              </Button>
+            </Box>
+          </form>
+        </CardContent>
+      </Card>
+
+      {/* BOTON PARA VER TODOS LOS AGENDAMIENTOS */}
       <Box
         sx={{
-          width: "80%",
+          width: { lg: "80%", md: "100%", xs: "100%" },
           overflow: "hidden",
           mt: 3,
         }}
@@ -366,51 +677,12 @@ function AgendamientoViewer() {
         <Link to="/all_agendamientos">
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", borderRadius: "20px", marginBottom: 2 }}
+            sx={{ width: "200px", background: "#0b2f6d", borderRadius: "20px" }}
           >
             Ver Todas
           </Button>
         </Link>
       </Box>
-      <Card
-        sx={{
-          width: { lg: "80%", md: "60%", xs: "80%" },
-          borderRadius: "20px",
-          boxShadow: 5,
-          marginTop: 2,
-        }}
-      >
-        <CardHeader
-          title={<Typography fontWeight="bold">Mis Agendamientos</Typography>}
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "center",
-          }}
-        />
-        <CardContent sx={{ display: "grid" }}>
-          {isLoading ? (
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              sx={{
-                width: "100%",
-                height: "200px",
-                borderRadius: "10px",
-              }}
-            />
-          ) : (
-            setTable()
-          )}
-        </CardContent>
-      </Card>
-      <ButtonGroup
-        size="small"
-        aria-label="pagination-button-group"
-        sx={{ p: 2 }}
-      >
-        {getButtons()}
-      </ButtonGroup>
     </Box>
   );
 }

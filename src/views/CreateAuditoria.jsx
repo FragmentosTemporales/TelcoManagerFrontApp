@@ -138,7 +138,24 @@ function CreateAuditoria() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prevForm) => ({ ...prevForm, [name]: value }));
+
+    if (name === "auditoria" && value === "SIN CONTACTO") {
+      setForm({
+        orden: form.orden,
+        auditoria: "SIN CONTACTO",
+        cobertura_wifi: "SIN CONTACTO",
+        n_tecnico: "SIN CONTACTO",
+        streaming_activos: "SIN CONTACTO",
+        control_deco: "SIN CONTACTO",
+        canales_activos: "SIN CONTACTO",
+        conectado_wifi: "SIN CONTACTO",
+        atencion_value: "SIN CONTACTO",
+        fechaCierre: form.fechaCierre,
+        observacion: form.observacion,
+      });
+    } else {
+      setForm((prevForm) => ({ ...prevForm, [name]: value }));
+    }
   };
 
   const setTable = () => (
@@ -338,7 +355,7 @@ function CreateAuditoria() {
                     textAlign: "center",
                   }}
                 >
-                  ORDEN DE TRABAJO
+                  Orden de Trabajo
                 </InputLabel>
                 <TextField
                   sx={{
@@ -414,6 +431,58 @@ function CreateAuditoria() {
                 }}
               >
                 <InputLabel
+                  id="auditoria-label"
+                  sx={{
+                    fontFamily: "initial",
+                    whiteSpace: "normal",
+                    maxWidth: "70%",
+                    textAlign: "center",
+                  }}
+                >
+                  Resultado de la Auditoría
+                </InputLabel>
+                <Select
+                  sx={{
+                    fontFamily: "initial",
+                    whiteSpace: "normal",
+                    width: { lg: "70%", xs: "100%", md: "100%" },
+                    textAlign: "center",
+                    background: "#ffffff",
+                  }}
+                  size="small"
+                  required
+                  id="auditoria"
+                  name="auditoria"
+                  variant="outlined"
+                  value={form.auditoria}
+                  onChange={handleChange}
+                  fontFamily="initial"
+                >
+                  <MenuItem value="CUMPLE" sx={{ fontFamily: "initial" }}>
+                    CUMPLE
+                  </MenuItem>
+                  <MenuItem value="CUMPLE CON OBSERVACIONES" sx={{ fontFamily: "initial" }}>
+                    CUMPLE CON OBSERVACIONES
+                  </MenuItem>
+                  <MenuItem value="NO CUMPLE" sx={{ fontFamily: "initial" }}>
+                    NO CUMPLE
+                  </MenuItem>
+                  <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
+                    SIN CONTACTO
+                  </MenuItem>
+                </Select>
+              </Box>
+
+              <Box
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <InputLabel
                   id="cobertura-wifi-label"
                   sx={{
                     fontFamily: "initial",
@@ -440,6 +509,7 @@ function CreateAuditoria() {
                   value={form.cobertura_wifi}
                   onChange={handleChange}
                   fontFamily="initial"
+                  disabled={form.auditoria === "SIN CONTACTO"}
                 >
                   <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
                     SI
@@ -493,6 +563,7 @@ function CreateAuditoria() {
                   value={form.streaming_activos}
                   onChange={handleChange}
                   fontFamily="initial"
+                  disabled={form.auditoria === "SIN CONTACTO"}
                 >
                   <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
                     SI
@@ -552,6 +623,7 @@ function CreateAuditoria() {
                   value={form.control_deco}
                   onChange={handleChange}
                   fontFamily="initial"
+                  disabled={form.auditoria === "SIN CONTACTO"}
                 >
                   <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
                     SI
@@ -605,6 +677,7 @@ function CreateAuditoria() {
                   value={form.canales_activos}
                   onChange={handleChange}
                   fontFamily="initial"
+                  disabled={form.auditoria === "SIN CONTACTO"}
                 >
                   <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
                     SI
@@ -657,6 +730,7 @@ function CreateAuditoria() {
                   value={form.conectado_wifi}
                   onChange={handleChange}
                   fontFamily="initial"
+                  disabled={form.auditoria === "SIN CONTACTO"}
                 >
                   <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
                     SI
@@ -709,6 +783,7 @@ function CreateAuditoria() {
                   value={form.n_tecnico}
                   onChange={handleChange}
                   fontFamily="initial"
+                  disabled={form.auditoria === "SIN CONTACTO"}
                 >
                   <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
                     SI
@@ -761,6 +836,7 @@ function CreateAuditoria() {
                   value={form.atencion_value}
                   onChange={handleChange}
                   fontFamily="initial"
+                  disabled={form.auditoria === "SIN CONTACTO"}
                 >
                   <MenuItem value="EXCELENTE" sx={{ fontFamily: "initial" }}>
                     EXCELENTE
@@ -776,58 +852,6 @@ function CreateAuditoria() {
                   </MenuItem>
                   <MenuItem value="MALA" sx={{ fontFamily: "initial" }}>
                     MALA
-                  </MenuItem>
-                  <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
-                    SIN CONTACTO
-                  </MenuItem>
-                </Select>
-              </Box>
-
-              <Box
-                sx={{
-                  mb: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <InputLabel
-                  id="auditoria-label"
-                  sx={{
-                    fontFamily: "initial",
-                    whiteSpace: "normal",
-                    maxWidth: "70%",
-                    textAlign: "center",
-                  }}
-                >
-                  Resultado de la Auditoría
-                </InputLabel>
-                <Select
-                  sx={{
-                    fontFamily: "initial",
-                    whiteSpace: "normal",
-                    width: { lg: "70%", xs: "100%", md: "100%" },
-                    textAlign: "center",
-                    background: "#ffffff",
-                  }}
-                  size="small"
-                  required
-                  id="auditoria"
-                  name="auditoria"
-                  variant="outlined"
-                  value={form.auditoria}
-                  onChange={handleChange}
-                  fontFamily="initial"
-                >
-                  <MenuItem value="CUMPLE" sx={{ fontFamily: "initial" }}>
-                    CUMPLE
-                  </MenuItem>
-                  <MenuItem value="CUMPLE CON OBSERVACIONES" sx={{ fontFamily: "initial" }}>
-                    CUMPLE CON OBSERVACIONES
-                  </MenuItem>
-                  <MenuItem value="NO CUMPLE" sx={{ fontFamily: "initial" }}>
-                    NO CUMPLE
                   </MenuItem>
                   <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
                     SIN CONTACTO

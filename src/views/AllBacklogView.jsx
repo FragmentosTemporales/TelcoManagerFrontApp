@@ -16,6 +16,9 @@ import {
   TableRow,
   TextField,
   Typography,
+  Select,
+  MenuItem,
+  FormControl,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -23,14 +26,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
-import { getAllAgendamientos, filterAgendamiento } from "../api/despachoAPI";
+import { getAllBacklog, CreateBacklogPriority } from "../api/backlogAPI";
 import { useSelector } from "react-redux";
-import extractDate from "../helpers/main";
-import { Link } from "react-router-dom";
-import AgendamientoCharts from "../components/agendamientoCharts";
-import BarChartIcon from "@mui/icons-material/BarChart";
 
-function AllAgendamientoViewer() {
+function AllBacklogView() {
   const authState = useSelector((state) => state.auth);
   const { token } = authState;
   const [open, setOpen] = useState(false);
@@ -40,28 +39,79 @@ function AllAgendamientoViewer() {
   const [data, setData] = useState(undefined);
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(1);
-  const handlePage = (newPage) => setPage(newPage);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [showStats, setShowStats] = useState(false);
+  const [form, setForm] = useState({
+    zona_de_trabajo: "",
+    RGUFinal: "",
+    tipo_de_actividad: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toggleFilters = () => {
     setShowFilters((prev) => !prev);
   };
 
-  const toggleStats = () => {
-    setShowStats((prev) => !prev);
+  const SubmitForm = async (e) => {
+    e.preventDefault();
+    fetchData();
   };
 
-  const [form, setForm] = useState({
-    fechaInicio: "",
-    fechaFin: "",
-  });
+  const handlePage = (newPage) => setPage(newPage);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prevForm) => ({ ...prevForm, [name]: value }));
+  };
+
+  const clearFilter = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true)
+    try {
+      setForm({
+        zona_de_trabajo: "",
+        RGUFinal: "",
+        tipo_de_actividad: "",
+      });
+      setPage(1);
+      await getAllBacklog(token, 1, {
+        zona_de_trabajo: "",
+        RGUFinal: "",
+        tipo_de_actividad: "",
+      }).then((res) => {
+        setData(res.data);
+        setPages(res.pages);
+      });
+    } catch (error) {
+      setAlertType("error");
+      setMessage(error);
+      setOpen(true);
+    }
+    setIsSubmitting(false)
+  };
+
+  const createPriority = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const response = await CreateBacklogPriority(token, form);
+      console.log(response);
+      setAlertType("success");
+      setMessage("Prioridad creada correctamente");
+      setOpen(true);
+    } catch (error) {
+      setAlertType("error");
+      setMessage(error);
+      setOpen(true);
+    }
+    setIsSubmitting(false);
+  };
 
   const fetchData = async () => {
     setIsLoading(true);
+    setIsSubmitting(true);
     try {
-      const response = await getAllAgendamientos(token, page);
+      const response = await getAllBacklog(token, page, form);
+      console.log(response.data);
       setData(response.data);
       setPages(response.pages);
     } catch (error) {
@@ -70,39 +120,11 @@ function AllAgendamientoViewer() {
       setOpen(true);
     }
     setIsLoading(false);
-  };
-
-  const SubmitForm = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const response = await filterAgendamiento(
-        token,
-        form.fechaInicio,
-        form.fechaFin
-      );
-      console.log(response);
-      setData(response);
-      setPages(1);
-    } catch (error) {
-      console.log(error);
-    }
     setIsSubmitting(false);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const clearFilter = () => {
-    setForm({ fechaInicio: "", fechaFin: "" });
-    fetchData();
   };
 
   const setTable = () => (
@@ -123,10 +145,12 @@ function AllAgendamientoViewer() {
       <TableHead>
         <TableRow>
           {[
-            "FECHA CREACION",
-            "ORDEN",
-            "FECHA AGENDAMIENTO",
-            "AGENDADO POR",
+            "Orden de Trabajo",
+            "Actividad",
+            "Zona de Trabajo",
+            "Marca",
+            "Fecha",
+            "Zona",
           ].map((header) => (
             <TableCell
               key={header}
@@ -134,7 +158,6 @@ function AllAgendamientoViewer() {
               sx={{
                 background: "#d8d8d8",
                 fontWeight: "bold",
-                width: "25%",
               }}
             >
               {header}
@@ -156,41 +179,45 @@ function AllAgendamientoViewer() {
         {data && data.length > 0 ? (
           data.map((row, index) => (
             <TableRow key={index}>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
-              >
+              <TableCell align="center" sx={{ fontSize: "16px" }}>
                 <Typography fontFamily={"initial"} variant="secondary">
-                  {row.fechaRegistro
-                    ? extractDate(row.fechaRegistro)
+                  {row.orden_de_trabajo
+                    ? row.orden_de_trabajo
                     : "Sin Información"}
                 </Typography>
               </TableCell>
 
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
-              >
+              <TableCell align="center" sx={{ fontSize: "16px" }}>
                 <Typography fontFamily={"initial"} variant="secondary">
-                  {row.orden ? row.orden : "Sin Información"}
-                </Typography>
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.fechaAgendamiento
-                    ? extractDate(row.fechaAgendamiento)
+                  {row.tipo_de_actividad
+                    ? row.tipo_de_actividad
                     : "Sin Información"}
                 </Typography>
               </TableCell>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
-              >
+
+              <TableCell align="center" sx={{ fontSize: "16px" }}>
                 <Typography fontFamily={"initial"} variant="secondary">
-                  {row.usuario ? row.usuario.nombre : "Sin Información"}
+                  {row.zona_de_trabajo
+                    ? row.zona_de_trabajo
+                    : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "16px" }}>
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.Marca ? row.Marca : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "16px" }}>
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.Fecha ? row.Fecha : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "16px" }}>
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.Zona ? row.Zona : "Sin Información"}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -257,26 +284,6 @@ function AllAgendamientoViewer() {
           {message}
         </Alert>
       )}
-      <Box
-        sx={{
-          width: { lg: "80%", md: "100%", xs: "100%" },
-          overflow: "hidden",
-          mt: 3,
-        }}
-      >
-        <Link to="/agendamientos">
-          <Button
-            variant="contained"
-            sx={{
-              background: "#0b2f6d",
-              borderRadius: "20px",
-              marginBottom: 2,
-            }}
-          >
-            Ver Mis Agendamientos
-          </Button>
-        </Link>
-      </Box>
 
       <Card
         sx={{
@@ -287,43 +294,7 @@ function AllAgendamientoViewer() {
         }}
       >
         <CardHeader
-          title={
-            <Typography fontWeight="bold">Estadística</Typography>
-          }
-          avatar={<BarChartIcon />}
-          action={
-            <Button
-              onClick={toggleStats}
-              sx={{ color: "white", minWidth: "auto" }}
-            >
-              {showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </Button>
-          }
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "center",
-          }}
-        />
-        {showStats && (
-          <CardContent sx={{ display: "grid" }}>
-            <AgendamientoCharts />
-          </CardContent>
-        )}
-      </Card>
-
-      <Card
-        sx={{
-          width: { lg: "80%", md: "100%", xs: "100%" },
-          borderRadius: "20px",
-          boxShadow: 5,
-          marginTop: 2,
-        }}
-      >
-        <CardHeader
-          title={
-            <Typography fontWeight="bold">Filtrar</Typography>
-          }
+          title={<Typography fontWeight="bold">Filtrar</Typography>}
           avatar={<SearchIcon />}
           action={
             <Button
@@ -353,38 +324,87 @@ function AllAgendamientoViewer() {
                 <Box
                   sx={{
                     mb: 2,
-                    width: "35%",
+                    width: "30%",
                   }}
                 >
-                  <InputLabel id="fechaInicio-label">Fecha de Inicio</InputLabel>
-                  <TextField
-                    required
-                    id="fechaInicio"
-                    type="datetime-local"
-                    name="fechaInicio"
-                    variant="outlined"
-                    value={form.fechaInicio}
-                    onChange={handleChange}
-                    sx={{ minWidth: "100%" }}
-                  />
+                  <FormControl fullWidth>
+                    <InputLabel id="zona_de_trabajo-label">
+                      Zona de Trabajo
+                    </InputLabel>
+                    <Select
+                      labelId="zona_de_trabajo-label"
+                      id="zona_de_trabajo"
+                      name="zona_de_trabajo"
+                      value={form?.zona_de_trabajo || ""}
+                      onChange={handleChange}
+                    >
+                      {["La Florida", "Nunoa", "Quilpue", "Villa Alemana"].map(
+                        (zona) => (
+                          <MenuItem key={zona} value={zona}>
+                            {zona}
+                          </MenuItem>
+                        )
+                      )}
+                    </Select>
+                  </FormControl>
                 </Box>
                 <Box
                   sx={{
                     mb: 2,
-                    width: "35%",
+                    width: "30%",
                   }}
                 >
-                  <InputLabel id="fechaFin-label">Fecha de Fin</InputLabel>
-                  <TextField
-                    required
-                    id="fechaFin"
-                    type="datetime-local"
-                    name="fechaFin"
-                    variant="outlined"
-                    value={form.fechaFin}
-                    onChange={handleChange}
-                    sx={{ minWidth: "100%" }}
-                  />
+                  <FormControl fullWidth>
+                    <InputLabel id="RGUFinal-label">RGU Final</InputLabel>
+                    <Select
+                      labelId="RGUFinal-label"
+                      id="RGUFinal"
+                      name="RGUFinal"
+                      value={form?.RGUFinal || ""}
+                      onChange={handleChange}
+                    >
+                      {["1", "2", "3"].map((zona) => (
+                        <MenuItem key={zona} value={zona}>
+                          {zona}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+
+                <Box
+                  sx={{
+                    mb: 2,
+                    width: "30%",
+                  }}
+                >
+                  <FormControl fullWidth>
+                    <InputLabel id="RGUFinal-label">
+                      Tipo de Actividad
+                    </InputLabel>
+                    <Select
+                      labelId="tipo_de_actividad-label"
+                      id="tipo_de_actividad"
+                      name="tipo_de_actividad"
+                      value={form?.tipo_de_actividad || ""}
+                      onChange={handleChange}
+                    >
+                      {[
+                        "Alta",
+                        "Alta Traslado",
+                        "Downgrade promoción",
+                        "Migración",
+                        "Modificación de Servicio",
+                        "Modificacion postventa",
+                        "Reparación",
+                        "Upgrade promoción",
+                      ].map((zona) => (
+                        <MenuItem key={zona} value={zona}>
+                          {zona}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Box>
               </Box>
               <Box
@@ -435,6 +455,24 @@ function AllAgendamientoViewer() {
                     Limpiar Filtro
                   </Button>
                 </Box>
+                <Box
+                  sx={{
+                    mb: 2,
+                    width: "20%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    onClick={createPriority}
+                    sx={{ height: 30, width: "100%", borderRadius: "20px" }}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Cargando..." : "Crear Prioridad"}
+                  </Button>
+                </Box>
               </Box>
             </form>
           </CardContent>
@@ -450,9 +488,7 @@ function AllAgendamientoViewer() {
         }}
       >
         <CardHeader
-          title={
-            <Typography fontWeight="bold">Lista de Agendamientos</Typography>
-          }
+          title={<Typography fontWeight="bold">Lista de Backlog</Typography>}
           sx={{
             background: "#0b2f6d",
             color: "white",
@@ -486,4 +522,4 @@ function AllAgendamientoViewer() {
     </Box>
   );
 }
-export default AllAgendamientoViewer;
+export default AllBacklogView;

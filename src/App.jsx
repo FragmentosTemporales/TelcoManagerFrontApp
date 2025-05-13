@@ -37,6 +37,8 @@ import AllAgendamientoViewer from "./views/AllAgendamientosView";
 import AmonesatacionesViewer from "./views/AmonestacionesUserView";
 import CreateAuditoria from "./views/CreateAuditoria";
 import AuditoriasView from "./views/AllAuditoriasView";
+import AllBacklogView from "./views/AllBacklogView";
+import OTFinder from "./views/OTFinder";
 
 function App() {
   return (
@@ -76,6 +78,8 @@ function App() {
           <Route path="/auditorias" element={<CreateAuditoria />} />
           <Route path="/all_agendamientos" element={<AllAgendamientoViewer />} />
           <Route path="/all_auditorias" element={<AuditoriasView />} />
+          <Route path="/all_backlogs" element={<AllBacklogView />} />
+          <Route path="/orden_info" element={<OTFinder />} />
           <Route
             path="/componente-asignado/:componenteID"
             element={<ComponenteAsignadoView />}
