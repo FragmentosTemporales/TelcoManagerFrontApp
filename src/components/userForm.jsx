@@ -31,7 +31,7 @@ function UserForm() {
     correo: "",
     numDoc: "",
     clave: "",
-    empresa: "",
+    empresaID: 1,
     planta: true,
   });
 
@@ -77,7 +77,7 @@ function UserForm() {
         correo: "",
         numDoc: "",
         clave: "",
-        empresa: "",
+        empresaID: 1,
         planta: true,
       });
       setIsSubmitting(false);
@@ -144,7 +144,7 @@ function UserForm() {
                     id="nombre"
                     type="text"
                     name="nombre"
-                    variant="outlined"
+                    variant="filled"
                     value={form.nombre}
                     onChange={handleChange}
                   />
@@ -162,7 +162,7 @@ function UserForm() {
                     id="correo"
                     type="email"
                     name="correo"
-                    variant="outlined"
+                    variant="filled"
                     value={form.correo}
                     onChange={handleChange}
                   />
@@ -180,7 +180,7 @@ function UserForm() {
                     id="numDoc"
                     type="text"
                     name="numDoc"
-                    variant="outlined"
+                    variant="filled"
                     value={form.numDoc}
                     onChange={handleChange}
                   />
@@ -198,7 +198,7 @@ function UserForm() {
                     id="clave"
                     type="text"
                     name="clave"
-                    variant="outlined"
+                    variant="filled"
                     value={form.clave}
                     onChange={handleChange}
                   />
@@ -212,12 +212,12 @@ function UserForm() {
                   </InputLabel>
                   <Select
                     labelId="empresa-label"
-                    id="empresa"
-                    name="empresa"
-                    value={form.empresa} // Aquí usas el valor de 'externo' en lugar de 'form.planta'
+                    id="empresaID"
+                    name="empresaID"
+                    value={form.empresaID}
                     onChange={handleChange}
                     fullWidth
-                    variant="outlined"
+                    variant="filled"
                     label="Empresa"
                     fontFamily="initial"
                   >
@@ -244,7 +244,7 @@ function UserForm() {
                     required
                     id="planta"
                     name="planta"
-                    variant="outlined"
+                    variant="filled"
                     value={form.planta}
                     onChange={handleChange}
                     label="Planta"
@@ -263,7 +263,12 @@ function UserForm() {
                   <Button
                     type="submit"
                     variant="contained"
-                    sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                    sx={{
+                      background: "#0b2f6d",
+                      fontWeight: "bold",
+                      borderRadius: "20px",
+                      width: "200px",
+                    }}
                     disabled={isSubmitting}
                   >
                     <Typography sx={{ fontFamily: "initial" }}>

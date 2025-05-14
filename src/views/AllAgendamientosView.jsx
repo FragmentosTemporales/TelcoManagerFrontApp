@@ -63,6 +63,7 @@ function AllAgendamientoViewer() {
     try {
       const response = await getAllAgendamientos(token, page);
       setData(response.data);
+      console.log(response.data);
       setPages(response.pages);
     } catch (error) {
       setAlertType("error");
@@ -125,6 +126,7 @@ function AllAgendamientoViewer() {
           {[
             "FECHA CREACION",
             "ORDEN",
+            "ESTADO",
             "FECHA AGENDAMIENTO",
             "AGENDADO POR",
           ].map((header) => (
@@ -134,7 +136,7 @@ function AllAgendamientoViewer() {
               sx={{
                 background: "#d8d8d8",
                 fontWeight: "bold",
-                width: "25%",
+                width: "20%",
               }}
             >
               {header}
@@ -158,7 +160,7 @@ function AllAgendamientoViewer() {
             <TableRow key={index}>
               <TableCell
                 align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
+                sx={{ fontSize: "16px", width: "20%" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.fechaRegistro
@@ -169,25 +171,36 @@ function AllAgendamientoViewer() {
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
+                sx={{ fontSize: "16px", width: "20%" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.orden ? row.orden : "Sin Información"}
                 </Typography>
               </TableCell>
+
               <TableCell
                 align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
+                sx={{ fontSize: "16px", width: "20%" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
-                  {row.fechaAgendamiento
-                    ? extractDate(row.fechaAgendamiento)
+                  {row.estado_interno ? row.estado_interno : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+
+              <TableCell
+                align="center"
+                sx={{ fontSize: "16px", width: "20%" }} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.nueva_cita
+                    ? extractDate(row.nueva_cita)
                     : "Sin Información"}
                 </Typography>
               </TableCell>
               <TableCell
                 align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
+                sx={{ fontSize: "16px", width: "20%" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.usuario ? row.usuario.nombre : "Sin Información"}

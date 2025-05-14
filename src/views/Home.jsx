@@ -181,6 +181,7 @@ function Home() {
       body: "Acá podrás gestionar, crear y visualizar todas las auditorías realizadas",
       moduloID: 22,
     },
+    /*
     {
       head: "Lista de Backlogs",
       icono: <NewspaperIcon />,
@@ -189,6 +190,7 @@ function Home() {
       body: "Acá podrás gestionar, crear y visualizar todos los backlogs agendados",
       moduloID: 23,
     },
+    */
   ];
 
   const accesos = secciones.filter((seccion) =>

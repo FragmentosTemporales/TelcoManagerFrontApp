@@ -312,7 +312,7 @@ function PermisosList() {
               <Button
                 type="submit"
                 variant="contained"
-                sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                sx={{ background: "#0b2f6d", fontWeight: "bold", borderRadius: "20px", width: "200px" }}
                 disabled={isSubmitting}
               >
                 <Typography sx={{ fontFamily: "initial" }}>
@@ -383,7 +383,7 @@ function PermisosList() {
               <Button
                 type="submit"
                 variant="contained"
-                sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                sx={{ background: "#0b2f6d", fontWeight: "bold", borderRadius: "20px", width: "200px" }}
                 disabled={isSubmitting}
               >
                 <Typography fontFamily="initial">
@@ -475,7 +475,7 @@ function PermisosList() {
                       }));
                       setOpenModal(true);
                     }}
-                    sx={{ borderRadius: "25px" }}
+                    sx={{ borderRadius: "20px", width: "200px" }}
                   >
                     <EditIcon />
                   </Button>
@@ -504,6 +504,7 @@ function PermisosList() {
         overflow: "auto",
         boxShadow: 5,
         textAlign: "center",
+        marginTop: 2,
       }}
     >
       <TableContainer>
@@ -590,7 +591,7 @@ function PermisosList() {
           <Button
             variant="contained"
             onClick={ActualizarPermiso}
-            sx={{ backgroundColor: "#0b2f6d" }}
+            sx={{ backgroundColor: "#0b2f6d", borderRadius: "20px", width: "200px" }}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Procesando..." : "Actualizar"}
