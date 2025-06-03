@@ -27,10 +27,23 @@ function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ correo: "", clave: "" });
+  const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    const savedCredentials = JSON.parse(localStorage.getItem("credentials"));
+    if (savedCredentials) {
+      setForm(savedCredentials);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
+  };
+
+  const handleRememberMeChange = (e) => {
+    setRememberMe(e.target.checked);
   };
 
   const handleClose = () => setOpen(false);
@@ -44,8 +57,12 @@ function Login() {
     try {
       const response = await onLogin(payload);
       dispatch(onLoad(response));
+      if (rememberMe) {
+        localStorage.setItem("credentials", JSON.stringify(form));
+      } else {
+        localStorage.removeItem("credentials");
+      }
       navigate("/");
-
     } catch (error) {
       dispatch(setMessage(error));
       setIsSubmitting(false);
@@ -99,7 +116,7 @@ function Login() {
         />
         <CardContent>
           <form onSubmit={handleSubmit}>
-            <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
+            <Box sx={{ mb: 2, mt:2, display: "flex", justifyContent: "center" }}>
               <TextField
                 required
                 sx={{ minWidth: "350px" }}
@@ -139,12 +156,20 @@ function Login() {
                 }}
               />
             </Box>
+            <Box sx={{ mb: 2, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Checkbox
+                checked={rememberMe}
+                onChange={handleRememberMeChange}
+                color="primary"
+              />
+              <Typography>Recordar usuario</Typography>
+            </Box>
             <Box sx={{ textAlign: "center" }}>
               <Button
                 type="submit"
                 variant="contained"
                 disabled={isSubmitting}
-                sx={{ background: "#0b2f6d" }}
+                sx={{ background: "#0b2f6d", width: "200px", borderRadius: "20px" }}
               >
                 {isSubmitting ? "Cargando..." : "Ingresar"}
               </Button>

@@ -210,7 +210,7 @@ function AllAgendamientoViewer() {
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan={4} align="center" sx={{ width: "100%" }}>
+            <TableCell colSpan={5} align="center" sx={{ width: "100%" }}>
               No hay datos disponibles
             </TableCell>
           </TableRow>

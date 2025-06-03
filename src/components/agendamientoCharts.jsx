@@ -25,7 +25,7 @@ import {
 import {
   getDataAgendamientos,
   getDataHistoricaAgendamientos,
-  getDataFuturaAgendamientos
+  getDataFuturaAgendamientos,
 } from "../api/despachoAPI";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -73,11 +73,12 @@ function AgendamientoCharts() {
     setIsSubmitting(true);
     setIsLoading(true);
     try {
-      const [chartResponse, historicalResponse, futureResponse] = await Promise.all([
-        getDataAgendamientos(token, fecha),
-        getDataHistoricaAgendamientos(token),
-        getDataFuturaAgendamientos(token),
-      ]);
+      const [chartResponse, historicalResponse, futureResponse] =
+        await Promise.all([
+          getDataAgendamientos(token, fecha),
+          getDataHistoricaAgendamientos(token),
+          getDataFuturaAgendamientos(token),
+        ]);
       const sortedChartData = chartResponse.sort((a, b) => b.Q - a.Q);
 
       const processedHistoricalData = historicalResponse.map((item) => ({
@@ -90,7 +91,10 @@ function AgendamientoCharts() {
         Q_futura: item.Q,
       }));
 
-      const mergedData = mergeDataByDate(processedHistoricalData, processedFutureData);
+      const mergedData = mergeDataByDate(
+        processedHistoricalData,
+        processedFutureData
+      );
 
       setData(sortedChartData);
       setDataHistorica(mergedData);
@@ -104,7 +108,6 @@ function AgendamientoCharts() {
   useEffect(() => {
     fetchData();
   }, []);
-
 
   return (
     <Box
@@ -204,16 +207,24 @@ function AgendamientoCharts() {
                 marginBottom: 2,
               }}
             >
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                sx={{ fontFamily: "initial" }}
-              >
+              <Typography variant="body2" sx={{ fontWeight: "bold" }}>
                 Agendamientos por despachador
               </Typography>
             </Box>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={data} layout="horizontal">
+                <defs>
+                  <linearGradient
+                    id="barGradientAgendamiento"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="0%" stopColor="#124fb9" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#0d3984" stopOpacity={1} />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="5 5" />
                 <XAxis dataKey="nombre" fontSize={10} />
                 <YAxis />
@@ -225,7 +236,7 @@ function AgendamientoCharts() {
                   }}
                 />
 
-                <Bar dataKey="Q" fill="#8884d8">
+                <Bar dataKey="Q" fill="url(#barGradientAgendamiento)">
                   <LabelList
                     dataKey="Q"
                     position="inside"
@@ -249,23 +260,41 @@ function AgendamientoCharts() {
                 marginBottom: 2,
               }}
             >
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                sx={{ fontFamily: "initial" }}
-              >
-                Histórico de Agendamientos
+              <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                Histórico de agendamientos
               </Typography>
             </Box>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={dataHistorica} layout="horizontal">
+                <defs>
+                  <linearGradient
+                    id="lineGradientHistorica"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="0"
+                  >
+                    <stop offset="0%" stopColor="#124fb9" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#0d3984" stopOpacity={1} />
+                  </linearGradient>
+                  <linearGradient
+                    id="lineGradientFutura"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="0"
+                  >
+                    <stop offset="0%" stopColor="#ff3333" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#b22323" stopOpacity={1} />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="fecha"
-                  tick={{ angle: -45, textAnchor: "end", fontSize: 10 }} // Reduce font size
-                  height={40} // Increase height to provide more space for labels
+                  tick={{ angle: -45, textAnchor: "end", fontSize: 10 }}
+                  height={40}
                 />
-                <Legend verticalAlign="top" height={36}/>
+                <Legend verticalAlign="top" height={36} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#f5f5f5",
@@ -277,13 +306,13 @@ function AgendamientoCharts() {
                 <Line
                   dataKey="Q_diaria"
                   type="monotone"
-                  stroke="#8884d8"
+                  stroke="url(#lineGradientHistorica)"
                   strokeWidth={2}
                 />
                 <Line
                   dataKey="Q_futura"
                   type="monotone"
-                  stroke="#FF0000" // Red tone
+                  stroke="url(#lineGradientFutura)"
                   strokeWidth={2}
                 />
               </LineChart>

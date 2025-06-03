@@ -74,9 +74,24 @@ export const getAuditoriasFiltradas = async (token, payload, page) => {
   }
 };
 
-export const getAuditoriasStats = async (token, fecha) => {
+export const getAuditoriasStats = async (token) => {
   try {
-    const url = `${baseUrl}/get-stats-auditorias/${fecha}`;
+    const url = `${baseUrl}/get-stats-auditorias`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getAuditoriasStatsEstado = async (token) => {
+  try {
+    const url = `${baseUrl}/get-stats-auditorias-estado`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -92,6 +107,21 @@ export const getAuditoriasStats = async (token, fecha) => {
 export const getAuditores = async (token) => {
   try {
     const url = `${baseUrl}/get-auditores`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getConsolidadoOt = async (token) => {
+  try {
+    const url = `${baseUrl}/get-compilado-ot`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,

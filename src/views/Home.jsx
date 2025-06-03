@@ -8,6 +8,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import UploadIcon from '@mui/icons-material/Upload';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import SearchIcon from "@mui/icons-material/Search";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
@@ -181,16 +182,22 @@ function Home() {
       body: "Acá podrás gestionar, crear y visualizar todas las auditorías realizadas",
       moduloID: 22,
     },
-    /*
     {
-      head: "Lista de Backlogs",
+      head: "Lista de Proyectos Consolidados",
       icono: <NewspaperIcon />,
-      title: "Gestiona y visualiza backlogs",
-      link: "/all_backlogs",
-      body: "Acá podrás gestionar, crear y visualizar todos los backlogs agendados",
-      moduloID: 23,
+      title: "Gestiona y visualiza Proyectos",
+      link: "/proyectos-onnet",
+      body: "Acá podrás visualizar los proyectos consolidados de OnNet",
+      moduloID: 1,
     },
-    */
+    {
+      head: "Carga Planilla Construcción",
+      icono: <UploadIcon />,
+      title: "Espacio para cargar planilla de construcción",
+      link: "/carga-construccion",
+      body: "Acá podrás enviar la planilla de construcción para su procesamiento y carga a DB",
+      moduloID: 6,
+    },
   ];
 
   const accesos = secciones.filter((seccion) =>

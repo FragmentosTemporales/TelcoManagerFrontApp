@@ -85,7 +85,6 @@ function FormFlota() {
     }
   };
 
-  useEffect(()=>{console.log(form)},[form])
 
   return (
     <Box

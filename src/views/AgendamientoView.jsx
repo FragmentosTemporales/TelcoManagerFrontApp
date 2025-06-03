@@ -38,47 +38,48 @@ function AgendamientoViewer() {
   const [isLoadingBacklogEstado, setIsLoadingBacklogEstado] = useState(false);
   const [dataBacklog, setDataBacklog] = useState(undefined);
   const [dataBacklogEstado, setDataBacklogEstado] = useState(undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const zonas = [
-                        "Calera de Tango",
-                        "Cerrillos",
-                        "Cerro Navia",
-                        "Colina",
-                        "Conchali",
-                        "El Bosque",
-                        "El Monte",
-                        "Estacion Central",
-                        "Huechuraba",
-                        "Independencia",
-                        "La Cisterna",
-                        "La Florida",
-                        "La Granja",
-                        "La Reina",
-                        "Lampa",
-                        "Las Condes",
-                        "Lo Barnechea",
-                        "Lo Espejo",
-                        "Lo Prado",
-                        "Macul",
-                        "Maipu",
-                        "Melipilla",
-                        "Nunoa",
-                        "Padre Hurtado",
-                        "Pedro Aguirre Cerda",
-                        "Penaflor",
-                        "Penalolen",
-                        "Providencia",
-                        "Pudahuel",
-                        "Puente Alto",
-                        "Quilicura",
-                        "Quinta Normal",
-                        "Recoleta",
-                        "Renca",
-                        "San Bernardo",
-                        "San Joaquin",
-                        "San Miguel",
-                        "Santiago Centro",
-                        "Vitacura"
-                      ]
+    "Calera de Tango",
+    "Cerrillos",
+    "Cerro Navia",
+    "Colina",
+    "Conchali",
+    "El Bosque",
+    "El Monte",
+    "Estacion Central",
+    "Huechuraba",
+    "Independencia",
+    "La Cisterna",
+    "La Florida",
+    "La Granja",
+    "La Reina",
+    "Lampa",
+    "Las Condes",
+    "Lo Barnechea",
+    "Lo Espejo",
+    "Lo Prado",
+    "Macul",
+    "Maipu",
+    "Melipilla",
+    "Nunoa",
+    "Padre Hurtado",
+    "Pedro Aguirre Cerda",
+    "Penaflor",
+    "Penalolen",
+    "Providencia",
+    "Pudahuel",
+    "Puente Alto",
+    "Quilicura",
+    "Quinta Normal",
+    "Recoleta",
+    "Renca",
+    "San Bernardo",
+    "San Joaquin",
+    "San Miguel",
+    "Santiago Centro",
+    "Vitacura",
+  ];
 
   const [formGetBacklog, setFormGetBacklog] = useState({ zona_de_trabajo: "" });
 
@@ -93,8 +94,29 @@ function AgendamientoViewer() {
 
   const SubmitBacklockForm = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    const sanitizedOrden = formBacklog.orden.replace(/\s+/g, "").toUpperCase();
+
+    // Validate that 'orden' starts with '1-'
+    if (!sanitizedOrden.startsWith("1-")) {
+      setAlertType("error");
+      setMessage("El campo 'ORDEN DE TRABAJO' debe comenzar con '1-'.");
+      setOpen(true);
+      setIsSubmitting(false);
+      return;
+    }
+
+    const payload = {
+      orden: sanitizedOrden,
+      nueva_cita: formBacklog.nueva_cita,
+      sub_clasificacion: formBacklog.sub_clasificacion,
+      estado_interno: formBacklog.estado_interno,
+      comentario: formBacklog.comentario,
+      userID: user_id,
+    };
+
     try {
-      const response = await createBacklogEstado(formBacklog, token);
+      const response = await createBacklogEstado(payload, token);
       setAlertType("success");
       setMessage(response.message);
       setOpen(true);
@@ -113,6 +135,7 @@ function AgendamientoViewer() {
       setOpen(true);
     }
     setDataBacklog(undefined);
+    setIsSubmitting(false);
   };
 
   const fetchBacklog = async () => {
@@ -313,13 +336,11 @@ function AgendamientoViewer() {
                     value={formGetBacklog?.zona_de_trabajo || ""}
                     onChange={handleChangeGetBacklog}
                   >
-                    {zonas.map(
-                      (zona) => (
-                        <MenuItem key={zona} value={zona}>
-                          {zona}
-                        </MenuItem>
-                      )
-                    )}
+                    {zonas.map((zona) => (
+                      <MenuItem key={zona} value={zona}>
+                        {zona}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>
@@ -653,13 +674,14 @@ function AgendamientoViewer() {
               <Button
                 type="submit"
                 variant="contained"
+                disabled={isSubmitting}
                 sx={{
                   width: "200px",
                   background: "#0b2f6d",
                   borderRadius: "20px",
                 }}
               >
-                CREAR
+                {isSubmitting ? "Cargando..." : "Crear"}{" "}
               </Button>
             </Box>
           </form>

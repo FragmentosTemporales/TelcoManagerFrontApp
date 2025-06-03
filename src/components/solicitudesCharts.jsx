@@ -83,7 +83,7 @@ function SolicitudCharts() {
     <>
       <TableHead>
         <TableRow>
-          {["CANTIDAD", "NOMBRE", "CENTRO COSTO"].map((header) => (
+          {["CANTIDAD", "NOMBRE", "CENTRO COSTO"].map((header, index) => (
             <TableCell
               key={header}
               align="center"
@@ -92,6 +92,8 @@ function SolicitudCharts() {
                 fontWeight: "bold",
                 fontSize: "10px",
                 color: "#ffffff",
+                borderRadius:
+                  index === 0 ? "20px 0 0 0" : index === 2 ? "0 20px 0 0" : "0",
               }}
             >
               {header}
@@ -108,6 +110,7 @@ function SolicitudCharts() {
         sx={{
           display: "column",
           justifyContent: "center",
+          backgroundColor: "#ffffff",
         }}
       >
         {dataTop && dataTop.length > 0 ? (
@@ -115,7 +118,7 @@ function SolicitudCharts() {
             <TableRow key={index}>
               <TableCell
                 align="center"
-                sx={{ fontSize: "12px", width: "10%" }} // Equal width
+                sx={{ fontSize: "10px", width: "10%" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.Q ? row.Q : "Sin Información"}
@@ -124,7 +127,7 @@ function SolicitudCharts() {
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "12px", width: "40%" }} // Equal width
+                sx={{ fontSize: "10px", width: "45%" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.Nombre ? row.Nombre : "Sin Información"}
@@ -133,7 +136,7 @@ function SolicitudCharts() {
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "12px", width: "50%" }} // Equal width
+                sx={{ fontSize: "10px", width: "45%" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.CENTRO_COSTO ? row.CENTRO_COSTO : "Sin Información"}
@@ -171,9 +174,11 @@ function SolicitudCharts() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        padding: 2,
       }}
     >
-      <Typography variant="h6" sx={{ marginBottom: 2, fontWeight: "bold" }}>
+      <Typography variant="body2"
+                sx={{ fontWeight: "bold" }}>
         Histórico de Solicitudes
       </Typography>
       {isLoading ? (
@@ -198,14 +203,15 @@ function SolicitudCharts() {
             justifyContent: "space-between",
             alignItems: "center",
             width: "90%",
-            marginTop: 2,
             padding: 2,
           }}
         >
+          {/** PRIMER GRAFICO POR ESTADOS **/}
           <Box
             sx={{
               width: { xs: "100%", lg: "100%" },
               marginBottom: { xs: 2, lg: 0 },
+              padding: 2,
             }}
           >
             <ResponsiveContainer width="100%" height={300}>
@@ -237,6 +243,7 @@ function SolicitudCharts() {
               </BarChart>
             </ResponsiveContainer>
           </Box>
+          {/** SEGUNDO GRAFICO Y TABLA CON TOPS**/}
           <Box
             sx={{
               width: { xs: "100%", lg: "100%" },
@@ -246,77 +253,120 @@ function SolicitudCharts() {
               height: "300px",
             }}
           >
-            
             <Box
               sx={{
-                width: "50%",
+                width: { xs: "100%", lg: "100%" },
                 marginBottom: { xs: 2, lg: 0 },
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: "column",
+                height: "300px",
               }}
             >
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={dataCC} layout="horizontal">
-                  <defs>
-                    <linearGradient
-                      id="barGradient2"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="0%" stopColor="#ff3333" stopOpacity={1} />
-                      <stop offset="100%" stopColor="#b22323" stopOpacity={1} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="5 5" />
-                  <XAxis dataKey="CENTRO_COSTO" fontSize={10} />
-                  <YAxis />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#f5f5f5",
-                      borderRadius: "20px",
-                      border: "1px solid #ccc",
-                    }}
-                  />
-                  <Bar dataKey="Q" fill="url(#barGradient2)">
-                    <LabelList
-                      dataKey="Q"
-                      position="inside"
-                      fill="#ffffff"
-                      fontWeight={"bold"}
-                    />
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </Box>
-            <Box
-              sx={{
-                width: "50%",
-                marginBottom: { xs: 2, lg: 0 },
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <TableContainer
+              {/** SEGUNDO GRAFICO POR CENTRO DE COSTO **/}
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: "bold" }}
+              >
+                Histórico por Centro de Costo
+              </Typography>
+              <Box
                 sx={{
-                  maxHeight: 300, // Set a max height for scrolling
+                  width: "100%",
+                  marginBottom: { xs: 2, lg: 0 },
+                  display: "flex",
+                  flexDirection: "row",
                 }}
               >
-                <Table
-                  stickyHeader
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={dataCC} layout="horizontal">
+                    <defs>
+                      <linearGradient
+                        id="barGradient2"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop offset="0%" stopColor="#ff3333" stopOpacity={1} />
+                        <stop
+                          offset="100%"
+                          stopColor="#b22323"
+                          stopOpacity={1}
+                        />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="5 5" />
+                    <XAxis dataKey="CENTRO_COSTO" fontSize={10} />
+                    <YAxis />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#f5f5f5",
+                        borderRadius: "20px",
+                        border: "1px solid #ccc",
+                      }}
+                    />
+                    <Bar dataKey="Q" fill="url(#barGradient2)">
+                      <LabelList
+                        dataKey="Q"
+                        position="inside"
+                        fill="#ffffff"
+                        fontWeight={"bold"}
+                        fontSize={10}
+                      />
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                width: { xs: "100%", lg: "100%" },
+                marginBottom: { xs: 2, lg: 0 },
+                display: "flex",
+                flexDirection: "column",
+                height: "300px",
+              }}
+            >
+              {/** SEGUNDO GRAFICO POR CENTRO DE COSTO **/}
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: "bold" }}
+              >
+                Top 10 Trabajadores Amonestados
+              </Typography>
+              {/** TABLA CON TOPS **/}
+              <Box
+                sx={{
+                  width: "100%",
+                  marginBottom: { xs: 2, lg: 0 },
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                <TableContainer
                   sx={{
-                    width: "100%",
-                    display: "column",
-                    justifyContent: "center",
+                    maxHeight: 300, // Set a max height for scrolling
+                    borderRadius: "20px",
                   }}
                 >
-                  {setTableHead()}
-                  {setTableBody()}
-                </Table>
-              </TableContainer>
+                  <Table
+                    sx={{
+                      width: "100%",
+                      display: "column",
+                      justifyContent: "center"
+                    }}
+                    stickyHeader
+                  >
+                    {setTableHead()}
+                    {setTableBody()}
+                  </Table>
+                </TableContainer>
+              </Box>
             </Box>
+
           </Box>
+
         </Box>
       )}
     </Box>

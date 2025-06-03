@@ -39,6 +39,10 @@ import CreateAuditoria from "./views/CreateAuditoria";
 import AuditoriasView from "./views/AllAuditoriasView";
 import AllBacklogView from "./views/AllBacklogView";
 import OTFinder from "./views/OTFinder";
+import ErrorHandler from "./utils/404NotFound";
+import ProyectosOnNetView from "./views/ProyectosConsolidadosView";
+import ProyectoConsolidadoView from "./views/ProyectoConsolidadoView";
+import LoadConstruccion from "./views/PlanillaConstruccion";
 
 function App() {
   return (
@@ -80,6 +84,9 @@ function App() {
           <Route path="/all_auditorias" element={<AuditoriasView />} />
           <Route path="/all_backlogs" element={<AllBacklogView />} />
           <Route path="/orden_info" element={<OTFinder />} />
+          <Route path="/proyectos-onnet" element={<ProyectosOnNetView />} />
+          <Route path="/consolidado/:id" element={<ProyectoConsolidadoView />} />
+          <Route path="/carga-construccion" element={<LoadConstruccion />} />
           <Route
             path="/componente-asignado/:componenteID"
             element={<ComponenteAsignadoView />}
@@ -88,6 +95,7 @@ function App() {
         <Route path="/bodegaRM" element={<BodegaViewer />} />
         <Route path="/bodegaQuinta" element={<BodegaQuintaViewer />} />
         <Route path="/login" element={<Login />} />
+        <Route path="*" element={<ErrorHandler/>} />
       </Routes>
     </BrowserRouter>
   );

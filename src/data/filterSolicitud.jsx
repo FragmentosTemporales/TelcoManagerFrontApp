@@ -47,6 +47,10 @@ const filterData = [
     descri: "ENVIADA POR CORREO",
     hab: "1",
   },
+  {
+    descri: "TRABAJADOR DESVINCULADO",
+    hab: "1",
+  },
 ];
 
 export default filterData;

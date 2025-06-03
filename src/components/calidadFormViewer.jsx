@@ -6,7 +6,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 import { downloadFile } from "../api/downloadApi";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";

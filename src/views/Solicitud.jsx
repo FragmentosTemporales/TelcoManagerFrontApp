@@ -1333,7 +1333,6 @@ function Solicitud() {
         justifyContent: "center",
         overflow: "auto",
         padding: 8,
-        width: "100%",
       }}
     >
       {/* COMPONENTE MODAL PARA APROBAR AMONESTACION */}
@@ -1572,7 +1571,9 @@ function Solicitud() {
 
           {/* BOX PARA TRABAJADOR DESVINCULADO */}
           <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
-            {area && area.areaID === 5 ? componenteDesvinculado() : null}
+            {area && area.areaID === 5 &
+            (dataGestiones[0].estado != "TRABAJADOR DESVINCULADO")
+            ? componenteDesvinculado() : null}
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO FINALIZADA */}
