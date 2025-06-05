@@ -107,3 +107,19 @@ export const createSeguimientoProyecto = async (payload, token) => {
     throw error.response.data.error;
   }
 };
+
+export const updateSeguimientoProyecto = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/update-seguimiento-proyecto`;
+    const response = await axios.put(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error)
+    throw error.response.data.error;
+  }
+};

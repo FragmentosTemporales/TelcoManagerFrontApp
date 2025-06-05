@@ -21,10 +21,16 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SearchIcon from "@mui/icons-material/Search";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { getAstList, getAstListUser, getAstUsers } from "../api/prevencionAPI";
+import {
+  getAstList,
+  getNotAstCC,
+  getDataCCStats,
+  getAstHistoricoExcel,
+} from "../api/prevencionAPI";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
 
@@ -32,30 +38,35 @@ function FormAstList() {
   const authState = useSelector((state) => state.auth);
   const { token } = authState;
   const [data, setData] = useState(undefined);
+  const [dataStatsCC, setDataStatsCC] = useState(undefined);
+  const [dataStatsCCFiltered, setDataStatsCCFiltered] = useState(undefined);
   const [pages, setPages] = useState(1);
-  const [dataUsers, setDataUsers] = useState([]);
-  const [tecnicoID, setTecnicoID] = useState("");
   const [page, setPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const handlePage = (newPage) => setPage(newPage);
+  const [centroCosto, setCentroCosto] = useState({ centro: "VTR RM" });
 
   const fetchData = async () => {
     try {
-      setIsSubmitting(true);
-      setIsLoading(true)
-      const res =
-        tecnicoID === ""
-          ? await getAstList(token, page)
-          : await getAstListUser(token, tecnicoID, page);
+      setIsLoading(true);
+      const res = await getAstList(token, page);
       setData(res.data);
       setPages(res.pages);
-      setIsSubmitting(false);
-      setIsLoading(false);
     } catch (error) {
-      console.log(error)
+      console.log(error);
+    } finally {
       setIsLoading(false);
-      setIsSubmitting(false);
+    }
+  };
+
+  const fetchDataAstByCC = async () => {
+    try {
+      const res = await getDataCCStats(token, centroCosto);
+      setDataStatsCCFiltered(res);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -72,19 +83,57 @@ function FormAstList() {
     </>
   );
 
-  const fetchAstUsers = async () => {
+  const fetchNotAstCC = async () => {
     try {
-      const res = await getAstUsers(token)
-      setDataUsers(res)
-    } catch(error){
-      console.log(error)
+      const res = await getNotAstCC(token);
+      setDataStatsCC(res);
+    } catch (error) {
+      console.log(error);
     }
-  }
-
-  const handleClear = async (e) => {
-    e.preventDefault();
-    setTecnicoID("");
   };
+
+  const toggleFilters = () => {
+    setShowFilters((prev) => !prev);
+  };
+
+  const getExcel = async () => {
+    setIsSubmitting(true);
+    try {
+      await getAstHistoricoExcel(token);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const downloadExcel = () => (
+    <Box
+      sx={{
+        width: "90%",
+        mb: 2,
+        display: "flex",
+        justifyContent: "start",
+      }}
+    >
+      <Button
+        variant="contained"
+        onClick={getExcel}
+        disabled={isSubmitting}
+        sx={{
+          width: 250,
+          height: 40,
+          fontWeight: "bold",
+          display: "flex",
+          justifyContent: "space-around",
+          borderRadius: "20px",
+          background: "#0b2f6d",
+        }}
+      >
+        {isSubmitting ? "Procesando...":"Descargar Excel"}
+      </Button>
+    </Box>
+  );
 
   const getButtons = () => (
     <>
@@ -112,11 +161,11 @@ function FormAstList() {
     </>
   );
 
-  const filterCard = () => (
+  const statsCard = () => (
     <>
       <Card
         sx={{
-          width: "70%",
+          width: "90%",
           overflow: "hidden",
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
@@ -129,100 +178,238 @@ function FormAstList() {
         <CardHeader
           title={
             <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              FILTRAR FORMULARIO POR TRABAJADOR
+              DATOS NO REALIZADAS
             </Typography>
           }
           avatar={<SearchIcon />}
+          action={
+            <Button
+              onClick={toggleFilters}
+              sx={{ color: "white", minWidth: "auto" }}
+            >
+              {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </Button>
+          }
           sx={{
             background: "#0b2f6d",
             color: "white",
             textAlign: "end",
           }}
         />
-        {dataUsers ? (
+        {showFilters && dataStatsCC ? (
           <CardContent>
-          <form>
-            <Grid
-              container
-              spacing={2}
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "column", md: "row" },
-                justifyContent: "space-around",
-                alignItems: "center",
-              }}
-            >
-              <Grid item xs={12} md={12} lg={6} sx={{width:'100%'}}>
-                <Autocomplete
-                  value={
-                    dataUsers.find((option) => option.value === tecnicoID) || null
-                  }
-                  onChange={(event, newValue) => {
-                    setTecnicoID(newValue ? newValue.value : "");
-                  }}
-                  options={dataUsers}
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Trabajador"
-                      required
-                      sx={{ width: "100%" }}
-                    />
-                  )}
-                />
-              </Grid>
-        
-              <Grid item xs={12} md={12} lg={3} sx={{width:'100%'}}>
-                <Button
-                  variant="contained"
-                  onClick={handleClear}
-                  sx={{
-                    fontWeight: "bold",
-                    background: "#0b2f6d",
-                    width: "100%",
-                    height: "40px",
-                  }}
-                >
-                  LIMPIAR FILTROS
-                </Button>
-              </Grid>
-        
-              <Grid item xs={12} md={12} lg={3} sx={{width:'100%'}}>
-                <Button
-                  variant="contained"
-                  onClick={fetchData}
-                  sx={{
-                    fontWeight: "bold",
-                    background: "#0b2f6d",
-                    width: "100%",
-                    height: "40px",
-                  }}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Procesando..." : "Actualizar"}
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        </CardContent>
-
+            <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+              {setTableStatsCC()}
+              {setTableStatsCCFilteres()}
+            </Box>
+          </CardContent>
         ) : null}
       </Card>
     </>
   );
 
+  const setTableStatsCC = () => (
+    <TableContainer
+      sx={{
+        maxHeight: 350,
+        minHeight: 250,
+        overflowY: "auto",
+      }}
+    >
+      <Table
+        sx={{ width: "100%", display: "column", justifyContent: "center" }}
+      >
+        {setTableHeadStatsCC()}
+        {setTableBodyStatsCC()}
+      </Table>
+    </TableContainer>
+  );
+
+  const setTableStatsCCFilteres = () => (
+    <TableContainer
+      sx={{
+        maxHeight: 350,
+        minHeight: 250,
+        overflowY: "auto",
+      }}
+    >
+      <Table
+        stickyHeader
+        sx={{ width: "100%", display: "column", justifyContent: "center" }}
+      >
+        {setTableHeadStatsCCFiltered()}
+        {setTableBodyStatsCCFiltered()}
+      </Table>
+    </TableContainer>
+  );
+
+  const setTableHeadStatsCC = () => (
+    <>
+      <TableHead>
+        <TableRow>
+          {["CANTIDAD NO REALIZADAS", "CENTRO COSTO"].map((header, index) => (
+            <TableCell
+              key={header}
+              align="center"
+              sx={{
+                background: "#0b2f6d",
+                fontWeight: "bold",
+                fontSize: "10px",
+                color: "#ffffff",
+              }}
+            >
+              {header}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    </>
+  );
+
+  const setTableHeadStatsCCFiltered = () => (
+    <>
+      <TableHead>
+        <TableRow>
+          {["NOMBRE", "RUT"].map((header, index) => (
+            <TableCell
+              key={header}
+              align="center"
+              sx={{
+                background: "#0b2f6d",
+                fontWeight: "bold",
+                fontSize: "10px",
+                color: "#ffffff",
+              }}
+            >
+              {header}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    </>
+  );
+
+  const setTableBodyStatsCC = () => (
+    <>
+      <TableBody
+        sx={{
+          display: "column",
+          justifyContent: "center",
+          backgroundColor: "#ffffff",
+        }}
+      >
+        {dataStatsCC && dataStatsCC.length > 0 ? (
+          dataStatsCC.map((row, index) => (
+            <TableRow
+              sx={{
+                textDecoration: "none",
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+              }}
+              key={index}
+              onClick={() => {
+                setCentroCosto({ centro: row.CENTRO_COSTO });
+              }}
+            >
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px", width: "10%" }} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.Q ? row.Q : "Sin Información"}
+                </Typography>
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px", width: "10%" }} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.CENTRO_COSTO ? row.CENTRO_COSTO : "Sin Información"}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={7} align="center">
+              No hay datos disponibles
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </>
+  );
+
+  const setTableBodyStatsCCFiltered = () => (
+    <>
+      <TableBody
+        sx={{
+          display: "column",
+          justifyContent: "center",
+          backgroundColor: "#ffffff",
+        }}
+      >
+        {dataStatsCCFiltered && dataStatsCCFiltered.length > 0 ? (
+          dataStatsCCFiltered.map((row, index) => (
+            <TableRow
+              sx={{
+                textDecoration: "none",
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+              }}
+              key={index}
+            >
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px", width: "10%" }} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.nombre ? row.nombre : "Sin Información"}
+                </Typography>
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px", width: "10%" }} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.numDoc ? row.numDoc : "Sin Información"}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={7} align="center">
+              No hay datos disponibles
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </>
+  );
+
+  const tableHeaders = [
+    { label: "FECHA", width: "25%" },
+    { label: "USUARIO", width: "25%" },
+    { label: "RUT", width: "25%" },
+    { label: "CENTRO COSTO", width: "25%" },
+  ];
+
   const setTableHead = () => (
     <>
       <TableHead>
         <TableRow>
-          {["FECHA", "USUARIO", "UBICACION", "ACCIONES"].map((header) => (
+          {tableHeaders.map((header, idx) => (
             <TableCell
-              key={header}
+              key={header.label}
               align="center"
-              sx={{ background: "#d8d8d8", fontWeight: "bold" }}
+              sx={{
+                background: "#d8d8d8",
+                fontWeight: "bold",
+                width: header.width,
+              }}
             >
-              {header}
+              {header.label}
             </TableCell>
           ))}
         </TableRow>
@@ -240,33 +427,37 @@ function FormAstList() {
       >
         {data && data.length > 0 ? (
           data.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
+            <TableRow
+              component={Link}
+              to={`/formulario-ast/${row.formID}`}
+              sx={{
+                textDecoration: "none",
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+              }}
+              key={index}
+            >
+              <TableCell align="center" sx={{ fontSize: "12px", width: "25%" }}>
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.fechaForm
                     ? extractDate(row.fechaForm)
                     : "Sin Información"}
                 </Typography>
               </TableCell>
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
+              <TableCell align="center" sx={{ fontSize: "12px", width: "25%" }}>
                 <Typography fontFamily={"initial"} variant="secondary">
-                  {row.usuario ? row.usuario.nombre : "Sin Información"}
+                  {row.nombre ? row.nombre : "Sin Información"}
                 </Typography>
               </TableCell>
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
+              <TableCell align="center" sx={{ fontSize: "12px", width: "25%" }}>
                 <Typography fontFamily={"initial"} variant="secondary">
-                  {row.lugar ? row.lugar : "Sin Información"}
+                  {row.numDoc ? row.numDoc : "Sin Información"}
                 </Typography>
               </TableCell>
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Link to={`/formulario-ast/${row.formID}`}>
-                  <Button
-                    variant="contained"
-                    sx={{ background: "#0b2f6d", borderRadius: "10px" }}
-                  >
-                    <VisibilityIcon />
-                  </Button>
-                </Link>
+              <TableCell align="center" sx={{ fontSize: "12px", width: "25%" }}>
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.CENTRO_COSTO ? row.CENTRO_COSTO : "Sin Información"}
+                </Typography>
               </TableCell>
             </TableRow>
           ))
@@ -283,15 +474,15 @@ function FormAstList() {
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    fetchAstUsers();
-  }, []);
-
-  useEffect(() => {
-    fetchData();
   }, [page]);
+
+  useEffect(() => {
+    fetchNotAstCC();
+  }, []);
+
+  useEffect(() => {
+    fetchDataAstByCC();
+  }, [centroCosto]);
 
   return (
     <Box
@@ -305,7 +496,8 @@ function FormAstList() {
         height: "100%",
       }}
     >
-      {filterCard()}
+      {statsCard()}
+      {downloadExcel()}
       {isLoading ? (
         <Box
           sx={{
@@ -317,19 +509,15 @@ function FormAstList() {
             justifyContent: "center",
           }}
         >
-          <Skeleton
-            variant="rounded"
-            width={"70%"}
-            height={"100%"}
-          />
+          <Skeleton variant="rounded" width={"70%"} height={"100%"} />
         </Box>
       ) : (
         <>
-          <Card sx={{ width: "70%", borderRadius: "10px", boxShadow: 5 }}>
+          <Card sx={{ width: "90%", borderRadius: "10px", boxShadow: 5 }}>
             <CardHeader
               title={
                 <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                  REGISTROS FORMULARIO AST
+                  DATOS AST REALIZADAS
                 </Typography>
               }
               sx={{

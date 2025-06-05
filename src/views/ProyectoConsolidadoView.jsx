@@ -19,9 +19,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { getInfoProyecto, getInfoSeguimiento, createSeguimientoProyecto } from "../api/onnetAPI";
-import { onLoad, onLoading, setMessage } from "../slices/formSlice";
+import { useParams, Link } from "react-router-dom";
+import {
+  getInfoProyecto,
+  getInfoSeguimiento,
+  createSeguimientoProyecto,
+  updateSeguimientoProyecto
+} from "../api/onnetAPI";
 
 function ProyectoConsolidadoView() {
   const { id } = useParams();
@@ -35,7 +39,12 @@ function ProyectoConsolidadoView() {
   const [data, setData] = useState(null);
   const [dataSeguimiento, setDataSeguimiento] = useState(null);
   const [showDetalle, setShowDetalle] = useState(true);
-  const [showCrearSeguimiento, setShowCrearSeguimiento] = useState(true); // Nuevo estado
+  const [toEdit, setToEdit] = useState(false);
+
+  const [validate, setValidate] = useState(false);
+
+  const [showCrearSeguimiento, setShowCrearSeguimiento] = useState(true);
+
   const [form, setForm] = useState({
     proyecto: "",
     responsable: "",
@@ -49,7 +58,6 @@ function ProyectoConsolidadoView() {
 
   const options = [
     { label: "Eliminado", value: "Eliminado" },
-    { label: "Eliminar", value: "Eliminar" },
     { label: "En Diseño", value: "En Diseño" },
     { label: "En gestión CTTA", value: "En gestión CTTA" },
     { label: "En gestión DMN", value: "En gestión DMN" },
@@ -58,7 +66,6 @@ function ProyectoConsolidadoView() {
     { label: "En validación ONF", value: "En validación ONF" },
     { label: "Entregado", value: "Entregado" },
     { label: "Finalizado", value: "Finalizado" },
-    { label: "REVISAR", value: "REVISAR" },
     { label: "Sin interes comercial", value: "Sin interes comercial" },
   ];
 
@@ -118,7 +125,7 @@ function ProyectoConsolidadoView() {
     "Orden Construccion",
     "Fecha Permiso Obtenido",
     "Empresa Adjudicada",
-    "Prioridad",
+    "Prioridad"
   ];
 
   const fetchData = async () => {
@@ -141,10 +148,39 @@ function ProyectoConsolidadoView() {
       const response = await getInfoSeguimiento(token, id);
       setDataSeguimiento(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
       setIsLoadingSeguimiento(false);
     }
+  };
+
+  const handleEdit = () => {
+    setForm({
+      proyecto: dataSeguimiento.proyecto,
+      responsable: dataSeguimiento.responsable,
+      estado_dmn: dataSeguimiento.estado_dmn,
+      visita_1: dataSeguimiento.visita_1,
+      visita_2: dataSeguimiento.visita_2,
+      visita_3: dataSeguimiento.visita_3,
+      observacion: dataSeguimiento.observacion,
+      userID: dataSeguimiento.userID || user_id,
+      id: dataSeguimiento.id,
+    });
+    setToEdit(true);
+    setShowCrearSeguimiento(true);
+  };
+
+  const clearForm = () => {
+    setForm({
+      proyecto: id,
+      responsable: "",
+      estado_dmn: "",
+      visita_1: "",
+      visita_2: "",
+      visita_3: "",
+      observacion: "",
+      userID: user_id,
+    });
   };
 
   const onSubmitForm = async (event) => {
@@ -154,24 +190,32 @@ function ProyectoConsolidadoView() {
       const response = await createSeguimientoProyecto(form, token);
       setOpen(true);
       setMessage("Seguimiento creado exitosamente.");
-      setForm({
-        proyecto: id,
-        responsable: "",
-        estado_dmn: "",
-        visita_1: "",
-        visita_2: "",
-        visita_3: "",
-        observacion: "",
-        userID: user_id,
-      });
-      console.log(response);
+      clearForm();
     } catch (error) {
-      console.error("Error submitting form:", error);
       setOpen(true);
       setMessage("Failed to submit form.");
     } finally {
       fetchDataSeguimiento();
       setIsSubmitting(false);
+    }
+  };
+
+  const onEditForm = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const response = await updateSeguimientoProyecto(form, token);
+      console.log(response);
+      setOpen(true);
+      setMessage("Seguimiento actualizado exitosamente.");
+      clearForm();
+    } catch (error) {
+      setOpen(true);
+      setMessage("Failed to submit form.");
+    } finally {
+      fetchDataSeguimiento();
+      setIsSubmitting(false);
+      setToEdit(false);
     }
   };
 
@@ -184,8 +228,9 @@ function ProyectoConsolidadoView() {
   }, []);
 
   useEffect(() => {
-    console.log(dataSeguimiento)
-  }, [dataSeguimiento]);
+    if (dataSeguimiento) {
+      dataSeguimiento.userID = user_id ? setValidate(true) : setValidate(false) ;
+    }}, [dataSeguimiento, user_id]);
 
   useEffect(() => {
     setForm((prev) => ({
@@ -480,40 +525,201 @@ function ProyectoConsolidadoView() {
                   >
                     <Box component="tbody">
                       <Box component="tr">
-                        <Box component="td" sx={{ fontWeight: "bold", p: 1, bgcolor: "#f5f5f5", borderBottom: 1, borderColor: "#eee" }}>Responsable</Box>
-                        <Box component="td" sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}>{dataSeguimiento.responsable || <em>Sin información</em>}</Box>
-                        <Box component="td" sx={{ fontWeight: "bold", p: 1, bgcolor: "#f5f5f5", borderBottom: 1, borderColor: "#eee" }}>Usuario</Box>
-                        <Box component="td" sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}>{dataSeguimiento.usuario?.nombre || <em>Sin información</em>}</Box>
-                      </Box>
-                      <Box component="tr">
-                        <Box component="td" sx={{ fontWeight: "bold", p: 1, bgcolor: "#f5f5f5", borderBottom: 1, borderColor: "#eee" }}>Estado DMN</Box>
-                        <Box component="td" sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}>{dataSeguimiento.estado_dmn || <em>Sin información</em>}</Box>
-                        <Box component="td" sx={{ fontWeight: "bold", p: 1, bgcolor: "#f5f5f5", borderBottom: 1, borderColor: "#eee" }}>Fecha Registro</Box>
-                        <Box component="td" sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}>
-                          {dataSeguimiento.fecha_registro ? new Date(dataSeguimiento.fecha_registro).toLocaleDateString() : <em>Sin información</em>}
+                        <Box
+                          component="td"
+                          sx={{
+                            fontWeight: "bold",
+                            p: 1,
+                            bgcolor: "#f5f5f5",
+                            borderBottom: 1,
+                            borderColor: "#eee",
+                          }}
+                        >
+                          Responsable
+                        </Box>
+                        <Box
+                          component="td"
+                          sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}
+                        >
+                          {dataSeguimiento.responsable || (
+                            <em>Sin información</em>
+                          )}
+                        </Box>
+                        <Box
+                          component="td"
+                          sx={{
+                            fontWeight: "bold",
+                            p: 1,
+                            bgcolor: "#f5f5f5",
+                            borderBottom: 1,
+                            borderColor: "#eee",
+                          }}
+                        >
+                          Creado por
+                        </Box>
+                        <Box
+                          component="td"
+                          sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}
+                        >
+                          {dataSeguimiento.usuario?.nombre || (
+                            <em>Sin información</em>
+                          )}
                         </Box>
                       </Box>
                       <Box component="tr">
-                        <Box component="td" sx={{ fontWeight: "bold", p: 1, bgcolor: "#f5f5f5", borderBottom: 1, borderColor: "#eee" }}>Visita 1</Box>
-                        <Box component="td" sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}>
-                          {dataSeguimiento.visita_1 ? new Date(dataSeguimiento.visita_1).toLocaleDateString() : <em>Sin información</em>}
+                        <Box
+                          component="td"
+                          sx={{
+                            fontWeight: "bold",
+                            p: 1,
+                            bgcolor: "#f5f5f5",
+                            borderBottom: 1,
+                            borderColor: "#eee",
+                          }}
+                        >
+                          Estado DMN
                         </Box>
-                        <Box component="td" sx={{ fontWeight: "bold", p: 1, bgcolor: "#f5f5f5", borderBottom: 1, borderColor: "#eee" }}>Visita 2</Box>
-                        <Box component="td" sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}>
-                          {dataSeguimiento.visita_2 ? new Date(dataSeguimiento.visita_2).toLocaleDateString() : <em>Sin información</em>}
+                        <Box
+                          component="td"
+                          sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}
+                        >
+                          {dataSeguimiento.estado_dmn || (
+                            <em>Sin información</em>
+                          )}
+                        </Box>
+                        <Box
+                          component="td"
+                          sx={{
+                            fontWeight: "bold",
+                            p: 1,
+                            bgcolor: "#f5f5f5",
+                            borderBottom: 1,
+                            borderColor: "#eee",
+                          }}
+                        >
+                          Fecha Creación
+                        </Box>
+                        <Box
+                          component="td"
+                          sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}
+                        >
+                          {dataSeguimiento.fecha_registro ? (
+                            new Date(
+                              dataSeguimiento.fecha_registro
+                            ).toLocaleDateString()
+                          ) : (
+                            <em>Sin información</em>
+                          )}
                         </Box>
                       </Box>
                       <Box component="tr">
-                        <Box component="td" sx={{ fontWeight: "bold", p: 1, bgcolor: "#f5f5f5", borderBottom: 1, borderColor: "#eee" }}>Visita 3</Box>
-                        <Box component="td" sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}>
-                          {dataSeguimiento.visita_3 ? new Date(dataSeguimiento.visita_3).toLocaleDateString() : <em>Sin información</em>}
+                        <Box
+                          component="td"
+                          sx={{
+                            fontWeight: "bold",
+                            p: 1,
+                            bgcolor: "#f5f5f5",
+                            borderBottom: 1,
+                            borderColor: "#eee",
+                          }}
+                        >
+                          Visita 1
                         </Box>
-                        <Box component="td" sx={{ fontWeight: "bold", p: 1, bgcolor: "#f5f5f5", borderBottom: 1, borderColor: "#eee" }}>Observación</Box>
-                        <Box component="td" sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}>
-                          {dataSeguimiento.observacion || <em>Sin información</em>}
+                        <Box
+                          component="td"
+                          sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}
+                        >
+                          {dataSeguimiento.visita_1 ? (
+                            new Date(
+                              dataSeguimiento.visita_1
+                            ).toLocaleDateString()
+                          ) : (
+                            <em>Sin información</em>
+                          )}
+                        </Box>
+                        <Box
+                          component="td"
+                          sx={{
+                            fontWeight: "bold",
+                            p: 1,
+                            bgcolor: "#f5f5f5",
+                            borderBottom: 1,
+                            borderColor: "#eee",
+                          }}
+                        >
+                          Visita 2
+                        </Box>
+                        <Box
+                          component="td"
+                          sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}
+                        >
+                          {dataSeguimiento.visita_2 ? (
+                            new Date(
+                              dataSeguimiento.visita_2
+                            ).toLocaleDateString()
+                          ) : (
+                            <em>Sin información</em>
+                          )}
+                        </Box>
+                      </Box>
+                      <Box component="tr">
+                        <Box
+                          component="td"
+                          sx={{
+                            fontWeight: "bold",
+                            p: 1,
+                            bgcolor: "#f5f5f5",
+                            borderBottom: 1,
+                            borderColor: "#eee",
+                          }}
+                        >
+                          Visita 3
+                        </Box>
+                        <Box
+                          component="td"
+                          sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}
+                        >
+                          {dataSeguimiento.visita_3 ? (
+                            new Date(
+                              dataSeguimiento.visita_3
+                            ).toLocaleDateString()
+                          ) : (
+                            <em>Sin información</em>
+                          )}
+                        </Box>
+                        <Box
+                          component="td"
+                          sx={{
+                            fontWeight: "bold",
+                            p: 1,
+                            bgcolor: "#f5f5f5",
+                            borderBottom: 1,
+                            borderColor: "#eee",
+                          }}
+                        >
+                          Observación
+                        </Box>
+                        <Box
+                          component="td"
+                          sx={{ p: 1, borderBottom: 1, borderColor: "#eee" }}
+                        >
+                          {dataSeguimiento.observacion || (
+                            <em>Sin información</em>
+                          )}
                         </Box>
                       </Box>
                     </Box>
+                  </Box>
+                  <Box sx={{ mt: 2, textAlign: "end" }}>
+                    <Button
+                      onClick={handleEdit}
+                      disabled={!validate}
+                      variant="contained"
+                      color="error"
+                      sx={{ width: "150px", borderRadius: "20px" }}
+                    >
+                      EDITAR
+                    </Button>
                   </Box>
                 </CardContent>
               </Card>
@@ -529,162 +735,356 @@ function ProyectoConsolidadoView() {
           )}
         </>
       )}
-      <Box sx={{ width: "90%", mt: 2 }}>
-        <Card sx={{ borderRadius: "20px" }}>
-          <CardHeader
-            avatar={<AddCircleOutlineIcon />}
-            title={
-              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                Crear Seguimiento
-              </Typography>
-            }
-            action={
-              <Button
-                onClick={toggleCrearSeguimiento}
-                sx={{ color: "white", minWidth: "auto" }}
-              >
-                {showCrearSeguimiento ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-              </Button>
-            }
-            sx={{
-              background: "#0b2f6d",
-              color: "white",
-              textAlign: "end",
-            }}
-          />
-          {showCrearSeguimiento && (
-            <CardContent>
-              <form onSubmit={onSubmitForm}>
-                <Box sx={{ mb: 2 }}>
-                  <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
-                    {/* Columna 1 */}
-                    <Box>
-                      <InputLabel htmlFor="proyecto">Proyecto</InputLabel>
-                      <TextField
-                        value={form.proyecto}
-                        name="proyecto"
-                        id="proyecto"
-                        disabled
-                        fullWidth
-                        size="small"
-                      />
-                    </Box>
-                    <Box>
-                      <InputLabel htmlFor="responsable">Responsable</InputLabel>
-                      <TextField
-                        value={form.responsable}
-                        name="responsable"
-                        id="responsable"
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, responsable: e.target.value }))
-                        }
-                        required
-                        fullWidth
-                        size="small"
-                      />
-                    </Box>
-                    <Box>
-                      <InputLabel id="estado-dmn-label">Estado DMN</InputLabel>
-                      <Select
-                        labelId="estado-dmn-label"
-                        id="estado_dmn"
-                        value={form.estado_dmn}
-                        name="estado_dmn"
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, estado_dmn: e.target.value }))
-                        }
-                        required
-                        fullWidth
-                        size="small"
-                      >
-                        {options.map((opt) => (
-                          <MenuItem key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </Box>
-                    <Box>
-                      <InputLabel htmlFor="visita_1">Visita 1</InputLabel>
-                      <TextField
-                        type="date"
-                        value={form.visita_1}
-                        name="visita_1"
-                        id="visita_1"
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, visita_1: e.target.value }))
-                        }
-                        InputLabelProps={{ shrink: true }}
-                        fullWidth
-                        size="small"
-                      />
-                    </Box>
-                    <Box>
-                      <InputLabel htmlFor="visita_2">Visita 2</InputLabel>
-                      <TextField
-                        type="date"
-                        value={form.visita_2}
-                        name="visita_2"
-                        id="visita_2"
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, visita_2: e.target.value }))
-                        }
-                        InputLabelProps={{ shrink: true }}
-                        fullWidth
-                        size="small"
-                      />
-                    </Box>
-                    <Box>
-                      <InputLabel htmlFor="visita_3">Visita 3</InputLabel>
-                      <TextField
-                        type="date"
-                        value={form.visita_3}
-                        name="visita_3"
-                        id="visita_3"
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, visita_3: e.target.value }))
-                        }
-                        InputLabelProps={{ shrink: true }}
-                        fullWidth
-                        size="small"
-                      />
-                    </Box>
-                  </Box>
-                  {/* Observación en una sola fila */}
-                  <Box sx={{ mt: 2 }}>
-                    <InputLabel htmlFor="observacion">Observación</InputLabel>
-                    <TextField
-                      value={form.observacion}
-                      name="observacion"
-                      id="observacion"
-                      onChange={(e) =>
-                        setForm((f) => ({ ...f, observacion: e.target.value }))
-                      }
-                      multiline
-                      minRows={2}
-                      fullWidth
-                      size="small"
-                    />
-                  </Box>
-                  {/* userID is included in form state but not shown */}
-                </Box>
+
+      {dataSeguimiento ? null : (
+        <Box sx={{ width: "90%", mt: 2 }}>
+          <Card sx={{ borderRadius: "20px" }}>
+            <CardHeader
+              avatar={<AddCircleOutlineIcon />}
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                  Crear Seguimiento
+                </Typography>
+              }
+              action={
                 <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  variant="contained"
-                  sx={{
-                    background: "#0b2f6d",
-                    borderRadius: "20px",
-                    width: "200px",
-                  }}
+                  onClick={toggleCrearSeguimiento}
+                  sx={{ color: "white", minWidth: "auto" }}
                 >
-                  {isSubmitting ? "Enviando..." : "Crear Seguimiento"}
+                  {showCrearSeguimiento ? (
+                    <ExpandLessIcon />
+                  ) : (
+                    <ExpandMoreIcon />
+                  )}
                 </Button>
-              </form>
-            </CardContent>
-          )}
-        </Card>
-      </Box>
+              }
+              sx={{
+                background: "#0b2f6d",
+                color: "white",
+                textAlign: "end",
+              }}
+            />
+            {showCrearSeguimiento && (
+              <CardContent>
+                <form onSubmit={onSubmitForm}>
+                  <Box sx={{ mb: 2 }}>
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: 2,
+                      }}
+                    >
+                      {/* Columna 1 */}
+                      <Box>
+                        <InputLabel htmlFor="proyecto">Proyecto</InputLabel>
+                        <TextField
+                          value={form.proyecto}
+                          name="proyecto"
+                          id="proyecto"
+                          disabled
+                          fullWidth
+                          size="small"
+                        />
+                      </Box>
+                      <Box>
+                        <InputLabel htmlFor="responsable">
+                          Responsable
+                        </InputLabel>
+                        <TextField
+                          value={form.responsable}
+                          name="responsable"
+                          id="responsable"
+                          onChange={(e) =>
+                            setForm((f) => ({
+                              ...f,
+                              responsable: e.target.value,
+                            }))
+                          }
+                          required
+                          fullWidth
+                          size="small"
+                        />
+                      </Box>
+                      <Box>
+                        <InputLabel id="estado-dmn-label">
+                          Estado DMN
+                        </InputLabel>
+                        <Select
+                          labelId="estado-dmn-label"
+                          id="estado_dmn"
+                          value={form.estado_dmn}
+                          name="estado_dmn"
+                          onChange={(e) =>
+                            setForm((f) => ({
+                              ...f,
+                              estado_dmn: e.target.value,
+                            }))
+                          }
+                          required
+                          fullWidth
+                          size="small"
+                        >
+                          {options.map((opt) => (
+                            <MenuItem key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </Box>
+                      <Box>
+                        <InputLabel htmlFor="visita_1">Visita 1</InputLabel>
+                        <TextField
+                          type="date"
+                          value={form.visita_1}
+                          name="visita_1"
+                          id="visita_1"
+                          onChange={(e) =>
+                            setForm((f) => ({ ...f, visita_1: e.target.value }))
+                          }
+                          InputLabelProps={{ shrink: true }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Box>
+                      <Box>
+                        <InputLabel htmlFor="visita_2">Visita 2</InputLabel>
+                        <TextField
+                          type="date"
+                          value={form.visita_2}
+                          name="visita_2"
+                          id="visita_2"
+                          onChange={(e) =>
+                            setForm((f) => ({ ...f, visita_2: e.target.value }))
+                          }
+                          InputLabelProps={{ shrink: true }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Box>
+                      <Box>
+                        <InputLabel htmlFor="visita_3">Visita 3</InputLabel>
+                        <TextField
+                          type="date"
+                          value={form.visita_3}
+                          name="visita_3"
+                          id="visita_3"
+                          onChange={(e) =>
+                            setForm((f) => ({ ...f, visita_3: e.target.value }))
+                          }
+                          InputLabelProps={{ shrink: true }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Box>
+                    </Box>
+                    {/* Observación en una sola fila */}
+                    <Box sx={{ mt: 2 }}>
+                      <InputLabel htmlFor="observacion">Observación</InputLabel>
+                      <TextField
+                        value={form.observacion}
+                        name="observacion"
+                        id="observacion"
+                        onChange={(e) =>
+                          setForm((f) => ({
+                            ...f,
+                            observacion: e.target.value,
+                          }))
+                        }
+                        multiline
+                        minRows={2}
+                        fullWidth
+                        size="small"
+                      />
+                    </Box>
+                    {/* userID is included in form state but not shown */}
+                  </Box>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    variant="contained"
+                    sx={{
+                      background: "#0b2f6d",
+                      borderRadius: "20px",
+                      width: "250px",
+                    }}
+                  >
+                    {isSubmitting ? "Enviando..." : "Crear Seguimiento"}
+                  </Button>
+                </form>
+              </CardContent>
+            )}
+          </Card>
+        </Box>
+      )}
+      {toEdit && (
+        <Box sx={{ width: "90%", mt: 2 }}>
+          <Card sx={{ borderRadius: "20px" }}>
+            <CardHeader
+              avatar={<AddCircleOutlineIcon />}
+              title={
+                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+                  Actualizar Seguimiento
+                </Typography>
+              }
+
+              sx={{
+                background: "#0b2f6d",
+                color: "white",
+                textAlign: "end",
+              }}
+            />
+            <CardContent>
+                <form onSubmit={onEditForm}>
+                  <Box sx={{ mb: 2 }}>
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: 2,
+                      }}
+                    >
+                      {/* Columna 1 */}
+                      <Box>
+                        <InputLabel htmlFor="proyecto">Proyecto</InputLabel>
+                        <TextField
+                          value={form.proyecto}
+                          name="proyecto"
+                          id="proyecto"
+                          disabled
+                          fullWidth
+                          size="small"
+                        />
+                      </Box>
+                      <Box>
+                        <InputLabel htmlFor="responsable">
+                          Responsable
+                        </InputLabel>
+                        <TextField
+                          value={form.responsable}
+                          name="responsable"
+                          id="responsable"
+                          onChange={(e) =>
+                            setForm((f) => ({
+                              ...f,
+                              responsable: e.target.value,
+                            }))
+                          }
+                          required
+                          fullWidth
+                          size="small"
+                        />
+                      </Box>
+                      <Box>
+                        <InputLabel id="estado-dmn-label">
+                          Estado DMN
+                        </InputLabel>
+                        <Select
+                          labelId="estado-dmn-label"
+                          id="estado_dmn"
+                          value={form.estado_dmn}
+                          name="estado_dmn"
+                          onChange={(e) =>
+                            setForm((f) => ({
+                              ...f,
+                              estado_dmn: e.target.value,
+                            }))
+                          }
+                          required
+                          fullWidth
+                          size="small"
+                        >
+                          {options.map((opt) => (
+                            <MenuItem key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </Box>
+                      <Box>
+                        <InputLabel htmlFor="visita_1">Visita 1</InputLabel>
+                        <TextField
+                          type="date"
+                          value={form.visita_1}
+                          name="visita_1"
+                          id="visita_1"
+                          onChange={(e) =>
+                            setForm((f) => ({ ...f, visita_1: e.target.value }))
+                          }
+                          InputLabelProps={{ shrink: true }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Box>
+                      <Box>
+                        <InputLabel htmlFor="visita_2">Visita 2</InputLabel>
+                        <TextField
+                          type="date"
+                          value={form.visita_2}
+                          name="visita_2"
+                          id="visita_2"
+                          onChange={(e) =>
+                            setForm((f) => ({ ...f, visita_2: e.target.value }))
+                          }
+                          InputLabelProps={{ shrink: true }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Box>
+                      <Box>
+                        <InputLabel htmlFor="visita_3">Visita 3</InputLabel>
+                        <TextField
+                          type="date"
+                          value={form.visita_3}
+                          name="visita_3"
+                          id="visita_3"
+                          onChange={(e) =>
+                            setForm((f) => ({ ...f, visita_3: e.target.value }))
+                          }
+                          InputLabelProps={{ shrink: true }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Box>
+                    </Box>
+                    {/* Observación en una sola fila */}
+                    <Box sx={{ mt: 2 }}>
+                      <InputLabel htmlFor="observacion">Observación</InputLabel>
+                      <TextField
+                        value={form.observacion}
+                        name="observacion"
+                        id="observacion"
+                        onChange={(e) =>
+                          setForm((f) => ({
+                            ...f,
+                            observacion: e.target.value,
+                          }))
+                        }
+                        multiline
+                        minRows={2}
+                        fullWidth
+                        size="small"
+                      />
+                    </Box>
+                    {/* userID is included in form state but not shown */}
+                  </Box>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    variant="contained"
+                    sx={{
+                      background: "#0b2f6d",
+                      borderRadius: "20px",
+                      width: "250px",
+                    }}
+                  >
+                    {isSubmitting ? "Enviando..." : "Actualizar Seguimiento"}
+                  </Button>
+                </form>
+              </CardContent>
+          </Card>
+        </Box>
+      )}
     </Box>
   );
 }

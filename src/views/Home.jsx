@@ -188,7 +188,7 @@ function Home() {
       title: "Gestiona y visualiza Proyectos",
       link: "/proyectos-onnet",
       body: "Acá podrás visualizar los proyectos consolidados de OnNet",
-      moduloID: 1,
+      moduloID: 24,
     },
     {
       head: "Carga Planilla Construcción",
