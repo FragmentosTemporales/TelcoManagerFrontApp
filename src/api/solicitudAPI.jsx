@@ -48,6 +48,21 @@ export const getSolicitudesByUser = async (token, page) => {
   }
 };
 
+export const getSolicitudePendientes = async (token) => {
+  try {
+    const url = `${baseUrl}/get-solicitudes-pendientes`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const getSolicitudeStats = async (token) => {
   try {
     const url = `${baseUrl}/get-stats-solicitudes`;

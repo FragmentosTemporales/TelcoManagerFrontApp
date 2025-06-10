@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import SearchIcon from "@mui/icons-material/Search";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -30,6 +31,7 @@ import {
   getNotAstCC,
   getDataCCStats,
   getAstHistoricoExcel,
+  getAstUsers,
 } from "../api/prevencionAPI";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
@@ -38,20 +40,24 @@ function FormAstList() {
   const authState = useSelector((state) => state.auth);
   const { token } = authState;
   const [data, setData] = useState(undefined);
+  const [dataUsers, setDataUsers] = useState(undefined);
   const [dataStatsCC, setDataStatsCC] = useState(undefined);
   const [dataStatsCCFiltered, setDataStatsCCFiltered] = useState(undefined);
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showStats, setShowStats] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const handlePage = (newPage) => setPage(newPage);
   const [centroCosto, setCentroCosto] = useState({ centro: "VTR RM" });
+  const [form, setForm] = useState({ fecha: "", numDoc: "" });
+  const [selectedUser, setSelectedUser] = useState(null); // Nuevo estado para Autocomplete
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const res = await getAstList(token, page);
+      const res = await getAstList(token, page, form);
       setData(res.data);
       setPages(res.pages);
     } catch (error) {
@@ -61,10 +67,41 @@ function FormAstList() {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetchData();
+  };
+
+  const handleClear = async (e) => {
+    e.preventDefault();
+    try {
+      setForm({ fecha: "", numDoc: "" });
+      setSelectedUser(null); // Limpiar Autocomplete
+      setPage(1); // Reset to the first page
+      await getAstList(token, 1, { fecha: "", numDoc: "" }).then((res) => {
+        setData(res.data);
+        setPages(res.pages);
+      });
+    } catch (error) {
+      console.log(error);
+      setOpen(true);
+    }
+  };
+
   const fetchDataAstByCC = async () => {
     try {
       const res = await getDataCCStats(token, centroCosto);
       setDataStatsCCFiltered(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchDataUsers = async () => {
+    try {
+      const res = await getAstUsers(token);
+      console.log(res);
+      setDataUsers(res);
     } catch (error) {
       console.log(error);
     }
@@ -94,6 +131,10 @@ function FormAstList() {
 
   const toggleFilters = () => {
     setShowFilters((prev) => !prev);
+  };
+
+  const toggleStats = () => {
+    setShowStats((prev) => !prev);
   };
 
   const getExcel = async () => {
@@ -130,7 +171,7 @@ function FormAstList() {
           background: "#0b2f6d",
         }}
       >
-        {isSubmitting ? "Procesando...":"Descargar Excel"}
+        {isSubmitting ? "Procesando..." : "Descargar Excel"}
       </Button>
     </Box>
   );
@@ -161,6 +202,117 @@ function FormAstList() {
     </>
   );
 
+  const filterCard = () => (
+    <>
+      <Card
+        sx={{
+          width: "90%",
+          overflow: "hidden",
+          backgroundColor: "#f5f5f5",
+          boxShadow: 5,
+          textAlign: "center",
+          borderRadius: "10px",
+          mt: 2,
+          mb: 2,
+        }}
+      >
+        <CardHeader
+          title={
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+              FILTRAR POR
+            </Typography>
+          }
+          avatar={<SearchIcon />}
+          action={
+            <Button
+              onClick={toggleFilters}
+              sx={{ color: "white", minWidth: "auto" }}
+            >
+              {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </Button>
+          }
+          sx={{
+            background: "#0b2f6d",
+            color: "white",
+            textAlign: "end",
+          }}
+        />
+        {showFilters && dataUsers ? (
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+                <Autocomplete
+                  options={dataUsers || []}
+                  getOptionLabel={(option) => option.label || ""}
+                  isOptionEqualToValue={(option, value) => option.value === value.value}
+                  value={selectedUser} // Controlar valor
+                  onChange={(event, value) => {
+                    setSelectedUser(value); // Actualizar estado
+                    setForm((prev) => ({
+                      ...prev,
+                      numDoc: value ? value.value : "",
+                    }));
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Seleccionar Usuario"
+                      variant="outlined"
+                      size="small"
+                    />
+                  )}
+                  sx={{ width: "30%" }}
+
+                />
+                <TextField
+                  label="Fecha"
+                  type="date"
+                  variant="outlined"
+                  size="small"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={(e) => {
+                    setForm((prev) => ({
+                      ...prev,
+                      fecha: e.target.value,
+                    }));
+                  }}
+                  sx={{ width: "30%" }}
+                  value={form.fecha}
+                />
+              </Box>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  mt: 2,
+                  background: "#0b2f6d",
+                  width: "200px",
+                  borderRadius: "20px",
+                }}
+              >
+                Filtrar
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={handleClear}
+                sx={{
+                  mt: 2,
+                  ml: 2,
+                  width: "200px",
+                  borderRadius: "20px",
+                }}
+              >
+                Limpiar Filtros
+              </Button>
+            </form>
+          </CardContent>
+        ) : null}
+      </Card>
+    </>
+  );
+
   const statsCard = () => (
     <>
       <Card
@@ -181,13 +333,13 @@ function FormAstList() {
               DATOS NO REALIZADAS
             </Typography>
           }
-          avatar={<SearchIcon />}
+          avatar={<BarChartIcon />}
           action={
             <Button
-              onClick={toggleFilters}
+              onClick={toggleStats}
               sx={{ color: "white", minWidth: "auto" }}
             >
-              {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              {showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </Button>
           }
           sx={{
@@ -196,7 +348,7 @@ function FormAstList() {
             textAlign: "end",
           }}
         />
-        {showFilters && dataStatsCC ? (
+        {showStats && dataStatsCC ? (
           <CardContent>
             <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
               {setTableStatsCC()}
@@ -481,8 +633,16 @@ function FormAstList() {
   }, []);
 
   useEffect(() => {
+    fetchDataUsers();
+  }, []);
+
+  useEffect(() => {
     fetchDataAstByCC();
   }, [centroCosto]);
+
+  useEffect(() => {
+    console.log(form);
+  }, [form]);
 
   return (
     <Box
@@ -497,6 +657,7 @@ function FormAstList() {
       }}
     >
       {statsCard()}
+      {filterCard()}
       {downloadExcel()}
       {isLoading ? (
         <Box
@@ -509,7 +670,7 @@ function FormAstList() {
             justifyContent: "center",
           }}
         >
-          <Skeleton variant="rounded" width={"70%"} height={"100%"} />
+          <Skeleton variant="rounded" width={"90%"} height={"100%"} />
         </Box>
       ) : (
         <>

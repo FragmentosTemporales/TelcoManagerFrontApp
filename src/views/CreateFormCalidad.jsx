@@ -76,7 +76,7 @@ import {
         const response = await createFormCalidad(formData, token);
         dispatch(onLoad(response));
         setOpen(true);
-        navigate("/solicitudes");
+        navigate("/modulo:solicitudes");
       } catch (error) {
         dispatch(setMessage(error));
         setOpen(true);

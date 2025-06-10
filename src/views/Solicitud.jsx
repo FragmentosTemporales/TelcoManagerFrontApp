@@ -1408,7 +1408,7 @@ function Solicitud() {
               mx: "auto",
             }}
           >
-            <Link to="/solicitudes">
+            <Link to="/modulo:solicitudes">
               <Button
                 variant="contained"
                 sx={{ background: "#0b2f6d", borderRadius: "20px" }}

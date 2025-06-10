@@ -78,7 +78,7 @@ function FormFlota() {
       const response = await createFormFlota(formData, token);
       dispatch(onLoad(response));
       setOpen(true);
-      navigate("/solicitudes");
+      navigate("/modulo:solicitudes");
     } catch (error) {
       dispatch(setMessage(error));
       setOpen(true);

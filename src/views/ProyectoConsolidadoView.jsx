@@ -228,8 +228,10 @@ function ProyectoConsolidadoView() {
   }, []);
 
   useEffect(() => {
-    if (dataSeguimiento) {
+    if (dataSeguimiento !== null) {
       dataSeguimiento.userID = user_id ? setValidate(true) : setValidate(false) ;
+      console.log("User ID:", user_id);
+      console.log("User ID DATA:", dataSeguimiento.userID);
     }}, [dataSeguimiento, user_id]);
 
   useEffect(() => {
@@ -238,7 +240,7 @@ function ProyectoConsolidadoView() {
       proyecto: id,
       userID: user_id,
     }));
-  }, [id, user_id]);
+  }, [dataSeguimiento]);
 
   const toggleDetalle = () => setShowDetalle((prev) => !prev);
   const toggleCrearSeguimiento = () => setShowCrearSeguimiento((prev) => !prev); // Nueva función

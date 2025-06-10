@@ -69,7 +69,7 @@ import {
         const response = await createFormRRHH(formData, token);
         dispatch(onLoad(response));
         setOpen(true);
-        navigate("/solicitudes");
+        navigate("/modulo:solicitudes");
       } catch (error) {
         dispatch(setMessage(error));
         setOpen(true);

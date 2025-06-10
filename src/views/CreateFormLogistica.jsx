@@ -68,7 +68,7 @@ import {
         const response = await createFormLogistica(formData, token);
         dispatch(onLoad(response));
         setOpen(true);
-        navigate("/solicitudes");
+        navigate("/modulo:solicitudes");
       } catch (error) {
         dispatch(setMessage(error));
         setOpen(true);

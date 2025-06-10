@@ -43,6 +43,7 @@ import ErrorHandler from "./utils/404NotFound";
 import ProyectosOnNetView from "./views/ProyectosConsolidadosView";
 import ProyectoConsolidadoView from "./views/ProyectoConsolidadoView";
 import LoadConstruccion from "./views/PlanillaConstruccion";
+import CreateReparacionView from "./views/CreateReparacion";
 
 function App() {
   return (
@@ -51,9 +52,9 @@ function App() {
       <Routes>
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<Home />} />
-          <Route path="/charts" element={<Charts />} />
+          <Route path="/modulo:charts" element={<Charts />} />
           <Route path="/mis-solicitudes" element={<AmonesatacionesViewer />} />
-          <Route path="/solicitudes" element={<Solicitudes />} />
+          <Route path="/modulo:solicitudes" element={<Solicitudes />} />
           <Route path="/solicitud/:solicitud_id" element={<Solicitud />} />
           <Route path="/create" element={<CreateArea />} />
           <Route path="/FLOTA/:logID" element={<FormFlota />} />
@@ -63,7 +64,7 @@ function App() {
           <Route path="/OPERACIONES/:logID" element={<FormOperaciones />} />
           <Route path="/LOGISTICA/:logID" element={<FormLogistica />} />
           <Route path="/notificaciones" element={<NotificacionesView />} />
-          <Route path="/reversa" element={<ReversaView />} />
+          <Route path="/modulo:reversa" element={<ReversaView />} />
           <Route path="/createzone" element={<CreateZone />} />
           <Route path="/objetivos" element={<ObjetivosView />} />
           <Route path="/proyectos" element={<ProyectosView />} />
@@ -87,6 +88,7 @@ function App() {
           <Route path="/proyectos-onnet" element={<ProyectosOnNetView />} />
           <Route path="/consolidado/:id" element={<ProyectoConsolidadoView />} />
           <Route path="/carga-construccion" element={<LoadConstruccion />} />
+          <Route path="/modulo:crear-reparacion" element={<CreateReparacionView />} />
           <Route
             path="/componente-asignado/:componenteID"
             element={<ComponenteAsignadoView />}

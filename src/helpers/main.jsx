@@ -2,7 +2,7 @@ const extractDate = (gmtString) => {
   const date = new Date(gmtString);
 
   // Subtract 4 hours from the time
-  date.setUTCHours(date.getUTCHours() - 4);
+  date.setUTCHours(date.getUTCHours());
 
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");

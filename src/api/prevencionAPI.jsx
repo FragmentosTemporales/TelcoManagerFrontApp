@@ -18,10 +18,10 @@ export const createAST = async (payload, token) => {
 };
 
 
-export const getAstList = async (token, page) => {
+export const getAstList = async (token, page, payload) => {
   try {
     const url = `${baseUrl}/get-ast-list/${page}`;
-    const response = await axios.get(url, {
+    const response = await axios.post(url, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -36,6 +36,21 @@ export const getAstList = async (token, page) => {
 export const getAst  = async (token, ID) => {
   try {
     const url = `${baseUrl}/get-ast/${ID}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getAstUsers  = async (token) => {
+  try {
+    const url = `${baseUrl}/get-ast-users`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,

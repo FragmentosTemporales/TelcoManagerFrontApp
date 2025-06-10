@@ -108,3 +108,16 @@ export const filterAgendamiento = async (token, fechaInicio, fechaFin) => {
   }
 };
 
+export const createRegistroReparacion = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/create-reparacion`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};

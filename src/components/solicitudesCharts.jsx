@@ -32,6 +32,7 @@ import {
   getSolicitudeStats,
   getSolicitudeCCStats,
   getSolicitudeTOPStats,
+  getSolicitudePendientes,
 } from "../api/solicitudAPI";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -43,6 +44,7 @@ function SolicitudCharts() {
   const [data, setData] = useState(undefined);
   const [dataCC, setDataCC] = useState(undefined);
   const [dataTop, setDataTop] = useState(undefined);
+  const [dataPendientes, setDataPendientes] = useState(undefined);
 
   const fetchChartData = async () => {
     setIsLoading(true);
@@ -67,17 +69,64 @@ function SolicitudCharts() {
     setIsLoading(false);
   };
 
-  const fetchChartDataTOP = async () => {
+  const fetchChartDataPendientes = async () => {
     setIsLoading(true);
     try {
-      const response = await getSolicitudeTOPStats(token);
-      setDataTop(response);
-      console.log("TOP", response);
+      const response = await getSolicitudePendientes(token);
+      console.log("Data Pendientes:", response);
+      setDataPendientes(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
     setIsLoading(false);
   };
+
+  const fetchChartDataTOP = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getSolicitudeTOPStats(token);
+      setDataTop(response);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setIsLoading(false);
+  };
+
+    const extractDate = (gmtString) => {
+    const date = new Date(gmtString);
+
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+
+    const formattedDate = `${day}-${month}-${year}`;
+    return formattedDate;
+  };
+
+  const setTableHeadPendientes = () => (
+    <>
+      <TableHead>
+        <TableRow>
+          {["FOLIO","MOTIVO","SOLICITANTE","AMONESTADO","RUT","ESTADO","CAMBIO ESTADO","DIAS"].map((header, index) => (
+            <TableCell
+              key={header}
+              align="center"
+              sx={{
+                background: "#0b2f6d",
+                fontWeight: "bold",
+                fontSize: "10px",
+                color: "#ffffff",
+                borderRadius:
+                  index === 0 ? "20px 0 0 0" : index === 7 ? "0 20px 0 0" : "0",
+              }}
+            >
+              {header}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    </>
+  );
 
   const setTableHead = () => (
     <>
@@ -155,6 +204,102 @@ function SolicitudCharts() {
     </>
   );
 
+  const setTableBodyPendientes = () => (
+    <>
+      <TableBody
+        sx={{
+          display: "column",
+          justifyContent: "center",
+          backgroundColor: "#ffffff",
+        }}
+      >
+        {dataPendientes && dataPendientes.length > 0 ? (
+          dataPendientes.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px"}} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.Folio ? row.Folio : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px"}} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.Motivo ? row.Motivo : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px"}} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.Solicitante ? row.Solicitante : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px"}} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.Amonestado ? row.Amonestado : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px"}} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.RUT ? row.RUT : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px"}} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.Estado ? row.Estado : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px"}} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row["Cambio Estado"] ? extractDate(row["Cambio Estado"]) : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell
+                align="center"
+                sx={{ fontSize: "10px"}} // Equal width
+              >
+                <Typography fontFamily={"initial"} variant="secondary">
+                  {row.Dias ? row.Dias : "Sin Información"}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={4} align="center" sx={{ width: "100%" }}>
+              No hay datos disponibles
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </>
+  );
+
   useEffect(() => {
     fetchChartDataCC();
   }, []);
@@ -167,6 +312,10 @@ function SolicitudCharts() {
     fetchChartDataTOP();
   }, []);
 
+  useEffect(() => {
+    fetchChartDataPendientes();
+  }, []);
+
   return (
     <Box
       sx={{
@@ -177,8 +326,7 @@ function SolicitudCharts() {
         padding: 2,
       }}
     >
-      <Typography variant="body2"
-                sx={{ fontWeight: "bold" }}>
+      <Typography variant="body2" sx={{ fontWeight: "bold" }}>
         Histórico de Solicitudes
       </Typography>
       {isLoading ? (
@@ -263,10 +411,7 @@ function SolicitudCharts() {
               }}
             >
               {/** SEGUNDO GRAFICO POR CENTRO DE COSTO **/}
-              <Typography
-                variant="body2"
-                sx={{ fontWeight: "bold" }}
-              >
+              <Typography variant="body2" sx={{ fontWeight: "bold" }}>
                 Histórico por Centro de Costo
               </Typography>
               <Box
@@ -329,11 +474,8 @@ function SolicitudCharts() {
               }}
             >
               {/** SEGUNDO GRAFICO POR CENTRO DE COSTO **/}
-              <Typography
-                variant="body2"
-                sx={{ fontWeight: "bold" }}
-              >
-                Top 10 Trabajadores Amonestados
+              <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                Top 10 Trabajadores activos amonestados
               </Typography>
               {/** TABLA CON TOPS **/}
               <Box
@@ -354,7 +496,7 @@ function SolicitudCharts() {
                     sx={{
                       width: "100%",
                       display: "column",
-                      justifyContent: "center"
+                      justifyContent: "center",
                     }}
                     stickyHeader
                   >
@@ -364,7 +506,40 @@ function SolicitudCharts() {
                 </TableContainer>
               </Box>
             </Box>
+          </Box>
 
+          {/** TABLA CON SOLICITUDES PENDIENTES **/}
+          <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+            paddingTop: 4,
+          }}
+        >
+            <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+              Solicitudes con gestión mayor a 10 días
+            </Typography>
+            <TableContainer
+              sx={{
+                maxHeight: 300, // Set a max height for scrolling
+                borderRadius: "20px",
+              }}
+            >
+              <Table
+                sx={{
+                  width: "100%",
+                  display: "column",
+                  justifyContent: "center",
+                }}
+                stickyHeader
+              >
+                {setTableHeadPendientes()}
+                {setTableBodyPendientes()}
+              </Table>
+            </TableContainer>
           </Box>
 
         </Box>

@@ -144,7 +144,7 @@ function Solicitudes() {
   const filterCard = () => (
     <Card
       sx={{
-        width: "80%",
+        width: "90%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
@@ -259,7 +259,7 @@ function Solicitudes() {
   const statisticsCard = () => (
     <Card
       sx={{
-        width: "80%",
+        width: "90%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
@@ -300,7 +300,7 @@ function Solicitudes() {
   const createNew = () => (
     <Box
       sx={{
-        width: "80%",
+        width: "90%",
         mt: 2,
         display: "flex",
         justifyContent: "start",
@@ -328,7 +328,7 @@ function Solicitudes() {
   const downloadExcel = () => (
     <Box
       sx={{
-        width: "80%",
+        width: "90%",
         mt: 2,
         display: "flex",
         justifyContent: "start",
@@ -420,7 +420,7 @@ function Solicitudes() {
   const setTableCard = () => (
     <Card
       sx={{
-        width: "80%",
+        width: "90%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
@@ -489,7 +489,7 @@ function Solicitudes() {
       {is_loading && !is_load ? (
         <Box
           sx={{
-            width: "80%",
+            width: "90%",
             overflow: "hidden",
             backgroundColor: "#f5f5f5",
             boxShadow: 5,
