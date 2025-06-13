@@ -73,6 +73,35 @@ export const getBacklogEstado = async (token, orden) => {
   }
 };
 
+export const getBacklogConsolidadoDiario = async (token, payload) => {
+  try {
+    const url = `${baseUrl}/get-despacho-consolidado-data-diario`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getDespachadoresData = async (token) => {
+  try {
+    const url = `${baseUrl}/get-despachadores`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const getOrdenInfo = async (token, orden) => {
   try {
     const url = `${baseUrl}/get-orden/${orden}`;

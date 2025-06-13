@@ -312,7 +312,7 @@ function ComponenteAsignadoView() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "10px",
+          borderRadius: "20px",
           mt: 2,
           mb: 2,
         }}
@@ -348,7 +348,7 @@ function ComponenteAsignadoView() {
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
-                    borderRadius: 1,
+                    borderRadius: "20px",
                   }}
                 >
                   <Typography
@@ -443,7 +443,7 @@ function ComponenteAsignadoView() {
               <TableCell align="left" sx={{ fontSize: "16px" }}>
                 <Button
                   variant="contained"
-                  sx={{ background: "#0b2f6d", borderRadius: 0 }}
+                  sx={{ background: "#0b2f6d", borderRadius: "20px" }}
                   onClick={() => {
                     setOpenModal(true);
                     setForm({
@@ -479,7 +479,7 @@ function ComponenteAsignadoView() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "10px",
+          borderRadius: "20px",
           mt: 2,
           mb: 2,
         }}
@@ -588,7 +588,7 @@ function ComponenteAsignadoView() {
                     display: "flex",
                     justifyContent: "space-around",
                     background: "#0b2f6d",
-                    borderRadius: "10px",
+                    borderRadius: "20px",
                   }}
                 >
                   {isSubmitting ? "Procesando..." : "Enviar"}
@@ -633,7 +633,7 @@ function ComponenteAsignadoView() {
                   display: "flex",
                   justifyContent: "space-around",
                   background: "#c62828",
-                  borderRadius: "10px",
+                  borderRadius: "20px",
                 }}
               >
                 {isSubmitting ? "Procesando..." : "Eliminar"}
@@ -677,7 +677,7 @@ function ComponenteAsignadoView() {
                   display: "flex",
                   justifyContent: "space-around",
                   background: "#c62828",
-                  borderRadius: "10px",
+                  borderRadius: "20px",
                 }}
               >
                 {isSubmitting ? "Procesando..." : "Eliminar"}
@@ -698,7 +698,7 @@ function ComponenteAsignadoView() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "10px",
+          borderRadius: "20px",
           mt: 2,
           mb: 2,
         }}
@@ -780,7 +780,7 @@ function ComponenteAsignadoView() {
                           <Tooltip title="Agregar Imagen">
                             <Button
                               variant="contained"
-                              sx={{ background: "#0b2f6d", borderRadius: 0 }}
+                              sx={{ background: "#0b2f6d", borderRadius: "20px" }}
                               onClick={() => {
                                 setOpenModal(true);
                                 setForm({
@@ -796,7 +796,7 @@ function ComponenteAsignadoView() {
                           <Tooltip title="Eliminar">
                             <Button
                               variant="contained"
-                              sx={{ background: "#c62828", borderRadius: 0 }}
+                              sx={{ background: "#c62828", borderRadius: "20px" }}
                               onClick={() => {
                                 setToDelete(row.recursoID),
                                   setOpenModalDelete(true);
@@ -832,7 +832,7 @@ function ComponenteAsignadoView() {
             backgroundColor: "#f5f5f5",
             boxShadow: 5,
             textAlign: "center",
-            borderRadius: "10px",
+            borderRadius: "20px",
             mt: 2,
             mb: 2,
           }}
@@ -905,7 +905,7 @@ function ComponenteAsignadoView() {
                       display: "flex",
                       justifyContent: "space-around",
                       background: "#0b2f6d",
-                      borderRadius: "10px",
+                      borderRadius: "20px",
                       margin: "20px",
                     }}
                   >
@@ -930,7 +930,7 @@ function ComponenteAsignadoView() {
             backgroundColor: "#f5f5f5",
             boxShadow: 5,
             textAlign: "center",
-            borderRadius: "10px",
+            borderRadius: "20px",
             mt: 2,
             mb: 2,
           }}
@@ -966,7 +966,7 @@ function ComponenteAsignadoView() {
                       sx={{
                         display: "flex",
                         justifyContent: "space-between",
-                        borderRadius: 1,
+                        borderRadius: "20px",
                       }}
                     >
                       <Typography
@@ -998,7 +998,7 @@ function ComponenteAsignadoView() {
             <Tooltip title="Borrar registros">
               <Button
                 variant="contained"
-                sx={{ background: "#c62828", borderRadius: 0 }}
+                sx={{ background: "#c62828", borderRadius: "20px" }}
                 onClick={() => {
                   setToDeleteMedicion(medicionCTO.medicionctoID),
                     setOpenModalDeleteMedicion(true);
@@ -1054,7 +1054,7 @@ function ComponenteAsignadoView() {
                 display: "flex",
                 justifyContent: "space-around",
                 background: "#0b2f6d",
-                borderRadius: "10px",
+                borderRadius: "20px",
               }}
             >
               Volver

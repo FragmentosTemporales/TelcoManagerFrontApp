@@ -111,6 +111,14 @@ function CreateReparacionView() {
         "Error al crear el formulario. Por favor, inténtelo de nuevo."
       );
     } finally {
+      setForm({
+        orden: "",
+        img_1: null,
+        img_2: null,
+        img_3: null,
+        ticket: "",
+        userID: user_id,
+      });
       setOpen(true);
       setIsSubmitting(false);
     }
@@ -211,6 +219,7 @@ function CreateReparacionView() {
                 name="img_1"
                 variant="outlined"
                 onChange={handleFileChange}
+                value={form.img_1 ? form.img_1.name : ""} // Mostrar el nombre del archivo seleccionado
               />
             </Box>
 
@@ -225,6 +234,7 @@ function CreateReparacionView() {
                 name="img_2"
                 variant="outlined"
                 onChange={handleFileChange}
+                value={form.img_2 ? form.img_2.name : ""} // Mostrar el nombre del archivo seleccionado
               />
             </Box>
 
@@ -239,6 +249,7 @@ function CreateReparacionView() {
                 name="img_3"
                 variant="outlined"
                 onChange={handleFileChange}
+                value={form.img_3 ? form.img_3.name : ""} // Mostrar el nombre del archivo seleccionado
               />
             </Box>
 

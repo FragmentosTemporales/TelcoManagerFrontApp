@@ -2,22 +2,6 @@ import axios from "axios";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
-export const getProyectos = async (token) => {
-  try {
-    const url = `${baseUrl}/get-proyectos-consolidado`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response.data.error;
-  }
-};
-
 export const getProyectoUnico = async (token, proyectoID) => {
   try {
     const url = `${baseUrl}/unique-project/${proyectoID}`;

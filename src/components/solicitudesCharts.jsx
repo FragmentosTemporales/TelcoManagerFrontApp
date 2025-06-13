@@ -30,8 +30,6 @@ import {
 } from "recharts";
 import {
   getSolicitudeStats,
-  getSolicitudeCCStats,
-  getSolicitudeTOPStats,
   getSolicitudePendientes,
 } from "../api/solicitudAPI";
 import { useSelector } from "react-redux";
@@ -42,8 +40,6 @@ function SolicitudCharts() {
   const { token } = authState;
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(undefined);
-  const [dataCC, setDataCC] = useState(undefined);
-  const [dataTop, setDataTop] = useState(undefined);
   const [dataPendientes, setDataPendientes] = useState(undefined);
 
   const fetchChartData = async () => {
@@ -52,17 +48,6 @@ function SolicitudCharts() {
       const response = await getSolicitudeStats(token);
       const sortedData = response.sort((a, b) => b.Q - a.Q);
       setData(sortedData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-    setIsLoading(false);
-  };
-
-  const fetchChartDataCC = async () => {
-    setIsLoading(true);
-    try {
-      const response = await getSolicitudeCCStats(token);
-      setDataCC(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -81,18 +66,7 @@ function SolicitudCharts() {
     setIsLoading(false);
   };
 
-  const fetchChartDataTOP = async () => {
-    setIsLoading(true);
-    try {
-      const response = await getSolicitudeTOPStats(token);
-      setDataTop(response);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-    setIsLoading(false);
-  };
-
-    const extractDate = (gmtString) => {
+  const extractDate = (gmtString) => {
     const date = new Date(gmtString);
 
     const year = date.getUTCFullYear();
@@ -107,7 +81,16 @@ function SolicitudCharts() {
     <>
       <TableHead>
         <TableRow>
-          {["FOLIO","MOTIVO","SOLICITANTE","AMONESTADO","RUT","ESTADO","CAMBIO ESTADO","DIAS"].map((header, index) => (
+          {[
+            "FOLIO",
+            "MOTIVO",
+            "SOLICITANTE",
+            "AMONESTADO",
+            "RUT",
+            "ESTADO",
+            "CAMBIO ESTADO",
+            "DIAS",
+          ].map((header, index) => (
             <TableCell
               key={header}
               align="center"
@@ -128,82 +111,6 @@ function SolicitudCharts() {
     </>
   );
 
-  const setTableHead = () => (
-    <>
-      <TableHead>
-        <TableRow>
-          {["CANTIDAD", "NOMBRE", "CENTRO COSTO"].map((header, index) => (
-            <TableCell
-              key={header}
-              align="center"
-              sx={{
-                background: "#0b2f6d",
-                fontWeight: "bold",
-                fontSize: "10px",
-                color: "#ffffff",
-                borderRadius:
-                  index === 0 ? "20px 0 0 0" : index === 2 ? "0 20px 0 0" : "0",
-              }}
-            >
-              {header}
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-    </>
-  );
-
-  const setTableBody = () => (
-    <>
-      <TableBody
-        sx={{
-          display: "column",
-          justifyContent: "center",
-          backgroundColor: "#ffffff",
-        }}
-      >
-        {dataTop && dataTop.length > 0 ? (
-          dataTop.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "10px", width: "10%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.Q ? row.Q : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell
-                align="center"
-                sx={{ fontSize: "10px", width: "45%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.Nombre ? row.Nombre : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell
-                align="center"
-                sx={{ fontSize: "10px", width: "45%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.CENTRO_COSTO ? row.CENTRO_COSTO : "Sin Información"}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan={4} align="center" sx={{ width: "100%" }}>
-              No hay datos disponibles
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </>
-  );
-
   const setTableBodyPendientes = () => (
     <>
       <TableBody
@@ -218,7 +125,7 @@ function SolicitudCharts() {
             <TableRow key={index}>
               <TableCell
                 align="center"
-                sx={{ fontSize: "10px"}} // Equal width
+                sx={{ fontSize: "10px" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.Folio ? row.Folio : "Sin Información"}
@@ -227,7 +134,7 @@ function SolicitudCharts() {
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "10px"}} // Equal width
+                sx={{ fontSize: "10px" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.Motivo ? row.Motivo : "Sin Información"}
@@ -236,7 +143,7 @@ function SolicitudCharts() {
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "10px"}} // Equal width
+                sx={{ fontSize: "10px" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.Solicitante ? row.Solicitante : "Sin Información"}
@@ -245,7 +152,7 @@ function SolicitudCharts() {
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "10px"}} // Equal width
+                sx={{ fontSize: "10px" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.Amonestado ? row.Amonestado : "Sin Información"}
@@ -254,7 +161,7 @@ function SolicitudCharts() {
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "10px"}} // Equal width
+                sx={{ fontSize: "10px" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.RUT ? row.RUT : "Sin Información"}
@@ -263,7 +170,7 @@ function SolicitudCharts() {
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "10px"}} // Equal width
+                sx={{ fontSize: "10px" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.Estado ? row.Estado : "Sin Información"}
@@ -272,16 +179,18 @@ function SolicitudCharts() {
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "10px"}} // Equal width
+                sx={{ fontSize: "10px" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
-                  {row["Cambio Estado"] ? extractDate(row["Cambio Estado"]) : "Sin Información"}
+                  {row["Cambio Estado"]
+                    ? extractDate(row["Cambio Estado"])
+                    : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "10px"}} // Equal width
+                sx={{ fontSize: "10px" }} // Equal width
               >
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.Dias ? row.Dias : "Sin Información"}
@@ -301,15 +210,7 @@ function SolicitudCharts() {
   );
 
   useEffect(() => {
-    fetchChartDataCC();
-  }, []);
-
-  useEffect(() => {
     fetchChartData();
-  }, []);
-
-  useEffect(() => {
-    fetchChartDataTOP();
   }, []);
 
   useEffect(() => {
@@ -391,134 +292,18 @@ function SolicitudCharts() {
               </BarChart>
             </ResponsiveContainer>
           </Box>
-          {/** SEGUNDO GRAFICO Y TABLA CON TOPS**/}
-          <Box
-            sx={{
-              width: { xs: "100%", lg: "100%" },
-              marginBottom: { xs: 2, lg: 0 },
-              display: "flex",
-              flexDirection: "row",
-              height: "300px",
-            }}
-          >
-            <Box
-              sx={{
-                width: { xs: "100%", lg: "100%" },
-                marginBottom: { xs: 2, lg: 0 },
-                display: "flex",
-                flexDirection: "column",
-                height: "300px",
-              }}
-            >
-              {/** SEGUNDO GRAFICO POR CENTRO DE COSTO **/}
-              <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                Histórico por Centro de Costo
-              </Typography>
-              <Box
-                sx={{
-                  width: "100%",
-                  marginBottom: { xs: 2, lg: 0 },
-                  display: "flex",
-                  flexDirection: "row",
-                }}
-              >
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={dataCC} layout="horizontal">
-                    <defs>
-                      <linearGradient
-                        id="barGradient2"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop offset="0%" stopColor="#ff3333" stopOpacity={1} />
-                        <stop
-                          offset="100%"
-                          stopColor="#b22323"
-                          stopOpacity={1}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="5 5" />
-                    <XAxis dataKey="CENTRO_COSTO" fontSize={10} />
-                    <YAxis />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#f5f5f5",
-                        borderRadius: "20px",
-                        border: "1px solid #ccc",
-                      }}
-                    />
-                    <Bar dataKey="Q" fill="url(#barGradient2)">
-                      <LabelList
-                        dataKey="Q"
-                        position="inside"
-                        fill="#ffffff"
-                        fontWeight={"bold"}
-                        fontSize={10}
-                      />
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </Box>
-            </Box>
-
-            <Box
-              sx={{
-                width: { xs: "100%", lg: "100%" },
-                marginBottom: { xs: 2, lg: 0 },
-                display: "flex",
-                flexDirection: "column",
-                height: "300px",
-              }}
-            >
-              {/** SEGUNDO GRAFICO POR CENTRO DE COSTO **/}
-              <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                Top 10 Trabajadores activos amonestados
-              </Typography>
-              {/** TABLA CON TOPS **/}
-              <Box
-                sx={{
-                  width: "100%",
-                  marginBottom: { xs: 2, lg: 0 },
-                  display: "flex",
-                  flexDirection: "row",
-                }}
-              >
-                <TableContainer
-                  sx={{
-                    maxHeight: 300, // Set a max height for scrolling
-                    borderRadius: "20px",
-                  }}
-                >
-                  <Table
-                    sx={{
-                      width: "100%",
-                      display: "column",
-                      justifyContent: "center",
-                    }}
-                    stickyHeader
-                  >
-                    {setTableHead()}
-                    {setTableBody()}
-                  </Table>
-                </TableContainer>
-              </Box>
-            </Box>
-          </Box>
 
           {/** TABLA CON SOLICITUDES PENDIENTES **/}
           <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            paddingTop: 4,
-          }}
-        >
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              paddingTop: 4,
+            }}
+          >
             <Typography variant="body2" sx={{ fontWeight: "bold" }}>
               Solicitudes con gestión mayor a 10 días
             </Typography>
@@ -541,7 +326,6 @@ function SolicitudCharts() {
               </Table>
             </TableContainer>
           </Box>
-
         </Box>
       )}
     </Box>

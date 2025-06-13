@@ -23,18 +23,11 @@ import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import BallotIcon from "@mui/icons-material/Ballot";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { onLoad, onLoading, setMessage } from "../slices/proyectosSlice";
-import { getProyectos } from "../api/proyectoAPI";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 function Home() {
   const authState = useSelector((state) => state.auth);
-  const proyectoState = useSelector((state) => state.proyectos);
-  const { permisos, token } = authState;
-  const { data: dataProyecto } = proyectoState;
-
-  const dispatch = useDispatch();
+  const { permisos } = authState;
 
   const secciones = [
     {
@@ -93,7 +86,8 @@ function Home() {
       body: "Acá podrás definir los objetivos mensuales según la zona a elegir",
       moduloID: 5,
     },
-    {
+    /*
+        {
       head: "Asignados OnNet",
       icono: <BallotIcon />,
       title: "Espacio para visualizar Proyectos Asignados",
@@ -101,6 +95,7 @@ function Home() {
       body: "Acá podrás gestionar los proyectos asignados a tu Usuario",
       moduloID: 6,
     },
+    */
     {
       head: "Asignados OnNet General",
       icono: <BallotIcon />,
@@ -214,22 +209,6 @@ function Home() {
     )
   );
 
-  const fetchData = async () => {
-    if (dataProyecto == null) {
-      try {
-        dispatch(onLoading());
-        const res = await getProyectos(token);
-        dispatch(onLoad(res));
-      } catch (error) {
-        dispatch(setMessage("Información no encontrada."));
-      }
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   return (
     <Box
       sx={{
@@ -245,7 +224,7 @@ function Home() {
         <Grid
           container
           spacing={2}
-          sx={{ width: "80%" }}
+          sx={{ width: "90%" }}
           justifyContent="center"
           alignItems="center"
         >
@@ -253,8 +232,7 @@ function Home() {
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card
                 sx={{
-                  minHeight: "400px",
-                  maxWidth: "400px",
+                  minHeight: "150px",
                   backgroundColor: "#f5f5f5",
                   borderRadius: "20px",
                   position: "relative",
@@ -270,7 +248,7 @@ function Home() {
                   title={
                     <Typography
                       fontWeight="bold"
-                      sx={{ fontFamily: "initial" }}
+                      sx={{ fontFamily: "initial", fontSize: "14px" }}
                     >
                       {acceso.head}
                     </Typography>
@@ -290,21 +268,9 @@ function Home() {
                       fontSize={"18px"}
                       fontWeight={"bold"}
                       fontFamily={"initial"}
-                      sx={{ minHeight: "80px", textAlign: "center" }}
+                      sx={{ fontFamily: "initial", fontSize: "14px", textAlign: "center" }}
                     >
                       {acceso.title}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      fontFamily={"initial"}
-                      sx={{
-                        color: "text.secondary",
-                        p: 2,
-                        minHeight: "80px",
-                        textAlign: "center",
-                      }}
-                    >
-                      {acceso.body}
                     </Typography>
 
                     <CardActions

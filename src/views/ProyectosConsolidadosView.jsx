@@ -23,6 +23,7 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
+import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -31,7 +32,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getProyectosFiltrados, getOptionToFilter } from "../api/onnetAPI";
+import {
+  getProyectosFiltrados,
+  getOptionToFilter,
+  sendPlantillaVisitasProyecto,
+} from "../api/onnetAPI";
 import ProyectosCharts from "../components/proyectosCharts";
 
 function ProyectosOnNetView() {
@@ -39,18 +44,20 @@ function ProyectosOnNetView() {
   const { token } = authState;
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(1);
-  const [alertType, setAlertType] = useState(undefined);
-  const [message, setMessage] = useState(undefined);
+  const [alertType, setAlertType] = useState("info");
+  const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   const [toFilter, setToFilter] = useState({
     proyecto: "",
     bandeja: "",
     categoria: "",
+    agencia: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [showLoaders, setShowLoaders] = useState(false);
 
   const [optionsToFilter, setOptionsToFilter] = useState([]);
 
@@ -61,6 +68,97 @@ function ProyectosOnNetView() {
     { value: "Entre 15 y 30 días", label: "Entre 15 y 30 días" },
     { value: "Mayor a 30 días", label: "Mayor a 30 días" },
   ];
+
+  const agencias = [
+    "CURICO",
+    "CENTRO",
+    "RANCAGUA",
+    "ANTOFAGASTA",
+    "PROVIDENCIA",
+    "CALAMA",
+    "HUALPEN",
+    "MELIPILLA",
+    "PUENTE ALTO",
+    "PENAFLOR",
+    "LOS ANGELES",
+    "INDEPENDENCIA",
+    "VIÑA DEL MAR",
+    "CHIGUAYANTE",
+    "LAS REJAS",
+    "VALDIVIA",
+    "CONCEPCION",
+    "VALPARAISO",
+    "QUILPUE",
+    "SAN ANTONIO",
+    "APOQUINDO",
+    "LOS ANDES",
+    "NUNOA",
+    "EL LLANO",
+    "QUILLOTA",
+    "MAIPU",
+    "CHILLAN",
+    "LA FLORIDA",
+    "SAN BERNARDO",
+    "TALCAHUANO",
+    "VINA DEL MAR",
+    "TALCA",
+  ];
+
+  const [formAgendas, setFormAgendas] = useState({
+    file: null,
+  });
+
+  const [formVisitas, setFormVisitas] = useState({
+    file: null,
+  });
+
+  const handleSubmitVisitas = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formData = new FormData();
+
+    if (formVisitas.file) {
+      formData.append("file", formVisitas.file);
+    }
+    try {
+      const response = await sendPlantillaVisitasProyecto(formData, token);
+      console.log(response);
+      setAlertType("success");
+      setMessage("Archivo cargado correctamente.");
+      setOpen(true);
+    } catch (error) {
+      // Manejo de error específico si el archivo está abierto por otro proceso
+      let errorMsg = error?.message || error;
+      if (
+        typeof errorMsg === "string" &&
+        (errorMsg.includes("used by another process") ||
+          errorMsg.includes("no se puede obtener acceso al archivo") ||
+          errorMsg.includes("Failed to load"))
+      ) {
+        errorMsg =
+          "No se pudo cargar el archivo porque está abierto en otra aplicación. Por favor, cierre el archivo e intente nuevamente.";
+      }
+      setMessage(errorMsg);
+      setAlertType("error");
+      setOpen(true);
+    } finally {
+      setIsSubmitting(false);
+      setFormVisitas({ file: null }); // Limpiar el formulario después de enviar
+    }
+  };
+
+  const handleFileChangeAgendas = (e) => {
+    setFormAgendas({
+      file: e.target.files[0],
+    });
+  };
+
+  const handleFileChangeVisitas = (e) => {
+    setFormVisitas({
+      file: e.target.files[0],
+    });
+  };
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -102,6 +200,10 @@ function ProyectosOnNetView() {
     setShowFilters((prev) => !prev);
   };
 
+  const toggleLoaders = () => {
+    setShowLoaders((prev) => !prev);
+  };
+
   const handlePage = (newPage) => setPage(newPage);
 
   const getButtons = () => (
@@ -135,17 +237,149 @@ function ProyectosOnNetView() {
     try {
       setToFilter({ bandeja: "", categoria: "" });
       setPage(1); // Reset to the first page
-      await getProyectosFiltrados(token, { bandeja: "", categoria: "" }, 1).then(
-        (res) => {
-          setPages(res.pages);
-          setData(res.data);
-        }
-      );
+      await getProyectosFiltrados(
+        token,
+        { bandeja: "", categoria: "" },
+        1
+      ).then((res) => {
+        setPages(res.pages);
+        setData(res.data);
+      });
     } catch (error) {
       setMessage("Error al limpiar los filtros.");
       setOpen(true);
     }
   };
+
+  const loaderCard = () => (
+    <Card
+      sx={{
+        width: { lg: "90%", md: "100%", xs: "100%" },
+        overflow: "hidden",
+        backgroundColor: "#f5f5f5",
+        boxShadow: 5,
+        textAlign: "center",
+        borderRadius: "20px",
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            CARGAR INFORMACIÓN
+          </Typography>
+        }
+        avatar={<DriveFolderUploadIcon />}
+        action={
+          <Button
+            onClick={toggleLoaders}
+            sx={{ color: "white", minWidth: "auto" }}
+          >
+            {showLoaders ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </Button>
+        }
+        sx={{
+          background: "#0b2f6d",
+          color: "white",
+          textAlign: "end",
+        }}
+      />
+      {showLoaders && (
+        <CardContent>
+          <Box
+            sx={{
+              minHeight: "100px",
+              display: "flex",
+              flexDirection: "row",
+              gap: 2,
+              alignItems: "space-evenly",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 2,
+                width: "50%",
+                boxShadow: 2,
+                borderRadius: "10px",
+              }}
+            >
+              <Box>
+                <InputLabel id="file-label">Agendas</InputLabel>
+                <TextField
+                  required
+                  fullWidth
+                  id="file"
+                  type="file"
+                  name="file"
+                  variant="outlined"
+                  onChange={handleFileChangeAgendas}
+                />
+              </Box>
+              <Box sx={{ mb: 2 }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    background: "#0b2f6d",
+                    fontWeight: "bold",
+                    width: "200px",
+                    borderRadius: "20px",
+                  }}
+                  onClick={handleSubmitVisitas}
+                  disabled
+                >
+                  {isSubmitting ? "Procesando..." : "Cargar"}
+                </Button>
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 2,
+                width: "50%",
+                boxShadow: 2,
+                borderRadius: "10px",
+              }}
+            >
+              <Box>
+                <InputLabel id="file-label">Visitas</InputLabel>
+                <TextField
+                  required
+                  fullWidth
+                  id="file"
+                  type="file"
+                  name="file"
+                  variant="outlined"
+                  onChange={handleFileChangeVisitas}
+                />
+              </Box>
+              <Box sx={{ mb: 2 }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    background: "#0b2f6d",
+                    fontWeight: "bold",
+                    width: "200px",
+                    borderRadius: "20px",
+                  }}
+                  onClick={handleSubmitVisitas}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Procesando..." : "Cargar"}
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+        </CardContent>
+      )}
+    </Card>
+  );
 
   const handleClose = () => {
     setOpen(false);
@@ -241,6 +475,29 @@ function ProyectosOnNetView() {
                         {option.label}
                       </MenuItem>
                     ))}
+                  </Select>
+                </FormControl>
+                <FormControl>
+                  <InputLabel id="agencia-label">Agencia</InputLabel>
+                  <Select
+                    label="agencia-label"
+                    id="agencia-select"
+                    value={toFilter.agencia || ""}
+                    sx={{ minWidth: "200px" }}
+                    size="small"
+                    onChange={(event) => {
+                      setToFilter((prev) => ({
+                        ...prev,
+                        agencia: event.target.value,
+                      }));
+                    }}
+                  >
+                    {agencias &&
+                      agencias.map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
                 <FormControl>
@@ -385,7 +642,6 @@ function ProyectosOnNetView() {
                 </Typography>
               </TableCell>
 
-
               <TableCell align="center" sx={{ fontSize: "16px" }}>
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.central_fttx ? row.central_fttx : "Sin Información"}
@@ -446,22 +702,24 @@ function ProyectosOnNetView() {
     >
       {open && (
         <Alert
-          severity={alertType}
           onClose={handleClose}
-          sx={{ marginBottom: 3 }}
+          severity={alertType || "info"}
+          sx={{ mt: 10, mb: 3, width: "90%" }}
         >
-          {message}
+          {message || "Mensaje de alerta por defecto"}
         </Alert>
       )}
       <Box
         sx={{
           width: { lg: "90%", md: "100%", xs: "100%" },
           marginBottom: 2,
-          paddingTop: 8,
+          paddingTop: 10,
         }}
       >
         <ProyectosCharts />
       </Box>
+
+      {loaderCard()}
       {filterCard()}
 
       <Card

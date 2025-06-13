@@ -27,9 +27,7 @@ import {
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
-import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
 import AddIcon from "@mui/icons-material/Add";
 import {
@@ -41,19 +39,18 @@ import {
   deleteTraza,
   createUniqueComponent,
 } from "../api/proyectoAPI";
+import { getInfoProyecto } from "../api/onnetAPI";
 import { useNavigate } from "react-router-dom";
 import { downloadFile } from "../api/downloadApi";
 
 function Asignado() {
   const { proyectoID } = useParams();
-  const proyectoState = useSelector((state) => state.proyectos);
   const authState = useSelector((state) => state.auth);
   const { token } = authState;
-  const { data } = proyectoState;
   const navigate = useNavigate();
   const [dataEmpresa, setDataEmpresa] = useState(undefined);
-  const [dataAvance, setDataAvance] = useState(undefined);
-  const [dataTraza, setDataTraza] = useState({});
+  const [dataAvance, setDataAvance] = useState([]);
+  const [dataTraza, setDataTraza] = useState([]);
   const [dataEstado, setDataEstado] = useState(undefined);
   const [dataComponentes, setDataComponentes] = useState(undefined);
   const [proyecto, setProyecto] = useState(undefined);
@@ -76,7 +73,6 @@ function Asignado() {
   const [mufaData, setMufaData] = useState([]);
   const [fibraData, setFibraData] = useState([]);
   const [ferreteriaData, setFerreteriaData] = useState([]);
-  const [id, setId] = useState(undefined);
   const [openModal, setOpenModal] = useState(false);
   const [openModalTrazas, setOpenModalTrazas] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
@@ -108,18 +104,33 @@ function Asignado() {
   //FUNCIONES DEL COMPONENTE
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       const res = await getProyectoUnico(token, proyectoID);
+      console.log(res.componente);
       setDataAvance(res.avance[0]);
       setDataTraza(res.traza[0]);
       setDataEmpresa(res.empresa);
       setDataEstado(res.estado);
       setDataComponentes(res.componente);
-      setId(res.proyectoID);
-      setIsLoading(false);
     } catch (error) {
       setMessage(error);
       setOpen(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchProyectoInfo = async () => {
+    setIsLoading(true);
+    try {
+      const res = await getInfoProyecto(token, proyectoID);
+      setProyecto(res[0]);
+    } catch (error) {
+      setMessage(error);
+      setOpen(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -154,7 +165,6 @@ function Asignado() {
   const handleSubmitUnique = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const proyectoID = id;
     const payload = { ...componentForm, proyectoID };
 
     try {
@@ -314,9 +324,7 @@ function Asignado() {
     const maxSize = 2.5 * 1024 * 1024;
 
     if (file) {
-      const validPdfTypes = [
-        "application/pdf"
-      ];
+      const validPdfTypes = ["application/pdf"];
 
       if (!validPdfTypes.includes(file.type)) {
         alert("Por favor, sube un archivo PDF válido (.pdf).");
@@ -341,14 +349,13 @@ function Asignado() {
 
   const downloader = async (file_path) => {
     try {
-        const payload = { file_path: file_path };
-        await downloadFile(payload, token);
-        console.log("Archivo descargado exitosamente");
+      const payload = { file_path: file_path };
+      await downloadFile(payload, token);
+      console.log("Archivo descargado exitosamente");
     } catch (error) {
-        console.error("Error descargando el archivo:", error);
+      console.error("Error descargando el archivo:", error);
     }
-};
-
+  };
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -361,13 +368,13 @@ function Asignado() {
     e.preventDefault();
     setIsSubmitting(true);
     const formData = new FormData();
-    formData.append("proyectoID", id);
+    formData.append("proyectoID", proyectoID);
     if (form.file) {
       formData.append("file", form.file);
     }
     try {
       const respuesta = await createAvance(formData, token);
-      console.log(respuesta)
+      console.log(respuesta);
       setIsSubmitting(false);
       setOpenModal(false);
       setForm({
@@ -391,13 +398,13 @@ function Asignado() {
     e.preventDefault();
     setIsSubmitting(true);
     const formData = new FormData();
-    formData.append("proyectoID", id);
+    formData.append("proyectoID", proyectoID);
     if (form.file) {
       formData.append("file", form.file);
     }
     try {
       const respuesta = await createTraza(formData, token);
-      console.log(respuesta)
+      console.log(respuesta);
       setIsSubmitting(false);
       setOpenModalTrazas(false);
       setForm({
@@ -448,145 +455,145 @@ function Asignado() {
   const proyectoCard = () => (
     <Box sx={{ pt: 2, display: "flex", justifyContent: "center" }}>
       {proyecto ? (
-        <Paper sx={{ width: "100%", textAlign: "start" }}>
-          <Grid container spacing={2}>
-            {/* REGION */}
-            <Grid item xs={12} sm={3}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                }}
-              >
-                REGION :
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1 }}>
-                {proyecto.region ? proyecto.region : "Sin Información"}
-              </Typography>
-            </Grid>
-
-            {/* COMUNA */}
-            <Grid item xs={12} sm={3}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                }}
-              >
-                COMUNA :
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1 }}>
-                {proyecto.comuna ? proyecto.comuna : "Sin Información"}
-              </Typography>
-            </Grid>
-
-            {/* DIRECCION */}
-            <Grid item xs={12} sm={3}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                }}
-              >
-                DIRECCION :
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1 }}>
-                {proyecto.direccion ? proyecto.direccion : "Sin Información"}
-              </Typography>
-            </Grid>
-
-            {/* TARGET RTS */}
-            <Grid item xs={12} sm={3}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                }}
-              >
-                TARGET RTS :
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1 }}>
-                {proyecto["Target RTS"]
-                  ? proyecto["Target RTS"]
-                  : "Sin Información"}
-              </Typography>
-            </Grid>
-
-            {/* FUENTE */}
-            <Grid item xs={12} sm={3}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                }}
-              >
-                FUENTE :
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1 }}>
-                {proyecto["Fuente"] ? proyecto["Fuente"] : "Sin Información"}
-              </Typography>
-            </Grid>
-
-            {/* ORIGEN */}
-            <Grid item xs={12} sm={3}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                }}
-              >
-                ORIGEN :
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1 }}>
-                {proyecto["Origen"] ? proyecto["Origen"] : "Sin Información"}
-              </Typography>
-            </Grid>
-
-            {/* FACILIDADES */}
-            <Grid item xs={12} sm={3}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                }}
-              >
-                FACILIDADES :
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1 }}>
-                {proyecto["uip"] ? proyecto["uip"] : "Sin Información"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                }}
-              >
-                TIPO :
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1 }}>
-                {proyecto["Tipo"] ? proyecto["Tipo"] : "Sin Información"}
-              </Typography>
-            </Grid>
+        <Grid container spacing={2}>
+          {/* REGION */}
+          <Grid item xs={12} sm={3}>
+            <Typography
+              fontWeight="bold"
+              sx={{
+                fontFamily: "initial",
+                background: "#e8e8e8",
+                p: 1,
+              }}
+            >
+              REGION :
+            </Typography>
+            <Typography sx={{ fontFamily: "initial", p: 1 }}>
+              {proyecto.Region ? proyecto.Region : "Sin Información"}
+            </Typography>
           </Grid>
-        </Paper>
+
+          {/* COMUNA */}
+          <Grid item xs={12} sm={3}>
+            <Typography
+              fontWeight="bold"
+              sx={{
+                fontFamily: "initial",
+                background: "#e8e8e8",
+                p: 1,
+              }}
+            >
+              COMUNA :
+            </Typography>
+            <Typography sx={{ fontFamily: "initial", p: 1 }}>
+              {proyecto.Comuna ? proyecto.Comuna : "Sin Información"}
+            </Typography>
+          </Grid>
+
+          {/* DIRECCION */}
+          <Grid item xs={12} sm={3}>
+            <Typography
+              fontWeight="bold"
+              sx={{
+                fontFamily: "initial",
+                background: "#e8e8e8",
+                p: 1,
+              }}
+            >
+              DIRECCION :
+            </Typography>
+            <Typography sx={{ fontFamily: "initial", p: 1 }}>
+              {proyecto.Direccion ? proyecto.Direccion : "Sin Información"}
+            </Typography>
+          </Grid>
+
+          {/* TARGET RTS */}
+          <Grid item xs={12} sm={3}>
+            <Typography
+              fontWeight="bold"
+              sx={{
+                fontFamily: "initial",
+                background: "#e8e8e8",
+                p: 1,
+              }}
+            >
+              TARGET RTS :
+            </Typography>
+            <Typography sx={{ fontFamily: "initial", p: 1 }}>
+              {proyecto["Target RTS"]
+                ? proyecto["Target RTS"]
+                : "Sin Información"}
+            </Typography>
+          </Grid>
+
+          {/* FUENTE */}
+          <Grid item xs={12} sm={3}>
+            <Typography
+              fontWeight="bold"
+              sx={{
+                fontFamily: "initial",
+                background: "#e8e8e8",
+                p: 1,
+              }}
+            >
+              FUENTE :
+            </Typography>
+            <Typography sx={{ fontFamily: "initial", p: 1 }}>
+              {proyecto["Despliegue"]
+                ? proyecto["Despliegue"]
+                : "Sin Información"}
+            </Typography>
+          </Grid>
+
+          {/* ORIGEN */}
+          <Grid item xs={12} sm={3}>
+            <Typography
+              fontWeight="bold"
+              sx={{
+                fontFamily: "initial",
+                background: "#e8e8e8",
+                p: 1,
+              }}
+            >
+              ORIGEN :
+            </Typography>
+            <Typography sx={{ fontFamily: "initial", p: 1 }}>
+              {proyecto["Origen"] ? proyecto["Origen"] : "Sin Información"}
+            </Typography>
+          </Grid>
+
+          {/* FACILIDADES */}
+          <Grid item xs={12} sm={3}>
+            <Typography
+              fontWeight="bold"
+              sx={{
+                fontFamily: "initial",
+                background: "#e8e8e8",
+                p: 1,
+              }}
+            >
+              FACILIDADES :
+            </Typography>
+            <Typography sx={{ fontFamily: "initial", p: 1 }}>
+              {proyecto["uip"] ? proyecto["uip"] : "Sin Información"}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Typography
+              fontWeight="bold"
+              sx={{
+                fontFamily: "initial",
+                background: "#e8e8e8",
+                p: 1,
+              }}
+            >
+              TIPO :
+            </Typography>
+            <Typography sx={{ fontFamily: "initial", p: 1 }}>
+              {proyecto["Tipo"] ? proyecto["Tipo"] : "Sin Información"}
+            </Typography>
+          </Grid>
+        </Grid>
       ) : (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
@@ -605,7 +612,7 @@ function Asignado() {
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
         textAlign: "center",
-        borderRadius: "10px",
+        borderRadius: "20px",
         mt: 2,
         mb: 2,
       }}
@@ -626,8 +633,14 @@ function Asignado() {
       <CardContent>
         <Paper>
           {[
-            { label: "NOMBRE EMPRESA :", value: dataEmpresa.nombre },
-            { label: "RUT EMPRESA :", value: dataEmpresa.rut },
+            {
+              label: "NOMBRE EMPRESA :",
+              value: dataEmpresa?.nombre || "Sin Información",
+            },
+            {
+              label: "RUT EMPRESA :",
+              value: dataEmpresa?.rut || "Sin Información",
+            },
           ].map((item, index) => (
             <Box
               key={index}
@@ -677,7 +690,7 @@ function Asignado() {
             backgroundColor: "#f5f5f5",
             boxShadow: 5,
             textAlign: "center",
-            borderRadius: "10px",
+            borderRadius: "20px",
             mt: 2,
             mb: 2,
           }}
@@ -1257,8 +1270,7 @@ function Asignado() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "10px",
-          mt: 2,
+          borderRadius: "20px",
           mb: 2,
         }}
       >
@@ -1283,7 +1295,7 @@ function Asignado() {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {["TIPO", "REFERENCIA N°", "RECURSOS", "IR"].map((header) => (
+                  {["TIPO", "REFERENCIA N°", "RECURSOS"].map((header) => (
                     <TableCell
                       key={header}
                       align="center"
@@ -1295,9 +1307,14 @@ function Asignado() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dataComponentes && data.length > 0 ? (
+                {dataComponentes ? (
                   dataComponentes.map((row, index) => (
-                    <TableRow key={index}>
+                    <TableRow
+                      key={index}
+                      component={Link}
+                      style={{ color: "white", textDecoration: "none" }}
+                      to={`/componente-asignado/${row.componenteID}`}
+                    >
                       <TableCell align="center">
                         {row.componentetipo.descri
                           ? row.componentetipo.descri
@@ -1329,24 +1346,6 @@ function Asignado() {
                           }
                         />
                       </TableCell>
-                      <TableCell align="center">
-                        <Tooltip title="Modificar">
-                          <Link to={`/componente-asignado/${row.componenteID}`}>
-                            <Button
-                              variant="contained"
-                              sx={{
-                                width: 30,
-                                height: 30,
-                                minWidth: 30,
-                                padding: 0,
-                                background: "#0b2f6d",
-                              }}
-                            >
-                              <AccountTreeIcon />
-                            </Button>
-                          </Link>
-                        </Tooltip>
-                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
@@ -1373,7 +1372,7 @@ function Asignado() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "10px",
+          borderRadius: "20px",
           mt: 2,
           mb: 2,
         }}
@@ -1463,7 +1462,7 @@ function Asignado() {
                     sx={{
                       background: "#0b2f6d",
                       width: "200px",
-                      borderRadius: "10px",
+                      borderRadius: "20px",
                     }}
                   >
                     Agregar
@@ -1486,7 +1485,7 @@ function Asignado() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "10px",
+          borderRadius: "20px",
           mt: 2,
           mb: 2,
         }}
@@ -1511,8 +1510,8 @@ function Asignado() {
             alignItems: "center",
           }}
         >
-          <Box sx={{ width: "100%", paddingTop:1 }}>
-            {dataAvance ? (
+          <Box sx={{ width: "100%", paddingTop: 1 }}>
+            {dataAvance && dataAvance.file ? (
               <Box
                 component={Paper}
                 sx={{
@@ -1522,7 +1521,9 @@ function Asignado() {
                   padding: 1,
                 }}
               >
-                <Typography sx={{ fontFamily: "initial", width:'200px' }}>CHECKLIST</Typography>
+                <Typography sx={{ fontFamily: "initial", width: "200px" }}>
+                  CHECKLIST
+                </Typography>
                 <Tooltip title="Descargar Archivo" placement="right">
                   <Button
                     onClick={() => downloader(dataAvance.file)}
@@ -1530,7 +1531,7 @@ function Asignado() {
                     variant="contained"
                     sx={{
                       background: "#0b2f6d",
-                      borderRadius: "10px",
+                      borderRadius: "20px",
                       minWidth: "200px",
                     }}
                   >
@@ -1548,7 +1549,7 @@ function Asignado() {
                     variant="contained"
                     color="error"
                     sx={{
-                      borderRadius: "10px",
+                      borderRadius: "20px",
                       minWidth: "200px",
                     }}
                   >
@@ -1577,7 +1578,7 @@ function Asignado() {
                       padding: 1,
                     }}
                   >
-                    <Typography sx={{ fontFamily: "initial", width:'200px' }}>
+                    <Typography sx={{ fontFamily: "initial", width: "200px" }}>
                       CHECKLIST
                     </Typography>
                     <TextField
@@ -1598,7 +1599,7 @@ function Asignado() {
                       variant="contained"
                       sx={{
                         background: "#0b2f6d",
-                        borderRadius: "10px",
+                        borderRadius: "20px",
                         minWidth: "200px",
                         maxHeight: "40px",
                       }}
@@ -1611,7 +1612,7 @@ function Asignado() {
               </Box>
             )}
           </Box>
-          <Box sx={{ width: "100%", paddingTop:1 }}>
+          <Box sx={{ width: "100%", paddingTop: 1 }}>
             {dataTraza && dataTraza.file ? (
               <Box
                 component={Paper}
@@ -1622,7 +1623,9 @@ function Asignado() {
                   padding: 1,
                 }}
               >
-                <Typography sx={{ fontFamily: "initial", width:'200px' }}>TRAZAS</Typography>
+                <Typography sx={{ fontFamily: "initial", width: "200px" }}>
+                  TRAZAS
+                </Typography>
                 <Tooltip title="Descargar Archivo" placement="right">
                   <Button
                     onClick={() => downloader(dataTraza.file)}
@@ -1630,7 +1633,7 @@ function Asignado() {
                     variant="contained"
                     sx={{
                       background: "#0b2f6d",
-                      borderRadius: "10px",
+                      borderRadius: "20px",
                       minWidth: "200px",
                     }}
                   >
@@ -1648,7 +1651,7 @@ function Asignado() {
                     variant="contained"
                     color="error"
                     sx={{
-                      borderRadius: "10px",
+                      borderRadius: "20px",
                       minWidth: "200px",
                     }}
                   >
@@ -1677,7 +1680,7 @@ function Asignado() {
                       padding: 1,
                     }}
                   >
-                    <Typography sx={{ fontFamily: "initial", width:'200px' }}>
+                    <Typography sx={{ fontFamily: "initial", width: "200px" }}>
                       TRAZAS
                     </Typography>
                     <TextField
@@ -1698,7 +1701,7 @@ function Asignado() {
                       variant="contained"
                       sx={{
                         background: "#0b2f6d",
-                        borderRadius: "10px",
+                        borderRadius: "20px",
                         minWidth: "200px",
                         maxHeight: "40px",
                       }}
@@ -1748,7 +1751,7 @@ function Asignado() {
                 display: "flex",
                 justifyContent: "space-around",
                 background: "#0b2f6d",
-                borderRadius: "10px",
+                borderRadius: "20px",
               }}
             >
               {isSubmitting ? "Procesando..." : "Enviar"}
@@ -1791,7 +1794,7 @@ function Asignado() {
                 display: "flex",
                 justifyContent: "space-around",
                 background: "#0b2f6d",
-                borderRadius: "10px",
+                borderRadius: "20px",
               }}
             >
               {isSubmitting ? "Procesando..." : "Enviar"}
@@ -1834,7 +1837,7 @@ function Asignado() {
                 fontWeight: "bold",
                 display: "flex",
                 justifyContent: "space-around",
-                borderRadius: "10px",
+                borderRadius: "20px",
               }}
             >
               {isSubmitting ? "Eliminando..." : "Eliminar"}
@@ -1877,7 +1880,7 @@ function Asignado() {
                 fontWeight: "bold",
                 display: "flex",
                 justifyContent: "space-around",
-                borderRadius: "10px",
+                borderRadius: "20px",
               }}
             >
               {isSubmitting ? "Eliminando..." : "Eliminar"}
@@ -1895,11 +1898,8 @@ function Asignado() {
   }, []);
 
   useEffect(() => {
-    if (data && id) {
-      const p = data.find((item) => item.proyecto === id);
-      setProyecto(p);
-    }
-  }, [data, id]);
+    fetchProyectoInfo();
+  }, []);
 
   //COMPONENTE RETORNADO
 
@@ -1924,6 +1924,7 @@ function Asignado() {
             {message}
           </Alert>
         )}
+
         {isLoading ? (
           <Box
             sx={{
@@ -1945,22 +1946,25 @@ function Asignado() {
         ) : (
           <>
             <Box sx={{ width: "90%" }}>
-              <Link to="/asignados">
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: 200,
-                    height: 40,
-                    fontWeight: "bold",
-                    display: "flex",
-                    justifyContent: "space-around",
-                    background: "#0b2f6d",
-                    borderRadius: "10px",
-                  }}
+              <Button
+                variant="contained"
+                sx={{
+                  width: 200,
+                  height: 40,
+                  fontWeight: "bold",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  background: "#0b2f6d",
+                  borderRadius: "20px",
+                }}
+              >
+                <Link
+                  style={{ color: "white", textDecoration: "none" }}
+                  to="/asignados"
                 >
                   Volver a Asignados
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </Box>
 
             {contenedorCard()}
@@ -2001,7 +2005,7 @@ function Asignado() {
                       sx={{
                         mt: 1,
                         background: "#0b2f6d",
-                        borderRadius: "10px",
+                        borderRadius: "20px",
                       }}
                     >
                       <Typography sx={{ fontFamily: "initial" }}>

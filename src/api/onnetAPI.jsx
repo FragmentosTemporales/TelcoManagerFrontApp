@@ -3,9 +3,9 @@ import axios from "axios";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
 
-export const getQMacroEstado = async (token) => {
+export const getQMacroEstado = async (token, agencia) => {
   try {
-    const url = `${baseUrl}/get-q-macro-estado`;
+    const url = `${baseUrl}/get-q-macro-estado/${agencia}`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -81,6 +81,21 @@ export const getOptionToFilter = async (token) => {
 export const sendPlantillaConstruccion = async (payload, token) => {
   try {
     const url = `${baseUrl}/load-construccion-geral`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const sendPlantillaVisitasProyecto = async (payload, token) => {
+  console.log(payload);
+  try {
+    const url = `${baseUrl}/load-visitas-proyecto`;
     const response = await axios.post(url, payload, {
       headers: {
         Authorization: `Bearer ${token}`

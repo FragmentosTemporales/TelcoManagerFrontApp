@@ -56,6 +56,7 @@ function FormAstList() {
 
   const fetchData = async () => {
     try {
+      setIsSubmitting(true);
       setIsLoading(true);
       const res = await getAstList(token, page, form);
       setData(res.data);
@@ -64,6 +65,7 @@ function FormAstList() {
       console.log(error);
     } finally {
       setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -74,6 +76,8 @@ function FormAstList() {
 
   const handleClear = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setIsSubmitting(true);
     try {
       setForm({ fecha: "", numDoc: "" });
       setSelectedUser(null); // Limpiar Autocomplete
@@ -84,7 +88,9 @@ function FormAstList() {
       });
     } catch (error) {
       console.log(error);
-      setOpen(true);
+    } finally {
+      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -285,6 +291,7 @@ function FormAstList() {
               <Button
                 type="submit"
                 variant="contained"
+                disabled={isSubmitting}
                 sx={{
                   mt: 2,
                   background: "#0b2f6d",
@@ -292,10 +299,11 @@ function FormAstList() {
                   borderRadius: "20px",
                 }}
               >
-                Filtrar
+                {isSubmitting ? "Procesando..." : "Filtrar"}
               </Button>
               <Button
                 variant="outlined"
+                disabled={isSubmitting}
                 onClick={handleClear}
                 sx={{
                   mt: 2,
@@ -304,7 +312,7 @@ function FormAstList() {
                   borderRadius: "20px",
                 }}
               >
-                Limpiar Filtros
+                {isSubmitting ? "Procesando..." : "Limpiar Filtros"}
               </Button>
             </form>
           </CardContent>
@@ -639,10 +647,6 @@ function FormAstList() {
   useEffect(() => {
     fetchDataAstByCC();
   }, [centroCosto]);
-
-  useEffect(() => {
-    console.log(form);
-  }, [form]);
 
   return (
     <Box

@@ -30,7 +30,6 @@ function LoadConstruccion() {
 
   const handleFileChange = (e) => {
     setForm({
-      ...form,
       file: e.target.files[0],
     });
   };

@@ -1,13 +1,11 @@
 import {
   Box,
   Button,
-  Card,
-  CardHeader,
   CircularProgress,
-  CardContent,
-  InputLabel,
   TextField,
   Typography,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import {
   BarChart,
@@ -27,6 +25,10 @@ import {
   getDataHistoricaAgendamientos,
   getDataFuturaAgendamientos,
 } from "../api/despachoAPI";
+import {
+getDespachadoresData,
+getBacklogConsolidadoDiario
+} from "../api/backlogAPI";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -35,10 +37,12 @@ function AgendamientoCharts() {
   const { token } = authState;
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(undefined);
+  const [userOptions, setUserOptions] = useState(undefined);
   const [dataHistorica, setDataHistorica] = useState(undefined);
-  const [dataFutura, setDataFutura] = useState(undefined);
+  const [dataConsolidada, setDataconsolidada] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fecha, setFecha] = useState(new Date().toISOString().slice(0, 10));
+  const [form, setForm] = useState({userID: "344"});
 
   const extractDate = (gmtString) => {
     const date = new Date(gmtString);
@@ -49,6 +53,15 @@ function AgendamientoCharts() {
 
     const formattedDate = `${day}-${month}-${year}`;
     return formattedDate;
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await getDespachadoresData(token);
+      setUserOptions(response);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } 
   };
 
   const mergeDataByDate = (historicalData, futureData) => {
@@ -105,9 +118,35 @@ function AgendamientoCharts() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
+  const handleSubmit = () => {
+    fetchConsolidatedData();
     fetchData();
+  };
+
+  const fetchConsolidatedData = async () => {
+    setIsLoading(true);
+    try {
+      const payload = {
+        fecha: fecha,
+        userID: form.userID,
+        }
+      const response = await getBacklogConsolidadoDiario(token, payload);
+      setDataconsolidada(response);
+    } catch (error) {
+      console.error("Error fetching consolidated data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleSubmit();
   }, []);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
 
   return (
     <Box
@@ -152,10 +191,39 @@ function AgendamientoCharts() {
             alignItems: "center",
           }}
         >
+          <Select
+            required
+            id="userID"
+            name="userID"
+            variant="outlined"
+            value={form.userID || ""}
+            onChange={(e) => setForm({ ...form, userID: e.target.value })}
+            sx={{ minWidth: "50%" }}
+            displayEmpty
+          >
+            <MenuItem value="" disabled>
+              Seleccione un usuario
+            </MenuItem>
+            {userOptions &&
+              userOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+          </Select>
+        </Box>
+        <Box
+          sx={{
+            width: "50%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Button
             variant="contained"
             disabled={isSubmitting}
-            onClick={fetchData}
+            onClick={handleSubmit}
             sx={{
               background: "#0b2f6d",
               height: 30,
@@ -194,6 +262,7 @@ function AgendamientoCharts() {
             padding: 2,
           }}
         >
+
           <Box
             sx={{
               width: { xs: "100%", lg: "100%" },
@@ -247,6 +316,65 @@ function AgendamientoCharts() {
               </BarChart>
             </ResponsiveContainer>
           </Box>
+
+{dataConsolidada ? (
+
+            <Box
+            sx={{
+              width: { xs: "100%", lg: "100%" },
+              marginBottom: { xs: 2, lg: 0 },
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                textAlign: "center",
+                marginBottom: 2,
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                Detalle Agendamientos
+              </Typography>
+            </Box>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={dataConsolidada} layout="horizontal">
+                <defs>
+                  <linearGradient
+                    id="barGradientConsolidada"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="0%" stopColor="#323232" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#282828" stopOpacity={1} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="5 5" />
+                <XAxis dataKey="estado_interno" fontSize={10} />
+                <YAxis />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#f5f5f5",
+                    borderRadius: "4px",
+                    border: "1px solid #ccc",
+                  }}
+                />
+
+                <Bar dataKey="Q" fill="url(#barGradientConsolidada)">
+                  <LabelList
+                    dataKey="Q"
+                    position="inside"
+                    fill="#f5f5f5"
+                    fontWeight={"bold"}
+                  />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </Box>
+) : null}
+
+
           <Box
             sx={{
               width: { xs: "100%", lg: "100%" },

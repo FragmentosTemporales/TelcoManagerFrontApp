@@ -2,8 +2,10 @@ import {
   Box,
   Button,
   CircularProgress,
+  Select,
   TextField,
   Typography,
+  MenuItem,
 } from "@mui/material";
 import {
   BarChart,
@@ -15,9 +17,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  getQMacroEstado
-} from "../api/onnetAPI";
+import { getQMacroEstado } from "../api/onnetAPI";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -26,11 +26,47 @@ function ProyectosCharts() {
   const { token } = authState;
   const [isLoading, setIsLoading] = useState(false);
   const [dataMacro, setDataMacro] = useState(undefined);
+  const [agencia, setAgencia] = useState("ANTOFAGASTA");
+
+  const agencias = [
+    "CURICO",
+    "CENTRO",
+    "RANCAGUA",
+    "ANTOFAGASTA",
+    "PROVIDENCIA",
+    "CALAMA",
+    "HUALPEN",
+    "MELIPILLA",
+    "PUENTE ALTO",
+    "PENAFLOR",
+    "LOS ANGELES",
+    "INDEPENDENCIA",
+    "VIÑA DEL MAR",
+    "CHIGUAYANTE",
+    "LAS REJAS",
+    "VALDIVIA",
+    "CONCEPCION",
+    "VALPARAISO",
+    "QUILPUE",
+    "SAN ANTONIO",
+    "APOQUINDO",
+    "LOS ANDES",
+    "NUNOA",
+    "EL LLANO",
+    "QUILLOTA",
+    "MAIPU",
+    "CHILLAN",
+    "LA FLORIDA",
+    "SAN BERNARDO",
+    "TALCAHUANO",
+    "VINA DEL MAR",
+    "TALCA",
+  ];
 
   const fetchChartDataMacro = async () => {
     setIsLoading(true);
     try {
-      const response = await getQMacroEstado(token);
+      const response = await getQMacroEstado(token, agencia);
       setDataMacro(response);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -40,7 +76,7 @@ function ProyectosCharts() {
 
   useEffect(() => {
     fetchChartDataMacro();
-  }, []);
+  }, [agencia]);
 
   return (
     <Box
@@ -80,6 +116,32 @@ function ProyectosCharts() {
               padding: 2,
             }}
           >
+            <Box
+              sx={{
+                width: "100%",
+                textAlign: "center",
+                marginBottom: 2,
+              }}
+            >
+              <Select
+                size="small"
+                value={agencia}
+                onChange={(e) => setAgencia(e.target.value)}
+                sx={{ width: "250px", marginBottom: 2 }}
+                variant="outlined"
+                displayEmpty
+              >
+                <MenuItem value="" disabled>
+                  Seleccione una agencia
+                </MenuItem>
+                {agencias &&
+                  agencias.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </Box>
             <Box
               sx={{
                 width: "100%",
@@ -129,7 +191,6 @@ function ProyectosCharts() {
               </ResponsiveContainer>
             </Box>
           </Box>
-
         </Box>
       )}
     </Box>

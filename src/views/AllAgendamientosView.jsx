@@ -63,7 +63,6 @@ function AllAgendamientoViewer() {
     try {
       const response = await getAllAgendamientos(token, page);
       setData(response.data);
-      console.log(response.data);
       setPages(response.pages);
     } catch (error) {
       setAlertType("error");

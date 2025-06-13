@@ -78,36 +78,6 @@ export const getSolicitudeStats = async (token) => {
   }
 };
 
-export const getSolicitudeCCStats = async (token) => {
-  try {
-    const url = `${baseUrl}/get-stats-solicitud-cc`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response.data.error;
-  }
-};
-
-export const getSolicitudeTOPStats = async (token) => {
-  try {
-    const url = `${baseUrl}/get-stats-solicitud-tops`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response.data.error;
-  }
-};
-
 export const getSolicitudeStatsByUser = async (token) => {
   try {
     const url = `${baseUrl}/get-stats-solicitudes-by-user`;

@@ -49,7 +49,7 @@ function AsignadosView() {
       {moduloPermiso && moduloPermiso["edit"] == true ? (
         <Box
           sx={{
-            width: "60%",
+            width: "80%",
             mt: 2,
             display: "flex",
             justifyContent: "start",
@@ -68,7 +68,7 @@ function AsignadosView() {
                 display: "flex",
                 justifyContent: "space-around",
                 background: "#0b2f6d",
-                borderRadius: "10px",
+                borderRadius: "20px",
               }}
             >
               <AddCircleOutlineIcon /> Crear Nueva
@@ -117,7 +117,6 @@ function AsignadosView() {
     }
   };
 
-
   useEffect(() => {
     fetchAllAsignados();
   }, [page]);
@@ -140,25 +139,28 @@ function AsignadosView() {
       <>
         {createNew()}
         {is_loading ? (
-          <Skeleton variant="rectangular"sx={{
-            width: "60%",
-            overflow: "hidden",
-            backgroundColor: "#f5f5f5",
-            boxShadow: 5,
-            textAlign: "center",
-            borderRadius: "10px",
-            minHeight: "250px",
-            mt: 2,
-          }} />
-        ) : (
-          <Card
+          <Skeleton
+            variant="rectangular"
             sx={{
-              width: "60%",
+              width: "80%",
               overflow: "hidden",
               backgroundColor: "#f5f5f5",
               boxShadow: 5,
               textAlign: "center",
               borderRadius: "10px",
+              minHeight: "250px",
+              mt: 2,
+            }}
+          />
+        ) : (
+          <Card
+            sx={{
+              width: "80%",
+              overflow: "hidden",
+              backgroundColor: "#f5f5f5",
+              boxShadow: 5,
+              textAlign: "center",
+              borderRadius: "20px",
               minHeight: "250px",
               mt: 2,
             }}
@@ -188,7 +190,6 @@ function AsignadosView() {
                       "USUARIO",
                       "PROYECTO",
                       "ESTADO",
-                      "ACCIONES",
                     ].map((header) => (
                       <TableCell
                         key={header}
@@ -207,21 +208,30 @@ function AsignadosView() {
                 <TableBody>
                   {data && data.length > 0 ? (
                     data.map((row, index) => (
-                      <TableRow key={index}>
+                      <TableRow
+                        key={index}
+                        component={Link}
+                        to={`/asignado/${row.proyectoID}`}
+                        sx={{
+                          textDecoration: "none",
+                          cursor: "pointer",
+                          "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+                        }}
+                      >
                         <TableCell
                           align="center"
                           sx={{ fontWeight: "bold", fontFamily: "initial" }}
                         >
-                          {row.user.empresa && row.user.empresa.nombre != null
-                            ? row.user.empresa.nombre
+                          {row.empresa && row.empresa
+                            ? row.empresa
                             : "Sin Información"}
                         </TableCell>
                         <TableCell
                           align="center"
                           sx={{ fontWeight: "bold", fontFamily: "initial" }}
                         >
-                          {row.user && row.user.nombre != null
-                            ? row.user.nombre
+                          {row.usuario && row.usuario
+                            ? row.usuario
                             : "Sin Información"}
                         </TableCell>
                         <TableCell
@@ -234,9 +244,9 @@ function AsignadosView() {
                           align="center"
                           sx={{ fontFamily: "initial" }}
                         >
-                          {row.estado && row.estado.descri ? (
+                          {row.descri && row.descri ? (
                             (() => {
-                              switch (row.estado.descri) {
+                              switch (row.descri) {
                                 case "Iniciado":
                                   return (
                                     <Chip
@@ -291,33 +301,6 @@ function AsignadosView() {
                           )}
                         </TableCell>
 
-                        <TableCell align="center">
-                          <Tooltip title="Agregar Componentes">
-                            <Button
-                              variant="contained"
-                              sx={{
-                                width: 30,
-                                height: 30,
-                                minWidth: 30,
-                                padding: 0,
-                                background: "#0b2f6d",
-                              }}
-                            >
-                              <Link
-                                style={{
-                                  color: "white",
-                                  textDecoration: "none",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                }}
-                                to={`/asignado/${row.proyectoID}`}
-                              >
-                                <LibraryAddIcon />
-                              </Link>
-                            </Button>
-                          </Tooltip>
-                        </TableCell>
                       </TableRow>
                     ))
                   ) : (
