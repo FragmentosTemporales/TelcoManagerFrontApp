@@ -121,3 +121,29 @@ export const createRegistroReparacion = async (payload, token) => {
     throw error.response.data.error;
   }
 };
+
+export const getDespachosSemenalExcel = async (token) => {
+  try {
+    const url = `${baseUrl}/get-despachos-semanales-excel`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      responseType: "blob", // Set the response type to "blob" to handle binary data
+    });
+
+    // Create a download link for the Excel file
+    const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = urlBlob;
+    link.setAttribute("download", "despachos.xlsx"); // Set the file name
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    return "Archivo descargado exitosamente."; // Optional success message
+  } catch (error) {
+    throw error.response?.data?.error || "Error al descargar el archivo.";
+  }
+};

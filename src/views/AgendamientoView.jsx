@@ -651,7 +651,6 @@ function AgendamientoViewer() {
               >
                 <InputLabel>Comentarios</InputLabel>
                 <TextField
-                  required
                   id="comentario"
                   type="text"
                   name="comentario"

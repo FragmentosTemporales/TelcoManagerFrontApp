@@ -93,9 +93,23 @@ export const sendPlantillaConstruccion = async (payload, token) => {
 };
 
 export const sendPlantillaVisitasProyecto = async (payload, token) => {
-  console.log(payload);
   try {
     const url = `${baseUrl}/load-visitas-proyecto`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const sendPlantillaAgendaProyecto = async (payload, token) => {
+  console.log(payload);
+  try {
+    const url = `${baseUrl}/load-agenda-visitas-geral`;
     const response = await axios.post(url, payload, {
       headers: {
         Authorization: `Bearer ${token}`

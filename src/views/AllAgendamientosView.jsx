@@ -17,13 +17,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
-import { getAllAgendamientos, filterAgendamiento } from "../api/despachoAPI";
+import { getAllAgendamientos, filterAgendamiento, getDespachosSemenalExcel } from "../api/despachoAPI";
 import { useSelector } from "react-redux";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
@@ -52,6 +53,44 @@ function AllAgendamientoViewer() {
   const toggleStats = () => {
     setShowStats((prev) => !prev);
   };
+
+    const getExcel = async () => {
+      setIsSubmitting(true);
+      try {
+        await getDespachosSemenalExcel(token);
+      } catch (error) {
+        console.log(error);
+      }
+      setIsSubmitting(false);
+    };
+
+  const downloadExcel = () => (
+    <Box
+      sx={{
+        width: "80%",
+        mt: 2,
+        display: "flex",
+        justifyContent: "start",
+      }}
+    >
+        <Button
+          variant="contained"
+          onClick={getExcel}
+          disabled={isSubmitting}
+          sx={{
+            width: 200,
+            height: 40,
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-around",
+            borderRadius: "20px",
+            background: "#0b2f6d",
+          }}
+        >
+          {isSubmitting ? "Cargando..." : "Descargar Excel"}
+        </Button>
+    </Box>
+  );
 
   const [form, setForm] = useState({
     fechaInicio: "",
@@ -452,6 +491,8 @@ function AllAgendamientoViewer() {
           </CardContent>
         )}
       </Card>
+
+      {downloadExcel()}
 
       <Card
         sx={{
