@@ -35,7 +35,6 @@ import { useEffect, useState } from "react";
 import {
   getProyectosFiltrados,
   getOptionToFilter,
-  sendPlantillaVisitasProyecto,
   sendPlantillaAgendaProyecto,
 } from "../api/onnetAPI";
 import ProyectosCharts from "../components/proyectosCharts";
@@ -114,39 +113,7 @@ function ProyectosOnNetView() {
   });
 
   const handleSubmitVisitas = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const formData = new FormData();
-
-    if (formVisitas.file) {
-      formData.append("file", formVisitas.file);
-    }
-    try {
-      const response = await sendPlantillaVisitasProyecto(formData, token);
-      console.log(response);
-      setAlertType("success");
-      setMessage("Archivo cargado correctamente.");
-      setOpen(true);
-    } catch (error) {
-      // Manejo de error específico si el archivo está abierto por otro proceso
-      let errorMsg = error?.message || error;
-      if (
-        typeof errorMsg === "string" &&
-        (errorMsg.includes("used by another process") ||
-          errorMsg.includes("no se puede obtener acceso al archivo") ||
-          errorMsg.includes("Failed to load"))
-      ) {
-        errorMsg =
-          "No se pudo cargar el archivo porque está abierto en otra aplicación. Por favor, cierre el archivo e intente nuevamente.";
-      }
-      setMessage(errorMsg);
-      setAlertType("error");
-      setOpen(true);
-    } finally {
-      setIsSubmitting(false);
-      setFormVisitas({ file: null }); // Limpiar el formulario después de enviar
-    }
+    
   };
 
   const handleSubmitAgendas = async (e) => {
@@ -405,8 +372,7 @@ function ProyectosOnNetView() {
                     width: "200px",
                     borderRadius: "20px",
                   }}
-                  onClick={handleSubmitVisitas}
-                  disabled={isSubmitting}
+                  disabled
                 >
                   {isSubmitting ? "Procesando..." : "Cargar"}
                 </Button>

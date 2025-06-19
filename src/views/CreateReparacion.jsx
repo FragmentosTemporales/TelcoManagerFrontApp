@@ -179,7 +179,7 @@ function CreateReparacionView() {
 
 
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="orden-label">Orden</InputLabel>
+              <InputLabel id="orden-label">Orden de Trabajo</InputLabel>
               <TextField
                 fullWidth
                 size="small"
@@ -209,7 +209,7 @@ function CreateReparacionView() {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="img_1-label">IMAGEN 1</InputLabel>
+              <InputLabel id="img_1-label">Registro 1</InputLabel>
               <TextField
                 required
                 size="small"
@@ -224,7 +224,7 @@ function CreateReparacionView() {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="img_2-label">IMAGEN 2</InputLabel>
+              <InputLabel id="img_2-label">Registro 2</InputLabel>
               <TextField
                 required
                 size="small"
@@ -239,7 +239,7 @@ function CreateReparacionView() {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="img_1-label">IMAGEN 3</InputLabel>
+              <InputLabel id="img_1-label">Registro 3</InputLabel>
               <TextField
                 required
                 size="small"
