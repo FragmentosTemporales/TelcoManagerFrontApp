@@ -3,37 +3,18 @@ import {
   Autocomplete,
   Box,
   Button,
-  ButtonGroup,
-  Card,
-  CardContent,
-  CardHeader,
   CircularProgress,
-  InputLabel,
   MenuItem,
   Select,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useEffect, useState } from "react";
 import {
   createAuditoria,
-  getAuditorias,
   getConsolidadoOt,
 } from "../api/calidadAPI";
 import { useSelector } from "react-redux";
-import extractDate from "../helpers/main";
 
 function CreateAuditoria() {
   const authState = useSelector((state) => state.auth);
@@ -42,19 +23,8 @@ function CreateAuditoria() {
   const [message, setMessage] = useState(undefined);
   const [alertType, setAlertType] = useState(undefined);
   const [isLoadingCompilado, setIsLoadingCompilado] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [dataCompilada, setDataCompilada] = useState(undefined);
-  const [data, setData] = useState(undefined);
-  const [pages, setPages] = useState(1);
-  const [page, setPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showCreate, setShowCreate] = useState(false);
-
-  const toggleCreate = () => {
-    setShowCreate((prev) => !prev);
-  };
-
-  const handlePage = (newPage) => setPage(newPage);
 
   const [form, setForm] = useState({
     orden: "",
@@ -108,7 +78,6 @@ function CreateAuditoria() {
       setAlertType("success");
       setMessage(response.message);
       setOpen(true);
-      fetchData();
     } catch (error) {
       setMessage(error);
       setAlertType("error");
@@ -130,20 +99,6 @@ function CreateAuditoria() {
       observacion: "",
     });
     setIsSubmitting(false);
-  };
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      const response = await getAuditorias(token, page);
-      setData(response.data);
-      setPages(response.pages);
-    } catch (error) {
-      setAlertType("error");
-      setMessage(error);
-      setOpen(true);
-    }
-    setIsLoading(false);
   };
 
   const fetchDataConsolidada = async () => {
@@ -186,139 +141,10 @@ function CreateAuditoria() {
     }
   };
 
-  const setTable = () => (
-    <>
-      <TableContainer>
-        <Table
-          sx={{ width: "100%", display: "column", justifyContent: "center" }}
-        >
-          {setTableHead()}
-          {setTableBody()}
-        </Table>
-      </TableContainer>
-    </>
-  );
-
-  const setTableHead = () => (
-    <>
-      <TableHead>
-        <TableRow>
-          {["FECHA CREACION", "ORDEN", "RESULTADO", "FECHA CIERRE"].map(
-            (header) => (
-              <TableCell
-                key={header}
-                align="center"
-                sx={{
-                  background: "#d8d8d8",
-                  fontWeight: "bold",
-                  width: "25%",
-                }}
-              >
-                {header}
-              </TableCell>
-            )
-          )}
-        </TableRow>
-      </TableHead>
-    </>
-  );
-
-  const setTableBody = () => (
-    <>
-      <TableBody
-        sx={{
-          display: "column",
-          justifyContent: "center",
-        }}
-      >
-        {data && data.length > 0 ? (
-          data.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.fechaRegistro
-                    ? extractDate(row.fechaRegistro)
-                    : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.orden ? row.orden : "Sin Información"}
-                </Typography>
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.auditoria ? row.auditoria : "Sin Información"}
-                </Typography>
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "16px", width: "25%" }} // Equal width
-              >
-                <Typography fontFamily={"initial"} variant="secondary">
-                  {row.fechaCierre ? row.fechaCierre : "Sin Información"}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan={4} align="center" sx={{ width: "100%" }}>
-              No hay datos disponibles
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </>
-  );
-
-  const getButtons = () => (
-    <>
-      <Button
-        key="prev"
-        variant="contained"
-        onClick={() => handlePage(page - 1)}
-        disabled={page === 1}
-        sx={{ background: "#0b2f6d" }}
-      >
-        <ArrowBackIosIcon />
-      </Button>
-      <Button key="current" variant="contained" sx={{ background: "#0b2f6d" }}>
-        {page}
-      </Button>
-      <Button
-        key="next"
-        variant="contained"
-        onClick={() => handlePage(page + 1)}
-        disabled={page === pages}
-        sx={{ background: "#0b2f6d" }}
-      >
-        <ArrowForwardIosIcon />
-      </Button>
-    </>
-  );
-
-  useEffect(() => {
-    fetchData();
-  }, [page]);
-
   useEffect(() => {
     fetchDataConsolidada();
   }, []);
 
-  useEffect(() => {
-    console.log(form);
-  }, [form]);
 
   return (
     <Box
@@ -330,6 +156,7 @@ function CreateAuditoria() {
         minHeight: "85vh",
         overflow: "auto",
         padding: 8,
+        background: "#f5f5f5",
       }}
     >
       {open && (
@@ -344,809 +171,708 @@ function CreateAuditoria() {
       {isLoadingCompilado ? (
         <CircularProgress />
       ) : (
-        <>
-          <Card
-            sx={{
-              width: { lg: "80%", md: "60%", xs: "80%" },
-              borderRadius: "20px",
-              boxShadow: 5,
-            }}
-          >
-            <CardHeader
-              title={<Typography fontWeight="bold">Crear Auditoría</Typography>}
-              avatar={<AddCircleOutlineIcon />}
-              action={
-                <Button
-                  onClick={toggleCreate}
-                  sx={{ color: "white", minWidth: "auto" }}
-                >
-                  {showCreate ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </Button>
-              }
+        <Box
+          sx={{
+            width: "90%",
+            background: "#ffffff",
+            pt: 4,
+            mt: 4,
+            boxShadow: 2,
+          }}
+        >
+          <form onSubmit={SubmitForm} style={{ width: "100%" }}>
+            <Box
               sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "center",
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-            />
-            {showCreate && (
-              <CardContent
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
                 }}
               >
-                <form onSubmit={SubmitForm} style={{ width: "100%" }}>
-                  <Box
+                1.- Órden de Trabajo
+              </Typography>
+              <Autocomplete
+                fullWidth
+                variant="standard"
+                size="small"
+                options={dataCompilada}
+                getOptionLabel={(option) => option.orden}
+                value={
+                  dataCompilada &&
+                  dataCompilada.find(
+                    (option) => option.orden === form.orden
+                  ) !== undefined
+                    ? dataCompilada.find(
+                        (option) => option.orden === form.orden
+                      )
+                    : null
+                }
+                onChange={(event, newValue) => {
+                  setForm({
+                    ...form,
+                    orden: newValue ? newValue.orden : "",
+                    tecnico: newValue ? newValue.Nombre : "",
+                    numDoc: newValue ? newValue.Rut : "",
+                  });
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="standard"
+                    required
                     sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      fontFamily: "initial",
+                      whiteSpace: "normal",
+                      width: { lg: "70%", xs: "100%", md: "100%" },
+                      textAlign: "center",
+                      background: "#ffffff",
                     }}
-                  >
-                    <Autocomplete
-                      fullWidth
-                      size="small"
-                      options={dataCompilada}
-                      getOptionLabel={(option) => option.orden}
-                      value={
-                        dataCompilada &&
-                        dataCompilada.find(
-                          (option) => option.orden === form.orden
-                        ) !== undefined
-                          ? dataCompilada.find(
-                              (option) => option.orden === form.orden
-                            )
-                          : null
-                      }
-                      onChange={(event, newValue) => {
-                        setForm({
-                          ...form,
-                          orden: newValue ? newValue.orden : "",
-                          tecnico: newValue ? newValue.Nombre : "",
-                          numDoc: newValue ? newValue.Rut : "",
-                        });
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="ORDEN DE TRABAJO"
-                          variant="outlined"
-                          required
-                          sx={{
-                            fontFamily: "initial",
-                            whiteSpace: "normal",
-                            width: { lg: "70%", xs: "100%", md: "100%" },
-                            textAlign: "center",
-                            background: "#ffffff",
-                          }}
-                        />
-                      )}
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: "100%",
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                    />
-                  </Box>
+                  />
+                )}
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: "100%",
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+              />
+            </Box>
 
-                                    <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="declaracion-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      Nombre técnico
-                    </InputLabel>
-                    <TextField
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      size="small"
-                      id="tecnico"
-                      type="text"
-                      name="tecnico"
-                      variant="outlined"
-                      value={form.tecnico}
-                      disabled
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="declaracion-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      Rut técnico
-                    </InputLabel>
-                    <TextField
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      size="small"
-                      id="numDoc"
-                      type="text"
-                      name="numDoc"
-                      variant="outlined"
-                      value={form.numDoc}
-                      disabled
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="fechaCierre-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      Fecha Cierre Órden de Trabajo
-                    </InputLabel>
-                    <TextField
-                      required
-                      size="small"
-                      id="fechaCierre"
-                      type="date"
-                      name="fechaCierre"
-                      variant="outlined"
-                      value={form.fechaCierre}
-                      onChange={handleChange}
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      inputProps={{
-                        min: new Date(new Date().getTime() - 4 * 60 * 60 * 1000)
-                          .toISOString()
-                          .slice(0, 16),
-                      }}
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="auditoria-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      Resultado de la Auditoría
-                    </InputLabel>
-                    <Select
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      size="small"
-                      required
-                      id="auditoria"
-                      name="auditoria"
-                      variant="outlined"
-                      value={form.auditoria}
-                      onChange={handleChange}
-                      fontFamily="initial"
-                    >
-                      <MenuItem value="CUMPLE" sx={{ fontFamily: "initial" }}>
-                        CUMPLE
-                      </MenuItem>
-                      <MenuItem
-                        value="CUMPLE CON OBSERVACIONES"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        CUMPLE CON OBSERVACIONES
-                      </MenuItem>
-                      <MenuItem
-                        value="NO CUMPLE"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        NO CUMPLE
-                      </MenuItem>
-                      <MenuItem
-                        value="SIN CONTACTO"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        SIN CONTACTO
-                      </MenuItem>
-                    </Select>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="cobertura-wifi-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      ¿Tiene usted buena cobertura de la señal de Wifi?
-                    </InputLabel>
-                    <Select
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      required
-                      size="small"
-                      id="cobertura_wifi"
-                      name="cobertura_wifi"
-                      variant="outlined"
-                      value={form.cobertura_wifi}
-                      onChange={handleChange}
-                      fontFamily="initial"
-                      disabled={form.auditoria === "SIN CONTACTO"}
-                    >
-                      <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
-                        SI
-                      </MenuItem>
-                      <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
-                        NO
-                      </MenuItem>
-                      <MenuItem value="NO SABE" sx={{ fontFamily: "initial" }}>
-                        NO SABE
-                      </MenuItem>
-                      <MenuItem
-                        value="SIN CONTACTO"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        SIN CONTACTO
-                      </MenuItem>
-                    </Select>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="streaming-activos-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      ¿Ocupa plataformas de Streaming?, si es así, ¿Están
-                      activas?, ¿Le indicaron cómo activarlas?
-                    </InputLabel>
-                    <Select
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      required
-                      size="small"
-                      id="streaming_activos"
-                      name="streaming_activos"
-                      variant="outlined"
-                      value={form.streaming_activos}
-                      onChange={handleChange}
-                      fontFamily="initial"
-                      disabled={form.auditoria === "SIN CONTACTO"}
-                    >
-                      <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
-                        SI
-                      </MenuItem>
-                      <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
-                        NO
-                      </MenuItem>
-                      <MenuItem
-                        value="AUN NO PRUEBO"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        AUN NO PRUEBO
-                      </MenuItem>
-                      <MenuItem
-                        value="NO APLICA"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        NO APLICA
-                      </MenuItem>
-                      <MenuItem
-                        value="SIN CONTACTO"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        SIN CONTACTO
-                      </MenuItem>
-                    </Select>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="control-deco-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      ¿Dejó identificado qué control corresponde a qué
-                      decodificador?
-                    </InputLabel>
-                    <Select
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      required
-                      size="small"
-                      id="control_deco"
-                      name="control_deco"
-                      variant="outlined"
-                      value={form.control_deco}
-                      onChange={handleChange}
-                      fontFamily="initial"
-                      disabled={form.auditoria === "SIN CONTACTO"}
-                    >
-                      <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
-                        SI
-                      </MenuItem>
-                      <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
-                        NO
-                      </MenuItem>
-                      <MenuItem
-                        value="NO APLICA"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        NO APLICA
-                      </MenuItem>
-                      <MenuItem
-                        value="SIN CONTACTO"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        SIN CONTACTO
-                      </MenuItem>
-                    </Select>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="canales-activos-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      ¿Los canales solicitados se encuentran instalados y
-                      funcionando?
-                    </InputLabel>
-                    <Select
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      required
-                      size="small"
-                      id="canales_activos"
-                      name="canales_activos"
-                      variant="outlined"
-                      value={form.canales_activos}
-                      onChange={handleChange}
-                      fontFamily="initial"
-                      disabled={form.auditoria === "SIN CONTACTO"}
-                    >
-                      <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
-                        SI
-                      </MenuItem>
-                      <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
-                        NO
-                      </MenuItem>
-                      <MenuItem
-                        value="NO APLICA"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        NO APLICA
-                      </MenuItem>
-                      <MenuItem
-                        value="SIN CONTACTO"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        SIN CONTACTO
-                      </MenuItem>
-                    </Select>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="conectado-wifi-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      ¿Usa algún artefacto conectado a la red Wifi?
-                    </InputLabel>
-                    <Select
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      required
-                      size="small"
-                      id="conectado_wifi"
-                      name="conectado_wifi"
-                      variant="outlined"
-                      value={form.conectado_wifi}
-                      onChange={handleChange}
-                      fontFamily="initial"
-                      disabled={form.auditoria === "SIN CONTACTO"}
-                    >
-                      <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
-                        SI
-                      </MenuItem>
-                      <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
-                        NO
-                      </MenuItem>
-                      <MenuItem
-                        value="NO APLICA"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        NO APLICA
-                      </MenuItem>
-                      <MenuItem
-                        value="SIN CONTACTO"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        SIN CONTACTO
-                      </MenuItem>
-                    </Select>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="n_tecnico-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      ¿El técnico dejó su número telefónico para la garantía?
-                    </InputLabel>
-                    <Select
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      required
-                      size="small"
-                      id="n_tecnico"
-                      name="n_tecnico"
-                      variant="outlined"
-                      value={form.n_tecnico}
-                      onChange={handleChange}
-                      fontFamily="initial"
-                      disabled={form.auditoria === "SIN CONTACTO"}
-                    >
-                      <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
-                        SI
-                      </MenuItem>
-                      <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
-                        NO
-                      </MenuItem>
-                      <MenuItem value="NO SABE" sx={{ fontFamily: "initial" }}>
-                        NO SABE
-                      </MenuItem>
-                      <MenuItem
-                        value="SIN CONTACTO"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        SIN CONTACTO
-                      </MenuItem>
-                    </Select>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="atencion-value-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      ¿Cómo le pareció la atención entregada por el técnico?
-                    </InputLabel>
-                    <Select
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      required
-                      size="small"
-                      id="atencion_value"
-                      name="atencion_value"
-                      variant="outlined"
-                      value={form.atencion_value}
-                      onChange={handleChange}
-                      fontFamily="initial"
-                      disabled={form.auditoria === "SIN CONTACTO"}
-                    >
-                      <MenuItem
-                        value="EXCELENTE"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        EXCELENTE
-                      </MenuItem>
-                      <MenuItem
-                        value="MUY BUENA"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        MUY BUENA
-                      </MenuItem>
-                      <MenuItem value="BUENA" sx={{ fontFamily: "initial" }}>
-                        BUENA
-                      </MenuItem>
-                      <MenuItem value="REGULAR" sx={{ fontFamily: "initial" }}>
-                        REGULAR
-                      </MenuItem>
-                      <MenuItem value="MALA" sx={{ fontFamily: "initial" }}>
-                        MALA
-                      </MenuItem>
-                      <MenuItem
-                        value="SIN CONTACTO"
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        SIN CONTACTO
-                      </MenuItem>
-                    </Select>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <InputLabel
-                      id="declaracion-label"
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        maxWidth: "70%",
-                        textAlign: "center",
-                      }}
-                    >
-                      Observación
-                    </InputLabel>
-                    <TextField
-                      sx={{
-                        fontFamily: "initial",
-                        whiteSpace: "normal",
-                        width: { lg: "70%", xs: "100%", md: "100%" },
-                        textAlign: "center",
-                        background: "#ffffff",
-                      }}
-                      size="small"
-                      id="observacion"
-                      type="text"
-                      name="observacion"
-                      variant="outlined"
-                      value={form.observacion}
-                      onChange={handleChange}
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      type="submit"
-                      disabled={isSubmitting}
-                      sx={{
-                        background: "#0b2f6d",
-                        height: 30,
-                        width: "20%",
-                        borderRadius: "20px",
-                      }}
-                    >
-                      {isSubmitting ? "Cargando..." : "Crear"}{" "}
-                    </Button>
-                  </Box>
-                </form>
-              </CardContent>
-            )}
-          </Card>
-
-          <Card
-            sx={{
-              width: { lg: "80%", md: "60%", xs: "80%" },
-              borderRadius: "20px",
-              boxShadow: 5,
-              marginTop: 2,
-            }}
-          >
-            <CardHeader
-              title={<Typography fontWeight="bold">Mis Auditorías</Typography>}
+            <Box
               sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "center",
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-            />
-            <CardContent sx={{ display: "grid" }}>
-              {isLoading ? (
-                <Skeleton
-                  variant="rectangular"
-                  animation="wave"
-                  sx={{
-                    width: "100%",
-                    height: "200px",
-                    borderRadius: "10px",
-                  }}
-                />
-              ) : (
-                setTable()
-              )}
-            </CardContent>
-          </Card>
-          <ButtonGroup
-            size="small"
-            aria-label="pagination-button-group"
-            sx={{ p: 2 }}
-          >
-            {getButtons()}
-          </ButtonGroup>
-        </>
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                2.- Técnico
+              </Typography>
+              <TextField
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                size="small"
+                id="tecnico"
+                type="text"
+                name="tecnico"
+                variant="standard"
+                value={form.tecnico}
+                disabled
+              />
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                3.- Rut del Técnico
+              </Typography>
+              <TextField
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                size="small"
+                id="numDoc"
+                type="text"
+                name="numDoc"
+                variant="standard"
+                value={form.numDoc}
+                disabled
+              />
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                4.- Fecha de Cierre
+              </Typography>
+              <TextField
+                required
+                size="small"
+                id="fechaCierre"
+                type="date"
+                name="fechaCierre"
+                variant="standard"
+                value={form.fechaCierre}
+                onChange={handleChange}
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                inputProps={{
+                  min: new Date(new Date().getTime() - 4 * 60 * 60 * 1000)
+                    .toISOString()
+                    .slice(0, 16),
+                }}
+              />
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                5.- Resultado de la Auditoría
+              </Typography>
+
+              <Select
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                size="small"
+                required
+                id="auditoria"
+                name="auditoria"
+                variant="standard"
+                value={form.auditoria}
+                onChange={handleChange}
+              >
+                <MenuItem value="CUMPLE" sx={{ fontFamily: "initial" }}>
+                  CUMPLE
+                </MenuItem>
+                <MenuItem
+                  value="CUMPLE CON OBSERVACIONES"
+                  sx={{ fontFamily: "initial" }}
+                >
+                  CUMPLE CON OBSERVACIONES
+                </MenuItem>
+                <MenuItem value="NO CUMPLE" sx={{ fontFamily: "initial" }}>
+                  NO CUMPLE
+                </MenuItem>
+                <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
+                  SIN CONTACTO
+                </MenuItem>
+              </Select>
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                pt: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                6.- ¿Tiene usted buena cobertura de la señal de Wifi?
+              </Typography>
+              <Select
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                required
+                size="small"
+                id="cobertura_wifi"
+                name="cobertura_wifi"
+                variant="standard"
+                value={form.cobertura_wifi}
+                onChange={handleChange}
+                fontFamily="initial"
+                disabled={form.auditoria === "SIN CONTACTO"}
+              >
+                <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
+                  SI
+                </MenuItem>
+                <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
+                  NO
+                </MenuItem>
+                <MenuItem value="NO SABE" sx={{ fontFamily: "initial" }}>
+                  NO SABE
+                </MenuItem>
+                <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
+                  SIN CONTACTO
+                </MenuItem>
+              </Select>
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                7.- ¿Ocupa plataformas de Streaming?, si es así, ¿Están activas?,
+                ¿Le indicaron cómo activarlas?
+              </Typography>
+
+              <Select
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                required
+                size="small"
+                id="streaming_activos"
+                name="streaming_activos"
+                variant="standard"
+                value={form.streaming_activos}
+                onChange={handleChange}
+                fontFamily="initial"
+                disabled={form.auditoria === "SIN CONTACTO"}
+              >
+                <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
+                  SI
+                </MenuItem>
+                <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
+                  NO
+                </MenuItem>
+                <MenuItem value="AUN NO PRUEBO" sx={{ fontFamily: "initial" }}>
+                  AUN NO PRUEBO
+                </MenuItem>
+                <MenuItem value="NO APLICA" sx={{ fontFamily: "initial" }}>
+                  NO APLICA
+                </MenuItem>
+                <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
+                  SIN CONTACTO
+                </MenuItem>
+              </Select>
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                8.- ¿Dejó identificado qué control corresponde a qué decodificador?
+              </Typography>
+              <Select
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                required
+                size="small"
+                id="control_deco"
+                name="control_deco"
+                variant="standard"
+                value={form.control_deco}
+                onChange={handleChange}
+                fontFamily="initial"
+                disabled={form.auditoria === "SIN CONTACTO"}
+              >
+                <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
+                  SI
+                </MenuItem>
+                <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
+                  NO
+                </MenuItem>
+                <MenuItem value="NO APLICA" sx={{ fontFamily: "initial" }}>
+                  NO APLICA
+                </MenuItem>
+                <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
+                  SIN CONTACTO
+                </MenuItem>
+              </Select>
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                9.- ¿Los canales solicitados se encuentran instalados y funcionando?
+              </Typography>
+              <Select
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                required
+                size="small"
+                id="canales_activos"
+                name="canales_activos"
+                variant="standard"
+                value={form.canales_activos}
+                onChange={handleChange}
+                fontFamily="initial"
+                disabled={form.auditoria === "SIN CONTACTO"}
+              >
+                <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
+                  SI
+                </MenuItem>
+                <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
+                  NO
+                </MenuItem>
+                <MenuItem value="NO APLICA" sx={{ fontFamily: "initial" }}>
+                  NO APLICA
+                </MenuItem>
+                <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
+                  SIN CONTACTO
+                </MenuItem>
+              </Select>
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                10.- ¿Usa algún artefacto conectado a la red Wifi?
+              </Typography>
+
+              <Select
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                required
+                size="small"
+                id="conectado_wifi"
+                name="conectado_wifi"
+                variant="standard"
+                value={form.conectado_wifi}
+                onChange={handleChange}
+                fontFamily="initial"
+                disabled={form.auditoria === "SIN CONTACTO"}
+              >
+                <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
+                  SI
+                </MenuItem>
+                <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
+                  NO
+                </MenuItem>
+                <MenuItem value="NO APLICA" sx={{ fontFamily: "initial" }}>
+                  NO APLICA
+                </MenuItem>
+                <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
+                  SIN CONTACTO
+                </MenuItem>
+              </Select>
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                11.- ¿El técnico dejó su número telefónico para la garantía?
+              </Typography>
+              <Select
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                required
+                size="small"
+                id="n_tecnico"
+                name="n_tecnico"
+                variant="standard"
+                value={form.n_tecnico}
+                onChange={handleChange}
+                fontFamily="initial"
+                disabled={form.auditoria === "SIN CONTACTO"}
+              >
+                <MenuItem value="SI" sx={{ fontFamily: "initial" }}>
+                  SI
+                </MenuItem>
+                <MenuItem value="NO" sx={{ fontFamily: "initial" }}>
+                  NO
+                </MenuItem>
+                <MenuItem value="NO SABE" sx={{ fontFamily: "initial" }}>
+                  NO SABE
+                </MenuItem>
+                <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
+                  SIN CONTACTO
+                </MenuItem>
+              </Select>
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                12.- ¿Cómo le pareció la atención entregada por el técnico?
+              </Typography>
+              <Select
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                required
+                size="small"
+                id="atencion_value"
+                name="atencion_value"
+                variant="standard"
+                value={form.atencion_value}
+                onChange={handleChange}
+                fontFamily="initial"
+                disabled={form.auditoria === "SIN CONTACTO"}
+              >
+                <MenuItem value="EXCELENTE" sx={{ fontFamily: "initial" }}>
+                  EXCELENTE
+                </MenuItem>
+                <MenuItem value="MUY BUENA" sx={{ fontFamily: "initial" }}>
+                  MUY BUENA
+                </MenuItem>
+                <MenuItem value="BUENA" sx={{ fontFamily: "initial" }}>
+                  BUENA
+                </MenuItem>
+                <MenuItem value="REGULAR" sx={{ fontFamily: "initial" }}>
+                  REGULAR
+                </MenuItem>
+                <MenuItem value="MALA" sx={{ fontFamily: "initial" }}>
+                  MALA
+                </MenuItem>
+                <MenuItem value="SIN CONTACTO" sx={{ fontFamily: "initial" }}>
+                  SIN CONTACTO
+                </MenuItem>
+              </Select>
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="secondary"
+                fontStyle={"italic"}
+                sx={{
+                  width: "70%",
+                  alignContent: "start",
+                  p: 1,
+                }}
+              >
+                13.- Observación
+              </Typography>
+              <TextField
+                sx={{
+                  fontFamily: "initial",
+                  whiteSpace: "normal",
+                  width: { lg: "70%", xs: "100%", md: "100%" },
+                  textAlign: "center",
+                  background: "#ffffff",
+                }}
+                size="small"
+                id="observacion"
+                type="text"
+                name="observacion"
+                variant="standard"
+                multiline
+                minRows={2}
+                value={form.observacion}
+                onChange={handleChange}
+              />
+            </Box>
+
+            <Box
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={isSubmitting}
+                sx={{
+                  background: "#0b2f6d",
+                  height: 30,
+                  width: "20%",
+                  borderRadius: "0px",
+                }}
+              >
+                {isSubmitting ? "Cargando..." : "Crear"}
+              </Button>
+            </Box>
+          </form>
+        </Box>
       )}
     </Box>
   );

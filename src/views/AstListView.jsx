@@ -113,17 +113,21 @@ function FormAstList() {
     }
   };
 
-  const setTable = () => (
-    <>
-      <TableContainer>
-        <Table
-          sx={{ width: "100%", display: "column", justifyContent: "center" }}
-        >
-          {setTableHead()}
-          {setTableBody()}
-        </Table>
-      </TableContainer>
-    </>
+  const setTableCard = () => (
+    <TableContainer
+      sx={{
+        width: "90%",
+        height: "100%",
+        overflow: "auto",
+        marginTop: 2,
+        boxShadow: 2,
+      }}
+    >
+      <Table stickyHeader>
+        {setTableHead()}
+        {setTableBody()}
+      </Table>
+    </TableContainer>
   );
 
   const fetchNotAstCC = async () => {
@@ -159,6 +163,7 @@ function FormAstList() {
       sx={{
         width: "90%",
         mb: 2,
+        mt: 2,
         display: "flex",
         justifyContent: "start",
       }}
@@ -173,7 +178,7 @@ function FormAstList() {
           fontWeight: "bold",
           display: "flex",
           justifyContent: "space-around",
-          borderRadius: "20px",
+          borderRadius: "0px",
           background: "#0b2f6d",
         }}
       >
@@ -209,116 +214,91 @@ function FormAstList() {
   );
 
   const filterCard = () => (
-    <>
-      <Card
-        sx={{
-          width: "90%",
-          overflow: "hidden",
-          backgroundColor: "#f5f5f5",
-          boxShadow: 5,
-          textAlign: "center",
-          borderRadius: "10px",
-          mt: 2,
-          mb: 2,
-        }}
-      >
-        <CardHeader
-          title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              FILTRAR POR
-            </Typography>
-          }
-          avatar={<SearchIcon />}
-          action={
-            <Button
-              onClick={toggleFilters}
-              sx={{ color: "white", minWidth: "auto" }}
-            >
-              {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </Button>
-          }
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "end",
-          }}
-        />
-        {showFilters && dataUsers ? (
-          <CardContent>
-            <form onSubmit={handleSubmit}>
-              <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-                <Autocomplete
-                  options={dataUsers || []}
-                  getOptionLabel={(option) => option.label || ""}
-                  isOptionEqualToValue={(option, value) => option.value === value.value}
-                  value={selectedUser} // Controlar valor
-                  onChange={(event, value) => {
-                    setSelectedUser(value); // Actualizar estado
-                    setForm((prev) => ({
-                      ...prev,
-                      numDoc: value ? value.value : "",
-                    }));
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Seleccionar Usuario"
-                      variant="outlined"
-                      size="small"
-                    />
-                  )}
-                  sx={{ width: "30%" }}
-
-                />
-                <TextField
-                  label="Fecha"
-                  type="date"
-                  variant="outlined"
-                  size="small"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  onChange={(e) => {
-                    setForm((prev) => ({
-                      ...prev,
-                      fecha: e.target.value,
-                    }));
-                  }}
-                  sx={{ width: "30%" }}
-                  value={form.fecha}
-                />
-              </Box>
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={isSubmitting}
-                sx={{
-                  mt: 2,
-                  background: "#0b2f6d",
-                  width: "200px",
-                  borderRadius: "20px",
-                }}
-              >
-                {isSubmitting ? "Procesando..." : "Filtrar"}
-              </Button>
-              <Button
+    <Box
+      sx={{
+        width: "90%",
+        overflow: "hidden",
+        backgroundColor: "white",
+        boxShadow: 2,
+        textAlign: "center",
+        mt: 2,
+        paddingTop: 3,
+        paddingBottom: 3,
+      }}
+    >
+      <form onSubmit={handleSubmit}>
+        <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+          <Autocomplete
+            variant="standard"
+            options={dataUsers || []}
+            getOptionLabel={(option) => option.label || ""}
+            isOptionEqualToValue={(option, value) =>
+              option.value === value.value
+            }
+            value={selectedUser} // Controlar valor
+            onChange={(event, value) => {
+              setSelectedUser(value); // Actualizar estado
+              setForm((prev) => ({
+                ...prev,
+                numDoc: value ? value.value : "",
+              }));
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Seleccionar Usuario"
                 variant="outlined"
-                disabled={isSubmitting}
-                onClick={handleClear}
-                sx={{
-                  mt: 2,
-                  ml: 2,
-                  width: "200px",
-                  borderRadius: "20px",
-                }}
-              >
-                {isSubmitting ? "Procesando..." : "Limpiar Filtros"}
-              </Button>
-            </form>
-          </CardContent>
-        ) : null}
-      </Card>
-    </>
+                size="small"
+              />
+            )}
+            sx={{ width: "30%" }}
+          />
+          <TextField
+            label="Fecha"
+            type="date"
+            variant="standard"
+            size="small"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) => {
+              setForm((prev) => ({
+                ...prev,
+                fecha: e.target.value,
+              }));
+            }}
+            sx={{ width: "30%" }}
+            value={form.fecha}
+          />
+        </Box>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={isSubmitting}
+          sx={{
+            mt: 2,
+            background: "#0b2f6d",
+            width: "200px",
+            borderRadius: "0px",
+          }}
+        >
+          {isSubmitting ? "Procesando..." : "Filtrar"}
+        </Button>
+        <Button
+          variant="outlined"
+          disabled={isSubmitting}
+          onClick={handleClear}
+          sx={{
+            mt: 2,
+            ml: 2,
+            width: "200px",
+            borderRadius: "0px",
+          }}
+        >
+          {isSubmitting ? "Procesando..." : "Limpiar Filtros"}
+        </Button>
+      </form>
+    </Box>
   );
 
   const statsCard = () => (
@@ -330,7 +310,7 @@ function FormAstList() {
           backgroundColor: "#f5f5f5",
           boxShadow: 5,
           textAlign: "center",
-          borderRadius: "10px",
+          borderRadius: "0px",
           mt: 2,
           mb: 2,
         }}
@@ -475,7 +455,7 @@ function FormAstList() {
                 align="center"
                 sx={{ fontSize: "10px", width: "10%" }} // Equal width
               >
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.Q ? row.Q : "Sin Información"}
                 </Typography>
               </TableCell>
@@ -483,7 +463,7 @@ function FormAstList() {
                 align="center"
                 sx={{ fontSize: "10px", width: "10%" }} // Equal width
               >
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.CENTRO_COSTO ? row.CENTRO_COSTO : "Sin Información"}
                 </Typography>
               </TableCell>
@@ -523,7 +503,7 @@ function FormAstList() {
                 align="center"
                 sx={{ fontSize: "10px", width: "10%" }} // Equal width
               >
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.nombre ? row.nombre : "Sin Información"}
                 </Typography>
               </TableCell>
@@ -531,7 +511,7 @@ function FormAstList() {
                 align="center"
                 sx={{ fontSize: "10px", width: "10%" }} // Equal width
               >
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.numDoc ? row.numDoc : "Sin Información"}
                 </Typography>
               </TableCell>
@@ -560,15 +540,7 @@ function FormAstList() {
       <TableHead>
         <TableRow>
           {tableHeaders.map((header, idx) => (
-            <TableCell
-              key={header.label}
-              align="center"
-              sx={{
-                background: "#d8d8d8",
-                fontWeight: "bold",
-                width: header.width,
-              }}
-            >
+            <TableCell key={header.label} align="center">
               {header.label}
             </TableCell>
           ))}
@@ -593,29 +565,30 @@ function FormAstList() {
               sx={{
                 textDecoration: "none",
                 cursor: "pointer",
+                backgroundColor: "#ffffff",
                 "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
               }}
               key={index}
             >
               <TableCell align="center" sx={{ fontSize: "12px", width: "25%" }}>
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.fechaForm
                     ? extractDate(row.fechaForm)
                     : "Sin Información"}
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px", width: "25%" }}>
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.nombre ? row.nombre : "Sin Información"}
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px", width: "25%" }}>
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.numDoc ? row.numDoc : "Sin Información"}
                 </Typography>
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px", width: "25%" }}>
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.CENTRO_COSTO ? row.CENTRO_COSTO : "Sin Información"}
                 </Typography>
               </TableCell>
@@ -653,11 +626,14 @@ function FormAstList() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        background: "white",
         alignItems: "center",
-        pt: 8,
+        justifyContent: "center",
         height: "100%",
+        width: "100%",
+        overflow: "auto",
+        paddingTop: 8,
+        paddingBottom: "50px",
+        backgroundColor: "#f0f0f0",
       }}
     >
       {statsCard()}
@@ -678,22 +654,7 @@ function FormAstList() {
         </Box>
       ) : (
         <>
-          <Card sx={{ width: "90%", borderRadius: "10px", boxShadow: 5 }}>
-            <CardHeader
-              title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                  DATOS AST REALIZADAS
-                </Typography>
-              }
-              sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "end",
-              }}
-            />
-
-            <CardContent>{setTable()}</CardContent>
-          </Card>
+          {setTableCard()}
 
           <ButtonGroup
             size="small"

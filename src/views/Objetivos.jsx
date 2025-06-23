@@ -152,13 +152,14 @@ function ObjetivosView() {
   };
 
   const setFilter = () => (
-    <>
+    <Box sx={{ width: "100%", marginTop: 2 }}>
       <form onSubmit={handleSubmit}>
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
+            padding: 3,
           }}
         >
           <FormControl sx={{ minWidth: "350px" }}>
@@ -167,6 +168,8 @@ function ObjetivosView() {
             </InputLabel>
             <Select
               required
+              size="small"
+              variant="standard"
               disabled={habilitado}
               labelId="estado-label"
               id="estado-select"
@@ -188,6 +191,8 @@ function ObjetivosView() {
             <Select
               labelId="estado-label"
               required
+              size="small"
+              variant="standard"
               id="estado-select"
               value={mes || ""}
               sx={{ minWidth: "200px" }}
@@ -217,20 +222,18 @@ function ObjetivosView() {
           </Button>
         </Box>
       </form>
-    </>
+    </Box>
   );
 
   const setTable = () => (
-    <>
+    <Box sx={{ width: "100%", marginTop: 2, boxShadow: 2 }}>
       <TableContainer>
-        <Table
-          sx={{ width: "100%", display: "column", justifyContent: "center" }}
-        >
+        <Table>
           {setTableHead()}
           {setTableBody()}
         </Table>
       </TableContainer>
-    </>
+    </Box>
   );
 
   const setTableHead = () => (
@@ -243,8 +246,7 @@ function ObjetivosView() {
             "ORIGEN",
             "FUENTE",
             "TIPO",
-            "FACILIDADES",
-            "ACCIONES",
+            "FACILIDADES"
           ].map((header) => (
             <TableCell
               key={header}
@@ -269,7 +271,18 @@ function ObjetivosView() {
       >
         {data && data.length > 0 ? (
           data.map((row, index) => (
-            <TableRow key={index}>
+            <TableRow
+              key={index}
+              onClick={row.editable ? () => {
+                setID(row.id);
+                setOpenModal(true);
+              } : undefined}
+              sx={{
+              textDecoration: "none",
+              cursor: "pointer",
+              "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+            }}
+            >
               <TableCell align="center" sx={{ fontSize: "16px" }}>
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.gerencia ? row.gerencia : "Sin Información"}
@@ -300,28 +313,7 @@ function ObjetivosView() {
                   {row.facilidades ? row.facilidades : 0}
                 </Typography>
               </TableCell>
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
-                {row.editable ? (
-                  <Tooltip title="Editar">
-                    <Button
-                      variant="contained"
-                      color="info"
-                      onClick={() => {
-                        setID(row.id);
-                        setOpenModal(true);
-                      }}
-                    >
-                      <EditIcon />
-                    </Button>
-                  </Tooltip>
-                ) : (
-                  <Tooltip title="Editar">
-                    <Button disabled variant="contained" color="info">
-                      <EditIcon />
-                    </Button>
-                  </Tooltip>
-                )}
-              </TableCell>
+
             </TableRow>
           ))
         ) : (
@@ -388,15 +380,18 @@ function ObjetivosView() {
 
   useEffect(() => {
     if (data && Object.keys(data).length > 0) {
-      const updatedOrigenes = Object.values(data).reduce((acc, value) => {
-        const existingIndex = acc.findIndex((o) => o.origen === value.origen);
-        if (existingIndex !== -1) {
-          acc[existingIndex].total += value.facilidades;
-        } else {
-          acc.push({ origen: value.origen, total: value.facilidades });
-        }
-        return acc;
-      }, [...origenes]); // Copia del estado actual
+      const updatedOrigenes = Object.values(data).reduce(
+        (acc, value) => {
+          const existingIndex = acc.findIndex((o) => o.origen === value.origen);
+          if (existingIndex !== -1) {
+            acc[existingIndex].total += value.facilidades;
+          } else {
+            acc.push({ origen: value.origen, total: value.facilidades });
+          }
+          return acc;
+        },
+        [...origenes]
+      ); // Copia del estado actual
 
       setOrigenes(updatedOrigenes);
     }
@@ -436,119 +431,80 @@ function ObjetivosView() {
       {origenes && origenes.length > 0 ? (
         <Box
           sx={{
-            width: "100%",
-            borderRadius: "10",
+            width: "90%",
             display: "flex",
             justifyContent: "center",
             marginTop: 2,
-            marginBottom: 2
+            marginBottom: 2,
+            boxShadow: 2,
           }}
         >
-          <Card sx={{ width: "40%", borderRadius: "10" }}>
-            <CardHeader
-              title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                  TOTALES
-                </Typography>
-              }
-              avatar={<CalculateIcon />}
+          <TableContainer>
+            <Table
               sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "end",
+                width: "100%",
+                display: "column",
+                justifyContent: "center",
               }}
-            />
-            <CardContent>
-              <TableContainer>
-                <Table
-                  sx={{
-                    width: "100%",
-                    display: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <TableHead>
-                    <TableRow>
-                      {["ORIGEN", "TOTAL"].map((header) => (
-                        <TableCell
-                          key={header}
-                          align="left"
-                          sx={{ background: "#d8d8d8", fontWeight: "bold" }}
-                        >
-                          {header}
-                        </TableCell>
-                      ))}
+            >
+              <TableHead>
+                <TableRow>
+                  {["ORIGEN", "TOTAL"].map((header) => (
+                    <TableCell
+                      key={header}
+                      align="left"
+                      sx={{ background: "#d8d8d8", fontWeight: "bold" }}
+                    >
+                      {header}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody
+                sx={{
+                  display: "column",
+                  justifyContent: "center",
+                }}
+              >
+                {origenes && origenes.length > 0 ? (
+                  origenes.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell align="left" sx={{ fontSize: "16px" }}>
+                        <Typography fontFamily={"initial"} variant="secondary">
+                          {row.origen ? row.origen : "Sin Información"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontSize: "16px" }}>
+                        <Typography fontFamily={"initial"} variant="secondary">
+                          {row.total ? row.total : 0}
+                        </Typography>
+                      </TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody
-                    sx={{
-                      display: "column",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {origenes && origenes.length > 0 ? (
-                      origenes.map((row, index) => (
-                        <TableRow key={index}>
-                          <TableCell align="left" sx={{ fontSize: "16px" }}>
-                            <Typography
-                              fontFamily={"initial"}
-                              variant="secondary"
-                            >
-                              {row.origen ? row.origen : "Sin Información"}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="left" sx={{ fontSize: "16px" }}>
-                            <Typography
-                              fontFamily={"initial"}
-                              variant="secondary"
-                            >
-                              {row.total ? row.total : 0}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={7} align="center">
-                          No hay datos disponibles
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      No hay datos disponibles
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
       ) : null}
       <Box
         sx={{
-          width: "100%",
+          width: "90%",
           borderRadius: "10",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
         }}
       >
-        <Card sx={{ width: "90%", borderRadius: "10" }}>
-          <CardHeader
-            title={
-              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                OBJETIVOS ONNET
-              </Typography>
-            }
-            avatar={<SportsScoreIcon />}
-            sx={{
-              background: "#0b2f6d",
-              color: "white",
-              textAlign: "end",
-            }}
-          />
-          <CardContent>{setFilter()}</CardContent>
-          <CardContent>{setTable()}</CardContent>
-        </Card>
+        {setFilter()}
+        {setTable()}
       </Box>
-
-      
     </Box>
   );
 }

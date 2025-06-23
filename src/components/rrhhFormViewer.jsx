@@ -34,65 +34,93 @@ function RrhhViewer({ data }) {
 
   return (
     <>
-      <CardContent>
-        <Paper sx={{ width: "100%", textAlign: "start" }}>
+      <Box sx={{ width: "100%", textAlign: "start" }}>
       {data && data["Fecha Marcaje"] != "Sin información" ? (
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography
-            fontWeight="bold"
+        <Box
             sx={{
-              fontFamily: "initial",
-              background: "#e8e8e8",
-              p: 1,
-              width: "30%",
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
             }}
           >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
             Fecha Marcaje:
           </Typography>
-          <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
+          <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
             {`${data["Fecha Marcaje"]}`}
           </Typography>
         </Box>
       ) : null}
 
       {data && data["Fecha Subida Documento"] != "Sin información" ? (
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography
-            fontWeight="bold"
+        <Box
             sx={{
-              fontFamily: "initial",
-              background: "#e8e8e8",
-              p: 1,
-              width: "30%",
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
             }}
           >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
             Fecha Subida Documento:
           </Typography>
-          <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
+          <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
             {`${data["Fecha Subida Documento"]}`}
           </Typography>
         </Box>
       ) : null}
 
       {data && data["Archivo"] !== "None" ? (
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography
-            fontWeight="bold"
+        <Box
             sx={{
-              fontFamily: "initial",
-              background: "#e8e8e8",
-              p: 1,
-              width: "30%",
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
             }}
           >
-            Archivo:
-          </Typography>
-          <Box
-            sx={{ display: "flex", alignItems: "center", width: "70%", p: 1 }}
-          >
-            <Tooltip title="Descargar Archivo" placement="right">
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Archivo:
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                width: "75%",
+                p: 1,
+              }}
+            >
               <Button
                 onClick={downloader}
+                variant="outlined"
                 size="small"
                 sx={{
                   textDecoration: "none",
@@ -102,12 +130,11 @@ function RrhhViewer({ data }) {
               >
                 Descargar
               </Button>
-            </Tooltip>
+            </Box>
           </Box>
-        </Box>
       ) : null}
-    </Paper>
-      </CardContent>
+    
+      </Box>
     </>
   );
 }

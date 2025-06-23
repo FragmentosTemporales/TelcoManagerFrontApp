@@ -68,33 +68,16 @@ function LoadConstruccion() {
   };
 
   const componente_carga = () => (
-    <Card
-      sx={{
-        borderRadius: "10px",
-        width: "50%",
-        height: "100%",
-        overflow: "auto",
-        boxShadow: 5,
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            CARGA PLANILLA CONSTRUCCION
-          </Typography>
-        }
-        sx={{
-          background: "#0b2f6d",
-          color: "white",
-          textAlign: "end",
-        }}
-      />
-
-      <CardContent
+      <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#fff",
+          height: "200px",
+          width: "500px",
+          boxShadow: 2,
         }}
       >
         <form
@@ -110,7 +93,7 @@ function LoadConstruccion() {
               id="file"
               type="file"
               name="file"
-              variant="outlined"
+              variant="standard"
               onChange={handleFileChange}
             />
           </Box>
@@ -119,15 +102,14 @@ function LoadConstruccion() {
             <Button
               type="submit"
               variant="contained"
-              sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+              sx={{ background: "#0b2f6d", fontWeight: "bold", pt: 1, pb: 1, width: "100%" }}
               disabled={isSubmitting}
             >
               {isSubmitting ? "Procesando..." : "Cargar"}
             </Button>
           </Box>
         </form>
-      </CardContent>
-    </Card>
+      </Box>
   );
 
   return (
@@ -137,7 +119,8 @@ function LoadConstruccion() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh", // Asegura centrado vertical completo
+        minHeight: "100vh",
+        backgroundColor: "#f4f6f8",
       }}
     >
       {open && (

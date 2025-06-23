@@ -34,154 +34,223 @@ function FlotaViewer({ data }) {
 
   return (
     <>
-      <CardContent>
-        <Paper sx={{ width: "100%", textAlign: "start" }}>
-          {data && data["Fecha Evento"] != "Sin información" ? (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Fecha Evento:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {`${data["Fecha Evento"]}`}
-              </Typography>
-            </Box>
-          ) : null}
-
-          {data && data["Fecha Asignación"] != "Sin información" ? (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Fecha Asignación:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {`${data["Fecha Asignación"]}`}
-              </Typography>
-            </Box>
-          ) : null}
-
-          {data && data["Modelo Vehículo"] != "Sin información" ? (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Modelo Vehículo:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {`${data["Modelo Vehículo"]}`}
-              </Typography>
-            </Box>
-          ) : null}
-
-          {data && data["Patente"] != "Sin información" ? (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Patente:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {`${data["Patente"]}`}
-              </Typography>
-            </Box>
-          ) : null}
-
-          {data && data["Velocidad"] != "Sin información" ? (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Velocidad:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {`${data["Velocidad"]}`}
-              </Typography>
-            </Box>
-          ) : null}
-
-          {data && data["Ubicación"] != "Sin información" ? (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Ubicación:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {`${data["Ubicación"]}`}
-              </Typography>
-            </Box>
-          ) : null}
-
-          {data && data["Archivo"] !== "None" ? (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box sx={{ width: "100%", textAlign: "start" }}>
+        {data && data["Fecha Evento"] != "Sin información" ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
             <Typography
-              fontWeight="bold"
               sx={{
-                fontFamily: "initial",
-                background: "#e8e8e8",
-                p: 1,
-                width: "30%",
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Fecha Evento:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {`${data["Fecha Evento"]}`}
+            </Typography>
+          </Box>
+        ) : null}
+
+        {data && data["Fecha Asignación"] != "Sin información" ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Fecha Asignación:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {`${data["Fecha Asignación"]}`}
+            </Typography>
+          </Box>
+        ) : null}
+
+        {data && data["Modelo Vehículo"] != "Sin información" ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Modelo Vehículo:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {`${data["Modelo Vehículo"]}`}
+            </Typography>
+          </Box>
+        ) : null}
+
+        {data && data["Patente"] != "Sin información" ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Patente:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {`${data["Patente"]}`}
+            </Typography>
+          </Box>
+        ) : null}
+
+        {data && data["Velocidad"] != "Sin información" ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Velocidad:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {`${data["Velocidad"]}`}
+            </Typography>
+          </Box>
+        ) : null}
+
+        {data && data["Ubicación"] != "Sin información" ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Ubicación:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {`${data["Ubicación"]}`}
+            </Typography>
+          </Box>
+        ) : null}
+
+        {data && data["Archivo"] !== "None" ? (
+        <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
               }}
             >
               Archivo:
             </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", width: "70%", p: 1 }}>
-              <Tooltip title="Descargar Archivo" placement="right">
-                <Button
-                  onClick={downloader}
-                  size="small"
-                  sx={{
-                    textDecoration: "none",
-                    color: "#1976d2",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Descargar
-                </Button>
-              </Tooltip>
+            <Box
+              sx={{
+                display: "flex",
+                width: "75%",
+                p: 1,
+              }}
+            >
+              <Button
+                onClick={downloader}
+                variant="outlined"
+                size="small"
+                sx={{
+                  textDecoration: "none",
+                  color: "#1976d2",
+                  fontWeight: "bold",
+                }}
+              >
+                Descargar
+              </Button>
             </Box>
           </Box>
-          ) : null}
-        </Paper>
-      </CardContent>
+      ) : null}
+
+      </Box>
     </>
   );
 }

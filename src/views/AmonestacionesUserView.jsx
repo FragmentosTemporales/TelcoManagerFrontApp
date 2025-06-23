@@ -48,7 +48,7 @@ function AmonesatacionesViewer() {
   const fetchData = async () => {
     try {
       setIsSubmitting(true);
-      const res = await getSolicitudesByUser(token, page)
+      const res = await getSolicitudesByUser(token, page);
       setData(res.data);
       setPages(res.pages);
       setIsSubmitting(false);
@@ -95,7 +95,7 @@ function AmonesatacionesViewer() {
     <>
       <Box
         sx={{
-          width: "80%",
+          width: "90%",
           mt: 2,
           display: "flex",
           justifyContent: "start",
@@ -111,7 +111,7 @@ function AmonesatacionesViewer() {
               fontWeight: "bold",
               display: "flex",
               justifyContent: "space-around",
-              borderRadius: "20px",
+              borderRadius: "0px",
             }}
           >
             <AddCircleOutlineIcon /> Crear Nueva
@@ -131,7 +131,7 @@ function AmonesatacionesViewer() {
             "FORMULARIO",
             "SOLICITANTE",
             "AMONESTADO",
-            "ESTADO"
+            "ESTADO",
           ].map((header) => (
             <TableCell key={header} align="center">
               <Typography fontFamily="initial">{header}</Typography>
@@ -161,29 +161,19 @@ function AmonesatacionesViewer() {
                 {row.Folio ? row.Folio : "Sin Folio"}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                {row.Motivo
-                  ? row.Motivo
-                  : "Sin Información"}
+                {row.Motivo ? row.Motivo : "Sin Información"}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                {row.Formulario
-                  ? row.Formulario
-                  : "Sin área asignada"}
+                {row.Formulario ? row.Formulario : "Sin área asignada"}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                {row.Solicitante
-                  ? row.Solicitante
-                  : "Sin Información"}
+                {row.Solicitante ? row.Solicitante : "Sin Información"}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                {row.Amonestado
-                  ? row.Amonestado
-                  : "Sin Información"}
+                {row.Amonestado ? row.Amonestado : "Sin Información"}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                {row.Estado
-                  ? row.Estado
-                  : "Sin Información"}
+                {row.Estado ? row.Estado : "Sin Información"}
               </TableCell>
             </TableRow>
           ))
@@ -201,83 +191,57 @@ function AmonesatacionesViewer() {
   );
 
   const setTableCard = () => (
+    <TableContainer
+      component={Paper}
+      sx={{ width: "90%", height: "100%", overflow: "auto", marginTop: 2 }}
+    >
+      <Table stickyHeader>
+        {setTableHead()}
+        {setTableBody()}
+      </Table>
+    </TableContainer>
+  );
+
+  const statisticsCard = () => (
     <Card
       sx={{
-        width: "80%",
+        width: "90%",
         overflow: "hidden",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "white",
         boxShadow: 5,
         textAlign: "center",
-        borderRadius: "20px",
-        minHeight: "250px",
+        borderRadius: "0px",
         mt: 2,
       }}
     >
       <CardHeader
         title={
           <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            MIS SOLICITUDES DE AMONESTACION
+            ESTADISTICAS DE SOLICITUDES
           </Typography>
         }
-        avatar={<FormatListBulletedIcon />}
+        avatar={<BarChartIcon />}
+        action={
+          <Button
+            onClick={toggleStatistics}
+            sx={{ color: "white", minWidth: "auto" }}
+          >
+            {showStatistics ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </Button>
+        }
         sx={{
           background: "#0b2f6d",
           color: "white",
           textAlign: "end",
         }}
       />
-      <TableContainer
-        component={Paper}
-        sx={{ width: "100%", height: "100%", overflow: "auto" }}
-      >
-        <Table stickyHeader>
-          {setTableHead()}
-          {setTableBody()}
-        </Table>
-      </TableContainer>
+      {showStatistics && (
+        <CardContent>
+          <SolicitudChartsByUser />
+        </CardContent>
+      )}
     </Card>
   );
-
-    const statisticsCard = () => (
-      <Card
-        sx={{
-          width: "80%",
-          overflow: "hidden",
-          backgroundColor: "#f5f5f5",
-          boxShadow: 5,
-          textAlign: "center",
-          borderRadius: "20px",
-          mt: 2,
-        }}
-      >
-        <CardHeader
-          title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              ESTADISTICAS DE SOLICITUDES
-            </Typography>
-          }
-          avatar={<BarChartIcon />}
-          action={
-            <Button
-              onClick={toggleStatistics}
-              sx={{ color: "white", minWidth: "auto" }}
-            >
-              {showStatistics ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </Button>
-          }
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "end",
-          }}
-        />
-        {showStatistics && (
-          <CardContent>
-            <SolicitudChartsByUser />
-          </CardContent>
-        )}
-      </Card>
-    );
 
   useEffect(() => {
     fetchData();
@@ -295,6 +259,7 @@ function AmonesatacionesViewer() {
         overflow: "auto",
         paddingTop: 8,
         paddingBottom: "50px",
+        backgroundColor: "#f0f0f0",
       }}
     >
       {open && (
@@ -303,7 +268,9 @@ function AmonesatacionesViewer() {
           severity="info"
           sx={{ marginTop: "2%", width: "80%" }}
         >
-            <Typography fontFamily="initial" fontWeight="bold">Mensaje</Typography>
+          <Typography fontFamily="initial" fontWeight="bold">
+            Mensaje
+          </Typography>
         </Alert>
       )}
       {statisticsCard()}
@@ -311,7 +278,7 @@ function AmonesatacionesViewer() {
       {isSubmitting ? (
         <Box
           sx={{
-            width: "80%",
+            width: "90%",
             overflow: "hidden",
             backgroundColor: "#f5f5f5",
             boxShadow: 5,
@@ -323,7 +290,7 @@ function AmonesatacionesViewer() {
         >
           <Skeleton
             variant="rounded"
-            width={"90%"}
+            width={"100%"}
             height={"800px"}
             sx={{ p: 3, m: 3 }}
           />

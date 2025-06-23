@@ -91,92 +91,94 @@ function Login() {
         background: "white",
         alignItems: "center",
         height: "100vh",
+        backgroundColor: "#f0f0f0",
       }}
     >
       {open && renderAlert()}
-      <Card
+      <Box
         sx={{
-          width: { lg: "30%", md: "60%", xs: "80%" },
-          borderRadius: "20px",
-          boxShadow: 5,
-          minWidth: "370px",
+          width: "100%",
+          maxWidth: "400px",
+          paddingTop: "25px",
+          paddingBottom: "40px",
+          backgroundColor: "white",
+          boxShadow: "2",
         }}
       >
-        <CardHeader
-          title={
-            <Typography fontWeight="bold" >
-              INICIAR SESION
-            </Typography>
-          }
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "center",
-          }}
-        />
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <Box sx={{ mb: 2, mt:2, display: "flex", justifyContent: "center" }}>
-              <TextField
-                required
-                sx={{ minWidth: "350px" }}
-                id="correo"
-                label="Correo"
-                type="email"
-                name="correo"
-                variant="outlined"
-                value={form.correo}
-                onChange={handleChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AccountBoxIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
-            <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
-              <TextField
-                required
-                sx={{ minWidth: "350px" }}
-                id="clave"
-                label="Clave"
-                type="password"
-                name="clave"
-                variant="outlined"
-                value={form.clave}
-                onChange={handleChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
-            <Box sx={{ mb: 2, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Checkbox
-                checked={rememberMe}
-                onChange={handleRememberMeChange}
-                color="primary"
-              />
-              <Typography>Recordar usuario</Typography>
-            </Box>
-            <Box sx={{ textAlign: "center" }}>
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={isSubmitting}
-                sx={{ background: "#0b2f6d", width: "200px", borderRadius: "20px" }}
-              >
-                {isSubmitting ? "Cargando..." : "Ingresar"}
-              </Button>
-            </Box>
-          </form>
-        </CardContent>
-      </Card>
+        <form onSubmit={handleSubmit}>
+          <Box sx={{ mb: 2, mt: 2, display: "flex", justifyContent: "center" }}>
+            <TextField
+              required
+              size="small"
+              sx={{ minWidth: "350px" }}
+              id="correo"
+              label="Correo"
+              type="email"
+              name="correo"
+              variant="outlined"
+              value={form.correo}
+              onChange={handleChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountBoxIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+          <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
+            <TextField
+              required
+              sx={{ minWidth: "350px" }}
+              id="clave"
+              size="small"
+              label="Clave"
+              type="password"
+              name="clave"
+              variant="outlined"
+              value={form.clave}
+              onChange={handleChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              mb: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Checkbox
+              checked={rememberMe}
+              onChange={handleRememberMeChange}
+              color="primary"
+            />
+            <Typography>Recordar usuario</Typography>
+          </Box>
+          <Box sx={{ textAlign: "center" }}>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting}
+              sx={{
+                background: "#0b2f6d",
+                width: "200px",
+                borderRadius: "0px",
+              }}
+            >
+              {isSubmitting ? "Cargando..." : "Ingresar"}
+            </Button>
+          </Box>
+        </form>
+      </Box>
     </Box>
   );
 }

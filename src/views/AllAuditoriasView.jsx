@@ -134,7 +134,7 @@ function AuditoriasView() {
   const setTable = () => (
     <TableContainer>
       <Table
-        sx={{ width: "100%", display: "column", justifyContent: "center" }}
+        sx={{ width: "100%", display: "column", justifyContent: "center", background: "#ffffff" }}
       >
         {setTableHead()}
         {setTableBody()}
@@ -160,9 +160,10 @@ function AuditoriasView() {
                 key={header}
                 align="center"
                 sx={{
-                  background: "#d8d8d8",
+                  background: "#0b2f6d",
                   fontWeight: "bold",
                   width: "20%",
+                  color: "white",
                 }}
               >
                 {header}
@@ -245,40 +246,13 @@ function AuditoriasView() {
   );
 
   const filterCard = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        textAlign: "center",
-        borderRadius: "20px",
-        mt: 2,
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            FILTRAR
-          </Typography>
-        }
-        avatar={<SearchIcon />}
-        action={
-          <Button
-            onClick={toggleFilters}
-            sx={{ color: "white", minWidth: "auto" }}
-          >
-            {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </Button>
-        }
-        sx={{
-          background: "#0b2f6d",
-          color: "white",
-          textAlign: "end",
-        }}
-      />
-      {showFilters && (
-        <CardContent>
+        <Box sx={{ 
+          width: "80%", 
+          margin: 2,
+          background: "#ffffff",
+
+         }
+        }> 
           <form>
             <Box
               sx={{
@@ -288,6 +262,8 @@ function AuditoriasView() {
                 alignItems: "center",
                 flexWrap: "wrap",
                 gap: 2,
+                padding: 2,
+                boxShadow: 2,
               }}
             >
               <Box
@@ -301,13 +277,13 @@ function AuditoriasView() {
                   width: "100%",
                 }}
               >
-                <Box sx={{ flex: 1, minWidth: "200px" }}>
+                <Box sx={{ flex: 1, minWidth: "200px", padding: 1 }}>
                   <InputLabel
                     id="auditoria-label"
                     sx={{
                       fontFamily: "initial",
                       whiteSpace: "normal",
-                      textAlign: "center",
+                      textAlign: "start",
                     }}
                   >
                     Orden de Trabajo
@@ -323,18 +299,18 @@ function AuditoriasView() {
                     id="orden"
                     type="text"
                     name="orden"
-                    variant="outlined"
+                    variant="standard"
                     value={toFilter.orden}
                     onChange={handleChange}
                   />
                 </Box>
-                <Box sx={{ flex: 1, minWidth: "200px" }}>
+                <Box sx={{ flex: 1, minWidth: "200px", padding: 1 }}>
                   <InputLabel
                     id="auditoria-label"
                     sx={{
                       fontFamily: "initial",
                       whiteSpace: "normal",
-                      textAlign: "center",
+                      textAlign: "start",
                     }}
                   >
                     Fecha Cierre
@@ -350,18 +326,18 @@ function AuditoriasView() {
                     id="fechaCierre"
                     type="date"
                     name="fechaCierre"
-                    variant="outlined"
+                    variant="standard"
                     value={toFilter.fechaCierre}
                     onChange={handleChange}
                   />
                 </Box>
-                <Box sx={{ flex: 1, minWidth: "200px" }}>
+                <Box sx={{ flex: 1, minWidth: "200px", padding: 1 }}>
                   <InputLabel
                     id="auditoria-label"
                     sx={{
                       fontFamily: "initial",
                       whiteSpace: "normal",
-                      textAlign: "center",
+                      textAlign: "start",
                     }}
                   >
                     Resultado de la Auditoría
@@ -376,7 +352,7 @@ function AuditoriasView() {
                     required
                     id="estado"
                     name="estado"
-                    variant="outlined"
+                    variant="standard"
                     value={toFilter.estado}
                     onChange={handleChange}
                   >
@@ -397,13 +373,13 @@ function AuditoriasView() {
                     </MenuItem>
                   </Select>
                 </Box>
-                <Box sx={{ flex: 1, minWidth: "200px" }}>
+                <Box sx={{ flex: 1, minWidth: "200px", padding: 1 }}>
                   <InputLabel
                     id="auditoria-label"
                     sx={{
                       fontFamily: "initial",
                       whiteSpace: "normal",
-                      textAlign: "center",
+                      textAlign: "start",
                     }}
                   >
                     Nombre Auditor
@@ -418,7 +394,7 @@ function AuditoriasView() {
                     required
                     id="nombre"
                     name="nombre"
-                    variant="outlined"
+                    variant="standard"
                     value={toFilter.nombre}
                     onChange={handleChange}
                   >
@@ -475,9 +451,7 @@ function AuditoriasView() {
               </Box>
             </Box>
           </form>
-        </CardContent>
-      )}
-    </Card>
+        </Box>
   );
 
   const getButtons = () => (
@@ -524,6 +498,7 @@ function AuditoriasView() {
         minHeight: "85vh",
         overflow: "auto",
         padding: 8,
+        background: "#f5f5f5",
       }}
     >
       {open && (
@@ -545,12 +520,12 @@ function AuditoriasView() {
         <Button
           variant="contained"
           onClick={getExcel}
+          color="error"
           sx={{
             fontWeight: "bold",
-            background: "#0b2f6d",
             minWidth: "200px",
             height: "40px",
-            borderRadius: "20px",
+            borderRadius: "0px",
           }}
         >
           DESCARGAR
@@ -560,7 +535,7 @@ function AuditoriasView() {
       <Card
         sx={{
           width: "80%",
-          borderRadius: "20px",
+          borderRadius: "0px",
           boxShadow: 5,
           marginTop: 2,
         }}
@@ -595,27 +570,14 @@ function AuditoriasView() {
 
       {filterCard()}
 
-      <Card
+      <Box
         sx={{
           width: "80%",
-          borderRadius: "20px",
-          boxShadow: 5,
+          borderRadius: "0px",
+          boxShadow: 2,
           marginTop: 2,
         }}
       >
-        <CardHeader
-          title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              LISTA DE AUDITORIAS
-            </Typography>
-          }
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "end",
-          }}
-        />
-        <CardContent sx={{ display: "grid" }}>
           {isLoading ? (
             <Skeleton
               variant="rectangular"
@@ -624,13 +586,13 @@ function AuditoriasView() {
                 width: "100%",
                 height: "200px",
                 borderRadius: "10px",
+                background: "#e0e0e0",
               }}
             />
           ) : (
             setTable()
           )}
-        </CardContent>
-      </Card>
+      </Box>
 
       <ButtonGroup
         size="small"

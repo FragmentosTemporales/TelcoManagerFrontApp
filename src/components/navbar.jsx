@@ -4,6 +4,7 @@ import {
   AppBar,
   Toolbar,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import AppsIcon from "@mui/icons-material/Apps";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -25,82 +26,70 @@ function Navbar() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" sx={{ background: "#0b2f6d" }}>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          {token && (
-            <>
-              <Link
-                to={"/"}
-                style={{
-                  color: "white",
-                  textDecoration: "none",
+    <AppBar position="fixed" sx={{ background: "#0b2f6d", height: "60px" }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {token && (
+          <>
+            <Link
+              to={"/"}
+              style={{
+                color: "white",
+                textDecoration: "none",
+                fontWeight: "bold",
+              }}
+            >
+              <Button
+                variant="contained"
+                sx={{
+                  height: "40px",
+                  width: "40px",
                   fontWeight: "bold",
+                  background: "#0b2f6d",
                 }}
               >
-                <Button
-                  variant="contained"
-                  sx={{
-                    height: "40px",
-                    width: "40px",
-                    fontWeight: "bold",
-                    background: "#124fb9",
-                    borderRadius: "20px",
-                    border: "1px solid #0b2f6d",
-                  }}
-                >
-                  <Tooltip title="Aplicaciones" placement="right">
-                    <AppsIcon />
-                  </Tooltip>
-                </Button>
-              </Link>
-
-              <Box>
-
-                <Tooltip title="Configuraciones" placement="left">
-                  <Link to={"/configuraciones"}>
-                    <Button
-                      variant="contained"
-                      color="info"
-                      sx={{
-                        height: "40px",
-                        width: "40px",
-                        fontWeight: "bold",
-                        background: "#124fb9",
-                        borderRadius: "20px",
-                        border: "1px solid #0b2f6d",
-                        marginLeft: "10px",
-                        marginRight: "10px",
-                      }}
-                    >
-                      <SettingsIcon />
-                    </Button>
-                  </Link>
+                <Tooltip title="Aplicaciones" placement="right">
+                  <AppsIcon />
                 </Tooltip>
+              </Button>
+            </Link>
 
-                <Tooltip title="Cerrar Sesión" placement="left">
+            <Box>
+              <Tooltip title="Configuraciones" placement="left">
+                <Link to={"/configuraciones"}>
                   <Button
                     variant="contained"
-                    color="error"
                     sx={{
                       height: "40px",
+                      width: "40px",
                       fontWeight: "bold",
-                      borderRadius: "20px",
-                      border: "1px solid #c62828",
-                      marginLeft: "10px",
+                      background: "#0b2f6d",
                     }}
-                    onClick={handleLogout}
                   >
-                    <LogoutIcon />
+                    <SettingsIcon />
                   </Button>
-                </Tooltip>
-              </Box>
+                </Link>
+              </Tooltip>
 
-            </>
-          )}
-        </Toolbar>
-      </AppBar>
-    </Box>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{
+                  height: "40px",
+                  width: "200px",
+                  fontWeight: "bold",
+                }}
+                onClick={handleLogout}
+              >
+                <LogoutIcon />
+                <Typography sx={{ marginLeft: "10px", fontWeight: "bold" }}>
+                  Cerrar sesion
+                </Typography>
+              </Button>
+            </Box>
+          </>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 }
 

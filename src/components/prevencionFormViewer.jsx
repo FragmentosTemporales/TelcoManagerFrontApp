@@ -33,154 +33,222 @@ function PrevencionViewer({ data }) {
 
   return (
     <>
-      <CardContent >
-        <Paper sx={{ width: "100%", textAlign: "start" }}>
-          {data && data["Auditor"] !== "Sin información" && (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Auditor:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {data["Auditor"]}
-              </Typography>
-            </Box>
-          )}
+      <Box sx={{ width: "100%", textAlign: "start" }}>
+        {data && data["Auditor"] !== "Sin información" && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Auditor:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {data["Auditor"]}
+            </Typography>
+          </Box>
+        )}
 
-          {data && data["Fecha Auditoria"] !== "Sin información" && (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Fecha Auditoria:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {data["Fecha Auditoria"]}
-              </Typography>
-            </Box>
-          )}
+        {data && data["Fecha Auditoria"] !== "Sin información" && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Fecha Auditoria:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {data["Fecha Auditoria"]}
+            </Typography>
+          </Box>
+        )}
 
-          {data && data["Epp Auditado"] !== "Sin información" && (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Epp Auditado:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {data["Epp Auditado"]}
-              </Typography>
-            </Box>
-          )}
+        {data && data["Epp Auditado"] !== "Sin información" && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Epp Auditado:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {data["Epp Auditado"]}
+            </Typography>
+          </Box>
+        )}
 
-          {data && data["Fecha Entrega Epp"] !== "Sin información" && (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Fecha Entrega Epp:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {data["Fecha Entrega Epp"]}
-              </Typography>
-            </Box>
-          )}
+        {data && data["Fecha Entrega Epp"] !== "Sin información" && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Fecha Entrega Epp:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {data["Fecha Entrega Epp"]}
+            </Typography>
+          </Box>
+        )}
 
-          {data && data["Dirección"] !== "Sin información" && (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Dirección:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {data["Dirección"]}
-              </Typography>
-            </Box>
-          )}
+        {data && data["Dirección"] !== "Sin información" && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Dirección:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {data["Dirección"]}
+            </Typography>
+          </Box>
+        )}
 
-          {data && data["Declaración"] !== "Sin información" && (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >
-                Declaración:
-              </Typography>
-              <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-                {data["Declaración"]}
-              </Typography>
-            </Box>
-          )}
+        {data && data["Declaración"] !== "Sin información" && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Declaración:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {data["Declaración"]}
+            </Typography>
+          </Box>
+        )}
 
-          {data && data["Archivo"] !== "None" && (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography
-                fontWeight="bold"
+        {data && data["Archivo"] !== "None" && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Archivo:
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                width: "75%",
+                p: 1,
+              }}
+            >
+              <Button
+                onClick={downloader}
+                variant="outlined"
+                size="small"
                 sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
+                  textDecoration: "none",
+                  color: "#1976d2",
+                  fontWeight: "bold",
                 }}
               >
-                Archivo:
-              </Typography>
-              <Box sx={{ display: "flex", alignItems: "center", width: "70%", p: 1 }}>
-                <Tooltip title="Descargar Archivo" placement="right">
-                  <Button
-                    onClick={downloader}
-                    size="small"
-                    sx={{
-                      textDecoration: "none",
-                      color: "#1976d2",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Descargar
-                  </Button>
-                </Tooltip>
-              </Box>
+                Descargar
+              </Button>
             </Box>
-          )}
-        </Paper>
-      </CardContent>
+          </Box>
+        )}
+      </Box>
     </>
   );
 }

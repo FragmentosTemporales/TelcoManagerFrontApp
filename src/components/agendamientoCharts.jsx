@@ -174,10 +174,11 @@ function AgendamientoCharts() {
         >
           <TextField
             required
+            size="small"
             id="fecha"
             type="date" // Changed to "date" for simplicity
             name="fecha"
-            variant="outlined"
+            variant="standard"
             value={fecha}
             onChange={(e) => setFecha(e.target.value)} // Fixed onChange to update fecha
             sx={{ minWidth: "50%" }}
@@ -195,7 +196,8 @@ function AgendamientoCharts() {
             required
             id="userID"
             name="userID"
-            variant="outlined"
+            size="small"
+            variant="standard"
             value={form.userID || ""}
             onChange={(e) => setForm({ ...form, userID: e.target.value })}
             sx={{ minWidth: "50%" }}

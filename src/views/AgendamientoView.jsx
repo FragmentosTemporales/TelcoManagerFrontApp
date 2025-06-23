@@ -198,6 +198,7 @@ function AgendamientoViewer() {
         justifyContent: "center",
         overflow: "auto",
         padding: 8,
+        backgroundColor: "#f0f0f0",
       }}
     >
       {open && (
@@ -211,161 +212,169 @@ function AgendamientoViewer() {
       )}
 
       {/* TARJETA DE INFORMACION BACKLOG */}
-      <Card
-        sx={{
-          width: { lg: "80%", md: "100%", xs: "100%" },
-          borderRadius: "20px",
-          boxShadow: 5,
-          marginTop: 2,
-        }}
-      >
-        <CardHeader
-          title={<Typography fontWeight="bold">Información cliente</Typography>}
+      {isLoadingBacklog ? (
+        <Box
           sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            mt: 4,
+            width: "90%",
           }}
-        />
-        <CardContent sx={{ display: "grid" }}>
-          {isLoadingBacklog ? (
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-              <CircularProgress />
-            </Box>
-          ) : dataBacklog ? (
-            <>
-              <Box
-                sx={{
-                  textAlign: "center",
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  sx={{
-                    mb: 2,
-                    width: "30%",
-                  }}
-                >
-                  <FormControl fullWidth>
-                    <InputLabel id="zona_de_trabajo-label">
-                      Zona de Trabajo
-                    </InputLabel>
-                    <Select
-                      labelId="zona_de_trabajo-label"
-                      id="zona_de_trabajo"
-                      name="zona_de_trabajo"
-                      value={formGetBacklog?.zona_de_trabajo || ""}
-                      onChange={handleChangeGetBacklog}
-                    >
-                      {zonas.map((zona) => (
-                        <MenuItem key={zona} value={zona}>
-                          {zona}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
-                <Button
-                  variant="contained"
-                  onClick={fetchBacklog}
-                  sx={{
-                    width: "200px",
-                    background: "#0b2f6d",
-                    borderRadius: "20px",
-                  }}
-                >
-                  Ver Cliente
-                </Button>
-              </Box>
-              <TableContainer>
-                <Table>
-                  <TableBody>
-                    {[
-                      ["Órden de Trabajo", dataBacklog.orden_de_trabajo],
-                      ["Nombre", dataBacklog.Cliente],
-                      ["Rut", dataBacklog.rut_cliente],
-                      ["Celular", dataBacklog.Celular],
-                      ["Zona", dataBacklog.zona_de_trabajo],
-                      ["Dirección", dataBacklog.direccion],
-                      ["Técnico", dataBacklog.tecnico],
-                      ["Actividad", dataBacklog.tipo_de_actividad],
-                      ["Fecha Agenda", dataBacklog.Fecha],
-                      ["Franja", dataBacklog.Franja],
-                      ["Código de Cierre", dataBacklog.codigo_de_cierre],
-                    ].map(([label, value], index) => (
-                      <TableRow key={index}>
-                        <TableCell sx={{ fontWeight: "bold" }}>
-                          {label}:
-                        </TableCell>
-                        <TableCell>
-                          {value ? value : "Sin Información"}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </>
-          ) : (
+        >
+          <CircularProgress />
+        </Box>
+      ) : dataBacklog ? (
+        <>
+          <Box
+            sx={{
+              textAlign: "center",
+              pt: 4,
+              pb: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "90%",
+              backgroundColor: "#fff",
+              boxShadow: 2,
+              mt: 2,
+              
+            }}
+          >
             <Box
               sx={{
-                textAlign: "center",
-                p: 2,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
+                mb: 2,
+                width: "30%",
               }}
             >
-              <Box
-                sx={{
-                  mb: 2,
-                  width: "30%",
-                }}
-              >
-                <FormControl fullWidth>
-                  <InputLabel id="zona_de_trabajo-label">
-                    Zona de Trabajo
-                  </InputLabel>
-                  <Select
-                    labelId="zona_de_trabajo-label"
-                    id="zona_de_trabajo"
-                    name="zona_de_trabajo"
-                    value={formGetBacklog?.zona_de_trabajo || ""}
-                    onChange={handleChangeGetBacklog}
-                  >
-                    {zonas.map((zona) => (
-                      <MenuItem key={zona} value={zona}>
-                        {zona}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-              <Button
-                variant="contained"
-                onClick={fetchBacklog}
-                sx={{
-                  width: "200px",
-                  background: "#0b2f6d",
-                  borderRadius: "20px",
-                }}
-              >
-                Ver Cliente
-              </Button>
+              <FormControl fullWidth>
+                <InputLabel id="zona_de_trabajo-label">
+                  Zona de Trabajo
+                </InputLabel>
+                <Select
+                  size="small"
+                  variant="standard"
+                  labelId="zona_de_trabajo-label"
+                  id="zona_de_trabajo"
+                  name="zona_de_trabajo"
+                  value={formGetBacklog?.zona_de_trabajo || ""}
+                  onChange={handleChangeGetBacklog}
+                >
+                  {zonas.map((zona) => (
+                    <MenuItem key={zona} value={zona}>
+                      {zona}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
-          )}
-        </CardContent>
-      </Card>
+            <Button
+              variant="outlined"
+              onClick={fetchBacklog}
+              sx={{
+                width: "200px",
+                borderRadius: "0px",
+              }}
+            >
+              Ver Cliente
+            </Button>
+          </Box>
+          <TableContainer
+            sx={{
+              width: "90%",
+              marginTop: 2,
+              boxShadow: 2,
+              backgroundColor: "#fff",
+              
+            }}
+          >
+            <Table>
+              <TableBody>
+                {[
+                  ["Órden de Trabajo", dataBacklog.orden_de_trabajo],
+                  ["Nombre", dataBacklog.Cliente],
+                  ["Rut", dataBacklog.rut_cliente],
+                  ["Celular", dataBacklog.Celular],
+                  ["Zona", dataBacklog.zona_de_trabajo],
+                  ["Dirección", dataBacklog.direccion],
+                  ["Técnico", dataBacklog.tecnico],
+                  ["Actividad", dataBacklog.tipo_de_actividad],
+                  ["Fecha Agenda", dataBacklog.Fecha],
+                  ["Franja", dataBacklog.Franja],
+                  ["Código de Cierre", dataBacklog.codigo_de_cierre],
+                ].map(([label, value], index) => (
+                  <TableRow key={index}>
+                    <TableCell sx={{ fontWeight: "bold", width: "30%" }}>
+                      {label}:
+                    </TableCell>
+                    <TableCell sx={{ width: "70%" }}>
+                      {value ? value : "Sin Información"}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      ) : (
+        <Box
+          sx={{
+            textAlign: "center",
+            pt: 2,
+            pb: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "90%",
+            boxShadow: 2,
+            backgroundColor: "#fff",
+            mt: 2,
+          }}
+        >
+          <Box
+            sx={{
+              mb: 2,
+              width: "30%",
+            }}
+          >
+            <FormControl fullWidth>
+              <InputLabel id="zona_de_trabajo-label">
+                Zona de Trabajo
+              </InputLabel>
+              <Select
+                size="small"
+                variant="standard"
+                labelId="zona_de_trabajo-label"
+                id="zona_de_trabajo"
+                name="zona_de_trabajo"
+                value={formGetBacklog?.zona_de_trabajo || ""}
+                onChange={handleChangeGetBacklog}
+              >
+                {zonas.map((zona) => (
+                  <MenuItem key={zona} value={zona}>
+                    {zona}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          <Button
+            variant="outlined"
+            onClick={fetchBacklog}
+            sx={{
+              width: "200px",
+              borderRadius: "0px",
+            }}
+          >
+            Ver Cliente
+          </Button>
+        </Box>
+      )}
 
       {/* TARJETA PARA VER ESTADOS POR OT */}
       {dataBacklogEstado && dataBacklogEstado.length > 0 ? (
         <Card
           sx={{
             width: { lg: "80%", md: "100%", xs: "100%" },
-            borderRadius: "20px",
             boxShadow: 5,
             marginTop: 2,
           }}
@@ -498,199 +507,198 @@ function AgendamientoViewer() {
       {/* TARJETA DE GESTION BACKLOG */}
       <Card
         sx={{
-          width: { lg: "80%", md: "100%", xs: "100%" },
-          borderRadius: "20px",
-          boxShadow: 5,
+          width: { lg: "90%", md: "100%", xs: "100%" },
+          boxShadow: 2,
           marginTop: 2,
+          pt: 2,
+          pb: 2,
         }}
       >
-        <CardHeader
-          title={<Typography fontWeight="bold">Gestion de Órdenes</Typography>}
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "center",
-          }}
-        />
-        <CardContent sx={{ display: "grid" }}>
-          <form onSubmit={SubmitBacklockForm}>
+        <form onSubmit={SubmitBacklockForm}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              flexWrap: "wrap",
+              gap: 2,
+            }}
+          >
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                flexWrap: "wrap",
-                gap: 2,
+                mb: 2,
+                width: "40%",
               }}
             >
-              <Box
-                sx={{
-                  mb: 2,
-                  width: "40%",
-                }}
-              >
-                <InputLabel>Orden de Trabajo</InputLabel>
-                <TextField
+              <InputLabel>Orden de Trabajo</InputLabel>
+              <TextField
+                required
+                size="small"
+                id="orden"
+                type="text"
+                name="orden"
+                variant="standard"
+                value={formBacklog.orden}
+                onChange={handleChangeBacklog}
+                sx={{ minWidth: "100%" }}
+              />
+            </Box>
+            <Box
+              sx={{
+                mb: 2,
+                width: "40%",
+              }}
+            >
+              <InputLabel>Fecha Cita</InputLabel>
+              <TextField
+                id="nueva_cita"
+                type="datetime-local"
+                name="nueva_cita"
+                size="small"
+                variant="standard"
+                value={formBacklog.nueva_cita}
+                onChange={handleChangeBacklog}
+                sx={{ minWidth: "100%" }}
+              />
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              flexWrap: "wrap",
+              gap: 2,
+            }}
+          >
+            <Box
+              sx={{
+                mb: 2,
+                width: "40%",
+              }}
+            >
+              <FormControl fullWidth>
+                <InputLabel>Estado</InputLabel>
+                <Select
                   required
-                  id="orden"
-                  type="text"
-                  name="orden"
-                  variant="outlined"
-                  value={formBacklog.orden}
-                  onChange={handleChangeBacklog}
-                  sx={{ minWidth: "100%" }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  mb: 2,
-                  width: "40%",
-                }}
-              >
-                <InputLabel>Fecha Cita</InputLabel>
-                <TextField
-                  id="nueva_cita"
-                  type="datetime-local"
-                  name="nueva_cita"
-                  variant="outlined"
-                  value={formBacklog.nueva_cita}
-                  onChange={handleChangeBacklog}
-                  sx={{ minWidth: "100%" }}
-                />
-              </Box>
+                  size="small"
+                  variant="standard"
+                  id="estado-interno-select"
+                  value={formBacklog.estado_interno || ""}
+                  onChange={(event) =>
+                    setFormBacklog((prevForm) => ({
+                      ...prevForm,
+                      estado_interno: event.target.value,
+                    }))
+                  }
+                >
+                  <MenuItem value="Carga otra EPS">Carga otra EPS</MenuItem>
+                  <MenuItem value="Efectiva">Efectiva</MenuItem>
+                  <MenuItem value="Futura">Futura</MenuItem>
+                  <MenuItem value="No Efectiva">No Efectiva</MenuItem>
+                  <MenuItem value="Sin Contacto">Sin Contacto</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
-
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                flexWrap: "wrap",
-                gap: 2,
+                mb: 2,
+                width: "40%",
               }}
             >
-              <Box
-                sx={{
-                  mb: 2,
-                  width: "40%",
-                }}
-              >
-                <FormControl fullWidth>
-                  <InputLabel>Estado</InputLabel>
-                  <Select
-                    required
-                    id="estado-interno-select"
-                    value={formBacklog.estado_interno || ""}
-                    onChange={(event) =>
-                      setFormBacklog((prevForm) => ({
-                        ...prevForm,
-                        estado_interno: event.target.value,
-                      }))
-                    }
-                  >
-                    <MenuItem value="Carga otra EPS">Carga otra EPS</MenuItem>
-                    <MenuItem value="Efectiva">Efectiva</MenuItem>
-                    <MenuItem value="Futura">Futura</MenuItem>
-                    <MenuItem value="No Efectiva">No Efectiva</MenuItem>
-                    <MenuItem value="Sin Contacto">Sin Contacto</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-              <Box
-                sx={{
-                  mb: 2,
-                  width: "40%",
-                }}
-              >
-                <FormControl fullWidth>
-                  <InputLabel>Clasificacion</InputLabel>
-                  <Select
-                    id="sub-clasificacion-select"
-                    value={formBacklog.sub_clasificacion || ""}
-                    onChange={(event) =>
-                      setFormBacklog((prevForm) => ({
-                        ...prevForm,
-                        sub_clasificacion: event.target.value,
-                      }))
-                    }
-                  >
-                    <MenuItem value="Cambia agenda">Cambia agenda</MenuItem>
-                    <MenuItem value="Cancelado">Cancelado</MenuItem>
-                    <MenuItem value="Cliente adelanta">
-                      Cliente adelanta
-                    </MenuItem>
-                    <MenuItem value="Cliente desiste">Cliente desiste</MenuItem>
-                    <MenuItem value="Cliente mantiene agenda">
-                      Cliente mantiene agenda
-                    </MenuItem>
-                    <MenuItem value="Orden mal generada">
-                      Orden mal generada
-                    </MenuItem>
-                    <MenuItem value="Problema inicio más temprano">
-                      Problema inicio más temprano
-                    </MenuItem>
-                    <MenuItem value="Trabajo ya asignado">
-                      Trabajo ya asignado
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
+              <FormControl fullWidth>
+                <InputLabel>Clasificacion</InputLabel>
+                <Select
+                size="small"
+                variant="standard"
+                  id="sub-clasificacion-select"
+                  value={formBacklog.sub_clasificacion || ""}
+                  onChange={(event) =>
+                    setFormBacklog((prevForm) => ({
+                      ...prevForm,
+                      sub_clasificacion: event.target.value,
+                    }))
+                  }
+                >
+                  <MenuItem value="Cambia agenda">Cambia agenda</MenuItem>
+                  <MenuItem value="Cancelado">Cancelado</MenuItem>
+                  <MenuItem value="Cliente adelanta">Cliente adelanta</MenuItem>
+                  <MenuItem value="Cliente desiste">Cliente desiste</MenuItem>
+                  <MenuItem value="Cliente mantiene agenda">
+                    Cliente mantiene agenda
+                  </MenuItem>
+                  <MenuItem value="Orden mal generada">
+                    Orden mal generada
+                  </MenuItem>
+                  <MenuItem value="Problema inicio más temprano">
+                    Problema inicio más temprano
+                  </MenuItem>
+                  <MenuItem value="Trabajo ya asignado">
+                    Trabajo ya asignado
+                  </MenuItem>
+                </Select>
+              </FormControl>
             </Box>
+          </Box>
 
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              flexWrap: "wrap",
+              gap: 2,
+            }}
+          >
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                flexWrap: "wrap",
-                gap: 2,
+                mb: 2,
+                width: "88%",
               }}
             >
-              <Box
-                sx={{
-                  mb: 2,
-                  width: "88%",
-                }}
-              >
-                <InputLabel>Comentarios</InputLabel>
-                <TextField
-                  id="comentario"
-                  type="text"
-                  name="comentario"
-                  variant="outlined"
-                  value={formBacklog.comentario}
-                  onChange={handleChangeBacklog}
-                  sx={{ minWidth: "100%" }}
-                />
-              </Box>
+              <InputLabel>Comentarios</InputLabel>
+              <TextField
+                id="comentario"
+                type="text"
+                name="comentario"
+                size="small"
+                multiline
+                maxRows={4}
+                minRows={4}
+                variant="standard"
+                value={formBacklog.comentario}
+                onChange={handleChangeBacklog}
+                sx={{ minWidth: "100%" }}
+              />
             </Box>
+          </Box>
 
-            <Box
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              flexWrap: "wrap",
+              gap: 2,
+            }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting}
               sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                flexWrap: "wrap",
-                gap: 2,
+                width: "200px",
+                background: "#0b2f6d",
+                borderRadius: "0px",
               }}
             >
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={isSubmitting}
-                sx={{
-                  width: "200px",
-                  background: "#0b2f6d",
-                  borderRadius: "20px",
-                }}
-              >
-                {isSubmitting ? "Cargando..." : "Crear"}{" "}
-              </Button>
-            </Box>
-          </form>
-        </CardContent>
+              {isSubmitting ? "Cargando..." : "Crear"}{" "}
+            </Button>
+          </Box>
+        </form>
       </Card>
 
       {/* BOTON PARA VER TODOS LOS AGENDAMIENTOS */}
       <Box
         sx={{
-          width: { lg: "80%", md: "100%", xs: "100%" },
+          width: { lg: "90%", md: "100%", xs: "100%" },
           overflow: "hidden",
           mt: 3,
         }}
@@ -698,7 +706,8 @@ function AgendamientoViewer() {
         <Link to="/all_agendamientos">
           <Button
             variant="contained"
-            sx={{ width: "200px", background: "#0b2f6d", borderRadius: "20px" }}
+            color="error"
+            sx={{ width: "200px", borderRadius: "0px" }}
           >
             Ver Todas
           </Button>

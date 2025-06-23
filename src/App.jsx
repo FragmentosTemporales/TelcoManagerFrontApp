@@ -44,6 +44,7 @@ import ProyectosOnNetView from "./views/ProyectosConsolidadosView";
 import ProyectoConsolidadoView from "./views/ProyectoConsolidadoView";
 import LoadConstruccion from "./views/PlanillaConstruccion";
 import CreateReparacionView from "./views/CreateReparacion";
+import TicketeraView from "./views/CreateTicket";
 
 function App() {
   return (
@@ -89,6 +90,7 @@ function App() {
           <Route path="/consolidado/:id" element={<ProyectoConsolidadoView />} />
           <Route path="/carga-construccion" element={<LoadConstruccion />} />
           <Route path="/modulo:crear-reparacion" element={<CreateReparacionView />} />
+          <Route path="/modulo:ticketera" element={<TicketeraView />} />
           <Route
             path="/componente-asignado/:componenteID"
             element={<ComponenteAsignadoView />}

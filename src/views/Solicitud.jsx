@@ -1124,70 +1124,68 @@ function Solicitud() {
   // COMPONENTES GENERALES DESDE AQUI
 
   const setTableEstado = () => (
-    <>
-      <CardContent>
-        <TableContainer
-          component={Paper}
-          sx={{ width: "100%", height: "100%" }}
-        >
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  sx={{ background: "#d8d8d8", fontWeight: "bold" }}
-                  align="center"
-                >
-                  <Typography fontFamily="initial">FECHA</Typography>
-                </TableCell>
-                <TableCell
-                  sx={{ background: "#d8d8d8", fontWeight: "bold" }}
-                  align="center"
-                >
-                  <Typography fontFamily="initial">ESTADO</Typography>
-                </TableCell>
-                <TableCell
-                  sx={{ background: "#d8d8d8", fontWeight: "bold" }}
-                  align="center"
-                >
-                  <Typography fontFamily="initial">GESTIONADO POR</Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {dataGestiones && dataGestiones.length > 0 ? (
-                dataGestiones.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center">
-                      <Typography fontFamily="initial">
-                        {extractDate(row.fecha)}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography fontFamily="initial">
-                        {row.estado ? row.estado : "Sin gestiones"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography fontFamily="initial">
-                        {row.responsable}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={3} align="center">
-                    <Typography fontFamily="initial">
-                      Sin gestiones registradas
+    <Box
+      sx={{
+        width: "80%",
+        marginTop: 2,
+        backgroundColor: "white",
+        boxShadow: 2,
+      }}
+    >
+      <TableContainer>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell
+                sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                align="center"
+              >
+                <Typography color={"white"}>FECHA</Typography>
+              </TableCell>
+              <TableCell
+                sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                align="center"
+              >
+                <Typography color={"white"}>ESTADO</Typography>
+              </TableCell>
+              <TableCell
+                sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                align="center"
+              >
+                <Typography color={"white"}>GESTIONADO POR</Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {dataGestiones && dataGestiones.length > 0 ? (
+              dataGestiones.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell align="center">
+                    <Typography>{extractDate(row.fecha)}</Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography>
+                      {row.estado ? row.estado : "Sin gestiones"}
                     </Typography>
                   </TableCell>
+                  <TableCell align="center">
+                    <Typography>{row.responsable}</Typography>
+                  </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </CardContent>
-    </>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={3} align="center">
+                  <Typography fontFamily="initial">
+                    Sin gestiones registradas
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 
   const setFormViewer = () => {
@@ -1214,108 +1212,113 @@ function Solicitud() {
   };
 
   const setDetallesView = () => (
-    <>
-      <CardContent sx={{ p: 4 }}>
-        {dataForm !== false && dataForm !== null ? (
-          setFormViewer()
-        ) : (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+    <Box
+      sx={{
+        width: "80%",
+        marginTop: 2,
+        backgroundColor: "white",
+        boxShadow: 2,
+      }}
+    >
+      {dataForm !== false && dataForm !== null ? (
+        setFormViewer()
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="body1"
+            component="div"
+            sx={{ color: "text.secondary", pb: 6, fontFamily: "initial" }}
           >
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{ color: "text.secondary", pb: 6, fontFamily: "initial" }}
+            Sin información
+          </Typography>
+          <Box paddingBottom={2}>
+            <Button
+              variant="contained"
+              sx={{
+                background: "#0b2f6d",
+                width: "300px",
+                borderRadius: "20px",
+              }}
+              onClick={() => {
+                downloadInforme();
+              }}
             >
-              Sin información
-            </Typography>
-            <Box paddingBottom={2}>
-              <Button
-                variant="contained"
-                sx={{
-                  background: "#0b2f6d",
-                  width: "300px",
-                  borderRadius: "20px",
-                }}
-                onClick={() => {
-                  downloadInforme();
-                }}
-              >
-                Descarga Plantilla Informe
-              </Button>
-            </Box>
-            <Link to={`/${data.area}/${data.logID}`}>
-              <Button
-                variant="contained"
-                sx={{
-                  background: "#0b2f6d",
-                  width: "300px",
-                  borderRadius: "20px",
-                }}
-              >
-                Crear Formulario
-              </Button>
-            </Link>
+              Descarga Plantilla Informe
+            </Button>
           </Box>
-        )}
-      </CardContent>
-    </>
+          <Link to={`/${data.area}/${data.logID}`}>
+            <Button
+              variant="contained"
+              sx={{
+                background: "#0b2f6d",
+                width: "300px",
+                borderRadius: "20px",
+              }}
+            >
+              Crear Formulario
+            </Button>
+          </Link>
+        </Box>
+      )}
+    </Box>
   );
 
   const setSolicitudView = () => (
-    <>
-      <CardContent sx={{ p: 4 }}>
-        <Paper>
-          {[
-            { label: "Fecha Solicitud :", value: data.fechaSolicitud },
-            { label: "Folio :", value: data.folio },
-            { label: "Solicitante :", value: data.solicitante },
-            { label: "Rut Solicitante :", value: data.rutSolicitante },
-            { label: "Tipo Formulario :", value: data.area },
-            { label: "Motivo :", value: data.motivo },
-            { label: "Submotivo :", value: data.submotivo },
-            { label: "Amonestado :", value: data.amonestado },
-            { label: "Rut Amonestado :", value: data.rutAmonestado },
-          ].map((item, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                borderRadius: 1,
-              }}
-            >
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                  fontFamily: "initial",
-                  width: "30%",
-                  background: "#e8e8e8",
-                  p: 1,
-                }}
-              >
-                {item.label}
-              </Typography>
-              <Typography
-                sx={{
-                  fontFamily: "initial",
-                  color: "text.secondary",
-                  width: "70%",
-                  p: 1,
-                }}
-              >
-                {item.value || "Sin Información"}
-              </Typography>
-            </Box>
-          ))}
-        </Paper>
-      </CardContent>
-    </>
+    <Box
+      sx={{
+        width: "80%",
+        marginTop: 2,
+        backgroundColor: "white",
+        boxShadow: 2,
+      }}
+    >
+      {[
+        { label: "Fecha Solicitud :", value: data.fechaSolicitud },
+        { label: "Folio :", value: data.folio },
+        { label: "Solicitante :", value: data.solicitante },
+        { label: "Rut Solicitante :", value: data.rutSolicitante },
+        { label: "Tipo Formulario :", value: data.area },
+        { label: "Motivo :", value: data.motivo },
+        { label: "Submotivo :", value: data.submotivo },
+        { label: "Amonestado :", value: data.amonestado },
+        { label: "Rut Amonestado :", value: data.rutAmonestado },
+      ].map((item, index) => (
+        <Box
+          key={index}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            border: "1px solid #e0e0e0",
+            padding: 1,
+          }}
+        >
+          <Typography
+            sx={{
+              width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+              color: "text.primary",
+              paddingLeft: 1,
+            }}
+          >
+            {item.label}
+          </Typography>
+          <Typography
+            sx={{
+              color: "text.secondary",
+              width: "75%",
+            }}
+          >
+            {item.value || "Sin Información"}
+          </Typography>
+        </Box>
+      ))}
+    </Box>
   );
 
   // USEEFFECTS DESDE AQUI
@@ -1333,6 +1336,7 @@ function Solicitud() {
         justifyContent: "center",
         overflow: "auto",
         padding: 8,
+        backgroundColor: "#f0f0f0",
       }}
     >
       {/* COMPONENTE MODAL PARA APROBAR AMONESTACION */}
@@ -1401,8 +1405,7 @@ function Solicitud() {
           {/* BOTON "IR A SOLICITUDES" */}
           <Box
             sx={{
-              width: "100%",
-              maxWidth: "800px",
+              width: "80%",
               overflow: "hidden",
               mt: 3,
               mx: "auto",
@@ -1411,98 +1414,24 @@ function Solicitud() {
             <Link to="/modulo:solicitudes">
               <Button
                 variant="contained"
-                sx={{ background: "#0b2f6d", borderRadius: "20px" }}
+                sx={{ background: "#0b2f6d", borderRadius: "0px" }}
               >
-                Ir a Solicitudes
+                <Typography sx={{ color: "white" }}>
+                  IR A SOLICITUDES
+                </Typography>
               </Button>
             </Link>
           </Box>
 
           {/* COMPONENTE SOLICITUD */}
-          <Card
-            sx={{
-              width: "100%",
-              maxWidth: "800px",
-              overflow: "hidden",
-              backgroundColor: "#f5f5f5",
-              boxShadow: 5,
-              borderRadius: "20px",
-              mt: 3,
-              mx: "auto",
-            }}
-          >
-            <CardHeader
-              title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                  {title}
-                </Typography>
-              }
-              sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "start",
-              }}
-            />
-
-            {setSolicitudView()}
-          </Card>
+          {setSolicitudView()}
 
           {/* COMPONENTE DETALLES */}
-          <Card
-            sx={{
-              width: "100%",
-              maxWidth: "800px",
-              overflow: "hidden",
-              backgroundColor: "#f5f5f5",
-              boxShadow: 5,
-              borderRadius: "20px",
-              mt: 3,
-              mx: "auto",
-            }}
-          >
-            <CardHeader
-              title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                  DETALLES
-                </Typography>
-              }
-              sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "start",
-              }}
-            />
-
-            {setDetallesView()}
-          </Card>
+          {setDetallesView()}
 
           {/* COMPONENTE GESTIONES */}
-          <Card
-            sx={{
-              width: "100%",
-              maxWidth: "800px",
-              overflow: "hidden",
-              backgroundColor: "#f5f5f5",
-              boxShadow: 5,
-              borderRadius: "20px",
-              mt: 3,
-              mx: "auto",
-            }}
-          >
-            <CardHeader
-              title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                  {tableTitle}
-                </Typography>
-              }
-              sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "start",
-              }}
-            />
-            {setTableEstado()}
-          </Card>
+
+          {setTableEstado()}
 
           {/* BOX PARA ANULAR AMONESTACIONES */}
           <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
@@ -1571,9 +1500,11 @@ function Solicitud() {
 
           {/* BOX PARA TRABAJADOR DESVINCULADO */}
           <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
-            {area && area.areaID === 5 &
-            (dataGestiones[0].estado != "TRABAJADOR DESVINCULADO")
-            ? componenteDesvinculado() : null}
+            {area &&
+            (area.areaID === 5) &
+              (dataGestiones[0].estado != "TRABAJADOR DESVINCULADO")
+              ? componenteDesvinculado()
+              : null}
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO FINALIZADA */}

@@ -1,0 +1,447 @@
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
+  FormControl,
+  InputLabel,
+  Rating,
+  Select,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+  MenuItem,
+  TableContainer,
+} from "@mui/material";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getCategoriasTicket, createTicket } from "../api/ticketeraAPI";
+
+function TicketeraView() {
+  const authState = useSelector((state) => state.auth);
+  const { token, user_id } = authState;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [crear, setCrear] = useState(false);
+  const [message, setMessage] = useState(undefined);
+  const [alertType, setAlertType] = useState(undefined);
+  const [categorias, setCategorias] = useState([]);
+  const [data, setData] = useState([]);
+  const [form, setForm] = useState({
+    file: null,
+    ticketcategoriaID: "",
+    titulo: "",
+    descripcion: "",
+    prioridad: 1,
+    userID: ""
+  });
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleFileChange = (e) => {
+    setForm({
+      ...form,
+      file: e.target.files[0],
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formData = new FormData();
+    if (form.file) {
+      formData.append("file", form.file);
+    }
+    formData.append("ticketcategoriaID", form.ticketcategoriaID);
+    formData.append("titulo", form.titulo);
+    formData.append("descripcion", form.descripcion);
+    formData.append("prioridad", form.prioridad);
+    formData.append("userID", form.userID);
+
+    try {
+      var response = await createTicket(formData, token);
+      setAlertType("success");
+      setMessage(response.message || "Ticket creado exitosamente");
+      setForm({
+        file: null,
+        ticketcategoriaID: "",
+        titulo: "",
+        descripcion: "",
+        prioridad: 1, // Reiniciar prioridad a valor por defecto
+        userID: user_id
+      });
+      setOpen(true);
+    } catch (error) {
+      // Manejo de error específico si el archivo está abierto por otro proceso
+      let errorMsg = error?.message || error;
+      if (
+        typeof errorMsg === "string" &&
+        (errorMsg.includes("used by another process") ||
+          errorMsg.includes("no se puede obtener acceso al archivo") ||
+          errorMsg.includes("Failed to load"))
+      ) {
+        errorMsg =
+          "No se pudo cargar el archivo porque está abierto en otra aplicación. Por favor, cierre el archivo e intente nuevamente.";
+      }
+      setMessage(errorMsg);
+      setAlertType("error");
+      setOpen(true);
+    } finally {
+      setIsSubmitting(false);
+      setCrear(false); // Cerrar el formulario de creación después de enviar
+    }
+  };
+
+  const fetchCategorias = async () => {
+    try {
+      const categorias = await getCategoriasTicket(token);
+      // Aquí puedes manejar las categorías obtenidas, por ejemplo, guardarlas en el estado
+      console.log(categorias);
+      const categoriasTransformadas = categorias.map((cat) => ({
+        value: cat.id,
+        label: cat.descripcion,
+      }));
+      setCategorias(categoriasTransformadas);
+    } catch (error) {
+      setMessage(error.message || "Error al obtener las categorías");
+      setAlertType("error");
+      setOpen(true);
+    }
+  };
+
+  const createCard = () => (
+    <Box
+      sx={{
+        mb: 2,
+        width: "80%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Typography
+        variant="h5"
+        sx={{
+          mb: 2,
+          mt: 2,
+          width: "90%",
+          textAlign: "start",
+          fontWeight: "bold",
+          color: "#0b2f6d",
+        }}
+      >
+        TICKETS / CREAR TICKET
+      </Typography>
+      <form onSubmit={handleSubmit} style={{ width: "90%" }}>
+        <Box sx={{ mb: 2, width: "100%" }}>
+          <InputLabel id="categoria-label">CATEGORÍA</InputLabel>
+          <Select
+            variant="standard"
+            required
+            labelId="categoria-label"
+            id="categoria-select"
+            label="CATEGORIA"
+            name="categoria"
+            value={form.ticketcategoriaID || ""}
+            onChange={(e) =>
+              setForm({ ...form, ticketcategoriaID: e.target.value })
+            }
+            sx={{ mb: 2, mt: 1, width: "50%", backgroundColor: "white" }}
+          >
+            {categorias.map((categoria) => (
+              <MenuItem key={categoria.value} value={categoria.value}>
+                {categoria.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+
+        <Box sx={{ mb: 2, width: "100%" }}>
+          <InputLabel id="titulo-input-label">TÍTULO</InputLabel>
+          <TextField
+            type="text"
+            variant="standard"
+            required
+            fullWidth
+            sx={{
+              mb: 2,
+              width: "50%",
+              backgroundColor: "white",
+            }}
+            placeholder="Ingrese el título del ticket"
+            onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+            inputProps={{ maxLength: 99 }}
+          />
+        </Box>
+
+        <Box sx={{ mb: 2, width: "100%" }}>
+          <InputLabel id="archivo-input-label">ARCHIVO</InputLabel>
+          <TextField
+            type="file"
+            fullWidth
+            variant="standard"
+            size="large"
+            sx={{ mb: 2, width: "50%", backgroundColor: "white" }}
+            onChange={handleFileChange}
+          />
+        </Box>
+
+        <Box sx={{ mb: 2, width: "100%" }}>
+          <InputLabel id="archivo-input-label">PRIORIDAD</InputLabel>
+          <Rating
+            name="prioridad"
+            onChange={(e) => setForm({ ...form, prioridad: e.target.value })}
+            defaultValue={1}
+            precision={1}
+          />
+        </Box>
+
+        <Box sx={{ mb: 2, width: "100%" }}>
+          <InputLabel id="descripcion-input-label">DESCRIPCIÓN</InputLabel>
+          <TextField
+            type="text"
+            required
+            fullWidth
+            variant="standard"
+            placeholder="Ingrese la descripción del ticket"
+            onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
+            inputProps={{ maxLength: 499 }}
+            multiline
+            minRows={5}
+            maxRows={5}
+            sx={{
+              mb: 2,
+              width: "100%",
+              backgroundColor: "white",
+            }}
+          />
+        </Box>
+
+        <Box
+          sx={{ mb: 2, width: "100%", display: "flex", justifyContent: "end" }}
+        >
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={isSubmitting}
+            sx={{
+              width: "200px",
+              borderRadius: "0px",
+              m: 2,
+              backgroundColor: "#0b2f6d",
+              color: "white",
+            }}
+          >
+            <Typography>{isSubmitting ? "Subiendo..." : "Enviar"}</Typography>
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => setCrear(false)}
+            sx={{
+              width: "200px",
+              borderRadius: "0px",
+              m: 2,
+            }}
+          >
+            <Typography>DESCARTAR</Typography>
+          </Button>
+        </Box>
+      </form>
+    </Box>
+  );
+
+  useEffect(() => {
+    fetchCategorias();
+  }, []);
+
+  useEffect(() => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      userID: user_id, // Asignar el user_id al formulario
+    }));
+  }, [user_id]);
+
+
+  return (
+    <Box
+      sx={{
+        paddingTop: "60px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f0f0f0",
+      }}
+    >
+      {open && (
+        <Alert
+          onClose={handleClose}
+          severity={alertType}
+          sx={{ width: "93%", marginBottom: 2 }}
+        >
+          {message}
+        </Alert>
+      )}
+
+      {crear && (
+        <Box
+          sx={{
+            width: "95%",
+            height: "90vh",
+            marginBottom: 2,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 2,
+            backgroundColor: "white",
+            boxShadow: 2,
+          }}
+        >
+          {createCard()}
+        </Box>
+      )}
+
+      {!crear && (
+        <Box
+          sx={{
+            width: "95%",
+            height: "90vh",
+            marginBottom: 2,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 2,
+            backgroundColor: "white",
+            boxShadow: 2,
+          }}
+        >
+          <Box
+            sx={{
+              mb: 2,
+              width: "80%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              variant="h5"
+              sx={{
+                mb: 2,
+                width: "90%",
+                textAlign: "start",
+                fontWeight: "bold",
+                color: "#0b2f6d",
+              }}
+            >
+              TICKETS
+            </Typography>
+            <Box sx={{ width: "90%", mb: 2 }}>
+              <TableContainer sx={{ minHeight: "50vh" }}>
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      {[
+                        "ID TICKET",
+                        "CATEGORÍA",
+                        "TITULO",
+                        "SOLICITANTE",
+                        "FECHA SOLICITUD",
+                        "PRIORIDAD",
+                        "ESTADO",
+                        "FECHA ULTIMO ESTADO"
+                      ].map((header) => (
+                        <TableCell key={header} align="center">
+                          <Typography>
+                            {header}
+                          </Typography>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data && data.length > 0 ? (
+                      data.map((row, index) => (
+                        <TableRow key={index}>
+                          <TableCell align="center" sx={{ fontSize: "12px" }}>
+                            {row.Folio ? row.Folio : "Sin Folio"}
+                          </TableCell>
+                          <TableCell align="center" sx={{ fontSize: "12px" }}>
+                            {row.Motivo ? row.Motivo : "Sin Información"}
+                          </TableCell>
+                          <TableCell align="center" sx={{ fontSize: "12px" }}>
+                            {row.Formulario
+                              ? row.Formulario
+                              : "Sin área asignada"}
+                          </TableCell>
+                          <TableCell align="center" sx={{ fontSize: "12px" }}>
+                            {row.Solicitante
+                              ? row.Solicitante
+                              : "Sin Información"}
+                          </TableCell>
+                          <TableCell align="center" sx={{ fontSize: "12px" }}>
+                            {row.Amonestado
+                              ? row.Amonestado
+                              : "Sin Información"}
+                          </TableCell>
+                          <TableCell align="center" sx={{ fontSize: "12px" }}>
+                            {row.Estado ? row.Estado : "Sin Información"}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={12} align="center">
+                          <Typography fontFamily="initial">
+                            No hay datos disponibles
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+            <Box
+              sx={{
+                mb: 2,
+                width: "100%",
+                display: "flex",
+                justifyContent: "end",
+              }}
+            >
+              <Button
+                onClick={() => setCrear(true)}
+                variant="contained"
+                sx={{
+                  width: "200px",
+                  borderRadius: "0px",
+                  m: 2,
+                  backgroundColor: "#0b2f6d",
+                  color: "white",
+                }}
+              >
+                CREAR
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      )}
+    </Box>
+  );
+}
+
+export default TicketeraView;

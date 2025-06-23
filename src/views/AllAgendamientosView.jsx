@@ -17,14 +17,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
-import { getAllAgendamientos, filterAgendamiento, getDespachosSemenalExcel } from "../api/despachoAPI";
+import {
+  getAllAgendamientos,
+  filterAgendamiento,
+  getDespachosSemenalExcel,
+} from "../api/despachoAPI";
 import { useSelector } from "react-redux";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
@@ -54,15 +58,15 @@ function AllAgendamientoViewer() {
     setShowStats((prev) => !prev);
   };
 
-    const getExcel = async () => {
-      setIsSubmitting(true);
-      try {
-        await getDespachosSemenalExcel(token);
-      } catch (error) {
-        console.log(error);
-      }
-      setIsSubmitting(false);
-    };
+  const getExcel = async () => {
+    setIsSubmitting(true);
+    try {
+      await getDespachosSemenalExcel(token);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsSubmitting(false);
+  };
 
   const downloadExcel = () => (
     <Box
@@ -73,22 +77,22 @@ function AllAgendamientoViewer() {
         justifyContent: "start",
       }}
     >
-        <Button
-          variant="contained"
-          onClick={getExcel}
-          disabled={isSubmitting}
-          sx={{
-            width: 200,
-            height: 40,
-            fontWeight: "bold",
-            display: "flex",
-            justifyContent: "space-around",
-            borderRadius: "20px",
-            background: "#0b2f6d",
-          }}
-        >
-          {isSubmitting ? "Cargando..." : "Descargar Excel"}
-        </Button>
+      <Button
+        variant="contained"
+        onClick={getExcel}
+        color="error"
+        disabled={isSubmitting}
+        sx={{
+          width: 200,
+          height: 40,
+          fontWeight: "bold",
+          display: "flex",
+          justifyContent: "space-around",
+          borderRadius: "0px",
+        }}
+      >
+        {isSubmitting ? "Cargando..." : "Descargar Excel"}
+      </Button>
     </Box>
   );
 
@@ -172,9 +176,10 @@ function AllAgendamientoViewer() {
               key={header}
               align="center"
               sx={{
-                background: "#d8d8d8",
+                background: "#0b2f6d",
                 fontWeight: "bold",
                 width: "20%",
+                color: "white",
               }}
             >
               {header}
@@ -224,7 +229,6 @@ function AllAgendamientoViewer() {
                   {row.estado_interno ? row.estado_interno : "Sin Información"}
                 </Typography>
               </TableCell>
-
 
               <TableCell
                 align="center"
@@ -297,6 +301,7 @@ function AllAgendamientoViewer() {
         minHeight: "85vh",
         overflow: "auto",
         padding: 8,
+        background: "#f5f5f5",
       }}
     >
       {open && (
@@ -320,11 +325,13 @@ function AllAgendamientoViewer() {
             variant="contained"
             sx={{
               background: "#0b2f6d",
-              borderRadius: "20px",
+              borderRadius: "0px",
               marginBottom: 2,
+              width: "200px",
+              fontWeight: "bold",
             }}
           >
-            Ver Mis Agendamientos
+            Volver
           </Button>
         </Link>
       </Box>
@@ -332,15 +339,13 @@ function AllAgendamientoViewer() {
       <Card
         sx={{
           width: { lg: "80%", md: "100%", xs: "100%" },
-          borderRadius: "20px",
+          borderRadius: "0px",
           boxShadow: 5,
           marginTop: 2,
         }}
       >
         <CardHeader
-          title={
-            <Typography fontWeight="bold">Estadística</Typography>
-          }
+          title={<Typography fontWeight="bold">Estadística</Typography>}
           avatar={<BarChartIcon />}
           action={
             <Button
@@ -363,171 +368,132 @@ function AllAgendamientoViewer() {
         )}
       </Card>
 
-      <Card
+      <Box
         sx={{
-          width: { lg: "80%", md: "100%", xs: "100%" },
-          borderRadius: "20px",
-          boxShadow: 5,
-          marginTop: 2,
+          width: "80%",
+          mt: 2,
+          background: "#fff",
+          boxShadow: 2,
+          pt: 2,
+          pb: 2,
         }}
       >
-        <CardHeader
-          title={
-            <Typography fontWeight="bold">Filtrar</Typography>
-          }
-          avatar={<SearchIcon />}
-          action={
-            <Button
-              onClick={toggleFilters}
-              sx={{ color: "white", minWidth: "auto" }}
+        <form onSubmit={SubmitForm}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              flexWrap: "wrap",
+              gap: 2,
+            }}
+          >
+            <Box
+              sx={{
+                mb: 2,
+                width: "35%",
+              }}
             >
-              {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </Button>
-          }
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "center",
-          }}
-        />
-        {showFilters && (
-          <CardContent sx={{ display: "grid" }}>
-            <form onSubmit={SubmitForm}>
-              <Box
+              <InputLabel id="fechaInicio-label">Fecha de Inicio</InputLabel>
+              <TextField
+                required
+                size="small"
+                id="fechaInicio"
+                type="datetime-local"
+                name="fechaInicio"
+                variant="standard"
+                value={form.fechaInicio}
+                onChange={handleChange}
+                sx={{ minWidth: "100%" }}
+              />
+            </Box>
+            <Box
+              sx={{
+                mb: 2,
+                width: "35%",
+              }}
+            >
+              <InputLabel id="fechaFin-label">Fecha de Fin</InputLabel>
+              <TextField
+                required
+                id="fechaFin"
+                size="small"
+                type="datetime-local"
+                name="fechaFin"
+                variant="standard"
+                value={form.fechaFin}
+                onChange={handleChange}
+                sx={{ minWidth: "100%" }}
+              />
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              flexWrap: "wrap",
+              gap: 2,
+            }}
+          >
+            <Box
+              sx={{
+                mb: 2,
+                width: "20%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={isSubmitting}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  flexWrap: "wrap",
-                  gap: 2,
+                  background: "#0b2f6d",
+                  height: 30,
+                  width: "100%",
+                  borderRadius: "0px",
                 }}
               >
-                <Box
-                  sx={{
-                    mb: 2,
-                    width: "35%",
-                  }}
-                >
-                  <InputLabel id="fechaInicio-label">Fecha de Inicio</InputLabel>
-                  <TextField
-                    required
-                    id="fechaInicio"
-                    type="datetime-local"
-                    name="fechaInicio"
-                    variant="outlined"
-                    value={form.fechaInicio}
-                    onChange={handleChange}
-                    sx={{ minWidth: "100%" }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    mb: 2,
-                    width: "35%",
-                  }}
-                >
-                  <InputLabel id="fechaFin-label">Fecha de Fin</InputLabel>
-                  <TextField
-                    required
-                    id="fechaFin"
-                    type="datetime-local"
-                    name="fechaFin"
-                    variant="outlined"
-                    value={form.fechaFin}
-                    onChange={handleChange}
-                    sx={{ minWidth: "100%" }}
-                  />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  flexWrap: "wrap",
-                  gap: 2,
-                }}
+                {isSubmitting ? "Cargando..." : "Buscar"}
+              </Button>
+            </Box>
+            <Box
+              sx={{
+                mb: 2,
+                width: "20%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={clearFilter}
+                sx={{ height: 30, width: "100%", borderRadius: "0px" }}
               >
-                <Box
-                  sx={{
-                    mb: 2,
-                    width: "20%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    disabled={isSubmitting}
-                    sx={{
-                      background: "#0b2f6d",
-                      height: 30,
-                      width: "100%",
-                      borderRadius: "20px",
-                    }}
-                  >
-                    {isSubmitting ? "Cargando..." : "Buscar"}
-                  </Button>
-                </Box>
-                <Box
-                  sx={{
-                    mb: 2,
-                    width: "20%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    onClick={clearFilter}
-                    sx={{ height: 30, width: "100%", borderRadius: "20px" }}
-                  >
-                    Limpiar Filtro
-                  </Button>
-                </Box>
-              </Box>
-            </form>
-          </CardContent>
-        )}
-      </Card>
+                Limpiar Filtro
+              </Button>
+            </Box>
+          </Box>
+        </form>
+      </Box>
 
       {downloadExcel()}
-
-      <Card
-        sx={{
-          width: { lg: "80%", md: "100%", xs: "100%" },
-          borderRadius: "20px",
-          boxShadow: 5,
-          marginTop: 2,
-        }}
-      >
-        <CardHeader
-          title={
-            <Typography fontWeight="bold">Lista de Agendamientos</Typography>
-          }
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "center",
-          }}
-        />
-        <CardContent sx={{ display: "grid" }}>
-          {isLoading ? (
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              sx={{
-                width: "100%",
-                height: "200px",
-                borderRadius: "10px",
-              }}
-            />
-          ) : (
-            setTable()
-          )}
-        </CardContent>
-      </Card>
+      <Box sx={{ width: "80%", mt: 2, background: "#fff", boxShadow: 2 }}>
+        {isLoading ? (
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            sx={{
+              width: "100%",
+              height: "200px",
+              borderRadius: "10px",
+            }}
+          />
+        ) : (
+          setTable()
+        )}
+      </Box>
 
       <ButtonGroup
         size="small"

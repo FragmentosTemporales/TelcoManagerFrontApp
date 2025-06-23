@@ -3,8 +3,6 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Card,
-  CardHeader,
   MenuItem,
   Paper,
   Select,
@@ -15,26 +13,22 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
-  CardContent,
+  Typography,  CardContent,
   TextField,
 } from "@mui/material";
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import BarChartIcon from "@mui/icons-material/BarChart";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import SearchIcon from "@mui/icons-material/Search";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSolicitudesFiltradas, getSolicitudesExcel } from "../api/solicitudAPI";
+import {
+  getSolicitudesFiltradas,
+  getSolicitudesExcel,
+} from "../api/solicitudAPI";
 import { onLoad, onLoading, setMessage } from "../slices/solicitudSlice";
 import filterData from "../data/filterSolicitud";
-import SolicitudCharts from "../components/solicitudesCharts";
 
 function Solicitudes() {
   const authState = useSelector((state) => state.auth);
@@ -46,8 +40,6 @@ function Solicitudes() {
   const [options, setOptions] = useState([]);
   const [page, setPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [showStatistics, setShowStatistics] = useState(false);
 
   const [toFilter, setToFilter] = useState({ folio: "", estado: "" });
 
@@ -80,9 +72,11 @@ function Solicitudes() {
     try {
       setToFilter({ folio: "", estado: "" });
       setPage(1); // Reset to the first page
-      await getSolicitudesFiltradas(token, { folio: "", estado: "" }, 1).then((res) => {
-        dispatch(onLoad(res));
-      });
+      await getSolicitudesFiltradas(token, { folio: "", estado: "" }, 1).then(
+        (res) => {
+          dispatch(onLoad(res));
+        }
+      );
     } catch (error) {
       dispatch(setMessage("Error al limpiar los filtros."));
       setOpen(true);
@@ -97,23 +91,15 @@ function Solicitudes() {
     setOptions(transformedOptions);
   };
 
-    const getExcel = async () => {
-      try {
-        await getSolicitudesExcel(token);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const getExcel = async () => {
+    try {
+      await getSolicitudesExcel(token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handlePage = (newPage) => setPage(newPage);
-
-  const toggleFilters = () => {
-    setShowFilters((prev) => !prev);
-  };
-
-  const toggleStatistics = () => {
-    setShowStatistics((prev) => !prev);
-  };
 
   const getButtons = () => (
     <>
@@ -142,159 +128,94 @@ function Solicitudes() {
   );
 
   const filterCard = () => (
-    <Card
+    <Box
       sx={{
         width: "90%",
         overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
+        backgroundColor: "white",
+        boxShadow: 2,
         textAlign: "center",
-        borderRadius: "20px",
         mt: 2,
+        paddingTop: 3,
+        paddingBottom: 3,
       }}
     >
-      <CardHeader
-        title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            FILTRAR SOLICITUDES
-          </Typography>
-        }
-        avatar={<SearchIcon />}
-        action={
-          <Button
-            onClick={toggleFilters}
-            sx={{ color: "white", minWidth: "auto" }}
+      <form>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+        >
+          <TextField
+            id="folio-input"
+            label="Folio"
+            variant="standard"
+            value={toFilter.folio || ""}
+            onChange={(event) => {
+              setToFilter((prev) => ({
+                ...prev,
+                folio: event.target.value,
+              }));
+            }}
+            sx={{ minWidth: "200px" }}
+            size="small"
+          />
+          <Select
+            labelId="estado-label"
+            required
+            variant="standard"
+            id="estado-select"
+            value={toFilter.estado || ""}
+            sx={{ minWidth: "200px" }}
+            size="small"
+            onChange={(event) => {
+              setToFilter((prev) => ({
+                ...prev,
+                estado: event.target.value,
+              }));
+            }}
           >
-            {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </Button>
-        }
-        sx={{
-          background: "#0b2f6d",
-          color: "white",
-          textAlign: "end",
-        }}
-      />
-      {showFilters && (
-        <CardContent>
-          <form>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-around",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: 2,
-              }}
-            >
-              <TextField
-                id="folio-input"
-                label="Folio"
-                variant="outlined"
-                value={toFilter.folio || ""}
-                onChange={(event) => {
-                  setToFilter((prev) => ({
-                    ...prev,
-                    folio: event.target.value,
-                  }));
-                }}
-                sx={{ minWidth: "200px" }}
-                size="small"
-              />
-              <Select
-                labelId="estado-label"
-                required
-                id="estado-select"
-                value={toFilter.estado || ""}
-                sx={{ minWidth: "200px" }}
-                size="small"
-                onChange={(event) => {
-                  setToFilter((prev) => ({
-                    ...prev,
-                    estado: event.target.value,
-                  }));
-                }}
-              >
-                {options.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
+            {options.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
 
-              <Button
-                variant="contained"
-                onClick={handleClear}
-                sx={{
-                  fontWeight: "bold",
-                  background: "#0b2f6d",
-                  minWidth: "200px",
-                  height: "40px",
-                  borderRadius: "20px",
-                }}
-              >
-                LIMPIAR FILTROS
-              </Button>
-
-              <Button
-                variant="contained"
-                onClick={fetchData}
-                sx={{
-                  fontWeight: "bold",
-                  background: "#0b2f6d",
-                  minWidth: "200px",
-                  height: "40px",
-                  borderRadius: "20px",
-                }}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Procesando..." : "Actualizar"}
-              </Button>
-            </Box>
-          </form>
-        </CardContent>
-      )}
-    </Card>
-  );
-
-  const statisticsCard = () => (
-    <Card
-      sx={{
-        width: "90%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        textAlign: "center",
-        borderRadius: "20px",
-        mt: 2,
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            ESTADISTICAS DE SOLICITUDES
-          </Typography>
-        }
-        avatar={<BarChartIcon />}
-        action={
           <Button
-            onClick={toggleStatistics}
-            sx={{ color: "white", minWidth: "auto" }}
+            variant="outlined"
+            onClick={fetchData}
+            sx={{
+              fontWeight: "bold",
+              minWidth: "200px",
+              height: "40px",
+              borderRadius: "0px",
+            }}
+            disabled={isSubmitting}
           >
-            {showStatistics ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            {isSubmitting ? "Procesando..." : "Actualizar"}
           </Button>
-        }
-        sx={{
-          background: "#0b2f6d",
-          color: "white",
-          textAlign: "end",
-        }}
-      />
-      {showStatistics && (
-        <CardContent>
-          <SolicitudCharts />
-        </CardContent>
-      )}
-    </Card>
+
+          <Button
+            variant="contained"
+            onClick={handleClear}
+            sx={{
+              fontWeight: "bold",
+              background: "#0b2f6d",
+              minWidth: "200px",
+              height: "40px",
+              borderRadius: "0px",
+            }}
+          >
+            LIMPIAR FILTROS
+          </Button>
+        </Box>
+      </form>
+    </Box>
   );
 
   const createNew = () => (
@@ -303,7 +224,8 @@ function Solicitudes() {
         width: "90%",
         mt: 2,
         display: "flex",
-        justifyContent: "start",
+        flexDirection: "row",
+        justifyContent: "space-between",
       }}
     >
       <Link style={{ color: "white", textDecoration: "none" }} to="/create">
@@ -316,12 +238,28 @@ function Solicitudes() {
             fontWeight: "bold",
             display: "flex",
             justifyContent: "space-around",
-            borderRadius: "20px",
+            borderRadius: "0px",
           }}
         >
           <AddCircleOutlineIcon /> Crear Nueva
         </Button>
       </Link>
+      <Button
+        variant="outlined"
+        onClick={getExcel}
+        sx={{
+          width: 200,
+          height: 40,
+          fontWeight: "bold",
+          display: "flex",
+          justifyContent: "space-around",
+          borderRadius: "0px",
+          backgroundColor: "#0b2f6d",
+          color: "white",
+        }}
+      >
+        <InsertDriveFileIcon /> Descargar
+      </Button>
     </Box>
   );
 
@@ -333,23 +271,7 @@ function Solicitudes() {
         display: "flex",
         justifyContent: "start",
       }}
-    >
-        <Button
-          variant="contained"
-          onClick={getExcel}
-          sx={{
-            width: 200,
-            height: 40,
-            fontWeight: "bold",
-            display: "flex",
-            justifyContent: "space-around",
-            borderRadius: "20px",
-            background: "#0b2f6d",
-          }}
-        >
-          <InsertDriveFileIcon /> Descargar
-        </Button>
-    </Box>
+    ></Box>
   );
 
   const setTableHead = () => (
@@ -364,7 +286,7 @@ function Solicitudes() {
           "ESTADO",
         ].map((header) => (
           <TableCell key={header} align="center">
-            <Typography fontFamily="initial">{header}</Typography>
+            <Typography >{header}</Typography>
           </TableCell>
         ))}
       </TableRow>
@@ -418,41 +340,15 @@ function Solicitudes() {
   );
 
   const setTableCard = () => (
-    <Card
-      sx={{
-        width: "90%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        textAlign: "center",
-        borderRadius: "20px",
-        minHeight: "250px",
-        mt: 2,
-      }}
+    <TableContainer
+      component={Paper}
+      sx={{ width: "90%", height: "100%", overflow: "auto", marginTop: 2 }}
     >
-      <CardHeader
-        title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            LISTA DE SOLICITUDES DE AMONESTACION
-          </Typography>
-        }
-        avatar={<FormatListBulletedIcon />}
-        sx={{
-          background: "#0b2f6d",
-          color: "white",
-          textAlign: "end",
-        }}
-      />
-      <TableContainer
-        component={Paper}
-        sx={{ width: "100%", height: "100%", overflow: "auto" }}
-      >
-        <Table stickyHeader>
-          {setTableHead()}
-          {setTableBody()}
-        </Table>
-      </TableContainer>
-    </Card>
+      <Table stickyHeader>
+        {setTableHead()}
+        {setTableBody()}
+      </Table>
+    </TableContainer>
   );
 
   useEffect(() => {
@@ -471,18 +367,21 @@ function Solicitudes() {
         overflow: "auto",
         paddingTop: 8,
         paddingBottom: "50px",
+        backgroundColor: "#f0f0f0",
       }}
     >
       {open && (
         <Alert
           onClose={handleClose}
           severity="info"
-          sx={{ marginTop: "2%", width: "80%" }}
+          sx={{
+            width: "88%",
+            boxShadow: 2,
+          }}
         >
           {message}
         </Alert>
       )}
-      {statisticsCard()}
       {filterCard()}
       {createNew()}
       {downloadExcel()}
@@ -501,8 +400,8 @@ function Solicitudes() {
         >
           <Skeleton
             variant="rounded"
-            width={"90%"}
-            height={"800px"}
+            width={"100%"}
+            height={"100%"}
             sx={{ p: 3, m: 3 }}
           />
         </Box>

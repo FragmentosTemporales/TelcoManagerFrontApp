@@ -18,13 +18,12 @@ function LogisticaViewer({ data }) {
   const downloader = async () => {
     try {
       const payload = { file_path: filePath };
-      await downloadFile(payload, token);   
+      await downloadFile(payload, token);
       console.log("Archivo descargado exitosamente");
     } catch (error) {
       console.error("Error descargando el archivo:", error);
     }
   };
-  
 
   useEffect(() => {
     if (data && data.Archivo !== "None") {
@@ -34,58 +33,77 @@ function LogisticaViewer({ data }) {
 
   return (
     <>
-      <CardContent >
-        <Paper sx={{ width: "100%", textAlign: "start" }}>
-      {data && data["Fecha Evento"] != "Sin información" ? (
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography
-                fontWeight="bold"
-                sx={{
-                  fontFamily: "initial",
-                  background: "#e8e8e8",
-                  p: 1,
-                  width: "30%",
-                }}
-              >Fecha Evento:
-          </Typography>
-          <Typography sx={{ fontFamily: "initial", p: 1, width: "70%" }}>
-            {`${data["Fecha Evento"]}`}
-          </Typography>
-        </Box>
-      ) : null}
-
-      {data && data["Archivo"] !== "None" ? (
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography
-          fontWeight="bold"
-          sx={{
-            fontFamily: "initial",
-            background: "#e8e8e8",
-            p: 1,
-            width: "30%",
-          }}
-        >
-          Archivo:
-        </Typography>
-        <Box sx={{ display: "flex", alignItems: "center", width: "70%", p: 1 }}>
-          <Tooltip title="Descargar Archivo" placement="right">
-            <Button
-              onClick={downloader}
-              size="small"
+      <Box sx={{ width: "100%", textAlign: "start" }}>
+        {data && data["Fecha Evento"] != "Sin información" ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
               sx={{
-                textDecoration: "none",
-                color: "#1976d2",
-                fontWeight: "bold",
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
               }}
             >
-              Descargar
-            </Button>
-          </Tooltip>
-        </Box>
+              Fecha Evento:
+            </Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                width: "75%",
+              }}
+            >
+              {`${data["Fecha Evento"]}`}
+            </Typography>
+          </Box>
+        ) : null}
+
+        {data && data["Archivo"] !== "None" ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 1,
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <Typography
+              sx={{
+                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                color: "text.primary",
+                paddingLeft: 1,
+              }}
+            >
+              Archivo:
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                width: "75%",
+                p: 1,
+              }}
+            >
+              <Button
+                onClick={downloader}
+                variant="outlined"
+                size="small"
+                sx={{
+                  textDecoration: "none",
+                  color: "#1976d2",
+                  fontWeight: "bold",
+                }}
+              >
+                Descargar
+              </Button>
+            </Box>
+          </Box>
+        ) : null}
       </Box>
-      ) : null}
-    </Paper>
-      </CardContent>
     </>
   );
 }

@@ -45,23 +45,25 @@ function AstViewer() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "85vh",
+        height: "100%",
+        width: "100%",
         overflow: "auto",
-        padding: 8,
+        paddingTop: 8,
+        paddingBottom: "50px",
+        backgroundColor: "#f0f0f0",
       }}
     >
       <Box
         sx={{
-          width: "90%",
+          width: "80%",
           overflow: "hidden",
-          borderRadius: "10px",
           mt: 3,
         }}
       >
         <Link to="/form-ast-list">
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", borderRadius: "10px" }}
+            sx={{ background: "#0b2f6d", borderRadius: "0px", width: "200px" }}
           >
             Volver
           </Button>
@@ -69,171 +71,130 @@ function AstViewer() {
       </Box>
       {isLoading ? (
         <Box
-          sx={{
-            width: "100%",
-            height: "90vh",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          sx={{ width: "80%", mb: 3, background: "#fff", boxShadow: 2, mt: 2 }}
         >
           <Skeleton
             variant="rounded"
-            width={"800px"}
+            width={"100%"}
             height={"70%"}
-            sx={{ p: 3, m: 3 }}
+            sx={{ m: 3 }}
           />
         </Box>
       ) : (
-        <>
-          <Card
-            sx={{
-              width: "90%",
-              overflow: "hidden",
-              backgroundColor: "#f5f5f5",
-              boxShadow: 5,
-              textAlign: "center",
-              borderRadius: "10px",
-              mt: 2,
-              mb: 2,
-            }}
-          >
-            <CardHeader
-              avatar={<FormatAlignJustifyIcon />}
-              title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                  FORMULARIO AST ID #{formID}
-                </Typography>
-              }
-              sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "end",
-              }}
-            />
-            <CardContent>
-              <Paper>
-                {[
-                  { label: "Nombre :", value: worker.nombre },
-                  { label: "Rut :", value: worker.numDoc },
-                  { label: "Empresa :", value: worker.empresa.nombre },
-                  { label: "Fecha :", value: extractDate(data.fechaForm) },
-                ].map((item, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      borderRadius: "10px",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontWeight: "bold",
-                        fontFamily: "initial",
-                        width: "30%",
-                        background: "#e8e8e8",
-                        p: 1,
-                      }}
-                    >
-                      {item.label}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontFamily: "initial",
-                        color: "text.secondary",
-                        width: "70%",
-                        p: 1,
-                      }}
-                    >
-                      {item.value || "Sin Información"}
-                    </Typography>
-                  </Box>
-                ))}
-              </Paper>
-              <Paper
-                sx={{ display: "column", justifyContent: "center", mt: 2 }}
+        <Box
+          sx={{ width: "80%", mb: 3, background: "#fff", boxShadow: 2, mt: 2 }}
+        >
+          <Box sx={{ display: "column", justifyContent: "center" }}>
+            {[
+              { label: "Nombre :", value: worker.nombre },
+              { label: "Rut :", value: worker.numDoc },
+              { label: "Empresa :", value: worker.empresa.nombre },
+              { label: "Fecha :", value: extractDate(data.fechaForm) },
+            ].map((item, index) => (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  padding: 1,
+                  borderBottom: "1px solid #e0e0e0",
+                }}
               >
-                {[
-                  {
-                    label: "¿Existe riesgo de ser golpeado por un objeto?",
-                    value: data.golpeadoPor,
-                  },
-                  {
-                    label: "¿Existe riesgo de una descarga eléctrica?",
-                    value: data.descargaElectrica,
-                  },
-                  {
-                    label: "¿Existe riesgo de una caída en altura?",
-                    value: data.caidaAltura,
-                  },
-                  {
-                    label: "¿Existe riesgo de tropiezo?",
-                    value: data.tropiezo,
-                  },
-                  {
-                    label:
-                      "¿Existe la posibilidad de una distensión muscular, producto de un levantamiento, flexión o dislocación?",
-                    value: data.distensionMuscular,
-                  },
-                  {
-                    label:
-                      "¿Existe la posibilidad de ser colisionado por otro vehículo?",
-                    value: data.colicionadoPor,
-                  },
-                  {
-                    label:
-                      "¿Las condiciones del vehículo son adecuadas para desempeñar las labores diarias?",
-                    value: data.condicionVehicular,
-                  },
-                  {
-                    label:
-                      "¿Se han identificado en el área de trabajo los posibles riesgos como piso resbaladizos, obstáculos, etc?",
-                    value: data.areaTrabajo,
-                  },
-                  {
-                    label:
-                      "¿Se ha realizado la ventilación adecuada del espacio de trabajo en caso de realizar actividades en cámaras subterráneas?",
-                    value: data.ventilacionAdecuada,
-                  },
-                  {
-                    label:
-                      "¿Se ha delimitado correctamente el área con barreras físicas, cintas de seguridad, conos, vallas u otros elementos?",
-                    value: data.areaDelimitada,
-                  },
-                  {
-                    label: "Medidas de control definidas",
-                    value: data.observacion,
-                  },
-                ].map((item, index) => (
-                  <Box key={index}>
-                    <Typography
-                      sx={{
-                        fontWeight: "bold",
-                        fontFamily: "initial",
-                        background: "#e8e8e8",
-                        p: 1,
-                      }}
-                    >
-                      {item.label}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontFamily: "initial",
-                        color: "text.secondary",
-                        width: "100%",
-                        p: 1,
-                      }}
-                    >
-                      {item.value || "Sin Información"}
-                    </Typography>
-                  </Box>
-                ))}
-              </Paper>
-            </CardContent>
-          </Card>
-        </>
+                <Typography
+                  sx={{
+                    width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
+                    color: "text.primary",
+                    paddingLeft: 1,
+                  }}
+                >
+                  {item.label}
+                </Typography>
+                <Typography
+                  sx={{
+                    color: "text.secondary",
+                    width: "75%",
+                  }}
+                >
+                  {item.value || "Sin Información"}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+          <Box sx={{ display: "column", justifyContent: "center", mt: 2 }}>
+            {[
+              {
+                label: "¿Existe riesgo de ser golpeado por un objeto?",
+                value: data.golpeadoPor,
+              },
+              {
+                label: "¿Existe riesgo de una descarga eléctrica?",
+                value: data.descargaElectrica,
+              },
+              {
+                label: "¿Existe riesgo de una caída en altura?",
+                value: data.caidaAltura,
+              },
+              {
+                label: "¿Existe riesgo de tropiezo?",
+                value: data.tropiezo,
+              },
+              {
+                label:
+                  "¿Existe la posibilidad de una distensión muscular, producto de un levantamiento, flexión o dislocación?",
+                value: data.distensionMuscular,
+              },
+              {
+                label:
+                  "¿Existe la posibilidad de ser colisionado por otro vehículo?",
+                value: data.colicionadoPor,
+              },
+              {
+                label:
+                  "¿Las condiciones del vehículo son adecuadas para desempeñar las labores diarias?",
+                value: data.condicionVehicular,
+              },
+              {
+                label:
+                  "¿Se han identificado en el área de trabajo los posibles riesgos como piso resbaladizos, obstáculos, etc?",
+                value: data.areaTrabajo,
+              },
+              {
+                label:
+                  "¿Se ha realizado la ventilación adecuada del espacio de trabajo en caso de realizar actividades en cámaras subterráneas?",
+                value: data.ventilacionAdecuada,
+              },
+              {
+                label:
+                  "¿Se ha delimitado correctamente el área con barreras físicas, cintas de seguridad, conos, vallas u otros elementos?",
+                value: data.areaDelimitada,
+              },
+              {
+                label: "Medidas de control definidas",
+                value: data.observacion,
+              },
+            ].map((item, index) => (
+              <Box key={index} sx={{ padding: 1, borderBottom: "1px solid #e0e0e0" }}>
+                <Typography
+                  sx={{
+                    width: "100%",
+                    color: "text.primary",
+                    paddingLeft: 1,
+                  }}
+                >
+                  {item.label}
+                </Typography>
+                <Typography
+                  sx={{
+                    color: "text.secondary",
+                    width: "100%",
+                    p: 1,
+                  }}
+                >
+                  {item.value || "Sin Información"}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
       )}
     </Box>
   );
