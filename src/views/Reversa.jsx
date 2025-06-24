@@ -30,7 +30,11 @@ import { BarChart } from "@mui/icons-material";
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getReversas, updateReversas, fetchReversas } from "../api/logisticaAPI";
+import {
+  getReversas,
+  updateReversas,
+  fetchReversas,
+} from "../api/logisticaAPI";
 import extractDate from "../helpers/main";
 import ReversaCharts from "../components/reversaCharts";
 
@@ -50,7 +54,6 @@ function ReversaView() {
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("info");
   const [showTableOk, setShowTableOk] = useState(false);
-  const [showStats, setShowStats] = useState(false);
 
   const renderAlert = () => (
     <Alert onClose={handleClose} severity={severity} sx={{ marginBottom: 3 }}>
@@ -60,10 +63,6 @@ function ReversaView() {
 
   const toggleTableOK = () => {
     setShowTableOk((prev) => !prev);
-  };
-
-  const toggleStats = () => {
-    setShowStats((prev) => !prev);
   };
 
   const fetchTecnicos = async () => {
@@ -161,9 +160,9 @@ function ReversaView() {
           <TableCell
             key={header}
             align="center"
-            sx={{ background: "#d8d8d8", fontWeight: "bold" }}
+            sx={{ background:"#0b2f6d", color: "white", fontSize: "12px" }}
           >
-            <Typography fontFamily="initial">{header}</Typography>
+            <Typography fontWeight="bold">{header}</Typography>
           </TableCell>
         ))}
       </TableRow>
@@ -301,12 +300,12 @@ function ReversaView() {
         <Box sx={{ textAlign: "center", marginTop: 2 }}>
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", width: "300px", borderRadius: '20px' }}
+            sx={{ background: "#0b2f6d", width: "200px", borderRadius: "0px" }}
             onClick={handleSubmitUpdate}
             disabled={isSubmitting}
           >
-            <Typography fontFamily="initial">
-              {isSubmitting ? "Procesando..." : "Actualizar Información"}
+            <Typography>
+              {isSubmitting ? "Procesando..." : "Actualizar"}
             </Typography>
           </Button>
         </Box>
@@ -333,20 +332,6 @@ function ReversaView() {
       );
     }
     return (
-      <Card sx={{ borderRadius: "20px" }}>
-        <CardHeader
-          title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              LISTA DE REVERSAS PENDIENTES
-            </Typography>
-          }
-          avatar={<PlaylistRemoveIcon />}
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "end",
-          }}
-        />
         <TableContainer
           component={Paper}
           sx={{ width: "100%", height: "100%", overflow: "auto" }}
@@ -356,7 +341,6 @@ function ReversaView() {
             {renderTableBody()}
           </Table>
         </TableContainer>
-      </Card>
     );
   };
 
@@ -377,7 +361,7 @@ function ReversaView() {
       );
     }
     return (
-      <Card sx={{ borderRadius: "20px" }}>
+      <Card sx={{ borderRadius: "0px" }}>
         <CardHeader
           title={
             <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
@@ -415,57 +399,34 @@ function ReversaView() {
   };
 
   const filterReversa = () => (
-    <Card sx={{ borderRadius: "20px", marginBottom: 2 }}>
-      <CardHeader
-        title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            FILTRO SEGUN SERIE
-          </Typography>
-        }
-        avatar={<SearchIcon />}
-        sx={{
-          background: "#0b2f6d",
-          color: "white",
-          textAlign: "end",
-        }}
-      />
-      <CardContent
-        sx={{
-          height: "100%",
-          overflow: "auto",
-          display: "flex",
-          justifyContent: "center",
-          margin: 1,
-        }}
-      >
-        <Box
-          sx={{
-            mb: 2,
-            display: "flex",
-            justifyContent: "center",
-            width: "500px",
-          }}
-        >
-          <FormControl fullWidth variant="filled">
-            <Autocomplete
-              fullWidth
-              options={data}
-              getOptionLabel={(option) => option.serie}
-              value={data.find((option) => option.serie === serie) || null}
-              onChange={(event, newValue) => setSerie(newValue || "")}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={<Typography fontFamily="initial">Series</Typography>}
-                  variant="filled"
-                  fullWidth
-                />
-              )}
+    <Box
+      sx={{
+        mb: 2,
+        display: "flex",
+        justifyContent: "center",
+        width: "100%",
+        backgroundColor: "#fff",
+        boxShadow: 2,
+        pb: 2,
+      }}
+    >
+      <FormControl>
+        <Autocomplete
+          sx={{ width: "300px" }}
+          options={data}
+          getOptionLabel={(option) => option.serie}
+          value={data.find((option) => option.serie === serie) || null}
+          onChange={(event, newValue) => setSerie(newValue || "")}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={<Typography fontFamily="initial">Series</Typography>}
+              variant="standard"
             />
-          </FormControl>
-        </Box>
-      </CardContent>
-    </Card>
+          )}
+        />
+      </FormControl>
+    </Box>
   );
 
   return (
@@ -475,11 +436,11 @@ function ReversaView() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        height: "100%",
-        minHeight: "85vh",
         width: "100%",
         paddingTop: 8,
         mt: 2,
+        backgroundColor: "#f5f5f5",
+        minHeight: "95vh",
       }}
     >
       {open && renderAlert()}
@@ -490,131 +451,94 @@ function ReversaView() {
           paddingBottom: 2,
         }}
       >
-        <Card sx={{ borderRadius: "20px", width: "100%" }}>
-          <CardHeader
-            title={
-              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                ESTADISTICAS
-              </Typography>
-            }
-            avatar={<BarChart />}
-            action={
-              <Button
-                onClick={toggleStats}
-                sx={{ color: "white", minWidth: "auto" }}
-              >
-                {showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-              </Button>
-            }
-            sx={{
-              background: "#0b2f6d",
-              color: "white",
-              textAlign: "end",
-            }}
-          />
-          {showStats && (
-            <CardContent>
-              <ReversaCharts/>
-            </CardContent>
-          )}
-        </Card>
+        <ReversaCharts />
       </Box>
 
       <Box
         sx={{
           width: { lg: "80%", md: "90%", xs: "100%" },
+          backgroundColor: "#fff",
+          boxShadow: 2,
+          pt: 4,
+          pb: 4,
         }}
       >
-        <Card sx={{ borderRadius: "20px", width: "100%" }}>
-          <CardHeader
-            title={
-              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                BUSCAR SERIE
-              </Typography>
-            }
-            avatar={<SearchIcon />}
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          sx={{ textAlign: "center", mb: 4 }}
+        >
+          CONSULTA DE REVERSAS
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Box
             sx={{
-              background: "#0b2f6d",
-              color: "white",
-              textAlign: "end",
+              mb: 2,
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "row",
+              width: "100%",
             }}
-          />
-          <CardContent>
-            <form onSubmit={handleSubmit}>
-              <Box
-                sx={{
-                  mb: 2,
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%",
-                }}
-              >
-                <FormControl sx={{ width: "50%" }} variant="filled">
-                  <InputLabel>
-                    <Typography fontFamily="initial">Frecuencia</Typography>
-                  </InputLabel>
-                  <Select
-                    value={frecuencia}
-                    onChange={(e) => setFrecuencia(e.target.value)}
-                    label="Frecuencia"
-                  >
-                    <MenuItem value="">
-                      <em>Todos</em>
-                    </MenuItem>
-                    <MenuItem value="MARTES">MARTES</MenuItem>
-                    <MenuItem value="MIERCOLES">MIÉRCOLES</MenuItem>
-                    <MenuItem value="JUEVES">JUEVES</MenuItem>
-                    <MenuItem value="VIERNES">VIERNES</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
+          >
+            <Select
+              sx={{ width: "50%" }}
+              size="small"
+              variant="standard"
+              value={frecuencia}
+              onChange={(e) => setFrecuencia(e.target.value)}
+            >
+              <MenuItem value="">
+                <em>Todos</em>
+              </MenuItem>
+              <MenuItem value="MARTES">MARTES</MenuItem>
+              <MenuItem value="MIERCOLES">MIÉRCOLES</MenuItem>
+              <MenuItem value="JUEVES">JUEVES</MenuItem>
+              <MenuItem value="VIERNES">VIERNES</MenuItem>
+            </Select>
+          </Box>
 
-              <Box
-                sx={{
-                  mb: 2,
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%",
-                  alignContent: "center",
-                }}
-              >
-                <Autocomplete
-                  sx={{ width: "50%" }}
-                  options={filteredTecnicos}
-                  getOptionLabel={(option) => option.label}
-                  value={
-                    filteredTecnicos.find((option) => option.value === rut) ||
-                    null
-                  }
-                  onChange={(event, newValue) => setRut(newValue?.value || "")}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label={
-                        <Typography fontFamily="initial">Técnico</Typography>
-                      }
-                      variant="filled"
-                      fullWidth
-                    />
-                  )}
+          <Box
+            sx={{
+              mb: 2,
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              alignContent: "center",
+            }}
+          >
+            <Autocomplete
+              sx={{ width: "50%" }}
+              size="small"
+              variant="standard"
+              options={filteredTecnicos}
+              getOptionLabel={(option) => option.label}
+              value={
+                filteredTecnicos.find((option) => option.value === rut) || null
+              }
+              onChange={(event, newValue) => setRut(newValue?.value || "")}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={<Typography>Técnico</Typography>}
+                  fullWidth
                 />
-              </Box>
+              )}
+            />
+          </Box>
 
-              <Box sx={{ textAlign: "center" }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{ background: "#0b2f6d" }}
-                  disabled={isSubmitting}
-                >
-                  <Typography fontFamily="initial">
-                    {isSubmitting ? "Procesando..." : "Consultar"}
-                  </Typography>
-                </Button>
-              </Box>
-            </form>
-          </CardContent>
-        </Card>
+          <Box sx={{ textAlign: "center" }}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ background: "#0b2f6d", width: "200px", mt: 2 }}
+              disabled={isSubmitting}
+            >
+              <Typography>
+                {isSubmitting ? "Procesando..." : "Consultar"}
+              </Typography>
+            </Button>
+          </Box>
+        </form>
       </Box>
 
       <Box sx={{ width: { lg: "80%", md: "90%", xs: "100%" }, paddingTop: 2 }}>

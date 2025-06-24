@@ -317,7 +317,7 @@ function FormAstList() {
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            <Typography fontWeight="bold">
               DATOS NO REALIZADAS
             </Typography>
           }
@@ -540,8 +540,21 @@ function FormAstList() {
       <TableHead>
         <TableRow>
           {tableHeaders.map((header, idx) => (
-            <TableCell key={header.label} align="center">
-              {header.label}
+            <TableCell
+              key={header.label}
+              align="center"
+              sx={{ backgroundColor: "#0b2f6d" }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#ffffff",
+                  fontSize: "14px",
+                }}
+              >
+                {header.label}
+              </Typography>
             </TableCell>
           ))}
         </TableRow>

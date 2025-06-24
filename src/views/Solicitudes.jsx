@@ -245,7 +245,7 @@ function Solicitudes() {
         </Button>
       </Link>
       <Button
-        variant="outlined"
+        variant="contained"
         onClick={getExcel}
         sx={{
           width: 200,
@@ -263,17 +263,6 @@ function Solicitudes() {
     </Box>
   );
 
-  const downloadExcel = () => (
-    <Box
-      sx={{
-        width: "90%",
-        mt: 2,
-        display: "flex",
-        justifyContent: "start",
-      }}
-    ></Box>
-  );
-
   const setTableHead = () => (
     <TableHead>
       <TableRow>
@@ -285,7 +274,7 @@ function Solicitudes() {
           "AMONESTADO",
           "ESTADO",
         ].map((header) => (
-          <TableCell key={header} align="center">
+          <TableCell key={header} align="center" sx={{ fontWeight: "bold", backgroundColor: "#0b2f6d", color: "white" }}>
             <Typography >{header}</Typography>
           </TableCell>
         ))}
@@ -384,7 +373,6 @@ function Solicitudes() {
       )}
       {filterCard()}
       {createNew()}
-      {downloadExcel()}
       {is_loading && !is_load ? (
         <Box
           sx={{
@@ -396,6 +384,7 @@ function Solicitudes() {
             mt: 2,
             display: "flex",
             justifyContent: "center",
+            height: "70vh",
           }}
         >
           <Skeleton

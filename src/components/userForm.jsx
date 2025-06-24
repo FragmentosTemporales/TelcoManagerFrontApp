@@ -96,189 +96,170 @@ function UserForm() {
         alignItems: "center",
         paddingTop: { xs: 10, md: 8 },
         mt: 2,
+        height: "85vh",
+        backgroundColor: "#f5f5f5",
       }}
     >
       {open && renderAlert()}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {dataEmpresa.length > 0 ? (
-          <Card
+          <Box
             sx={{
-              borderRadius: "10px",
-              width: { lg: "50%", xs: "90%", md: "70%" },
-              overflow: "auto",
-              boxShadow: 5,
-              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: { xs: "90%", sm: "80%", md: "60%" },
+              backgroundColor: "#fff",
+              boxShadow: 2,
+              pt: 3,
+              pb: 3,
             }}
           >
-            <CardHeader
-              title={
-                <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-                  CREAR USUARIO
-                </Typography>
-              }
-              avatar={<AccountBoxIcon />}
-              sx={{
-                background: "#0b2f6d",
-                color: "white",
-                textAlign: "end",
-              }}
-            />
-            <CardContent
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <form onSubmit={handleSubmit} style={{ width: "80%" }}>
-                <Box sx={{ mb: 2 }}>
-                  <InputLabel
-                    id="auditor-label"
-                    sx={{ fontFamily: "initial" }}
-                  >
-                    Nombre
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    required
-                    id="nombre"
-                    type="text"
-                    name="nombre"
-                    variant="filled"
-                    value={form.nombre}
-                    onChange={handleChange}
-                  />
-                </Box>
-                <Box sx={{ mb: 2 }}>
-                  <InputLabel
-                    id="auditor-label"
-                    sx={{ fontFamily: "initial" }}
-                  >
-                    Correo
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    required
-                    id="correo"
-                    type="email"
-                    name="correo"
-                    variant="filled"
-                    value={form.correo}
-                    onChange={handleChange}
-                  />
-                </Box>
-                <Box sx={{ mb: 2 }}>
-                  <InputLabel
-                    id="auditor-label"
-                    sx={{ fontFamily: "initial" }}
-                  >
-                    Rut
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    required
-                    id="numDoc"
-                    type="text"
-                    name="numDoc"
-                    variant="filled"
-                    value={form.numDoc}
-                    onChange={handleChange}
-                  />
-                </Box>
-                <Box sx={{ mb: 2 }}>
-                  <InputLabel
-                    id="auditor-label"
-                    sx={{ fontFamily: "initial" }}
-                  >
-                    Clave
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    required
-                    id="clave"
-                    type="text"
-                    name="clave"
-                    variant="filled"
-                    value={form.clave}
-                    onChange={handleChange}
-                  />
-                </Box>
-                <Box sx={{ mb: 2 }}>
-                  <InputLabel
-                    id="empresa-label"
-                    sx={{ fontFamily: "initial" }}
-                  >
-                    Empresa
-                  </InputLabel>
-                  <Select
-                    labelId="empresa-label"
-                    id="empresaID"
-                    name="empresaID"
-                    value={form.empresaID}
-                    onChange={handleChange}
-                    fullWidth
-                    variant="filled"
-                    label="Empresa"
-                    fontFamily="initial"
-                  >
-                    {dataEmpresa.map((option) => (
-                      <MenuItem
-                        key={option.value}
-                        value={option.value}
-                        sx={{ fontFamily: "initial" }}
-                      >
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Box>
-                <Box sx={{ mb: 2 }}>
-                  <InputLabel
-                    id="planta-label"
-                    sx={{ fontFamily: "initial" }}
-                  >
-                    Contrato
-                  </InputLabel>
-                  <Select
-                    fullWidth
-                    required
-                    id="planta"
-                    name="planta"
-                    variant="filled"
-                    value={form.planta}
-                    onChange={handleChange}
-                    label="Planta"
-                    fontFamily="initial"
-                  >
-                    <MenuItem value={true} sx={{ fontFamily: "initial" }}>
-                      Planta
-                    </MenuItem>
-                    <MenuItem value={false} sx={{ fontFamily: "initial" }}>
-                      Externo
-                    </MenuItem>
-                  </Select>
-                </Box>
+            <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
+              CREAR USUARIO
+            </Typography>
+            <form onSubmit={handleSubmit} style={{ width: "80%" }}>
 
-                <Box sx={{ textAlign: "center" }}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{
-                      background: "#0b2f6d",
-                      fontWeight: "bold",
-                      borderRadius: "20px",
-                      width: "200px",
-                    }}
-                    disabled={isSubmitting}
-                  >
-                    <Typography sx={{ fontFamily: "initial" }}>
-                      {isSubmitting ? "Procesando..." : "Crear"}
-                    </Typography>
-                  </Button>
-                </Box>
-              </form>
-            </CardContent>
-          </Card>
+              <Box sx={{ mb: 2 }}>
+                <InputLabel id="auditor-label" >
+                  Nombre
+                </InputLabel>
+                <TextField
+                  fullWidth
+                  required
+                  id="nombre"
+                  type="text"
+                  name="nombre"
+                  size="small"
+                  variant="standard"
+                  value={form.nombre}
+                  onChange={handleChange}
+                />
+              </Box>
+              
+              <Box sx={{ mb: 2 }}>
+                <InputLabel id="auditor-label">
+                  Correo
+                </InputLabel>
+                <TextField
+                  fullWidth
+                  required
+                  id="correo"
+                  type="email"
+                  name="correo"
+                  size="small"
+                  variant="standard"
+                  value={form.correo}
+                  onChange={handleChange}
+                />
+              </Box>
+
+              <Box sx={{ mb: 2 }}>
+                <InputLabel id="auditor-label">
+                  Rut
+                </InputLabel>
+                <TextField
+                  fullWidth
+                  required
+                  id="numDoc"
+                  type="text"
+                  name="numDoc"
+                  size="small"
+                  variant="standard"
+                  value={form.numDoc}
+                  onChange={handleChange}
+                />
+              </Box>
+
+              <Box sx={{ mb: 2 }}>
+                <InputLabel id="auditor-label">
+                  Clave
+                </InputLabel>
+                <TextField
+                  fullWidth
+                  required
+                  id="clave"
+                  type="text"
+                  name="clave"
+                  size="small"
+                  variant="standard"
+                  value={form.clave}
+                  onChange={handleChange}
+                />
+              </Box>
+
+              <Box sx={{ mb: 2 }}>
+                <InputLabel id="empresa-label">
+                  Empresa
+                </InputLabel>
+                <Select
+                  labelId="empresa-label"
+                  id="empresaID"
+                  name="empresaID"
+                  value={form.empresaID}
+                  onChange={handleChange}
+                  fullWidth
+                  size="small"
+                  variant="standard"
+                  label="Empresa"
+                  fontFamily="initial"
+                >
+                  {dataEmpresa.map((option) => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                      sx={{ fontFamily: "initial" }}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+
+              <Box sx={{ mb: 2 }}>
+                <InputLabel id="planta-label">
+                  Contrato
+                </InputLabel>
+                <Select
+                  fullWidth
+                  required
+                  id="planta"
+                  name="planta"
+                  size="small"
+                  variant="standard"
+                  value={form.planta}
+                  onChange={handleChange}
+                  label="Planta"
+                  fontFamily="initial"
+                >
+                  <MenuItem value={true} sx={{ fontFamily: "initial" }}>
+                    Planta
+                  </MenuItem>
+                  <MenuItem value={false} sx={{ fontFamily: "initial" }}>
+                    Externo
+                  </MenuItem>
+                </Select>
+              </Box>
+
+              <Box sx={{ textAlign: "center" }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    background: "#0b2f6d",
+                    fontWeight: "bold",
+                    borderRadius: "0px",
+                    width: "200px",
+                  }}
+                  disabled={isSubmitting}
+                >
+                  <Typography>
+                    {isSubmitting ? "Procesando..." : "Crear"}
+                  </Typography>
+                </Button>
+              </Box>
+            </form>
+          </Box>
         ) : (
           <Box
             sx={{

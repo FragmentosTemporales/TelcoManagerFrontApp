@@ -2,10 +2,7 @@ import {
   Alert,
   Box,
   Button,
-  Card,
-  CardHeader,
-  CardContent,
-  FormControl,
+  Divider,
   InputLabel,
   Rating,
   Select,
@@ -19,9 +16,16 @@ import {
   MenuItem,
   TableContainer,
 } from "@mui/material";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getCategoriasTicket, createTicket } from "../api/ticketeraAPI";
+import {
+  getCategoriasTicket,
+  createTicket,
+  getUserTicket,
+} from "../api/ticketeraAPI";
+import { Diversity1Rounded } from "@mui/icons-material";
 
 function TicketeraView() {
   const authState = useSelector((state) => state.auth);
@@ -33,23 +37,73 @@ function TicketeraView() {
   const [alertType, setAlertType] = useState(undefined);
   const [categorias, setCategorias] = useState([]);
   const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const handlePage = (newPage) => setPage(newPage);
   const [form, setForm] = useState({
     file: null,
     ticketcategoriaID: "",
     titulo: "",
     descripcion: "",
     prioridad: 1,
-    userID: ""
+    userID: "",
   });
+
+  const extractDate = (gmtString) => {
+    const date = new Date(gmtString);
+
+    // Restar 4 horas al tiempo
+    date.setUTCHours(date.getUTCHours() - 4);
+
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+
+    const formattedDateTime = `${day}-${month}-${year}`;
+
+    return formattedDateTime;
+  };
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && !file.type.startsWith("image/")) {
+      setMessage("Solo se permiten archivos de imagen.");
+      setAlertType("error");
+      setOpen(true);
+      setForm({ ...form, file: null });
+      e.target.value = null; // limpia el input
+      return;
+    }
     setForm({
       ...form,
-      file: e.target.files[0],
+      file: file,
+    });
+  };
+
+  const fetchTickets = async () => {
+    try {
+      const tickets = await getUserTicket(page, token);
+      setData(tickets.data);
+      setPages(tickets.pages);
+    } catch (error) {
+      setMessage(error.message || "Error al obtener los tickets");
+      setAlertType("error");
+      setOpen(true);
+    }
+  };
+
+  const clearForm = () => {
+    setForm({
+      file: null,
+      ticketcategoriaID: "",
+      titulo: "",
+      descripcion: "",
+      prioridad: 1, // Reiniciar prioridad a valor por defecto
+      userID: user_id,
     });
   };
 
@@ -71,14 +125,7 @@ function TicketeraView() {
       var response = await createTicket(formData, token);
       setAlertType("success");
       setMessage(response.message || "Ticket creado exitosamente");
-      setForm({
-        file: null,
-        ticketcategoriaID: "",
-        titulo: "",
-        descripcion: "",
-        prioridad: 1, // Reiniciar prioridad a valor por defecto
-        userID: user_id
-      });
+      clearForm();
       setOpen(true);
     } catch (error) {
       // Manejo de error específico si el archivo está abierto por otro proceso
@@ -96,6 +143,7 @@ function TicketeraView() {
       setAlertType("error");
       setOpen(true);
     } finally {
+      fetchTickets(); // Refrescar la lista de tickets después de crear uno nuevo
       setIsSubmitting(false);
       setCrear(false); // Cerrar el formulario de creación después de enviar
     }
@@ -104,8 +152,6 @@ function TicketeraView() {
   const fetchCategorias = async () => {
     try {
       const categorias = await getCategoriasTicket(token);
-      // Aquí puedes manejar las categorías obtenidas, por ejemplo, guardarlas en el estado
-      console.log(categorias);
       const categoriasTransformadas = categorias.map((cat) => ({
         value: cat.id,
         label: cat.descripcion,
@@ -122,11 +168,13 @@ function TicketeraView() {
     <Box
       sx={{
         mb: 2,
-        width: "80%",
+        width: "90%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "white",
+        boxShadow: 2,
       }}
     >
       <Typography
@@ -140,8 +188,9 @@ function TicketeraView() {
           color: "#0b2f6d",
         }}
       >
-        TICKETS / CREAR TICKET
+        CREAR TICKET
       </Typography>
+      <Divider sx={{ width: "90%", mb: 2 }} />
       <form onSubmit={handleSubmit} style={{ width: "90%" }}>
         <Box sx={{ mb: 2, width: "100%" }}>
           <InputLabel id="categoria-label">CATEGORÍA</InputLabel>
@@ -193,14 +242,20 @@ function TicketeraView() {
             size="large"
             sx={{ mb: 2, width: "50%", backgroundColor: "white" }}
             onChange={handleFileChange}
+            inputProps={{ accept: "image/*" }}
           />
-        </Box>
-
-        <Box sx={{ mb: 2, width: "100%" }}>
+        </Box>        <Box sx={{ mb: 2, width: "100%" }}>
           <InputLabel id="archivo-input-label">PRIORIDAD</InputLabel>
           <Rating
             name="prioridad"
-            onChange={(e) => setForm({ ...form, prioridad: e.target.value })}
+            value={form.prioridad}
+            onChange={(event, newValue) => {
+              // Mapear los valores de las estrellas a los valores deseados (1, 3, 5)
+              const priorityMap = { 1: 1, 2: 3, 3: 5 };
+              const mappedValue = priorityMap[newValue] || 1;
+              setForm({ ...form, prioridad: mappedValue });
+            }}
+            max={3}
             defaultValue={1}
             precision={1}
           />
@@ -217,10 +272,9 @@ function TicketeraView() {
             onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
             inputProps={{ maxLength: 499 }}
             multiline
-            minRows={5}
-            maxRows={5}
+            minRows={4}
+            maxRows={4}
             sx={{
-              mb: 2,
               width: "100%",
               backgroundColor: "white",
             }}
@@ -237,28 +291,188 @@ function TicketeraView() {
             sx={{
               width: "200px",
               borderRadius: "0px",
-              m: 2,
+              height: "40px",
+              ml: 2,
               backgroundColor: "#0b2f6d",
               color: "white",
             }}
           >
-            <Typography>{isSubmitting ? "Subiendo..." : "Enviar"}</Typography>
+            <Typography fontWeight="bold">
+              {isSubmitting ? "Subiendo..." : "Enviar"}
+            </Typography>
           </Button>
           <Button
             variant="outlined"
-            onClick={() => setCrear(false)}
+            onClick={() => {
+              setCrear(false);
+              clearForm();
+            }}
             sx={{
               width: "200px",
               borderRadius: "0px",
-              m: 2,
+              height: "40px",
+              ml: 2,
             }}
           >
-            <Typography>DESCARTAR</Typography>
+            <Typography fontWeight="bold">DESCARTAR</Typography>
           </Button>
         </Box>
       </form>
     </Box>
   );
+
+  const tableView = () => (
+    <Box
+      sx={{
+        mb: 2,
+        width: "90%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Box
+        sx={{
+          mb: 2,
+          width: "100%",
+          display: "flex",
+          justifyContent: "start",
+        }}
+      >
+        <Button
+          onClick={() => setCrear(true)}
+          variant="contained"
+          color="error"
+          sx={{
+            width: "200px",
+            borderRadius: "0px",
+            mt: 2,
+            boxShadow: 2,
+          }}
+        >
+          <Typography fontWeight="bold">CREAR TICKET</Typography>
+        </Button>
+      </Box>
+
+      <Box sx={{ width: "100%", mb: 2 }}>
+        <TableContainer sx={{ boxShadow: 2, backgroundColor: "white" }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                {[
+                  "TICKET",
+                  "CATEGORÍA",
+                  "TITULO",
+                  "FECHA SOLICITUD",
+                  "PRIORIDAD",
+                  "GESTIONADO POR",
+                  "ESTADO",
+                  "ULTIMO CAMBIO",
+                ].map((header) => (
+                  <TableCell
+                    key={header}
+                    align="center"
+                    sx={{ backgroundColor: "#0b2f6d" }}
+                  >
+                    <Typography
+                      fontWeight={"bold"}
+                      sx={{ fontSize: "12px", color: "white" }}
+                    >
+                      {header}
+                    </Typography>
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data && data.length > 0 ? (
+                data.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                      {row.ticket_id ? row.ticket_id : "Sin Información"}
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                      {row.categoria ? row.categoria : "Sin Información"}
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                      {row.titulo ? row.titulo : "Sin titulo"}
+                    </TableCell>
+
+                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                      {row.fecha_creacion
+                        ? extractDate(row.fecha_creacion)
+                        : "Sin Información"}
+                    </TableCell>                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                      {row.prioridad ? (
+                        <Rating value={row.prioridad} readOnly max={3} />
+                      ) : (
+                        "Sin Información"
+                      )}
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                      {row.gestionado_por
+                        ? row.gestionado_por
+                        : "Sin Información"}
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                      {row.estado ? row.estado : "Sin Información"}
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                      {row.last_update
+                        ? extractDate(row.last_update)
+                        : "Sin Información"}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={12} align="center">
+                    <Typography fontFamily="initial">
+                      No hay datos disponibles
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+          {getButtons()}
+        </Box>
+      </Box>
+    </Box>
+  );
+
+  const getButtons = () => (
+    <>
+      <Button
+        key="prev"
+        variant="contained"
+        onClick={() => handlePage(page - 1)}
+        disabled={page === 1}
+        sx={{ background: "#0b2f6d" }}
+      >
+        <ArrowBackIosIcon />
+      </Button>
+      <Button key="current" variant="contained" sx={{ background: "#0b2f6d" }}>
+        {page}
+      </Button>
+      <Button
+        key="next"
+        variant="contained"
+        onClick={() => handlePage(page + 1)}
+        disabled={page === pages}
+        sx={{ background: "#0b2f6d" }}
+      >
+        <ArrowForwardIosIcon />
+      </Button>
+    </>
+  );
+
+  useEffect(() => {
+    fetchTickets();
+  }, [page]);
 
   useEffect(() => {
     fetchCategorias();
@@ -271,7 +485,6 @@ function TicketeraView() {
     }));
   }, [user_id]);
 
-
   return (
     <Box
       sx={{
@@ -281,6 +494,7 @@ function TicketeraView() {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#f0f0f0",
+        minHeight: "90vh",
       }}
     >
       {open && (
@@ -293,153 +507,9 @@ function TicketeraView() {
         </Alert>
       )}
 
-      {crear && (
-        <Box
-          sx={{
-            width: "95%",
-            height: "90vh",
-            marginBottom: 2,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            paddingTop: 2,
-            backgroundColor: "white",
-            boxShadow: 2,
-          }}
-        >
-          {createCard()}
-        </Box>
-      )}
+      {!crear && tableView()}
 
-      {!crear && (
-        <Box
-          sx={{
-            width: "95%",
-            height: "90vh",
-            marginBottom: 2,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            paddingTop: 2,
-            backgroundColor: "white",
-            boxShadow: 2,
-          }}
-        >
-          <Box
-            sx={{
-              mb: 2,
-              width: "80%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography
-              variant="h5"
-              sx={{
-                mb: 2,
-                width: "90%",
-                textAlign: "start",
-                fontWeight: "bold",
-                color: "#0b2f6d",
-              }}
-            >
-              TICKETS
-            </Typography>
-            <Box sx={{ width: "90%", mb: 2 }}>
-              <TableContainer sx={{ minHeight: "50vh" }}>
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      {[
-                        "ID TICKET",
-                        "CATEGORÍA",
-                        "TITULO",
-                        "SOLICITANTE",
-                        "FECHA SOLICITUD",
-                        "PRIORIDAD",
-                        "ESTADO",
-                        "FECHA ULTIMO ESTADO"
-                      ].map((header) => (
-                        <TableCell key={header} align="center">
-                          <Typography>
-                            {header}
-                          </Typography>
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {data && data.length > 0 ? (
-                      data.map((row, index) => (
-                        <TableRow key={index}>
-                          <TableCell align="center" sx={{ fontSize: "12px" }}>
-                            {row.Folio ? row.Folio : "Sin Folio"}
-                          </TableCell>
-                          <TableCell align="center" sx={{ fontSize: "12px" }}>
-                            {row.Motivo ? row.Motivo : "Sin Información"}
-                          </TableCell>
-                          <TableCell align="center" sx={{ fontSize: "12px" }}>
-                            {row.Formulario
-                              ? row.Formulario
-                              : "Sin área asignada"}
-                          </TableCell>
-                          <TableCell align="center" sx={{ fontSize: "12px" }}>
-                            {row.Solicitante
-                              ? row.Solicitante
-                              : "Sin Información"}
-                          </TableCell>
-                          <TableCell align="center" sx={{ fontSize: "12px" }}>
-                            {row.Amonestado
-                              ? row.Amonestado
-                              : "Sin Información"}
-                          </TableCell>
-                          <TableCell align="center" sx={{ fontSize: "12px" }}>
-                            {row.Estado ? row.Estado : "Sin Información"}
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={12} align="center">
-                          <Typography fontFamily="initial">
-                            No hay datos disponibles
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>
-            <Box
-              sx={{
-                mb: 2,
-                width: "100%",
-                display: "flex",
-                justifyContent: "end",
-              }}
-            >
-              <Button
-                onClick={() => setCrear(true)}
-                variant="contained"
-                sx={{
-                  width: "200px",
-                  borderRadius: "0px",
-                  m: 2,
-                  backgroundColor: "#0b2f6d",
-                  color: "white",
-                }}
-              >
-                CREAR
-              </Button>
-            </Box>
-          </Box>
-        </Box>
-      )}
+      {crear && createCard()}
     </Box>
   );
 }

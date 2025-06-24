@@ -199,6 +199,7 @@ function AgendamientoViewer() {
         overflow: "auto",
         padding: 8,
         backgroundColor: "#f0f0f0",
+        minHeight: "90vh",
       }}
     >
       {open && (

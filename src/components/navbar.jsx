@@ -75,15 +75,13 @@ function Navbar() {
                 color="error"
                 sx={{
                   height: "40px",
-                  width: "200px",
+                  width: "40px",
                   fontWeight: "bold",
+                  marginLeft: "10px",
                 }}
                 onClick={handleLogout}
               >
                 <LogoutIcon />
-                <Typography sx={{ marginLeft: "10px", fontWeight: "bold" }}>
-                  Cerrar sesion
-                </Typography>
               </Button>
             </Box>
           </>

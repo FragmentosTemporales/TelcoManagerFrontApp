@@ -47,12 +47,8 @@ function AllAgendamientoViewer() {
   const [page, setPage] = useState(1);
   const handlePage = (newPage) => setPage(newPage);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
   const [showStats, setShowStats] = useState(false);
 
-  const toggleFilters = () => {
-    setShowFilters((prev) => !prev);
-  };
 
   const toggleStats = () => {
     setShowStats((prev) => !prev);
@@ -203,9 +199,9 @@ function AllAgendamientoViewer() {
             <TableRow key={index}>
               <TableCell
                 align="center"
-                sx={{ fontSize: "16px", width: "20%" }} // Equal width
+                sx={{ fontSize: "14px", width: "20%" }} // Equal width
               >
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.fechaRegistro
                     ? extractDate(row.fechaRegistro)
                     : "Sin Información"}
@@ -214,27 +210,27 @@ function AllAgendamientoViewer() {
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "16px", width: "20%" }} // Equal width
+                sx={{ fontSize: "14px", width: "20%" }} // Equal width
               >
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.orden ? row.orden : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "16px", width: "20%" }} // Equal width
+                sx={{ fontSize: "14px", width: "20%" }} // Equal width
               >
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.estado_interno ? row.estado_interno : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell
                 align="center"
-                sx={{ fontSize: "16px", width: "20%" }} // Equal width
+                sx={{ fontSize: "14px", width: "20%" }} // Equal width
               >
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.nueva_cita
                     ? extractDate(row.nueva_cita)
                     : "Sin Información"}
@@ -242,9 +238,9 @@ function AllAgendamientoViewer() {
               </TableCell>
               <TableCell
                 align="center"
-                sx={{ fontSize: "16px", width: "20%" }} // Equal width
+                sx={{ fontSize: "14px", width: "20%" }} // Equal width
               >
-                <Typography fontFamily={"initial"} variant="secondary">
+                <Typography variant="secondary">
                   {row.usuario ? row.usuario.nombre : "Sin Información"}
                 </Typography>
               </TableCell>

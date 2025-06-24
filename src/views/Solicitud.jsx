@@ -68,9 +68,6 @@ function Solicitud() {
   // VARIABLE CON ID DEL USUARIO CREADOR DE LA SOLICITUD
   const [validate, setValidate] = useState(undefined);
 
-  const title = `SOLICITUD DE AMONESTACIÓN N° ${solicitud_id}`;
-  const tableTitle = `REGISTRO DE GESTIONES`;
-
   // MODALES
 
   const setModalRechazar = () => (

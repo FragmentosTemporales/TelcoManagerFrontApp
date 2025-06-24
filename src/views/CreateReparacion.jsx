@@ -133,7 +133,8 @@ function CreateReparacionView() {
         background: "white",
         alignItems: "center",
         pt: 8,
-        height: "100%",
+        height: "90vh",
+        backgroundColor: "#f5f5f5",
       }}
     >
       {open && (
@@ -141,42 +142,29 @@ function CreateReparacionView() {
           {message}
         </Alert>
       )}
-      <Card
-        sx={{
-          borderRadius: "20px",
-          width: "50%",
-          height: "100%",
-          overflow: "auto",
-          boxShadow: 5,
-        }}
-      >
-        <CardHeader
-          title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              FORMULARIO REPARACION
-            </Typography>
-          }
-          avatar={<FeedIcon />}
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "end",
-          }}
-        />
-
-        <CardContent
+        <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            boxShadow: 2,
+            width: "50%",
+            paddingTop: 4,
+            paddingBottom: 4,
+            backgroundColor: "#fff",
           }}
         >
+          <Typography
+            variant="h5"
+            sx={{ mb: 4, fontWeight: "bold", color: "#0b2f6d" }}
+          >
+            CREAR REGISTRO DE REPARACIÓN
+          </Typography>
           <form
             onSubmit={handleSubmit}
             style={{ width: "80%" }}
             encType="multipart/form-data"
           >
-
 
             <Box sx={{ mb: 2 }}>
               <InputLabel id="orden-label">Orden de Trabajo</InputLabel>
@@ -187,7 +175,7 @@ function CreateReparacionView() {
                 id="orden"
                 type="text"
                 name="orden"
-                variant="outlined"
+                variant="standard"
                 value={form.orden}
                 onChange={handleChange}
               />
@@ -202,7 +190,7 @@ function CreateReparacionView() {
                 id="ticket"
                 type="text"
                 name="ticket"
-                variant="outlined"
+                variant="standard"
                 value={form.ticket}
                 onChange={handleChange}
               />
@@ -217,7 +205,7 @@ function CreateReparacionView() {
                 id="img_1"
                 type="file"
                 name="img_1"
-                variant="outlined"
+                variant="standard"
                 onChange={handleFileChange}
                 value={form.img_1 ? form.img_1.name : ""} // Mostrar el nombre del archivo seleccionado
               />
@@ -232,7 +220,7 @@ function CreateReparacionView() {
                 id="img_2"
                 type="file"
                 name="img_2"
-                variant="outlined"
+                variant="standard"
                 onChange={handleFileChange}
                 value={form.img_2 ? form.img_2.name : ""} // Mostrar el nombre del archivo seleccionado
               />
@@ -247,7 +235,7 @@ function CreateReparacionView() {
                 id="img_3"
                 type="file"
                 name="img_3"
-                variant="outlined"
+                variant="standard"
                 onChange={handleFileChange}
                 value={form.img_3 ? form.img_3.name : ""} // Mostrar el nombre del archivo seleccionado
               />
@@ -257,15 +245,14 @@ function CreateReparacionView() {
               <Button
                 type="submit"
                 variant="contained"
-                sx={{ background: "#0b2f6d", fontWeight: "bold", width: "200px", borderRadius: "20px" }}
+                sx={{ background: "#0b2f6d", fontWeight: "bold", width: "200px", borderRadius: "0px", marginTop: "20px" }}
                 disabled={isSubmitting} // Deshabilitar el botón cuando isSubmitting es true
               >
                 {isSubmitting ? "Procesando..." : "Crear"}
               </Button>
             </Box>
           </form>
-        </CardContent>
-      </Card>
+        </Box>
     </Box>
   );
 }

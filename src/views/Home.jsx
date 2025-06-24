@@ -1,29 +1,8 @@
 import {
   Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Divider,
   Grid,
   Typography,
 } from "@mui/material";
-import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
-import UploadIcon from "@mui/icons-material/Upload";
-import NewspaperIcon from "@mui/icons-material/Newspaper";
-import SearchIcon from "@mui/icons-material/Search";
-import ContactSupportIcon from "@mui/icons-material/ContactSupport";
-import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
-import AutoAwesomeMosaicIcon from "@mui/icons-material/AutoAwesomeMosaic";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import SportsScoreIcon from "@mui/icons-material/SportsScore";
-import BallotIcon from "@mui/icons-material/Ballot";
-import DvrIcon from "@mui/icons-material/Dvr";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -33,71 +12,67 @@ function Home() {
 
   const secciones = [
     {
+      head: "Gestión de Tickets",
+      title: "Gestiona los tickets de soporte",
+      link: "/modulo:gestion-ticketera",
+      moduloID: 26,
+    },
+    {
       head: "Reportes",
-      icono: <BarChartIcon />,
       title: "Vista de Reportes",
       link: "/modulo:charts",
       moduloID: 1,
     },
     {
       head: "Reversa",
-      icono: <FlipCameraAndroidIcon />,
       title: "Listado de Reversas Pendientes",
       link: "/modulo:reversa",
       moduloID: 2,
     },
     {
       head: "Reparaciones",
-      icono: <FlipCameraAndroidIcon />,
       title: "Creación de Reparaciones",
       link: "/modulo:crear-reparacion",
       moduloID: 1,
     },
     {
       head: "Amonestaciones",
-      icono: <FormatListBulletedIcon />,
       title: "Listado de Solicitudes de Amonestación",
       link: "/modulo:solicitudes",
       moduloID: 3,
     },
     {
       head: "Mis Solicitudes",
-      icono: <FormatListBulletedIcon />,
       title: "Revisa el estado de tus solicitudes de Amonestación",
       link: "/mis-solicitudes",
       moduloID: 20,
     },
     {
       head: "Área de Creación",
-      icono: <AccountBoxIcon />,
       title: "Espacio de Creación",
       link: "/createzone",
       moduloID: 4,
     },
     {
       head: "Objetivos OnNet",
-      icono: <SportsScoreIcon />,
       title: "Espacio para definir los objetivos por zona",
       link: "/objetivos",
       moduloID: 5,
     },
     {
       head: "Asignados OnNet General",
-      icono: <BallotIcon />,
       title: "Espacio para visualizar Proyectos Asignados",
       link: "/asignados",
       moduloID: 11,
     },
     {
       head: "Gestión Formularios AST",
-      icono: <DvrIcon />,
       title: "Espacio para gestionar los formulario AST",
       link: "/form-ast-list",
       moduloID: 7,
     },
     {
       head: "Gestión Bodega RM",
-      icono: <InventoryIcon />,
       title:
         "Espacio para gestión de atención en bodega en la Región Metropolitana",
       link: "/bodegaRM",
@@ -105,77 +80,66 @@ function Home() {
     },
     {
       head: "Gestión Bodega Quinta",
-      icono: <InventoryIcon />,
       title: "Espacio para gestión de atención en bodega de la V Región",
       link: "/bodegaQuinta",
       moduloID: 12,
     },
     {
       head: "Gestión Totem",
-      icono: <AutoAwesomeMosaicIcon />,
       title: "Espacio para gestión de atención",
       link: "/totem",
       moduloID: 13,
     },
     {
       head: "Gestión Supervisor",
-      icono: <AssignmentIndIcon />,
       title: "Espacio para gestión de técnicos",
       link: "/supervisor",
       moduloID: 14,
     },
     {
       head: "Chat Soporte",
-      icono: <ContactSupportIcon />,
       title: "Espacio para consulta y soporte técnico",
       link: "/chatbot",
       moduloID: 15,
     },
     {
       head: "Agendamiento",
-      icono: <NewspaperIcon />,
       title: "Gestiona despachos y agendamientos",
       link: "/agendamientos",
       moduloID: 19,
     },
     {
       head: "Buscador de Ordenes",
-      icono: <SearchIcon />,
       title: "Buscador de Ordenes de Trabajo",
       link: "/orden_info",
       moduloID: 19,
     },
     {
       head: "Auditorías",
-      icono: <NewspaperIcon />,
       title: "Gestiona y crea auditorías",
       link: "/auditorias",
       moduloID: 21,
     },
     {
       head: "Lista de Auditorías",
-      icono: <NewspaperIcon />,
       title: "Gestiona y visualiza auditorías",
       link: "/all_auditorias",
       moduloID: 22,
     },
     {
       head: "Lista de Proyectos Consolidados",
-      icono: <NewspaperIcon />,
       title: "Gestiona y visualiza Proyectos",
       link: "/proyectos-onnet",
       moduloID: 24,
     },
     {
       head: "Carga Planilla Construcción",
-      icono: <UploadIcon />,
       title: "Espacio para cargar planilla de construcción",
       link: "/carga-construccion",
       moduloID: 6,
     },
     {
       head: "Crear Ticket",
-      icono: <ConfirmationNumberIcon />,
       title: "Crear Ticket para Soporte Estadístico",
       link: "/modulo:ticketera",
       moduloID: 25,
@@ -217,7 +181,7 @@ function Home() {
                     lg: "100px",
                     md: "180px",
                     sm: "180px",
-                    xs: "150px",
+                    xs: "100px",
                   },
                   boxShadow: 2,
                   backgroundColor: "white",
@@ -253,7 +217,7 @@ function Home() {
                     justifyContent: "start",
                     display: "flex",
                     width: "90%",
-                    paddingLeft:1,
+                    paddingLeft: 1,
                   }}
                 >
                   {acceso.title}
