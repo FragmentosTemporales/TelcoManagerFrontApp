@@ -3,9 +3,39 @@ import axios from "axios";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
 
-export const getQMacroEstado = async (token, agencia) => {
+export const getQMacroEstado = async (token) => {
   try {
-    const url = `${baseUrl}/get-q-macro-estado/${agencia}`;
+    const url = `${baseUrl}/get-q-macro-estado`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getQProyectosConResponsable = async (token) => {
+  try {
+    const url = `${baseUrl}/get-q-estado-con-responsable`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getQProyectosSinResponsable = async (token) => {
+  try {
+    const url = `${baseUrl}/get-q-estado-sin-responsable`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -1,9 +1,6 @@
 import {
   Alert,
   Box,
-  Card,
-  CardContent,
-  CardHeader,
   Checkbox,
   Button,
   TextField,
@@ -62,7 +59,9 @@ function Login() {
       } else {
         localStorage.removeItem("credentials");
       }
-      navigate("/");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (error) {
       dispatch(setMessage(error));
       setIsSubmitting(false);

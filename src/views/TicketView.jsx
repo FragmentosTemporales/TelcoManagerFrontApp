@@ -3,33 +3,25 @@ import {
   Box,
   Button,
   Divider,
-  Modal,
   MenuItem,
   Rating,
   Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
+  TextField,
   Typography,
-  TableContainer,
   CircularProgress,
   Tooltip,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import {
-  updateTicketEstado,
-  getTicketInfo,
-} from "../api/ticketeraAPI";
+import { updateTicketEstado, getTicketInfo } from "../api/ticketeraAPI";
 import { useParams, Link } from "react-router-dom";
 import { fetchFileUrl } from "../api/downloadApi";
+import confetti from "canvas-confetti";
 
 function TicketViewer() {
   const authState = useSelector((state) => state.auth);
   const { logID } = useParams();
-  const { token } = authState;
+  const { token, area } = authState;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,8 +30,10 @@ function TicketViewer() {
   const [loading, setLoading] = useState(false);
   const [formUpdate, setFormUpdate] = useState({
     logID: "",
+    comentario: "",
     estado: "",
   });
+
   const [respaldo, setRespaldo] = useState(null);
 
   const optionSelect = [
@@ -62,16 +56,73 @@ function TicketViewer() {
   const extractDate = (gmtString) => {
     const date = new Date(gmtString);
 
-    // Restar 4 horas al tiempo
-    date.setUTCHours(date.getUTCHours() - 4);
-
     const year = date.getUTCFullYear();
     const month = String(date.getUTCMonth() + 1).padStart(2, "0");
     const day = String(date.getUTCDate()).padStart(2, "0");
 
-    const formattedDateTime = `${day}-${month}-${year}`;
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+    const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+
+    const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}-${month}-${year}`;
 
     return formattedDateTime;
+  };
+
+  const triggerConfetti = () => {
+    // Confeti desde la izquierda
+    confetti({
+      particleCount: 150,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.6 },
+      gravity: 1.5,
+      shapes: ["star"],
+      colors: ["#26ccff", "#a25afd", "#ff5e7e", "#88ff5a", "#fcff42"],
+    });
+
+    // Confeti desde la derecha
+    confetti({
+      particleCount: 150,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.6 },
+      gravity: 1.5,
+      shapes: ["star"],
+      colors: ["#26ccff", "#a25afd", "#ff5e7e", "#88ff5a", "#fcff42"],
+    });
+
+    // Confeti desde el centro superior
+    confetti({
+      particleCount: 200,
+      angle: 90,
+      spread: 70,
+      origin: { x: 0.5, y: 0 },
+      gravity: 1.2,
+      shapes: ["star", "circle"],
+      colors: ["#26ccff", "#a25afd", "#ff5e7e", "#88ff5a", "#fcff42"],
+    });
+
+    // Confeti adicional desde esquinas
+    setTimeout(() => {
+      confetti({
+        particleCount: 100,
+        angle: 45,
+        spread: 60,
+        origin: { x: 0.2, y: 0.3 },
+        gravity: 1.8,
+        colors: ["#FFE400", "#FFBD00", "#E89611", "#FFCA28"],
+      });
+
+      confetti({
+        particleCount: 100,
+        angle: 135,
+        spread: 60,
+        origin: { x: 0.8, y: 0.3 },
+        gravity: 1.8,
+        colors: ["#FFE400", "#FFBD00", "#E89611", "#FFCA28"],
+      });
+    }, 200);
   };
 
   const TicketPreview = () => (
@@ -91,8 +142,18 @@ function TicketViewer() {
         </Typography>
         <Divider sx={{ width: "95%", marginBottom: 2 }} />
       </>
-      <Box sx={{ width: "95%", display: "flex", flexDirection: "row" }}>
-        <Typography variant="h7" fontWeight="bold" sx={{ width: "20%" }}>
+      <Box
+        sx={{
+          width: "95%",
+          display: "flex",
+          flexDirection: { lg: "row", md: "column", xs: "column" },
+        }}
+      >
+        <Typography
+          variant="h7"
+          fontWeight="bold"
+          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
+        >
           CATEGORIA :
         </Typography>
         <Typography variant="h7" sx={{ width: "80%" }}>
@@ -100,8 +161,18 @@ function TicketViewer() {
         </Typography>
       </Box>
       <Divider sx={{ width: "95%", margin: 2 }} />
-      <Box sx={{ width: "95%", display: "flex", flexDirection: "row" }}>
-        <Typography variant="h7" fontWeight="bold" sx={{ width: "20%" }}>
+      <Box
+        sx={{
+          width: "95%",
+          display: "flex",
+          flexDirection: { lg: "row", md: "column", xs: "column" },
+        }}
+      >
+        <Typography
+          variant="h7"
+          fontWeight="bold"
+          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
+        >
           TITULO :
         </Typography>
         <Typography variant="h7" sx={{ width: "80%" }}>
@@ -109,8 +180,18 @@ function TicketViewer() {
         </Typography>
       </Box>
       <Divider sx={{ width: "95%", margin: 2 }} />
-      <Box sx={{ width: "95%", display: "flex", flexDirection: "row" }}>
-        <Typography variant="h7" fontWeight="bold" sx={{ width: "20%" }}>
+      <Box
+        sx={{
+          width: "95%",
+          display: "flex",
+          flexDirection: { lg: "row", md: "column", xs: "column" },
+        }}
+      >
+        <Typography
+          variant="h7"
+          fontWeight="bold"
+          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
+        >
           DESCRIPCION :
         </Typography>
         <Typography variant="h7" sx={{ width: "80%" }}>
@@ -118,8 +199,18 @@ function TicketViewer() {
         </Typography>
       </Box>
       <Divider sx={{ width: "95%", margin: 2 }} />
-      <Box sx={{ width: "95%", display: "flex", flexDirection: "row" }}>
-        <Typography variant="h7" fontWeight="bold" sx={{ width: "20%" }}>
+      <Box
+        sx={{
+          width: "95%",
+          display: "flex",
+          flexDirection: { lg: "row", md: "column", xs: "column" },
+        }}
+      >
+        <Typography
+          variant="h7"
+          fontWeight="bold"
+          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
+        >
           SOLICITANTE :
         </Typography>
         <Typography variant="h7" sx={{ width: "80%" }}>
@@ -127,8 +218,18 @@ function TicketViewer() {
         </Typography>
       </Box>
       <Divider sx={{ width: "95%", margin: 2 }} />{" "}
-      <Box sx={{ width: "95%", display: "flex", flexDirection: "row" }}>
-        <Typography variant="h7" fontWeight="bold" sx={{ width: "20%" }}>
+      <Box
+        sx={{
+          width: "95%",
+          display: "flex",
+          flexDirection: { lg: "row", md: "column", xs: "column" },
+        }}
+      >
+        <Typography
+          variant="h7"
+          fontWeight="bold"
+          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
+        >
           PRIORIDAD :
         </Typography>
         <Typography variant="h7" sx={{ width: "80%" }}>
@@ -140,17 +241,18 @@ function TicketViewer() {
         </Typography>
       </Box>
       <Divider sx={{ width: "95%", margin: 2 }} />{" "}
-      <Box sx={{ width: "95%", display: "flex", flexDirection: "row" }}>
-        <Typography variant="h7" fontWeight="bold" sx={{ width: "20%" }}>
-          ESTADO :
-        </Typography>
-        <Typography variant="h7" sx={{ width: "80%" }}>
-          {data.estado ? data.estado : "No disponible"}
-        </Typography>
-      </Box>
-      <Divider sx={{ width: "95%", margin: 2 }} />{" "}
-      <Box sx={{ width: "95%", display: "flex", flexDirection: "row" }}>
-        <Typography variant="h7" fontWeight="bold" sx={{ width: "20%" }}>
+      <Box
+        sx={{
+          width: "95%",
+          display: "flex",
+          flexDirection: { lg: "row", md: "column", xs: "column" },
+        }}
+      >
+        <Typography
+          variant="h7"
+          fontWeight="bold"
+          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
+        >
           CREACION :
         </Typography>
         <Typography variant="h7" sx={{ width: "80%" }}>
@@ -160,27 +262,75 @@ function TicketViewer() {
         </Typography>
       </Box>
       <Divider sx={{ width: "95%", margin: 2 }} />{" "}
-      <Box sx={{ width: "95%", display: "flex", flexDirection: "row" }}>
-        <Typography variant="h7" fontWeight="bold" sx={{ width: "20%" }}>
+      <Box
+        sx={{
+          width: "95%",
+          display: "flex",
+          flexDirection: { lg: "row", md: "column", xs: "column" },
+        }}
+      >
+        <Typography
+          variant="h7"
+          fontWeight="bold"
+          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
+        >
+          ESTADO :
+        </Typography>
+        <Typography variant="h7" sx={{ width: "80%" }}>
+          {data.estado ? data.estado : "No disponible"}
+        </Typography>
+      </Box>
+      <Divider sx={{ width: "95%", margin: 2 }} />{" "}
+      <Box
+        sx={{
+          width: "95%",
+          display: "flex",
+          flexDirection: { lg: "row", md: "column", xs: "column" },
+        }}
+      >
+        <Typography
+          variant="h7"
+          fontWeight="bold"
+          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
+        >
+          COMENTARIOS :
+        </Typography>
+        <Typography variant="h7" sx={{ width: "80%" }}>
+          {data.comentario ? data.comentario : "No disponible"}
+        </Typography>
+      </Box>
+      <Divider sx={{ width: "95%", margin: 2 }} />{" "}
+      <Box
+        sx={{
+          width: "95%",
+          display: "flex",
+          flexDirection: { lg: "row", md: "column", xs: "column" },
+        }}
+      >
+        <Typography
+          variant="h7"
+          fontWeight="bold"
+          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
+        >
           IMAGEN :
         </Typography>{" "}
         <Typography variant="h7" sx={{ width: "80%" }}>
           {respaldo && !loading ? (
-            <Tooltip title="Ver imagen"  placement="top">
-              <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+              <Tooltip title="Ver imagen" placement="top">
                 <a href={respaldo} target="_blank" rel="noopener noreferrer">
                   <img
                     src={respaldo}
                     alt="Imagen del ticket"
                     style={{
-                      maxHeight: "600px",
-                      maxWidth: "600px",
+                      maxHeight: "400px",
+                      maxWidth: "450px",
                       cursor: "pointer",
                     }}
                   />
                 </a>
-              </Typography>
-            </Tooltip>
+              </Tooltip>
+            </Typography>
           ) : loading ? (
             <Box
               sx={{
@@ -207,18 +357,23 @@ function TicketViewer() {
   };
 
   const handleUpdate = async () => {
+    setIsSubmitting(true);
     try {
       const response = await updateTicketEstado(formUpdate, token);
       setAlertType("success");
+      {
+        formUpdate.estado == 3 ? triggerConfetti() : null;
+      }
       setMessage(response.message || "Estado del ticket actualizado");
       setOpen(true);
-      setFormUpdate({ logID: logID, estado: "" });
+      setFormUpdate({ logID: logID, estado: "", comentario: "" });
       fetchTicket();
     } catch (error) {
       setMessage(error || "Error al crear el ticket");
       setAlertType("error");
       setOpen(true);
     }
+    setIsSubmitting(false);
   };
 
   const fetchTicket = async () => {
@@ -273,7 +428,11 @@ function TicketViewer() {
       >
         <Box
           component={Link}
-          to="/modulo:gestion-ticketera"
+          to={
+            area && area.areaID == 7
+              ? "/modulo:gestion-ticketera"
+              : "/modulo:ticketera"
+          }
           sx={{ textDecoration: "none", with: "100%" }}
         >
           <Button
@@ -333,84 +492,112 @@ function TicketViewer() {
           {TicketPreview()}
         </Box>
       )}
-      <Box
-        sx={{
-          width: "80%",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginTop: 2,
-          backgroundColor: "#fff",
-          boxShadow: 2,
-          marginBottom: 4,
-        }}
-      >
+      {area && area.areaID == 7 && (
         <Box
           sx={{
-            width: "100%",
+            width: "80%",
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 2,
+            backgroundColor: "#fff",
+            boxShadow: 2,
+            marginBottom: 4,
           }}
         >
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            sx={{
-              marginBottom: 2,
-              marginTop: 2,
-              justifyContent: "start",
-              width: "95%",
-            }}
-          >
-            GESTIONAR TICKET
-          </Typography>
-          <Divider sx={{ width: "95%", marginBottom: 2 }} />
           <Box
             sx={{
-              width: "95%",
+              width: "100%",
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              marginBottom: 4,
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Select
-              label="Estado"
-              value={formUpdate.estado}
-              onChange={(e) =>
-                setFormUpdate({ ...formUpdate, estado: e.target.value })
-              }
-              size="small"
-              variant="standard"
-              sx={{ width: "30%" }}
-            >
-              {optionSelect.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-            <Button
-              variant="contained"
-              disabled={isSubmitting}
-              onClick={() => {
-                handleUpdate();
-              }}
+            <Typography
+              variant="h4"
+              fontWeight="bold"
               sx={{
-                background: "#0b2f6d",
-                color: "white",
-                fontWeight: "bold",
-                width: "30%",
-                borderRadius: "0px",
+                marginBottom: 2,
+                marginTop: 2,
+                justifyContent: "start",
+                width: "95%",
               }}
             >
-              {isSubmitting ? "Cargando..." : "ACTUALIZAR ESTADO"}
-            </Button>
+              GESTIONAR TICKET
+            </Typography>
+            <Divider sx={{ width: "95%", marginBottom: 2 }} />
+            <Box
+              sx={{
+                width: "95%",
+                display: "flex",
+                flexDirection: { lg: "column", md: "column", xs: "column" },
+                marginBottom: 4,
+              }}
+            >
+              <Select
+                value={formUpdate.estado}
+                onChange={(e) =>
+                  setFormUpdate({ ...formUpdate, estado: e.target.value })
+                }
+                size="small"
+                variant="standard"
+                sx={{
+                  width: { lg: "40%", md: "90%", xs: "90%" },
+                  marginBottom: 2,
+                }}
+              >
+                {optionSelect.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+              <TextField
+                label="Comentarios"
+                value={formUpdate.comentario}
+                onChange={(e) =>
+                  setFormUpdate({ ...formUpdate, comentario: e.target.value })
+                }
+                size="small"
+                variant="standard"
+                inputProps={{ maxLength: 499 }}
+                sx={{
+                  width: { lg: "90%", md: "90%", xs: "90%" },
+                  marginBottom: 2,
+                }}
+                multiline
+                rows={4}
+              />
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  disabled={isSubmitting}
+                  onClick={() => {
+                    handleUpdate();
+                  }}
+                  sx={{
+                    background: "#0b2f6d",
+                    color: "white",
+                    fontWeight: "bold",
+                    width: { lg: "40%", md: "90%", xs: "90%" },
+                    borderRadius: "0px",
+                  }}
+                >
+                  {isSubmitting ? "Cargando..." : "ACTUALIZAR ESTADO"}
+                </Button>
+              </Box>
+            </Box>
           </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 }

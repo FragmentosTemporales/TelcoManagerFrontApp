@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  AppBar,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { AppBar, Box, Button, Toolbar, Tooltip } from "@mui/material";
 import AppsIcon from "@mui/icons-material/Apps";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -62,7 +55,7 @@ function Navbar() {
                       height: "40px",
                       width: "40px",
                       fontWeight: "bold",
-                      background: "#0b2f6d",
+                      background: "#124fb9",
                     }}
                   >
                     <SettingsIcon />

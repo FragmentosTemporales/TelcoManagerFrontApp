@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Divider,
-  Modal,
   MenuItem,
   Rating,
   Select,
@@ -17,45 +16,39 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getTicketera, updateTicketEstado } from "../api/ticketeraAPI";
-import { downloadFile } from "../api/downloadApi";
+import { getTicketera } from "../api/ticketeraAPI";
 import { Link } from "react-router-dom";
 
 function GestorTicketera() {
   const authState = useSelector((state) => state.auth);
   const { token } = authState;
   const [open, setOpen] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alertType, setAlertType] = useState(undefined);
   const [data, setData] = useState([]);
   const optionSQL = ["SOLICITADO", "EN GESTION", "FINALIZADO", "NO APLICA"];
   const [form, setForm] = useState({ estado: "SOLICITADO" });
-  const [ticket, setTicket] = useState({});
-  const [formUpdate, setFormUpdate] = useState({
-    logID: "",
-    estado: "",
-  });
+
 
   const extractDate = (gmtString) => {
     const date = new Date(gmtString);
-
-    // Restar 4 horas al tiempo
-    date.setUTCHours(date.getUTCHours() - 4);
 
     const year = date.getUTCFullYear();
     const month = String(date.getUTCMonth() + 1).padStart(2, "0");
     const day = String(date.getUTCDate()).padStart(2, "0");
 
-    const formattedDateTime = `${day}-${month}-${year}`;
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+    const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+
+    const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}-${month}-${year}`;
 
     return formattedDateTime;
   };
 
   const handleClose = () => {
     setOpen(false);
-    setOpenModal(false);
   };
 
   const handleSubmit = async (e) => {
@@ -114,7 +107,7 @@ function GestorTicketera() {
             onChange={(e) => setForm({ ...form, estado: e.target.value })}
             size="small"
             variant="standard"
-            sx={{ width: "30%", mb: 2 }}
+            sx={{ width: { lg: "30%", md: "50%", xs: "90%" }, mb: 2 }}
           >
             {optionSQL.map((option) => (
               <MenuItem key={option} value={option}>
@@ -139,7 +132,7 @@ function GestorTicketera() {
               background: "#0b2f6d",
               color: "white",
               fontWeight: "bold",
-              width: "30%",
+              width: { lg: "30%", md: "50%", xs: "90%" },
               borderRadius: "0px",
             }}
           >
@@ -167,7 +160,7 @@ function GestorTicketera() {
               ].map((header) => (
                 <TableCell
                   key={header}
-                  align="start"
+                  align="left"
                   sx={{ backgroundColor: "#0b2f6d" }}
                 >
                   <Typography
@@ -193,34 +186,34 @@ function GestorTicketera() {
                   component={Link}
                   to={`/ticketviewer/${row.logID}`}
                 >
-                  <TableCell align="start" sx={{ fontSize: "12px" }}>
+                  <TableCell align="left" sx={{ fontSize: "12px" }}>
                     {row.ticket_id ? row.ticket_id : "Sin Información"}
                   </TableCell>
                   <TableCell
-                    align="start"
+                    align="left"
                     sx={{ fontSize: "12px", fontWeight: "bold" }}
                   >
                     {row.categoria ? row.categoria : "Sin Información"}
                   </TableCell>
-                  <TableCell align="start" sx={{ fontSize: "12px" }}>
+                  <TableCell align="left" sx={{ fontSize: "12px" }}>
                     {row.titulo ? row.titulo : "Sin titulo"}
                   </TableCell>
-
-                  <TableCell align="start" sx={{ fontSize: "12px" }}>
+                  <TableCell align="left" sx={{ fontSize: "12px" }}>
                     {row.fecha_solicitud
                       ? extractDate(row.fecha_solicitud)
                       : "Sin Información"}
-                  </TableCell>                  <TableCell align="start" sx={{ fontSize: "12px" }}>
+                  </TableCell>{" "}
+                  <TableCell align="left" sx={{ fontSize: "12px" }}>
                     {row.prioridad ? (
                       <Rating value={row.prioridad} readOnly max={3} />
                     ) : (
                       "Sin Información"
                     )}
                   </TableCell>
-                  <TableCell align="start" sx={{ fontSize: "12px" }}>
+                  <TableCell align="left" sx={{ fontSize: "12px" }}>
                     {row.solicitante ? row.solicitante : "Sin Información"}
                   </TableCell>
-                  <TableCell align="start" sx={{ fontSize: "12px" }}>
+                  <TableCell align="left" sx={{ fontSize: "12px" }}>
                     {row.estado ? row.estado : "Sin Información"}
                   </TableCell>
                 </TableRow>
@@ -241,15 +234,6 @@ function GestorTicketera() {
   useEffect(() => {
     fetchTickets();
   }, []);
-
-  useEffect(() => {
-    if (ticket) {
-      setFormUpdate((prevForm) => ({
-        ...prevForm,
-        logID: ticket.logID || "",
-      }));
-    }
-  }, [ticket]);
 
   return (
     <Box

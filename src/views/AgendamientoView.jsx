@@ -238,7 +238,6 @@ function AgendamientoViewer() {
               backgroundColor: "#fff",
               boxShadow: 2,
               mt: 2,
-              
             }}
           >
             <Box
@@ -285,7 +284,6 @@ function AgendamientoViewer() {
               marginTop: 2,
               boxShadow: 2,
               backgroundColor: "#fff",
-              
             }}
           >
             <Table>
@@ -594,7 +592,10 @@ function AgendamientoViewer() {
                 >
                   <MenuItem value="Carga otra EPS">Carga otra EPS</MenuItem>
                   <MenuItem value="Efectiva">Efectiva</MenuItem>
-                  <MenuItem value="Futura">Futura</MenuItem>
+                  <MenuItem value="Confirma mismo día">Confirma mismo día</MenuItem>
+                  <MenuItem value="Cliente mantiene agenda original">
+                    Cliente mantiene agenda original
+                  </MenuItem>
                   <MenuItem value="No Efectiva">No Efectiva</MenuItem>
                   <MenuItem value="Sin Contacto">Sin Contacto</MenuItem>
                 </Select>
@@ -609,8 +610,8 @@ function AgendamientoViewer() {
               <FormControl fullWidth>
                 <InputLabel>Clasificacion</InputLabel>
                 <Select
-                size="small"
-                variant="standard"
+                  size="small"
+                  variant="standard"
                   id="sub-clasificacion-select"
                   value={formBacklog.sub_clasificacion || ""}
                   onChange={(event) =>
@@ -624,9 +625,6 @@ function AgendamientoViewer() {
                   <MenuItem value="Cancelado">Cancelado</MenuItem>
                   <MenuItem value="Cliente adelanta">Cliente adelanta</MenuItem>
                   <MenuItem value="Cliente desiste">Cliente desiste</MenuItem>
-                  <MenuItem value="Cliente mantiene agenda">
-                    Cliente mantiene agenda
-                  </MenuItem>
                   <MenuItem value="Orden mal generada">
                     Orden mal generada
                   </MenuItem>

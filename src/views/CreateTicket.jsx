@@ -4,6 +4,7 @@ import {
   Button,
   Divider,
   InputLabel,
+  Modal,
   Rating,
   Select,
   TextField,
@@ -16,22 +17,25 @@ import {
   MenuItem,
   TableContainer,
 } from "@mui/material";
+
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   getCategoriasTicket,
   createTicket,
   getUserTicket,
 } from "../api/ticketeraAPI";
-import { Diversity1Rounded } from "@mui/icons-material";
 
 function TicketeraView() {
   const authState = useSelector((state) => state.auth);
   const { token, user_id } = authState;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [crear, setCrear] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [alertType, setAlertType] = useState(undefined);
@@ -40,6 +44,9 @@ function TicketeraView() {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const handlePage = (newPage) => setPage(newPage);
+
+  const [ticket, setTicket] = useState(null);
+
   const [form, setForm] = useState({
     file: null,
     ticketcategoriaID: "",
@@ -52,20 +59,25 @@ function TicketeraView() {
   const extractDate = (gmtString) => {
     const date = new Date(gmtString);
 
-    // Restar 4 horas al tiempo
-    date.setUTCHours(date.getUTCHours() - 4);
-
     const year = date.getUTCFullYear();
     const month = String(date.getUTCMonth() + 1).padStart(2, "0");
     const day = String(date.getUTCDate()).padStart(2, "0");
 
-    const formattedDateTime = `${day}-${month}-${year}`;
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+    const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+
+    const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}-${month}-${year}`;
 
     return formattedDateTime;
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   const handleFileChange = (e) => {
@@ -214,7 +226,6 @@ function TicketeraView() {
             ))}
           </Select>
         </Box>
-
         <Box sx={{ mb: 2, width: "100%" }}>
           <InputLabel id="titulo-input-label">TÍTULO</InputLabel>
           <TextField
@@ -232,7 +243,6 @@ function TicketeraView() {
             inputProps={{ maxLength: 99 }}
           />
         </Box>
-
         <Box sx={{ mb: 2, width: "100%" }}>
           <InputLabel id="archivo-input-label">ARCHIVO</InputLabel>
           <TextField
@@ -244,23 +254,20 @@ function TicketeraView() {
             onChange={handleFileChange}
             inputProps={{ accept: "image/*" }}
           />
-        </Box>        <Box sx={{ mb: 2, width: "100%" }}>
-          <InputLabel id="archivo-input-label">PRIORIDAD</InputLabel>
+        </Box>
+        <Box sx={{ mb: 2, width: "100%" }}>
+          <InputLabel id="archivo-input-label">PRIORIDAD</InputLabel>{" "}
           <Rating
             name="prioridad"
             value={form.prioridad}
             onChange={(event, newValue) => {
-              // Mapear los valores de las estrellas a los valores deseados (1, 3, 5)
-              const priorityMap = { 1: 1, 2: 3, 3: 5 };
-              const mappedValue = priorityMap[newValue] || 1;
-              setForm({ ...form, prioridad: mappedValue });
+              setForm({ ...form, prioridad: newValue || 1 });
             }}
             max={3}
             defaultValue={1}
             precision={1}
           />
         </Box>
-
         <Box sx={{ mb: 2, width: "100%" }}>
           <InputLabel id="descripcion-input-label">DESCRIPCIÓN</InputLabel>
           <TextField
@@ -280,7 +287,6 @@ function TicketeraView() {
             }}
           />
         </Box>
-
         <Box
           sx={{ mb: 2, width: "100%", display: "flex", justifyContent: "end" }}
         >
@@ -319,6 +325,58 @@ function TicketeraView() {
         </Box>
       </form>
     </Box>
+  );
+
+  const modalComentario = () => (
+    <Modal
+      open={openModal}
+      onClose={handleCloseModal}
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Box
+        sx={{
+          width: "90%",
+          maxWidth: "600px",
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+          borderRadius: "8px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box>
+          <Typography
+            id="modal-icon"
+            sx={{ color: "#0b2f6d", fontWeight: "bold" }}
+          >
+            <WarningAmberIcon />
+          </Typography>
+        </Box>
+        <Divider sx={{ width: "100%", mb: 2 }} />
+        <Typography
+          id="modal-title"
+          variant="h6"
+          component="h2"
+          sx={{ mb: 2, color: "#0b2f6d", fontWeight: "bold" }}
+        >
+          COMENTARIO
+        </Typography>
+        <Typography id="modal-description" sx={{ mb: 2 }}>
+          {ticket.comentario
+            ? ticket.comentario
+            : "No hay comentarios disponibles."}
+        </Typography>
+      </Box>
+    </Modal>
   );
 
   const tableView = () => (
@@ -388,37 +446,46 @@ function TicketeraView() {
             <TableBody>
               {data && data.length > 0 ? (
                 data.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                  <TableRow
+                    key={index}
+                    component={Link}
+                    to={`/ticketviewer/${row.logID}`}
+                    sx={{
+                      textDecoration: "none",
+                      cursor: "pointer",
+                      "&:hover": { backgroundColor: "#f5f5f5" },
+                    }}
+                  >
+                    <TableCell align="center" sx={{ fontSize: "12px" }}>
                       {row.ticket_id ? row.ticket_id : "Sin Información"}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                    <TableCell align="center" sx={{ fontSize: "12px" }}>
                       {row.categoria ? row.categoria : "Sin Información"}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                    <TableCell align="center" sx={{ fontSize: "12px" }}>
                       {row.titulo ? row.titulo : "Sin titulo"}
                     </TableCell>
-
-                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                    <TableCell align="center" sx={{ fontSize: "12px" }}>
                       {row.fecha_creacion
                         ? extractDate(row.fecha_creacion)
                         : "Sin Información"}
-                    </TableCell>                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                    </TableCell>{" "}
+                    <TableCell align="center" sx={{ fontSize: "12px" }}>
                       {row.prioridad ? (
                         <Rating value={row.prioridad} readOnly max={3} />
                       ) : (
                         "Sin Información"
                       )}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                    <TableCell align="center" sx={{ fontSize: "12px" }}>
                       {row.gestionado_por
                         ? row.gestionado_por
                         : "Sin Información"}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                    <TableCell align="center" sx={{ fontSize: "12px" }}>
                       {row.estado ? row.estado : "Sin Información"}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontSize: "10px" }}>
+                    <TableCell align="center" sx={{ fontSize: "12px" }}>
                       {row.last_update
                         ? extractDate(row.last_update)
                         : "Sin Información"}
@@ -506,6 +573,8 @@ function TicketeraView() {
           {message}
         </Alert>
       )}
+
+      {openModal && modalComentario()}
 
       {!crear && tableView()}
 

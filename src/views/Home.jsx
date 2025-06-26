@@ -1,8 +1,4 @@
-import {
-  Box,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -158,6 +154,7 @@ function Home() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        flexDirection: "column",
         minHeight: "90vh",
         paddingTop: { xs: 10, md: 8 },
         mt: 2,

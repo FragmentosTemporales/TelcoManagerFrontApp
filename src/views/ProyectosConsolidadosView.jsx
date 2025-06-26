@@ -3,12 +3,7 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Card,
-  Chip,
-  CardContent,
-  CardHeader,
   MenuItem,
-  Paper,
   Skeleton,
   Select,
   Table,
@@ -18,17 +13,12 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Tooltip,
   Typography,
   InputLabel,
   FormControl,
 } from "@mui/material";
-import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -36,8 +26,10 @@ import {
   getProyectosFiltrados,
   getOptionToFilter,
   sendPlantillaAgendaProyecto,
+  getQMacroEstado,
+  getQProyectosConResponsable,
+  getQProyectosSinResponsable,
 } from "../api/onnetAPI";
-import ProyectosCharts from "../components/proyectosCharts";
 
 function ProyectosOnNetView() {
   const authState = useSelector((state) => state.auth);
@@ -48,6 +40,9 @@ function ProyectosOnNetView() {
   const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [dataMacro, setDataMacro] = useState([]);
+  const [dataProyectoSin, setDataProyectoSin] = useState([]);
+  const [dataProyectoCon, setDataProyectoCon] = useState([]);
   const [toFilter, setToFilter] = useState({
     proyecto: "",
     bandeja: "",
@@ -56,8 +51,6 @@ function ProyectosOnNetView() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [showLoaders, setShowLoaders] = useState(false);
 
   const [optionsToFilter, setOptionsToFilter] = useState([]);
 
@@ -112,9 +105,18 @@ function ProyectosOnNetView() {
     file: null,
   });
 
-  const handleSubmitVisitas = async (e) => {
-    
+  const extractDate = (gmtString) => {
+    const date = new Date(gmtString);
+
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+
+    const formattedDate = `${day}-${month}-${year}`;
+    return formattedDate;
   };
+
+  const handleSubmitVisitas = async (e) => {};
 
   const handleSubmitAgendas = async (e) => {
     e.preventDefault();
@@ -180,6 +182,51 @@ function ProyectosOnNetView() {
     setIsSubmitting(false);
   };
 
+  const fetchDataMacro = async () => {
+    setIsLoading(true);
+    setIsSubmitting(true);
+    try {
+      const response = await getQMacroEstado(token);
+      setDataMacro(response);
+    } catch (error) {
+      setAlertType("error");
+      setMessage(error);
+      setOpen(true);
+    }
+    setIsLoading(false);
+    setIsSubmitting(false);
+  };
+
+  const fetchDataProyectosCon = async () => {
+    setIsLoading(true);
+    setIsSubmitting(true);
+    try {
+      const response = await getQProyectosConResponsable(token);
+      setDataProyectoCon(response);
+    } catch (error) {
+      setAlertType("error");
+      setMessage(error);
+      setOpen(true);
+    }
+    setIsLoading(false);
+    setIsSubmitting(false);
+  };
+
+  const fetchDataProyectosSin = async () => {
+    setIsLoading(true);
+    setIsSubmitting(true);
+    try {
+      const response = await getQProyectosSinResponsable(token);
+      setDataProyectoSin(response);
+    } catch (error) {
+      setAlertType("error");
+      setMessage(error);
+      setOpen(true);
+    }
+    setIsLoading(false);
+    setIsSubmitting(false);
+  };
+
   const fetchDataOptions = async () => {
     setIsLoading(true);
     setIsSubmitting(true);
@@ -198,14 +245,6 @@ function ProyectosOnNetView() {
     }
     setIsLoading(false);
     setIsSubmitting(false);
-  };
-
-  const toggleFilters = () => {
-    setShowFilters((prev) => !prev);
-  };
-
-  const toggleLoaders = () => {
-    setShowLoaders((prev) => !prev);
   };
 
   const handlePage = (newPage) => setPage(newPage);
@@ -256,132 +295,106 @@ function ProyectosOnNetView() {
   };
 
   const loaderCard = () => (
-    <Card
+    <Box
       sx={{
-        width: { lg: "90%", md: "100%", xs: "100%" },
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        textAlign: "center",
-        borderRadius: "20px",
+        minHeight: "100px",
+        display: "flex",
+        flexDirection: { lg: "row", md: "column", xs: "column" },
+        gap: 2,
+        alignItems: "space-evenly",
+        width: "90%",
+        mb: 2,
       }}
     >
-      <CardHeader
-        title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            CARGAR INFORMACIÓN
-          </Typography>
-        }
-        avatar={<DriveFolderUploadIcon />}
-        action={
-          <Button
-            onClick={toggleLoaders}
-            sx={{ color: "white", minWidth: "auto" }}
-          >
-            {showLoaders ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </Button>
-        }
+      <Box
         sx={{
-          background: "#0b2f6d",
-          color: "white",
-          textAlign: "end",
+          pt: 2,
+          pb: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+          width: { lg: "50%", md: "100%", xs: "100%" },
+          boxShadow: 2,
+          borderRadius: "0px",
+          backgroundColor: "#fff",
         }}
-      />
-      {showLoaders && (
-        <CardContent>
-          <Box
+      >
+        <Box sx={{ pb: 2 }}>
+          <InputLabel id="file-label">Agendas</InputLabel>
+          <TextField
+            required
+            size="small"
+            fullWidth
+            id="file"
+            type="file"
+            name="file"
+            variant="standard"
+            onChange={handleFileChangeAgendas}
+          />
+        </Box>
+        <Box>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={isSubmitting}
             sx={{
-              minHeight: "100px",
-              display: "flex",
-              flexDirection: "row",
-              gap: 2,
-              alignItems: "space-evenly",
+              background: "#0b2f6d",
+              fontWeight: "bold",
+              width: "200px",
+              borderRadius: "0px",
             }}
+            onClick={handleSubmitAgendas}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 2,
-                width: "50%",
-                boxShadow: 2,
-                borderRadius: "10px",
-              }}
-            >
-              <Box>
-                <InputLabel id="file-label">Agendas</InputLabel>
-                <TextField
-                  required
-                  fullWidth
-                  id="file"
-                  type="file"
-                  name="file"
-                  variant="outlined"
-                  onChange={handleFileChangeAgendas}
-                />
-              </Box>
-              <Box sx={{ mb: 2 }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={isSubmitting}
-                  sx={{
-                    background: "#0b2f6d",
-                    fontWeight: "bold",
-                    width: "200px",
-                    borderRadius: "20px",
-                  }}
-                  onClick={handleSubmitAgendas}
-                >
-                  {isSubmitting ? "Procesando..." : "Cargar"}
-                </Button>
-              </Box>
-            </Box>
+            {isSubmitting ? "Procesando..." : "Cargar"}
+          </Button>
+        </Box>
+      </Box>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 2,
-                width: "50%",
-                boxShadow: 2,
-                borderRadius: "10px",
-              }}
-            >
-              <Box>
-                <InputLabel id="file-label">Visitas</InputLabel>
-                <TextField
-                  required
-                  fullWidth
-                  id="file"
-                  type="file"
-                  name="file"
-                  variant="outlined"
-                  onChange={handleFileChangeVisitas}
-                />
-              </Box>
-              <Box sx={{ mb: 2 }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{
-                    background: "#0b2f6d",
-                    fontWeight: "bold",
-                    width: "200px",
-                    borderRadius: "20px",
-                  }}
-                  disabled
-                >
-                  {isSubmitting ? "Procesando..." : "Cargar"}
-                </Button>
-              </Box>
-            </Box>
-          </Box>
-        </CardContent>
-      )}
-    </Card>
+      <Box
+        sx={{
+          pt: 2,
+          pb: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+          width: { lg: "50%", md: "100%", xs: "100%" },
+          boxShadow: 2,
+          borderRadius: "0px",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Box sx={{ pb: 2 }}>
+          <InputLabel id="file-label">Visitas</InputLabel>
+          <TextField
+            required
+            size="small"
+            fullWidth
+            id="file"
+            type="file"
+            name="file"
+            variant="standard"
+            onChange={handleFileChangeVisitas}
+          />
+        </Box>
+        <Box>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              background: "#0b2f6d",
+              fontWeight: "bold",
+              width: "200px",
+              borderRadius: "0px",
+            }}
+            disabled
+          >
+            {isSubmitting ? "Procesando..." : "Cargar"}
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 
   const handleClose = () => {
@@ -389,200 +402,420 @@ function ProyectosOnNetView() {
   };
 
   const filterCard = () => (
-    <Card
+    <Box
       sx={{
-        width: { lg: "90%", md: "100%", xs: "100%" },
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        textAlign: "center",
-        borderRadius: "20px",
+        width: "90%",
+        mb: 2,
         mt: 2,
+        backgroundColor: "#fff",
+        pt: 2,
+        pb: 2,
+        boxShadow: 2,
       }}
     >
-      <CardHeader
-        title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            FILTRAR PROYECTOS
-          </Typography>
-        }
-        avatar={<SearchIcon />}
-        action={
-          <Button
-            onClick={toggleFilters}
-            sx={{ color: "white", minWidth: "auto" }}
+      <form>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            alignItems: "center",
+          }}
+        >
+          {/* Primera fila: ambos selects */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              alignItems: "center",
+              gap: 2,
+              width: "100%",
+            }}
           >
-            {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </Button>
-        }
-        sx={{
-          background: "#0b2f6d",
-          color: "white",
-          textAlign: "end",
-        }}
-      />
-      {showFilters && (
-        <CardContent>
-          <form>
-            <Box
+            <FormControl>
+              <TextField
+                label="Proyecto"
+                variant="standard"
+                id="proyecto-textfield"
+                value={toFilter.proyecto || ""}
+                sx={{ minWidth: "200px" }}
+                size="small"
+                onChange={(event) => {
+                  setToFilter((prev) => ({
+                    ...prev,
+                    proyecto: event.target.value,
+                  }));
+                }}
+              />
+            </FormControl>
+            <FormControl>
+              <InputLabel id="bandeja-label">Bandeja proyecto</InputLabel>
+              <Select
+                label="bandeja-label"
+                id="bandeja-select"
+                variant="standard"
+                value={toFilter.bandeja || ""}
+                sx={{ minWidth: "200px" }}
+                size="small"
+                onChange={(event) => {
+                  setToFilter((prev) => ({
+                    ...prev,
+                    bandeja: event.target.value,
+                  }));
+                }}
+              >
+                {optionsToFilter.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel id="agencia-label">Agencia</InputLabel>
+              <Select
+                label="agencia-label"
+                id="agencia-select"
+                variant="standard"
+                value={toFilter.agencia || ""}
+                sx={{ minWidth: "200px" }}
+                size="small"
+                onChange={(event) => {
+                  setToFilter((prev) => ({
+                    ...prev,
+                    agencia: event.target.value,
+                  }));
+                }}
+              >
+                {agencias &&
+                  agencias.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel id="categoria-label">Categoria</InputLabel>
+              <Select
+                labelId="categoria-label"
+                id="categoria-select"
+                variant="standard"
+                value={toFilter.categoria || ""}
+                sx={{ minWidth: "200px" }}
+                size="small"
+                onChange={(event) => {
+                  setToFilter((prev) => ({
+                    ...prev,
+                    categoria: event.target.value,
+                  }));
+                }}
+              >
+                {categorias.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          {/* Segunda fila: ambos botones */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              alignItems: "center",
+              gap: 2,
+              width: "100%",
+              pt: 2,
+            }}
+          >
+            <Button
+              variant="contained"
+              onClick={handleClear}
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-                alignItems: "center",
+                fontWeight: "bold",
+                background: "#0b2f6d",
+                minWidth: "200px",
+                height: "40px",
+                borderRadius: "0px",
               }}
             >
-              {/* Primera fila: ambos selects */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  gap: 2,
-                  width: "100%",
-                }}
-              >
-                <FormControl>
-                  <TextField
-                    label="Proyecto"
-                    id="proyecto-textfield"
-                    value={toFilter.proyecto || ""}
-                    sx={{ minWidth: "200px" }}
-                    size="small"
-                    onChange={(event) => {
-                      setToFilter((prev) => ({
-                        ...prev,
-                        proyecto: event.target.value,
-                      }));
-                    }}
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel id="bandeja-label">Bandeja</InputLabel>
-                  <Select
-                    label="bandeja-label"
-                    id="bandeja-select"
-                    value={toFilter.bandeja || ""}
-                    sx={{ minWidth: "200px" }}
-                    size="small"
-                    onChange={(event) => {
-                      setToFilter((prev) => ({
-                        ...prev,
-                        bandeja: event.target.value,
-                      }));
-                    }}
-                  >
-                    {optionsToFilter.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl>
-                  <InputLabel id="agencia-label">Agencia</InputLabel>
-                  <Select
-                    label="agencia-label"
-                    id="agencia-select"
-                    value={toFilter.agencia || ""}
-                    sx={{ minWidth: "200px" }}
-                    size="small"
-                    onChange={(event) => {
-                      setToFilter((prev) => ({
-                        ...prev,
-                        agencia: event.target.value,
-                      }));
-                    }}
-                  >
-                    {agencias &&
-                      agencias.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-                <FormControl>
-                  <InputLabel id="categoria-label">Categoria</InputLabel>
-                  <Select
-                    labelId="categoria-label"
-                    id="categoria-select"
-                    value={toFilter.categoria || ""}
-                    sx={{ minWidth: "200px" }}
-                    size="small"
-                    onChange={(event) => {
-                      setToFilter((prev) => ({
-                        ...prev,
-                        categoria: event.target.value,
-                      }));
-                    }}
-                  >
-                    {categorias.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-              {/* Segunda fila: ambos botones */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  gap: 2,
-                  width: "100%",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  onClick={handleClear}
-                  sx={{
-                    fontWeight: "bold",
-                    background: "#0b2f6d",
-                    minWidth: "200px",
-                    height: "40px",
-                    borderRadius: "20px",
-                  }}
-                >
-                  LIMPIAR FILTROS
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={fetchData}
-                  sx={{
-                    fontWeight: "bold",
-                    background: "#0b2f6d",
-                    minWidth: "200px",
-                    height: "40px",
-                    borderRadius: "20px",
-                  }}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Procesando..." : "Actualizar"}
-                </Button>
-              </Box>
-            </Box>
-          </form>
-        </CardContent>
-      )}
-    </Card>
+              LIMPIAR FILTROS
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={fetchData}
+              sx={{
+                fontWeight: "bold",
+                minWidth: "200px",
+                height: "40px",
+                borderRadius: "0px",
+              }}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Procesando..." : "Actualizar"}
+            </Button>
+          </Box>
+        </Box>
+      </form>
+    </Box>
+  );
+
+  const setTableProyectosSin = () => (
+    <Box sx={{width: "100%" }}>
+      <Typography
+        variant="h6"
+        sx={{ mb: 2, textAlign: "left", fontWeight: "bold" }}
+      >
+        Cantidad de proyectos sin responsable asignado
+      </Typography>
+      <TableContainer sx={{ boxShadow: 2, borderRadius: "0px" }}>
+        <Table>
+          {setTableHeadProyectosSin()}
+          {setTableBodyProyectosSin()}
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+
+  const setTableHeadProyectosSin = () => (
+    <>
+      <TableHead>
+        <TableRow>
+          {["CANTIDAD", "ESTADO", "REGION"].map((header) => (
+            <TableCell
+              key={header}
+              align="center"
+              sx={{
+                background: "#0b2f6d",
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              {header}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    </>
+  );
+
+  const setTableBodyProyectosSin = () => (
+    <>
+      <TableBody
+        sx={{
+          display: "column",
+          justifyContent: "center",
+          backgroundColor: "#fff",
+        }}
+      >
+        {dataProyectoSin && dataProyectoSin.length > 0 ? (
+          dataProyectoSin.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary" fontWeight="bold">
+                  {row.Q ? row.Q : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
+                  {row.macro_estado ? row.macro_estado : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
+                  {row.region ? row.region : "Sin Información"}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={6} align="center" sx={{ width: "100%" }}>
+              No hay datos disponibles
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </>
+  );
+
+  const setTableProyectosCon = () => (
+    <Box sx={{width: "100%", mb: 2 }}>
+      <Typography
+        variant="h6"
+        sx={{ mb: 2, textAlign: "left", fontWeight: "bold" }}
+      >
+        Cantidad de proyectos con responsable asignado
+      </Typography>
+      <TableContainer sx={{ boxShadow: 2, borderRadius: "0px" }}>
+        <Table>
+          {setTableHeadProyectosCon()}
+          {setTableBodyProyectosCon()}
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+
+  const setTableHeadProyectosCon = () => (
+    <>
+      <TableHead>
+        <TableRow>
+          {["CANTIDAD", "ESTADO", "REGION"].map((header) => (
+            <TableCell
+              key={header}
+              align="center"
+              sx={{
+                background: "#0b2f6d",
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              {header}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    </>
+  );
+
+  const setTableBodyProyectosCon = () => (
+    <>
+      <TableBody
+        sx={{
+          display: "column",
+          justifyContent: "center",
+          backgroundColor: "#fff",
+        }}
+      >
+        {dataProyectoCon && dataProyectoCon.length > 0 ? (
+          dataProyectoCon.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary" fontWeight="bold">
+                  {row.Q ? row.Q : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
+                  {row.macro_estado ? row.macro_estado : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
+                  {row.region ? row.region : "Sin Información"}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={6} align="center" sx={{ width: "100%" }}>
+              No hay datos disponibles
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </>
+  );
+
+  const setTableMacro = () => (
+    <Box sx={{width: "100%" }}>
+      <Typography
+        variant="h6"
+        sx={{ mb: 2, textAlign: "left", fontWeight: "bold" }}
+      >
+        Cantidades por estado y región
+      </Typography>
+      <TableContainer sx={{ boxShadow: 2, borderRadius: "0px" }}>
+        <Table>
+          {setTableHeadMacro()}
+          {setTableBodyMacro()}
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+
+  const setTableHeadMacro = () => (
+    <>
+      <TableHead>
+        <TableRow>
+          {["CANTIDAD", "ESTADO", "REGION"].map((header) => (
+            <TableCell
+              key={header}
+              align="center"
+              sx={{
+                background: "#0b2f6d",
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              {header}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    </>
+  );
+
+  const setTableBodyMacro = () => (
+    <>
+      <TableBody
+        sx={{
+          display: "column",
+          justifyContent: "center",
+          backgroundColor: "#fff",
+        }}
+      >
+        {dataMacro && dataMacro.length > 0 ? (
+          dataMacro.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary" fontWeight="bold">
+                  {row.Q ? row.Q : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
+                  {row.macro_estado ? row.macro_estado : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
+                  {row.region ? row.region : "Sin Información"}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={6} align="center" sx={{ width: "100%" }}>
+              No hay datos disponibles
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </>
   );
 
   const setTable = () => (
-    <>
-      <TableContainer>
-        <Table
-          sx={{ width: "100%", display: "column", justifyContent: "center" }}
-        >
-          {setTableHead()}
-          {setTableBody()}
-        </Table>
-      </TableContainer>
-    </>
+    <TableContainer>
+      <Table
+        sx={{ width: "100%", display: "column", justifyContent: "center" }}
+      >
+        {setTableHead()}
+        {setTableBody()}
+      </Table>
+    </TableContainer>
   );
 
   const setTableHead = () => (
@@ -596,13 +829,17 @@ function ProyectosOnNetView() {
             "AGENCIA",
             "DESPLIEGUE",
             "(Q) DÍAS",
+            "RESPONSABLE",
+            "ASIGNACIÓN",
           ].map((header) => (
             <TableCell
               key={header}
               align="center"
               sx={{
-                background: "#d8d8d8",
+                background: "#0b2f6d",
                 fontWeight: "bold",
+                color: "white",
+                fontSize: "14px",
               }}
             >
               {header}
@@ -619,6 +856,7 @@ function ProyectosOnNetView() {
         sx={{
           display: "column",
           justifyContent: "center",
+          backgroundColor: "#fff",
         }}
       >
         {data && data.length > 0 ? (
@@ -633,39 +871,51 @@ function ProyectosOnNetView() {
                 "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
               }}
             >
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"initial"} variant="secondary">
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
                   {row.proyecto ? row.proyecto : "Sin Información"}
                 </Typography>
               </TableCell>
 
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"initial"} variant="secondary">
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
                   {row.bandeja_onnet ? row.bandeja_onnet : "Sin Información"}
                 </Typography>
               </TableCell>
 
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"initial"} variant="secondary">
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
                   {row.central_fttx ? row.central_fttx : "Sin Información"}
                 </Typography>
               </TableCell>
 
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"initial"} variant="secondary">
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
                   {row.agencia ? row.agencia : "Sin Información"}
                 </Typography>
               </TableCell>
 
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"initial"} variant="secondary">
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
                   {row.despliegue ? row.despliegue : "Sin Información"}
                 </Typography>
               </TableCell>
 
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
-                <Typography fontFamily={"initial"} variant="secondary">
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
                   {row.duracion_dias ? row.duracion_dias : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
+                  {row.responsable ? row.responsable : "Sin Información"}
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center" sx={{ fontSize: "12px" }}>
+                <Typography  variant="secondary">
+                  {row.fecha_asignacion ? extractDate(row.fecha_asignacion) : "Sin Información"}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -687,6 +937,9 @@ function ProyectosOnNetView() {
 
   useEffect(() => {
     fetchDataOptions();
+    fetchDataMacro();
+    fetchDataProyectosCon();
+    fetchDataProyectosSin();
   }, []);
 
   return (
@@ -701,6 +954,8 @@ function ProyectosOnNetView() {
         overflow: "auto",
         paddingBottom: "50px",
         minHeight: "80vh",
+        paddingTop: "67px",
+        backgroundColor: "#f5f5f5",
       }}
     >
       {open && (
@@ -712,51 +967,77 @@ function ProyectosOnNetView() {
           {message || "Mensaje de alerta por defecto"}
         </Alert>
       )}
-      <Box
-        sx={{
-          width: { lg: "90%", md: "100%", xs: "100%" },
-          marginBottom: 2,
-          paddingTop: 10,
-        }}
-      >
-        <ProyectosCharts />
-      </Box>
 
       {loaderCard()}
-      {filterCard()}
 
-      <Card
+      <Box
         sx={{
-          width: { lg: "90%", md: "100%", xs: "100%" },
-          borderRadius: "20px",
-          boxShadow: 5,
-          marginTop: 2,
+          width: { lg: "90%", md: "90%", xs: "100%" },
+          overflow: "hidden",
+          backgroundColor: "#f5f5f5",
+          boxShadow: 2,
+          textAlign: "center",
+          borderRadius: "0px",
+          mt: 2,
         }}
       >
-        <CardHeader
-          title={<Typography fontWeight="bold">Lista de Proyectos</Typography>}
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "center",
-          }}
-        />
-        <CardContent sx={{ display: "grid" }}>
-          {isLoading ? (
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              sx={{
-                width: "100%",
-                height: "200px",
-                borderRadius: "10px",
-              }}
-            />
-          ) : (
-            setTable()
-          )}
-        </CardContent>
-      </Card>
+        {isLoading ? (
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            sx={{
+              width: "100%",
+              height: "200px",
+              borderRadius: "0px",
+            }}
+          />
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: {lg: "row", md: "column", xs: "column"},
+              alignItems: "start",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Box sx={{ width: "100%", display: "flex", flexDirection: "column", m:1 }}>
+              {setTableMacro()} 
+            </Box>
+            <Box sx={{ width: "100%", display: "flex", flexDirection: "column", m:1 }}>
+            {setTableProyectosCon()}
+            {setTableProyectosSin()}
+            </Box>
+          </Box>
+        )}
+      </Box>
+
+      {filterCard()}
+      <Box
+        sx={{
+          width: { lg: "90%", md: "90%", xs: "100%" },
+          overflow: "hidden",
+          backgroundColor: "#f5f5f5",
+          boxShadow: 2,
+          textAlign: "center",
+          borderRadius: "0px",
+          mt: 2,
+        }}
+      >
+        {isLoading ? (
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            sx={{
+              width: "100%",
+              height: "200px",
+              borderRadius: "0px",
+            }}
+          />
+        ) : (
+          setTable()
+        )}
+      </Box>
+
       <ButtonGroup
         size="small"
         aria-label="pagination-button-group"

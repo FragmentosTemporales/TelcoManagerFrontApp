@@ -32,11 +32,10 @@ export const getNotificaciones = async (token) => {
   }
 };
 
-export const updateNotificacion = async (token, payload, id) => {
+export const updateNotificacion = async (token,id) => {
   try {
-    const notificacionID = id
-    const url = `${baseUrl}/update-notificacion/${notificacionID}`;
-    const response = await axios.put(url, payload, {
+    const url = `${baseUrl}/update-notificacion/${id}`;
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -46,4 +45,4 @@ export const updateNotificacion = async (token, payload, id) => {
   } catch (error) {
     throw error.response.data.error;
   }
-}
+};

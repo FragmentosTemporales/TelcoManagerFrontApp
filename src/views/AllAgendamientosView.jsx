@@ -17,12 +17,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import {
   getAllAgendamientos,
