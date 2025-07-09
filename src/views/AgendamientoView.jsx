@@ -39,7 +39,7 @@ function AgendamientoViewer() {
   const [dataBacklog, setDataBacklog] = useState(undefined);
   const [dataBacklogEstado, setDataBacklogEstado] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const zonas = [
+  const zonas_metropolitana = [
     "Calera de Tango",
     "Cerrillos",
     "Cerro Navia",
@@ -81,6 +81,35 @@ function AgendamientoViewer() {
     "Vitacura",
   ];
 
+  const zonas_centro = [
+    "Algarrobo",
+    "Calle Larga",
+    "Concon",
+    "Curacaví",
+    "Hijuelas",
+    "La Calera",
+    "La Cruz",
+    "Limache",
+    "Los Andes",
+    "Machali",
+    "Panquehue",
+    "Putaendo",
+    "Quillota",
+    "Quilpue",
+    "Rancagua",
+    "Rengo",
+    "San Antonio",
+    "San Esteban",
+    "San Felipe",
+    "San Fernando",
+    "Santa Maria",
+    "Santo Domingo",
+    "Valparaiso",
+    "Villa Alemana",
+    "Vina Del Mar",
+  ];
+
+  const [selectedRegion, setSelectedRegion] = useState("");
   const [formGetBacklog, setFormGetBacklog] = useState({ zona_de_trabajo: "" });
 
   const [formBacklog, setFormBacklog] = useState({
@@ -173,6 +202,11 @@ function AgendamientoViewer() {
     setFormGetBacklog((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
+  const handleRegionSelect = (region) => {
+    setSelectedRegion(region);
+    setFormGetBacklog({ zona_de_trabajo: "" }); // Reset zone selection when region changes
+  };
+
   const handleChangeBacklog = (e) => {
     const { name, value } = e.target;
     setFormBacklog((prevForm) => ({ ...prevForm, [name]: value }));
@@ -219,7 +253,7 @@ function AgendamientoViewer() {
             display: "flex",
             justifyContent: "center",
             mt: 4,
-            width: "90%",
+            width: { lg: "90%", md: "100%", xs: "100%" },
           }}
         >
           <CircularProgress />
@@ -234,7 +268,7 @@ function AgendamientoViewer() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              width: "90%",
+              width: { lg: "90%", md: "100%", xs: "100%" },
               backgroundColor: "#fff",
               boxShadow: 2,
               mt: 2,
@@ -243,29 +277,86 @@ function AgendamientoViewer() {
             <Box
               sx={{
                 mb: 2,
-                width: "30%",
+                width: "50%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
               }}
             >
-              <FormControl fullWidth>
-                <InputLabel id="zona_de_trabajo-label">
-                  Zona de Trabajo
-                </InputLabel>
-                <Select
-                  size="small"
-                  variant="standard"
-                  labelId="zona_de_trabajo-label"
-                  id="zona_de_trabajo"
-                  name="zona_de_trabajo"
-                  value={formGetBacklog?.zona_de_trabajo || ""}
-                  onChange={handleChangeGetBacklog}
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Selecciona la Región
+              </Typography>
+              <ButtonGroup variant="outlined" sx={{ mb: 4 }}>
+                <Button
+                  onClick={() => handleRegionSelect("metropolitana")}
+                  variant={
+                    selectedRegion === "metropolitana"
+                      ? "contained"
+                      : "outlined"
+                  }
+                  sx={{
+                    width: "200px",
+                    backgroundColor:
+                      selectedRegion === "metropolitana"
+                        ? "#0b2f6d"
+                        : "transparent",
+                    color:
+                      selectedRegion === "metropolitana" ? "white" : "#0b2f6d",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedRegion === "metropolitana"
+                          ? "#0b2f6d"
+                          : "#f0f0f0",
+                    },
+                  }}
                 >
-                  {zonas.map((zona) => (
-                    <MenuItem key={zona} value={zona}>
-                      {zona}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  Metropolitana
+                </Button>
+                <Button
+                  onClick={() => handleRegionSelect("centro")}
+                  variant={
+                    selectedRegion === "centro" ? "contained" : "outlined"
+                  }
+                  sx={{
+                    width: "200px",
+                    backgroundColor:
+                      selectedRegion === "centro" ? "#0b2f6d" : "transparent",
+                    color: selectedRegion === "centro" ? "white" : "#0b2f6d",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedRegion === "centro" ? "#0b2f6d" : "#f0f0f0",
+                    },
+                  }}
+                >
+                  Centro
+                </Button>
+              </ButtonGroup>
+
+              {selectedRegion && (
+                <FormControl fullWidth>
+                  <InputLabel id="zona_de_trabajo-label">
+                    Zona de Trabajo
+                  </InputLabel>
+                  <Select
+                    size="small"
+                    variant="standard"
+                    labelId="zona_de_trabajo-label"
+                    id="zona_de_trabajo"
+                    name="zona_de_trabajo"
+                    value={formGetBacklog?.zona_de_trabajo || ""}
+                    onChange={handleChangeGetBacklog}
+                  >
+                    {(selectedRegion === "metropolitana"
+                      ? zonas_metropolitana
+                      : zonas_centro
+                    ).map((zona) => (
+                      <MenuItem key={zona} value={zona}>
+                        {zona}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
             </Box>
             <Button
               variant="outlined"
@@ -280,7 +371,7 @@ function AgendamientoViewer() {
           </Box>
           <TableContainer
             sx={{
-              width: "90%",
+              width: { lg: "90%", md: "100%", xs: "100%" },
               marginTop: 2,
               boxShadow: 2,
               backgroundColor: "#fff",
@@ -316,45 +407,98 @@ function AgendamientoViewer() {
         </>
       ) : (
         <Box
-          sx={{
-            textAlign: "center",
-            pt: 2,
-            pb: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "90%",
-            boxShadow: 2,
-            backgroundColor: "#fff",
-            mt: 2,
-          }}
-        >
+            sx={{
+              textAlign: "center",
+              pt: 4,
+              pb: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: { lg: "90%", md: "100%", xs: "100%" },
+              backgroundColor: "#fff",
+              boxShadow: 2,
+              mt: 2,
+            }}
+          >
           <Box
             sx={{
               mb: 2,
-              width: "30%",
+              width: "50%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            <FormControl fullWidth>
-              <InputLabel id="zona_de_trabajo-label">
-                Zona de Trabajo
-              </InputLabel>
-              <Select
-                size="small"
-                variant="standard"
-                labelId="zona_de_trabajo-label"
-                id="zona_de_trabajo"
-                name="zona_de_trabajo"
-                value={formGetBacklog?.zona_de_trabajo || ""}
-                onChange={handleChangeGetBacklog}
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Selecciona la Región
+            </Typography>
+            <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
+              <Button
+                onClick={() => handleRegionSelect("metropolitana")}
+                variant={
+                  selectedRegion === "metropolitana" ? "contained" : "outlined"
+                }
+                sx={{
+                  width: "200px",
+                  backgroundColor:
+                    selectedRegion === "metropolitana"
+                      ? "#0b2f6d"
+                      : "transparent",
+                  color:
+                    selectedRegion === "metropolitana" ? "white" : "#0b2f6d",
+                  "&:hover": {
+                    backgroundColor:
+                      selectedRegion === "metropolitana"
+                        ? "#0b2f6d"
+                        : "#f0f0f0",
+                  },
+                }}
               >
-                {zonas.map((zona) => (
-                  <MenuItem key={zona} value={zona}>
-                    {zona}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                Metropolitana
+              </Button>
+              <Button
+                onClick={() => handleRegionSelect("centro")}
+                variant={selectedRegion === "centro" ? "contained" : "outlined"}
+                sx={{
+                  width: "200px",
+                  backgroundColor:
+                    selectedRegion === "centro" ? "#0b2f6d" : "transparent",
+                  color: selectedRegion === "centro" ? "white" : "#0b2f6d",
+                  "&:hover": {
+                    backgroundColor:
+                      selectedRegion === "centro" ? "#0b2f6d" : "#f0f0f0",
+                  },
+                }}
+              >
+                Centro
+              </Button>
+            </ButtonGroup>
+
+            {selectedRegion && (
+              <FormControl fullWidth>
+                <InputLabel id="zona_de_trabajo-label">
+                  Zona de Trabajo
+                </InputLabel>
+                <Select
+                  size="small"
+                  variant="standard"
+                  labelId="zona_de_trabajo-label"
+                  id="zona_de_trabajo"
+                  name="zona_de_trabajo"
+                  value={formGetBacklog?.zona_de_trabajo || ""}
+                  onChange={handleChangeGetBacklog}
+                >
+                  {(selectedRegion === "metropolitana"
+                    ? zonas_metropolitana
+                    : zonas_centro
+                  ).map((zona) => (
+                    <MenuItem key={zona} value={zona}>
+                      {zona}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
           </Box>
           <Button
             variant="outlined"
@@ -373,7 +517,7 @@ function AgendamientoViewer() {
       {dataBacklogEstado && dataBacklogEstado.length > 0 ? (
         <Card
           sx={{
-            width: { lg: "80%", md: "100%", xs: "100%" },
+            width: { lg: "90%", md: "100%", xs: "100%" },
             boxShadow: 5,
             marginTop: 2,
           }}
@@ -590,14 +734,15 @@ function AgendamientoViewer() {
                     }))
                   }
                 >
-                  <MenuItem value="Carga otra EPS">Carga otra EPS</MenuItem>
-                  <MenuItem value="Efectiva">Efectiva</MenuItem>
-                  <MenuItem value="Confirma mismo día">Confirma mismo día</MenuItem>
-                  <MenuItem value="Cliente mantiene agenda original">
-                    Cliente mantiene agenda original
-                  </MenuItem>
-                  <MenuItem value="No Efectiva">No Efectiva</MenuItem>
                   <MenuItem value="Sin Contacto">Sin Contacto</MenuItem>
+                  <MenuItem value="Adelanta">Adelanta</MenuItem>
+                  <MenuItem value="Confirma Visita">Confirma Visita</MenuItem>
+                  <MenuItem value="Mantiene Agenda">Mantiene Agenda</MenuItem>
+                  <MenuItem value="Desiste">Desiste</MenuItem>
+                  <MenuItem value="Orden con Problemas">
+                    Orden con Problemas
+                  </MenuItem>
+                  <MenuItem value="Reagenda">Reagenda</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -610,6 +755,7 @@ function AgendamientoViewer() {
               <FormControl fullWidth>
                 <InputLabel>Clasificacion</InputLabel>
                 <Select
+                  disabled
                   size="small"
                   variant="standard"
                   id="sub-clasificacion-select"
@@ -620,21 +766,7 @@ function AgendamientoViewer() {
                       sub_clasificacion: event.target.value,
                     }))
                   }
-                >
-                  <MenuItem value="Cambia agenda">Cambia agenda</MenuItem>
-                  <MenuItem value="Cancelado">Cancelado</MenuItem>
-                  <MenuItem value="Cliente adelanta">Cliente adelanta</MenuItem>
-                  <MenuItem value="Cliente desiste">Cliente desiste</MenuItem>
-                  <MenuItem value="Orden mal generada">
-                    Orden mal generada
-                  </MenuItem>
-                  <MenuItem value="Problema inicio más temprano">
-                    Problema inicio más temprano
-                  </MenuItem>
-                  <MenuItem value="Trabajo ya asignado">
-                    Trabajo ya asignado
-                  </MenuItem>
-                </Select>
+                ></Select>
               </FormControl>
             </Box>
           </Box>

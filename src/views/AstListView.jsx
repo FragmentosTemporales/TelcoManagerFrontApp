@@ -33,7 +33,6 @@ import {
   getAstHistoricoExcel,
   getAstUsers,
 } from "../api/prevencionAPI";
-import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
 
 function FormAstList() {
@@ -48,11 +47,29 @@ function FormAstList() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showStats, setShowStats] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
   const handlePage = (newPage) => setPage(newPage);
   const [centroCosto, setCentroCosto] = useState({ centro: "VTR RM" });
   const [form, setForm] = useState({ fecha: "", numDoc: "" });
   const [selectedUser, setSelectedUser] = useState(null); // Nuevo estado para Autocomplete
+
+const extractDate = (gmtString) => {
+  const date = new Date(gmtString);
+
+
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+
+  const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}-${month}-${year} `;
+  
+  return formattedDateTime;
+};
+
+
 
   const fetchData = async () => {
     try {
@@ -137,10 +154,6 @@ function FormAstList() {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const toggleFilters = () => {
-    setShowFilters((prev) => !prev);
   };
 
   const toggleStats = () => {

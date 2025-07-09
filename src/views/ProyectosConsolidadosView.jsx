@@ -235,8 +235,8 @@ function ProyectosOnNetView() {
       // Mapear los resultados al formato requerido
       const mapped = Array.isArray(response)
         ? response.map((opt) => ({
-            value: opt.bandeja_onnet || "",
-            label: opt.bandeja_onnet || "",
+            value: opt.macro_estado || "",
+            label: opt.macro_estado || "",
           }))
         : [];
       setOptionsToFilter(mapped);
@@ -450,7 +450,7 @@ function ProyectosOnNetView() {
               />
             </FormControl>
             <FormControl>
-              <InputLabel id="bandeja-label">Bandeja proyecto</InputLabel>
+              <InputLabel id="bandeja-label">Bandeja</InputLabel>
               <Select
                 label="bandeja-label"
                 id="bandeja-select"
@@ -922,7 +922,7 @@ function ProyectosOnNetView() {
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan={6} align="center" sx={{ width: "100%" }}>
+            <TableCell colSpan={8} align="center" sx={{ width: "100%" }}>
               No hay datos disponibles
             </TableCell>
           </TableRow>

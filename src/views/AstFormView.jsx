@@ -65,7 +65,9 @@ function AstViewer() {
             variant="contained"
             sx={{ background: "#0b2f6d", borderRadius: "0px", width: "200px" }}
           >
-            Volver
+            <Typography fontWeight="bold" sx={{ color: "#fff" }}>
+              VOLVER
+            </Typography>
           </Button>
         </Link>
       </Box>
@@ -84,6 +86,11 @@ function AstViewer() {
         <Box
           sx={{ width: "80%", mb: 3, background: "#fff", boxShadow: 2, mt: 2 }}
         >
+          <Box sx={{ display: "flex", alignItems: "center", p: 2, background: "#0b2f6d" }}>
+            <Typography variant="h5" sx={{ color: "#fff", flexGrow: 1, textAlign: "center", fontWeight: "bold" }}>
+              ANALISIS SEGURO DEL TRABAJO
+            </Typography>
+          </Box>
           <Box sx={{ display: "column", justifyContent: "center" }}>
             {[
               { label: "Nombre :", value: worker.nombre },
@@ -104,6 +111,7 @@ function AstViewer() {
                     width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
                     color: "text.primary",
                     paddingLeft: 1,
+                    fontWeight: "bold",
                   }}
                 >
                   {item.label}
@@ -178,6 +186,7 @@ function AstViewer() {
                     width: "100%",
                     color: "text.primary",
                     paddingLeft: 1,
+                    fontWeight : "bold",
                   }}
                 >
                   {item.label}

@@ -4,7 +4,6 @@ import {
   Button,
   Divider,
   InputLabel,
-  Modal,
   Rating,
   Select,
   TextField,
@@ -16,11 +15,12 @@ import {
   Typography,
   MenuItem,
   TableContainer,
+  Tooltip,
 } from "@mui/material";
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -28,14 +28,14 @@ import {
   getCategoriasTicket,
   createTicket,
   getUserTicket,
+  sendTicketInfo,
 } from "../api/ticketeraAPI";
 
 function TicketeraView() {
   const authState = useSelector((state) => state.auth);
-  const { token, user_id } = authState;
+  const { token, user_id, nombre } = authState;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
   const [crear, setCrear] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [alertType, setAlertType] = useState(undefined);
@@ -44,8 +44,9 @@ function TicketeraView() {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const handlePage = (newPage) => setPage(newPage);
+  const [logID, setLogID] = useState(null);
 
-  const [ticket, setTicket] = useState(null);
+  const [titleOptions, setTitleOptions] = useState([]);
 
   const [form, setForm] = useState({
     file: null,
@@ -55,6 +56,106 @@ function TicketeraView() {
     prioridad: 1,
     userID: "",
   });
+
+  const wsp_soporte = () => (
+    <Box
+      sx={{
+        position: "fixed",
+        width: "55px",
+        height: "55px",
+        lineHeight: "55px",
+        bottom: "30px",
+        right: "30px",
+        background: "#25d366",
+        color: "#fff",
+        borderRadius: "50px",
+        zIndex: "1",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+        textDecoration: "none",
+        transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+        "&:hover": {
+          transform: "translateY(-10px)",
+          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+        },
+      }}
+      component="a"
+      href={`https://api.whatsapp.com/send?phone=56950056126&text=Hola, mi nombre es ${nombre} necesito ayuda con un Ticket.`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <WhatsAppIcon />
+    </Box>
+  );
+
+  const setTituloData = () => {
+    if (form.ticketcategoriaID && form.ticketcategoriaID != "") {
+      switch (form.ticketcategoriaID) {
+        case 1:
+          const transformedOptions = [
+            {
+              value: "OT SIN GENERAR",
+              label: "OT SIN GENERAR",
+            },
+            {
+              value: "REPORTE NO ACTUALIZADO",
+              label: "REPORTE NO ACTUALIZADO",
+            },
+            {
+              value: "SIN ACCESO A PLATAFORMA",
+              label: "SIN ACCESO A PLATAFORMA",
+            },
+            {
+              value: "TOTEM FUERA DE SERVICIO",
+              label: "TOTEM FUERA DE SERVICIO",
+            },
+            {
+              value: "OTROS",
+              label: "OTROS",
+            },
+          ];
+          setTitleOptions(transformedOptions);
+          break;
+
+        case 2:
+          const transformedOptions2 = [
+            { value: "ACCESO A REPORTE", label: "ACCESO A REPORTE" },
+            { value: "CREACION DE PERMISOS", label: "CREACION DE PERMISOS" },
+            { value: "CREACION DE USUARIO", label: "CREACION DE USUARIO" },
+            {
+              value: "OTROS",
+              label: "OTROS",
+            },
+          ];
+          setTitleOptions(transformedOptions2);
+          break;
+
+        case 3:
+          const transformedOptions3 = [
+            {
+              value: "AUTOMATIZACION DE PROCESO",
+              label: "AUTOMATIZACION DE PROCESO",
+            },
+            { value: "CREACION DE MODULO", label: "CREACION DE MODULO" },
+            { value: "DESARROLLO DE REPORTE", label: "DESARROLLO DE REPORTE" },
+            {
+              value: "OTROS",
+              label: "OTROS",
+            },
+          ];
+          setTitleOptions(transformedOptions3);
+          break;
+
+        default:
+          console.log("ticketcategoriaID no reconocida");
+          break;
+      }
+    } else {
+      console.log("No hay submotivos disponible");
+    }
+  };
 
   const extractDate = (gmtString) => {
     const date = new Date(gmtString);
@@ -76,19 +177,18 @@ function TicketeraView() {
     setOpen(false);
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file && !file.type.startsWith("image/")) {
-      setMessage("Solo se permiten archivos de imagen.");
-      setAlertType("error");
-      setOpen(true);
-      setForm({ ...form, file: null });
-      e.target.value = null; // limpia el input
-      return;
+    if (file) {
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowedTypes.includes(file.type)) {
+        setMessage("Solo se permiten archivos JPG, JPEG y PNG.");
+        setAlertType("error");
+        setOpen(true);
+        setForm({ ...form, file: null });
+        e.target.value = null; // limpia el input
+        return;
+      }
     }
     setForm({
       ...form,
@@ -117,6 +217,7 @@ function TicketeraView() {
       prioridad: 1, // Reiniciar prioridad a valor por defecto
       userID: user_id,
     });
+    setTitleOptions([]); // Clear title options when form is cleared
   };
 
   const handleSubmit = async (e) => {
@@ -137,6 +238,7 @@ function TicketeraView() {
       var response = await createTicket(formData, token);
       setAlertType("success");
       setMessage(response.message || "Ticket creado exitosamente");
+      setLogID(response.logID);
       clearForm();
       setOpen(true);
     } catch (error) {
@@ -228,20 +330,24 @@ function TicketeraView() {
         </Box>
         <Box sx={{ mb: 2, width: "100%" }}>
           <InputLabel id="titulo-input-label">TÍTULO</InputLabel>
-          <TextField
-            type="text"
+          <Select
             variant="standard"
             required
-            fullWidth
-            sx={{
-              mb: 2,
-              width: "50%",
-              backgroundColor: "white",
-            }}
-            placeholder="Ingrese el título del ticket"
+            labelId="titulo-input-label"
+            id="titulo-select"
+            label="TITULO"
+            name="titulo"
+            value={form.titulo || ""}
             onChange={(e) => setForm({ ...form, titulo: e.target.value })}
-            inputProps={{ maxLength: 99 }}
-          />
+            sx={{ mb: 2, mt: 1, width: "50%", backgroundColor: "white" }}
+            disabled={!form.ticketcategoriaID || titleOptions.length === 0}
+          >
+            {titleOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
         </Box>
         <Box sx={{ mb: 2, width: "100%" }}>
           <InputLabel id="archivo-input-label">ARCHIVO</InputLabel>
@@ -252,7 +358,7 @@ function TicketeraView() {
             size="large"
             sx={{ mb: 2, width: "50%", backgroundColor: "white" }}
             onChange={handleFileChange}
-            inputProps={{ accept: "image/*" }}
+            inputProps={{ accept: ".jpg,.jpeg,.png,image/jpeg,image/png" }}
           />
         </Box>
         <Box sx={{ mb: 2, width: "100%" }}>
@@ -327,58 +433,6 @@ function TicketeraView() {
     </Box>
   );
 
-  const modalComentario = () => (
-    <Modal
-      open={openModal}
-      onClose={handleCloseModal}
-      aria-labelledby="modal-title"
-      aria-describedby="modal-description"
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Box
-        sx={{
-          width: "90%",
-          maxWidth: "600px",
-          bgcolor: "background.paper",
-          boxShadow: 24,
-          p: 4,
-          borderRadius: "8px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Box>
-          <Typography
-            id="modal-icon"
-            sx={{ color: "#0b2f6d", fontWeight: "bold" }}
-          >
-            <WarningAmberIcon />
-          </Typography>
-        </Box>
-        <Divider sx={{ width: "100%", mb: 2 }} />
-        <Typography
-          id="modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ mb: 2, color: "#0b2f6d", fontWeight: "bold" }}
-        >
-          COMENTARIO
-        </Typography>
-        <Typography id="modal-description" sx={{ mb: 2 }}>
-          {ticket.comentario
-            ? ticket.comentario
-            : "No hay comentarios disponibles."}
-        </Typography>
-      </Box>
-    </Modal>
-  );
-
   const tableView = () => (
     <Box
       sx={{
@@ -388,6 +442,7 @@ function TicketeraView() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        minHeight: "90vh",
       }}
     >
       <Box
@@ -537,6 +592,21 @@ function TicketeraView() {
     </>
   );
 
+  const sendTicketInfoToUser = async () => {
+    try {
+      await sendTicketInfo(logID, token);
+      setLogID(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (logID && logID != null) {
+      sendTicketInfoToUser();
+    }
+  }, [logID]);
+
   useEffect(() => {
     fetchTickets();
   }, [page]);
@@ -548,9 +618,14 @@ function TicketeraView() {
   useEffect(() => {
     setForm((prevForm) => ({
       ...prevForm,
-      userID: user_id, // Asignar el user_id al formulario
+      userID: user_id,
     }));
   }, [user_id]);
+
+  useEffect(() => {
+    setTituloData();
+    setForm((prevForm) => ({ ...prevForm, titulo: "" }));
+  }, [form.ticketcategoriaID]);
 
   return (
     <Box
@@ -564,6 +639,7 @@ function TicketeraView() {
         minHeight: "90vh",
       }}
     >
+      {wsp_soporte()}
       {open && (
         <Alert
           onClose={handleClose}
@@ -573,8 +649,6 @@ function TicketeraView() {
           {message}
         </Alert>
       )}
-
-      {openModal && modalComentario()}
 
       {!crear && tableView()}
 

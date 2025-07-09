@@ -65,7 +65,7 @@ function AllAgendamientoViewer() {
   const downloadExcel = () => (
     <Box
       sx={{
-        width: "80%",
+        width: "100%",
         mt: 2,
         display: "flex",
         justifyContent: "start",
@@ -309,7 +309,7 @@ function AllAgendamientoViewer() {
       )}
       <Box
         sx={{
-          width: { lg: "80%", md: "100%", xs: "100%" },
+          width: { lg: "100%", md: "100%", xs: "100%" },
           overflow: "hidden",
           mt: 3,
         }}
@@ -332,7 +332,7 @@ function AllAgendamientoViewer() {
 
       <Card
         sx={{
-          width: { lg: "80%", md: "100%", xs: "100%" },
+          width: { lg: "100%", md: "100%", xs: "100%" },
           borderRadius: "0px",
           boxShadow: 5,
           marginTop: 2,
@@ -364,7 +364,7 @@ function AllAgendamientoViewer() {
 
       <Box
         sx={{
-          width: "80%",
+          width: "100%",
           mt: 2,
           background: "#fff",
           boxShadow: 2,
@@ -473,7 +473,7 @@ function AllAgendamientoViewer() {
       </Box>
 
       {downloadExcel()}
-      <Box sx={{ width: "80%", mt: 2, background: "#fff", boxShadow: 2 }}>
+      <Box sx={{ width: "100%", mt: 2, background: "#fff", boxShadow: 2 }}>
         {isLoading ? (
           <Skeleton
             variant="rectangular"

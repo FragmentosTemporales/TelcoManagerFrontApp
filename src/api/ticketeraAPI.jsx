@@ -89,3 +89,18 @@ export const getTicketInfo = async (logID, token) => {
     throw error.response.data.error;
   }
 };
+
+export const sendTicketInfo = async (logID, token) => {
+  try {
+    const url = `${baseUrl}/send-ticket-info/${logID}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};

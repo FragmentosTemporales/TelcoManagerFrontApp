@@ -156,6 +156,7 @@ function Home() {
         alignItems: "center",
         flexDirection: "column",
         minHeight: "90vh",
+        pb: 2,
         paddingTop: { xs: 10, md: 8 },
         mt: 2,
         backgroundColor: "#f0f0f0",
@@ -190,7 +191,7 @@ function Home() {
                     "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
                   "&:hover": {
                     transform: "translateY(-10px)",
-                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)"
                   },
                 }}
                 component={Link}

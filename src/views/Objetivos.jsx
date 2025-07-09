@@ -100,6 +100,26 @@ function ObjetivosView() {
       value: "2025-07-01",
       label: "Julio 2025",
     },
+    {
+      value: "2025-08-01",
+      label: "Agosto 2025",
+    },
+    {
+      value: "2025-09-01",
+      label: "Septiembre 2025",
+    },
+    {
+      value: "2025-10-01",
+      label: "Octubre 2025",
+    },
+    {
+      value: "2025-11-01",
+      label: "Noviembre 2025",
+    },
+    {
+      value: "2025-12-01",
+      label: "Diciembre 2025",
+    },
   ];
 
   const [origenes, setOrigenes] = useState([]);

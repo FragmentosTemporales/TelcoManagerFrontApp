@@ -23,6 +23,8 @@ import {
   motivoData20,
   motivoData22,
   motivoData24,
+  motivoData26,
+  motivoData27
 } from "../data/submotivoData";
 import areaData from "../data/areaData";
 import {
@@ -113,6 +115,22 @@ function FormSolicitud() {
             label: item.descri,
           }));
           setSmOptions(transformedOptions6);
+          break;
+
+        case "26":
+          const transformedOptions7 = motivoData26.map((item) => ({
+            value: item.submotivoID,
+            label: item.descri,
+          }));
+          setSmOptions(transformedOptions7);
+          break;
+
+        case "27":
+          const transformedOptions8 = motivoData27.map((item) => ({
+            value: item.submotivoID,
+            label: item.descri,
+          }));
+          setSmOptions(transformedOptions8);
           break;
 
         default:
@@ -334,7 +352,6 @@ function FormSolicitud() {
           </Typography>
           <form onSubmit={handleSubmit} style={{ width: "80%" }}>
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="area-select-label">Area</InputLabel>
               <Autocomplete
                 options={areaOptions}
                 variant="standard"
@@ -357,9 +374,6 @@ function FormSolicitud() {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="persona-select-label">
-                Persona a amonestar
-              </InputLabel>
               <Autocomplete
                 options={personaOptions}
                 variant="standard"
@@ -383,7 +397,6 @@ function FormSolicitud() {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="motivo-select-label">Motivo Asociado</InputLabel>
               <Autocomplete
                 options={motivoOptions}
                 getOptionLabel={(option) => option.label}
@@ -407,9 +420,6 @@ function FormSolicitud() {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="motivo-select-label">
-                Submotivo Asociado
-              </InputLabel>
               <Autocomplete
                 options={smOptions}
                 variant="standard"

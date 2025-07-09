@@ -53,6 +53,12 @@ const prevencionData = [
     hab: "1",
     areaID: "1",
   },
+  {
+    motivoID: "27",
+    descri: "INCUMPLIMIENTO PROGRAMACION",
+    hab: "1",
+    areaID: "1",
+  },
 ];
 export { prevencionData };
 
@@ -106,6 +112,18 @@ const operacionesData = [
   {
     motivoID: "16",
     descri: "TIEMPO INADECUADO PARA LA EJECUCION DE LA TAREA",
+    hab: "1",
+    areaID: "3",
+  },
+  {
+    motivoID: "25",
+    descri: "ENTREGA INFORMACION FALSA",
+    hab: "1",
+    areaID: "3",
+  },
+  {
+    motivoID: "26",
+    descri: "FALTA A LA NORMA DE TRABAJO",
     hab: "1",
     areaID: "3",
   },

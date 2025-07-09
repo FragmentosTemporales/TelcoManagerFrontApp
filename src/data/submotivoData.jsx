@@ -71,3 +71,21 @@ const motivoData24 = [
   }
 ];
 export { motivoData24 };
+
+const motivoData26 = [
+  {
+    submotivoID: "11",
+    descri: "GESTION INCORRECTA DE OT",
+    motivoID: "26",
+  }
+];
+export { motivoData26 };
+
+const motivoData27 = [
+  {
+    submotivoID: "12",
+    descri: "INASISTENCIA EXAMEN OCUPACIONAL",
+    motivoID: "27",
+  }
+];
+export { motivoData27 };

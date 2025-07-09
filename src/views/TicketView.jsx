@@ -40,6 +40,7 @@ function TicketViewer() {
     { value: 2, label: "EN GESTION" },
     { value: 3, label: "FINALIZADO" },
     { value: 4, label: "NO APLICA" },
+    { value: 5, label: "DERIVADO A TI" },
   ];
 
   const fetchFile = async (filePath) => {

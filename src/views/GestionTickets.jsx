@@ -27,7 +27,7 @@ function GestorTicketera() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alertType, setAlertType] = useState(undefined);
   const [data, setData] = useState([]);
-  const optionSQL = ["SOLICITADO", "EN GESTION", "FINALIZADO", "NO APLICA"];
+  const optionSQL = ["SOLICITADO", "EN GESTION", "FINALIZADO", "NO APLICA", "DERIVADO A TI"];
   const [form, setForm] = useState({ estado: "SOLICITADO" });
 
 
