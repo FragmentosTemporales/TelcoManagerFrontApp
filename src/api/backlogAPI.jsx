@@ -16,20 +16,6 @@ export const getAllBacklog = async (token, page, payload) => {
   }
 };
 
-export const CreateBacklogPriority = async (token, payload) => {
-  try {
-    const url = `${baseUrl}/set-backlog-priority`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response.data.error;
-  }
-};
-
 export const getBacklog = async (payload, token) => {
   try {
     const url = `${baseUrl}/get-backlog`;
@@ -61,35 +47,6 @@ export const createBacklogEstado = async (payload, token) => {
 export const getBacklogEstado = async (token, orden) => {
   try {
     const url = `${baseUrl}/get-backlog-estado/${orden}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response.data.error;
-  }
-};
-
-export const getBacklogConsolidadoDiario = async (token, payload) => {
-  try {
-    const url = `${baseUrl}/get-despacho-consolidado-data-diario`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response.data.error;
-  }
-};
-
-export const getDespachadoresData = async (token) => {
-  try {
-    const url = `${baseUrl}/get-despachadores`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,

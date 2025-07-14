@@ -5,7 +5,8 @@ const state = {
   is_load: false,
   message: null,
   data: null,
-  pages: null
+  pages: null,
+  total: null
 };
 
 export const solicitudSlice = createSlice({
@@ -21,6 +22,7 @@ export const solicitudSlice = createSlice({
       const payload = action.payload;
       state.data = payload.data
       state.pages = payload.pages
+      state.total = payload.total
       state.message = payload.message;
       state.is_loading = false,
       state.is_load = true;

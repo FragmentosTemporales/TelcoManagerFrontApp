@@ -30,8 +30,6 @@ import {
 import { useSelector } from "react-redux";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
-import AgendamientoCharts from "../components/agendamientoCharts";
-import BarChartIcon from "@mui/icons-material/BarChart";
 
 function AllAgendamientoViewer() {
   const authState = useSelector((state) => state.auth);
@@ -45,12 +43,6 @@ function AllAgendamientoViewer() {
   const [page, setPage] = useState(1);
   const handlePage = (newPage) => setPage(newPage);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showStats, setShowStats] = useState(false);
-
-
-  const toggleStats = () => {
-    setShowStats((prev) => !prev);
-  };
 
   const getExcel = async () => {
     setIsSubmitting(true);
@@ -329,38 +321,6 @@ function AllAgendamientoViewer() {
           </Button>
         </Link>
       </Box>
-
-      <Card
-        sx={{
-          width: { lg: "100%", md: "100%", xs: "100%" },
-          borderRadius: "0px",
-          boxShadow: 5,
-          marginTop: 2,
-        }}
-      >
-        <CardHeader
-          title={<Typography fontWeight="bold">Estadística</Typography>}
-          avatar={<BarChartIcon />}
-          action={
-            <Button
-              onClick={toggleStats}
-              sx={{ color: "white", minWidth: "auto" }}
-            >
-              {showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </Button>
-          }
-          sx={{
-            background: "#0b2f6d",
-            color: "white",
-            textAlign: "center",
-          }}
-        />
-        {showStats && (
-          <CardContent sx={{ display: "grid" }}>
-            <AgendamientoCharts />
-          </CardContent>
-        )}
-      </Card>
 
       <Box
         sx={{

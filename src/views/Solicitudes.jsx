@@ -13,7 +13,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,  CardContent,
+  Typography,
+  CardContent,
   TextField,
 } from "@mui/material";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
@@ -34,7 +35,7 @@ function Solicitudes() {
   const authState = useSelector((state) => state.auth);
   const solicitudState = useSelector((state) => state.solicitud);
   const { token } = authState;
-  const { message, data, is_loading, is_load, pages } = solicitudState;
+  const { message, data, is_loading, is_load, pages, total } = solicitudState;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
@@ -50,6 +51,7 @@ function Solicitudes() {
       dispatch(onLoading());
       setIsSubmitting(true);
       const res = await getSolicitudesFiltradas(token, toFilter, page);
+      console.log("SOLICITUDES : ", res);
       dispatch(onLoad(res));
       setIsSubmitting(false);
     } catch (error) {
@@ -274,8 +276,16 @@ function Solicitudes() {
           "AMONESTADO",
           "ESTADO",
         ].map((header) => (
-          <TableCell key={header} align="center" sx={{ fontWeight: "bold", backgroundColor: "#0b2f6d", color: "white" }}>
-            <Typography >{header}</Typography>
+          <TableCell
+            key={header}
+            align="center"
+            sx={{
+              fontWeight: "bold",
+              backgroundColor: "#0b2f6d",
+              color: "white",
+            }}
+          >
+            <Typography>{header}</Typography>
           </TableCell>
         ))}
       </TableRow>
@@ -331,8 +341,34 @@ function Solicitudes() {
   const setTableCard = () => (
     <TableContainer
       component={Paper}
-      sx={{ width: "90%", height: "100%", overflow: "auto", marginTop: 2 }}
+      sx={{ width: "90%", height: "100%", overflow: "auto", marginTop: 2, borderRadius: "0px" }}
     >
+      <Box sx={{ display: "flex", justifyContent: "space-between", p: 1, backgroundColor: "#0b2f6d" }}>
+        <Typography
+          sx={{
+            backgroundColor: "#0b2f6d",
+            color: "white",
+            padding: 1,
+            fontStyle: "italic",
+            fontSize: "12px",
+          }}
+          align="left"
+        >
+          Total de Solicitudes: {total}
+        </Typography>
+        <Typography
+          sx={{
+            backgroundColor: "#0b2f6d",
+            color: "white",
+            padding: 1,
+            fontStyle: "italic",
+            fontSize: "12px",
+          }}
+          align="right"
+        >
+          Total de Páginas: {pages}
+        </Typography>
+      </Box>
       <Table stickyHeader>
         {setTableHead()}
         {setTableBody()}
@@ -351,6 +387,7 @@ function Solicitudes() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        minHeight: "90vh",
         height: "100%",
         width: "100%",
         overflow: "auto",
@@ -384,15 +421,10 @@ function Solicitudes() {
             mt: 2,
             display: "flex",
             justifyContent: "center",
-            height: "70vh",
+            height: "30vh",
           }}
         >
-          <Skeleton
-            variant="rounded"
-            width={"100%"}
-            height={"100%"}
-            sx={{ p: 3, m: 3 }}
-          />
+          <Skeleton sx={{ width: "90%", height: "100%" }} />
         </Box>
       ) : (
         <>

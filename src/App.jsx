@@ -37,7 +37,6 @@ import AllAgendamientoViewer from "./views/AllAgendamientosView";
 import AmonesatacionesViewer from "./views/AmonestacionesUserView";
 import CreateAuditoria from "./views/CreateAuditoria";
 import AuditoriasView from "./views/AllAuditoriasView";
-import AllBacklogView from "./views/AllBacklogView";
 import OTFinder from "./views/OTFinder";
 import ErrorHandler from "./utils/404NotFound";
 import ProyectosOnNetView from "./views/ProyectosConsolidadosView";
@@ -47,6 +46,7 @@ import CreateReparacionView from "./views/CreateReparacion";
 import TicketeraView from "./views/CreateTicket";
 import GestorTicketera from "./views/GestionTickets";
 import TicketViewer from "./views/TicketView";
+import CreateMigracionesProactivas from "./views/CreateMigracionesProactivas";
 
 function App() {
   return (
@@ -86,7 +86,6 @@ function App() {
           <Route path="/auditorias" element={<CreateAuditoria />} />
           <Route path="/all_agendamientos" element={<AllAgendamientoViewer />} />
           <Route path="/all_auditorias" element={<AuditoriasView />} />
-          <Route path="/all_backlogs" element={<AllBacklogView />} />
           <Route path="/orden_info" element={<OTFinder />} />
           <Route path="/proyectos-onnet" element={<ProyectosOnNetView />} />
           <Route path="/consolidado/:id" element={<ProyectoConsolidadoView />} />
@@ -95,6 +94,7 @@ function App() {
           <Route path="/modulo:ticketera" element={<TicketeraView />} />
           <Route path="/modulo:gestion-ticketera" element={<GestorTicketera />} />
           <Route path="/ticketviewer/:logID" element={<TicketViewer />} />
+          <Route path="/modulo:create-migracion-proactiva" element={<CreateMigracionesProactivas />} />
           <Route
             path="/componente-asignado/:componenteID"
             element={<ComponenteAsignadoView />}

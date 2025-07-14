@@ -147,3 +147,50 @@ export const getDespachosSemenalExcel = async (token) => {
     throw error.response?.data?.error || "Error al descargar el archivo.";
   }
 };
+
+export const createMigracion = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/despacho/create-migracion-proactiva`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error)
+    throw error.response.data.error;
+  }
+};
+
+export const getDataMigracionesProactivas = async (token, page) => {
+  try {
+    const url = `${baseUrl}/despacho/get-migraciones-proactivas/${page}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getClienteMigracion = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/despacho/get-migracion-proactiva`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error)
+    throw error.response.data.error;
+  }
+};

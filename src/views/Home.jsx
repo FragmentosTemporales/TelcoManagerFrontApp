@@ -140,6 +140,12 @@ function Home() {
       link: "/modulo:ticketera",
       moduloID: 25,
     },
+    {
+      head: "Crear Migraciones Proactivas",
+      title: "Crear Migraciones Proactivas ",
+      link: "/modulo:create-migracion-proactiva",
+      moduloID: 27,
+    },
   ];
 
   const accesos = secciones.filter((seccion) =>
