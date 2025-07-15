@@ -179,6 +179,51 @@ export const getDataMigracionesProactivas = async (token, page) => {
   }
 };
 
+export const getDataMigracionesPendientes = async (token) => {
+  try {
+    const url = `${baseUrl}/despacho/get-migraciones-pendientes`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getDataMigracionesComunas = async (token) => {
+  try {
+    const url = `${baseUrl}/despacho/get-migraciones-comunas`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const getMigracionUnica = async (id, token) => {
+  try {
+    const url = `${baseUrl}/despacho/get-migracion/${id}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const getClienteMigracion = async (payload, token) => {
   try {
     const url = `${baseUrl}/despacho/get-migracion-proactiva`;
