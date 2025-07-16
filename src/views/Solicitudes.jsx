@@ -135,11 +135,12 @@ function Solicitudes() {
         width: "90%",
         overflow: "hidden",
         backgroundColor: "white",
-        boxShadow: 2,
         textAlign: "center",
         mt: 2,
         paddingTop: 3,
         paddingBottom: 3,
+        border: "2px solid #dfdeda",
+        borderRadius: 2,
       }}
     >
       <form>
@@ -195,7 +196,7 @@ function Solicitudes() {
               fontWeight: "bold",
               minWidth: "200px",
               height: "40px",
-              borderRadius: "0px",
+              borderRadius: 2,
             }}
             disabled={isSubmitting}
           >
@@ -210,7 +211,7 @@ function Solicitudes() {
               background: "#0b2f6d",
               minWidth: "200px",
               height: "40px",
-              borderRadius: "0px",
+              borderRadius: 2,
             }}
           >
             LIMPIAR FILTROS
@@ -240,7 +241,7 @@ function Solicitudes() {
             fontWeight: "bold",
             display: "flex",
             justifyContent: "space-around",
-            borderRadius: "0px",
+            borderRadius: 2,
           }}
         >
           <AddCircleOutlineIcon /> Crear Nueva
@@ -255,7 +256,7 @@ function Solicitudes() {
           fontWeight: "bold",
           display: "flex",
           justifyContent: "space-around",
-          borderRadius: "0px",
+          borderRadius: 2,
           backgroundColor: "#0b2f6d",
           color: "white",
         }}
@@ -341,7 +342,7 @@ function Solicitudes() {
   const setTableCard = () => (
     <TableContainer
       component={Paper}
-      sx={{ width: "90%", height: "100%", overflow: "auto", marginTop: 2, borderRadius: "0px" }}
+      sx={{ width: "90%", height: "100%", overflow: "auto", marginTop: 2, borderRadius: 2 }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", p: 1, backgroundColor: "#0b2f6d" }}>
         <Typography

@@ -83,7 +83,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -103,7 +103,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ borderRadius: "20px" }}
+              sx={{ borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -126,7 +126,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -146,7 +146,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ borderRadius: "20px" }}
+              sx={{ borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -169,7 +169,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -189,7 +189,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ borderRadius: "20px" }}
+              sx={{ borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -212,7 +212,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -232,7 +232,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ borderRadius: "20px" }}
+              sx={{ borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -255,7 +255,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -275,7 +275,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ width: "200px", borderRadius: "20px" }}
+              sx={{ width: "200px", borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -298,7 +298,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -318,7 +318,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ width: "200px", borderRadius: "20px" }}
+              sx={{ width: "200px", borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -341,7 +341,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -361,7 +361,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ width: "200px", borderRadius: "20px" }}
+              sx={{ width: "200px", borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -384,7 +384,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -404,7 +404,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ width: "200px", borderRadius: "20px" }}
+              sx={{ width: "200px", borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -427,7 +427,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -447,7 +447,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ width: "200px", borderRadius: "20px" }}
+              sx={{ width: "200px", borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -470,7 +470,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -490,7 +490,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ width: "200px", borderRadius: "20px" }}
+              sx={{ width: "200px", borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -513,7 +513,7 @@ function Solicitud() {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            borderRadius: "20px",
+            borderRadius: 2,
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -533,7 +533,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ borderRadius: "20px" }}
+              sx={{ borderRadius: 2 }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -555,7 +555,7 @@ function Solicitud() {
           setOpenModalFinalizar(true);
         }}
         disabled={isSubmitting}
-        sx={{ borderRadius: "20px" }}
+        sx={{ borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Finalizar Amonestación"}
       </Button>
@@ -571,7 +571,7 @@ function Solicitud() {
           setEstadoID(9);
           setOpenModalRechazar(true);
         }}
-        sx={{ borderRadius: "20px" }}
+        sx={{ borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Anular Amonestación"}
       </Button>
@@ -587,7 +587,7 @@ function Solicitud() {
           setEstadoID(3);
           setOpenModalLegal(true);
         }}
-        sx={{ borderRadius: "20px" }}
+        sx={{ borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Requiere Legal"}
       </Button>
@@ -603,7 +603,7 @@ function Solicitud() {
           setEstadoID(15);
           setOpenModalDesvinculado(true);
         }}
-        sx={{ borderRadius: "20px" }}
+        sx={{ borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Trabajador Desvinculado"}
       </Button>
@@ -619,7 +619,7 @@ function Solicitud() {
           setEstadoID(4);
           setOpenModalEmpleador(true);
         }}
-        sx={{ borderRadius: "20px" }}
+        sx={{ borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Firma Empleador"}
       </Button>
@@ -635,7 +635,7 @@ function Solicitud() {
           setEstadoID(7);
           setOpenModalTrabajador(true);
         }}
-        sx={{ width: "200px", borderRadius: "20px" }}
+        sx={{ width: "200px", borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Firma Trabajador"}
       </Button>
@@ -651,7 +651,7 @@ function Solicitud() {
           setEstadoID(5);
           setOpenModalLicencia(true);
         }}
-        sx={{ width: "200px", borderRadius: "20px" }}
+        sx={{ width: "200px", borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Licencia Médica"}
       </Button>
@@ -667,7 +667,7 @@ function Solicitud() {
           setEstadoID(6);
           setOpenModalVacaciones(true);
         }}
-        sx={{ width: "200px", borderRadius: "20px" }}
+        sx={{ width: "200px", borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Vacaciones"}
       </Button>
@@ -683,7 +683,7 @@ function Solicitud() {
           setEstadoID(13);
           setOpenModalCorreo(true);
         }}
-        sx={{ width: "200px", borderRadius: "20px" }}
+        sx={{ width: "200px", borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Enviada por Correo"}
       </Button>
@@ -699,7 +699,7 @@ function Solicitud() {
           setEstadoID(10);
           setOpenModalFirmada(true);
         }}
-        sx={{ width: "200px", borderRadius: "20px" }}
+        sx={{ width: "200px", borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Firmada"}
       </Button>
@@ -715,7 +715,7 @@ function Solicitud() {
           setEstadoID(12);
           setOpenModalNoFirmada(true);
         }}
-        sx={{ width: "200px", borderRadius: "20px" }}
+        sx={{ width: "200px", borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "No Firmada"}
       </Button>
@@ -727,19 +727,18 @@ function Solicitud() {
   const componenteAnulacion = () => (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: "800px",
+        width: "80%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "20px",
+        borderRadius: 2,
         mt: 3,
         mx: "auto",
       }}
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+          <Typography>
             ACCIONES
           </Typography>
         }
@@ -758,19 +757,18 @@ function Solicitud() {
   const componenteRequiereLegal = () => (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: "800px",
+        width: "80%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "20px",
+        borderRadius: 2,
         mt: 3,
         mx: "auto",
       }}
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+          <Typography>
             ACCIONES
           </Typography>
         }
@@ -791,19 +789,18 @@ function Solicitud() {
   const componenteDesvinculado = () => (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: "800px",
+        width: "80%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "20px",
+        borderRadius: 2,
         mt: 3,
         mx: "auto",
       }}
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+          <Typography>
             ACCIONES
           </Typography>
         }
@@ -822,19 +819,18 @@ function Solicitud() {
   const componenteRequiereEmpleador = () => (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: "800px",
+        width: "80%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "20px",
+        borderRadius: 2,
         mt: 3,
         mx: "auto",
       }}
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+          <Typography>
             ACCIONES
           </Typography>
         }
@@ -853,19 +849,18 @@ function Solicitud() {
   const componenteOperativo = () => (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: "800px",
+        width: "80%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "20px",
+        borderRadius: 2,
         mt: 3,
         mx: "auto",
       }}
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+          <Typography>
             ACCIONES
           </Typography>
         }
@@ -886,19 +881,18 @@ function Solicitud() {
   const componenteLicencia = () => (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: "800px",
+        width: "80%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "20px",
+        borderRadius: 2,
         mt: 3,
         mx: "auto",
       }}
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+          <Typography>
             ACCIONES
           </Typography>
         }
@@ -918,19 +912,18 @@ function Solicitud() {
   const componenteVacaciones = () => (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: "800px",
+        width: "80%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "20px",
+        borderRadius: 2,
         mt: 3,
         mx: "auto",
       }}
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+          <Typography>
             ACCIONES
           </Typography>
         }
@@ -950,19 +943,18 @@ function Solicitud() {
   const componenteNoFirmada = () => (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: "800px",
+        width: "80%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "20px",
+        borderRadius: 2,
         mt: 3,
         mx: "auto",
       }}
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+          <Typography>
             ACCIONES
           </Typography>
         }
@@ -981,19 +973,18 @@ function Solicitud() {
   const componenteFirmada = () => (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: "800px",
+        width: "80%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "20px",
+        borderRadius: 2,
         mt: 3,
         mx: "auto",
       }}
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+          <Typography>
             ACCIONES
           </Typography>
         }
@@ -1013,19 +1004,18 @@ function Solicitud() {
   const componenteFinalizada = () => (
     <Card
       sx={{
-        width: "100%",
-        maxWidth: "800px",
+        width: "80%",
         overflow: "hidden",
         backgroundColor: "#f5f5f5",
         boxShadow: 5,
-        borderRadius: "20px",
+        borderRadius: 2,
         mt: 3,
         mx: "auto",
       }}
     >
       <CardHeader
         title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+          <Typography>
             ACCIONES
           </Typography>
         }
@@ -1127,6 +1117,8 @@ function Solicitud() {
         marginTop: 2,
         backgroundColor: "white",
         boxShadow: 2,
+        border: "1px solid #dfdeda",
+        borderRadius: 2,
       }}
     >
       <TableContainer>
@@ -1134,7 +1126,7 @@ function Solicitud() {
           <TableHead>
             <TableRow>
               <TableCell
-                sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                sx={{ background: "#0b2f6d", fontWeight: "bold", borderTopLeftRadius: 5 }}
                 align="center"
               >
                 <Typography color={"white"}>FECHA</Typography>
@@ -1146,7 +1138,7 @@ function Solicitud() {
                 <Typography color={"white"}>ESTADO</Typography>
               </TableCell>
               <TableCell
-                sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                sx={{ background: "#0b2f6d", fontWeight: "bold", borderTopRightRadius: 5 }}
                 align="center"
               >
                 <Typography color={"white"}>GESTIONADO POR</Typography>
@@ -1215,6 +1207,8 @@ function Solicitud() {
         marginTop: 2,
         backgroundColor: "white",
         boxShadow: 2,
+        border: "1px solid #dfdeda",
+        borderRadius: 2,
       }}
     >
       {dataForm !== false && dataForm !== null ? (
@@ -1241,7 +1235,7 @@ function Solicitud() {
               sx={{
                 background: "#0b2f6d",
                 width: "300px",
-                borderRadius: "20px",
+                borderRadius: 2,
               }}
               onClick={() => {
                 downloadInforme();
@@ -1256,7 +1250,7 @@ function Solicitud() {
               sx={{
                 background: "#0b2f6d",
                 width: "300px",
-                borderRadius: "20px",
+                borderRadius: 2,
               }}
             >
               Crear Formulario
@@ -1274,10 +1268,12 @@ function Solicitud() {
         marginTop: 2,
         backgroundColor: "white",
         boxShadow: 2,
+        borderRadius: 2,
+        border: "1px solid #dfdeda",
       }}
     >
       {[
-        { label: "Fecha Solicitud :", value: data.fechaSolicitud },
+        { label: "Fecha Solicitud :", value: extractDate(data.fechaSolicitud) },
         { label: "Folio :", value: data.folio },
         { label: "Solicitante :", value: data.solicitante },
         { label: "Rut Solicitante :", value: data.rutSolicitante },
@@ -1332,7 +1328,8 @@ function Solicitud() {
         alignItems: "center",
         justifyContent: "center",
         overflow: "auto",
-        padding: 8,
+        paddingTop: "80px",
+        paddingBottom: "20px",
         backgroundColor: "#f0f0f0",
       }}
     >
@@ -1384,6 +1381,7 @@ function Solicitud() {
         <Box
           sx={{
             width: "100%",
+            height: "90vh",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -1411,7 +1409,7 @@ function Solicitud() {
             <Link to="/modulo:solicitudes">
               <Button
                 variant="contained"
-                sx={{ background: "#0b2f6d", borderRadius: "0px" }}
+                sx={{ background: "#0b2f6d", borderRadius: 2 }}
               >
                 <Typography sx={{ color: "white" }}>
                   IR A SOLICITUDES
@@ -1431,7 +1429,7 @@ function Solicitud() {
           {setTableEstado()}
 
           {/* BOX PARA ANULAR AMONESTACIONES */}
-          <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             {(user_id == 4) &
             (dataGestiones[0].estado != "ANULADA" &&
               dataGestiones[0].estado != "FINALIZADA")
@@ -1440,7 +1438,7 @@ function Solicitud() {
           </Box>
 
           {/* BOX PARA EVALUACION LEGAL */}
-          <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
             (dataGestiones[0].estado == "ENVIADA A RRHH")
               ? componenteRequiereLegal()
@@ -1448,7 +1446,7 @@ function Solicitud() {
           </Box>
 
           {/* BOX PARA EVALUACION LEGAL */}
-          <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
             (dataGestiones[0].estado == "EVALUACION LEGAL")
               ? componenteRequiereEmpleador()
@@ -1456,7 +1454,7 @@ function Solicitud() {
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
-          <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
             (dataGestiones[0].estado == "PENDIENTE FIRMA EMPLEADOR")
               ? componenteOperativo()
@@ -1464,7 +1462,7 @@ function Solicitud() {
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
-          <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
             (dataGestiones[0].estado == "LICENCIA MEDICA")
               ? componenteLicencia()
@@ -1472,7 +1470,7 @@ function Solicitud() {
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
-          <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
             (dataGestiones[0].estado == "VACACIONES")
               ? componenteVacaciones()
@@ -1480,7 +1478,7 @@ function Solicitud() {
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE FIRMA */}
-          <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             {(user_id == validate) &
             (dataGestiones[0].estado == "PENDIENTE FIRMA TRABAJADOR")
               ? componenteFirmada()
@@ -1488,7 +1486,7 @@ function Solicitud() {
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE NO FIRMADA */}
-          <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
             (dataGestiones[0].estado == "NO FIRMADA")
               ? componenteNoFirmada()
@@ -1496,7 +1494,7 @@ function Solicitud() {
           </Box>
 
           {/* BOX PARA TRABAJADOR DESVINCULADO */}
-          <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             {area &&
             (area.areaID === 5) &
               (dataGestiones[0].estado != "TRABAJADOR DESVINCULADO")
@@ -1505,7 +1503,7 @@ function Solicitud() {
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO FINALIZADA */}
-          <Box sx={{ width: "100%", maxWidth: "800px", mx: "auto" }}>
+          <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
             (dataGestiones[0].estado == "FIRMADA")
               ? componenteFinalizada()

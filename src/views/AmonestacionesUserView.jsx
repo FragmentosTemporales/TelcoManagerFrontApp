@@ -260,6 +260,7 @@ function AmonesatacionesViewer() {
         paddingTop: 8,
         paddingBottom: "50px",
         backgroundColor: "#f0f0f0",
+        minHeight: "90vh",
       }}
     >
       {open && (

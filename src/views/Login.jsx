@@ -101,7 +101,8 @@ function Login() {
           paddingTop: "25px",
           paddingBottom: "40px",
           backgroundColor: "white",
-          boxShadow: "2",
+          border: "2px solid #dfdeda",
+          borderRadius: 2,
         }}
       >
         <form onSubmit={handleSubmit}>
@@ -114,7 +115,7 @@ function Login() {
               label="Correo"
               type="email"
               name="correo"
-              variant="outlined"
+              variant="standard"
               value={form.correo}
               onChange={handleChange}
               InputProps={{
@@ -135,7 +136,7 @@ function Login() {
               label="Clave"
               type="password"
               name="clave"
-              variant="outlined"
+              variant="standard"
               value={form.clave}
               onChange={handleChange}
               InputProps={{
@@ -170,7 +171,7 @@ function Login() {
               sx={{
                 background: "#0b2f6d",
                 width: "200px",
-                borderRadius: "0px",
+                borderRadius: 2,
               }}
             >
               {isSubmitting ? "Cargando..." : "Ingresar"}

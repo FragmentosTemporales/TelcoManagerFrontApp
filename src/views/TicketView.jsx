@@ -137,6 +137,7 @@ function TicketViewer() {
             marginTop: 2,
             justifyContent: "start",
             width: "95%",
+            color: "#0b2f6d",
           }}
         >
           DETALLES
@@ -442,7 +443,7 @@ function TicketViewer() {
               width: "200px",
               marginBottom: 2,
               backgroundColor: "#0b2f6d",
-              borderRadius: "0px",
+              borderRadius: 2,
               fontWeight: "bold",
             }}
           >
@@ -469,10 +470,11 @@ function TicketViewer() {
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
-            boxShadow: 2,
+            border: "2px solid #dfdeda",
+            borderRadius: 2,
           }}
         >
-          <Typography variant="h5" sx={{ marginBottom: 4 }}>
+          <Typography variant="h5" sx={{ marginBottom: 4, color: "#0b2f6d" }}>
             Cargando los recursos...
           </Typography>
           <CircularProgress />
@@ -487,7 +489,8 @@ function TicketViewer() {
             alignItems: "center",
             height: "100%",
             paddingBottom: 4,
-            boxShadow: 2,
+            borderRadius: 2,
+            border: "2px solid #dfdeda",
           }}
         >
           {TicketPreview()}
@@ -502,8 +505,9 @@ function TicketViewer() {
             justifyContent: "space-between",
             marginTop: 2,
             backgroundColor: "#fff",
-            boxShadow: 2,
             marginBottom: 4,
+            borderRadius: 2,
+            border: "2px solid #dfdeda",
           }}
         >
           <Box
@@ -523,6 +527,7 @@ function TicketViewer() {
                 marginTop: 2,
                 justifyContent: "start",
                 width: "95%",
+                color: "#0b2f6d",
               }}
             >
               GESTIONAR TICKET
@@ -589,7 +594,7 @@ function TicketViewer() {
                     color: "white",
                     fontWeight: "bold",
                     width: { lg: "40%", md: "90%", xs: "90%" },
-                    borderRadius: "0px",
+                    borderRadius: 2,
                   }}
                 >
                   {isSubmitting ? "Cargando..." : "ACTUALIZAR ESTADO"}

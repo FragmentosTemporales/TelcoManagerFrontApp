@@ -27,9 +27,14 @@ function GestorTicketera() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alertType, setAlertType] = useState(undefined);
   const [data, setData] = useState([]);
-  const optionSQL = ["SOLICITADO", "EN GESTION", "FINALIZADO", "NO APLICA", "DERIVADO A TI"];
+  const optionSQL = [
+    "SOLICITADO",
+    "EN GESTION",
+    "FINALIZADO",
+    "NO APLICA",
+    "DERIVADO A TI",
+  ];
   const [form, setForm] = useState({ estado: "SOLICITADO" });
-
 
   const extractDate = (gmtString) => {
     const date = new Date(gmtString);
@@ -84,6 +89,8 @@ function GestorTicketera() {
         pb: 2,
         boxShadow: 2,
         backgroundColor: "white",
+        borderRadius: 2,
+        border: "2px solid #dfdeda",
       }}
     >
       <Typography
@@ -133,7 +140,7 @@ function GestorTicketera() {
               color: "white",
               fontWeight: "bold",
               width: { lg: "30%", md: "50%", xs: "90%" },
-              borderRadius: "0px",
+              borderRadius: 2,
             }}
           >
             {isSubmitting ? "Cargando..." : "FILTRAR TICKETS"}
@@ -145,7 +152,14 @@ function GestorTicketera() {
 
   const tablaTickets = () => (
     <Box sx={{ width: "90%", mb: 2 }}>
-      <TableContainer sx={{ boxShadow: 2, backgroundColor: "white" }}>
+      <TableContainer
+        sx={{
+          boxShadow: 2,
+          backgroundColor: "white",
+          borderRadius: 2,
+          border: "2px solid #dfdeda",
+        }}
+      >
         <Table stickyHeader>
           <TableHead>
             <TableRow>

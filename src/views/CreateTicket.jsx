@@ -288,7 +288,8 @@ function TicketeraView() {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "white",
-        boxShadow: 2,
+        borderRadius: 2,
+        border: "2px solid #dfdeda",
       }}
     >
       <Typography
@@ -306,7 +307,7 @@ function TicketeraView() {
       </Typography>
       <Divider sx={{ width: "90%", mb: 2 }} />
       <form onSubmit={handleSubmit} style={{ width: "90%" }}>
-        <Box sx={{ mb: 2, width: "100%" }}>
+        <Box sx={{ mb: 1, width: "100%" }}>
           <InputLabel id="categoria-label">CATEGORÍA</InputLabel>
           <Select
             variant="standard"
@@ -328,7 +329,7 @@ function TicketeraView() {
             ))}
           </Select>
         </Box>
-        <Box sx={{ mb: 2, width: "100%" }}>
+        <Box sx={{ mb: 1, width: "100%" }}>
           <InputLabel id="titulo-input-label">TÍTULO</InputLabel>
           <Select
             variant="standard"
@@ -349,7 +350,7 @@ function TicketeraView() {
             ))}
           </Select>
         </Box>
-        <Box sx={{ mb: 2, width: "100%" }}>
+        <Box sx={{ mb: 1, width: "100%" }}>
           <InputLabel id="archivo-input-label">ARCHIVO</InputLabel>
           <TextField
             type="file"
@@ -361,7 +362,7 @@ function TicketeraView() {
             inputProps={{ accept: ".jpg,.jpeg,.png,image/jpeg,image/png" }}
           />
         </Box>
-        <Box sx={{ mb: 2, width: "100%" }}>
+        <Box sx={{ mb: 1, width: "100%" }}>
           <InputLabel id="archivo-input-label">PRIORIDAD</InputLabel>{" "}
           <Rating
             name="prioridad"
@@ -374,7 +375,7 @@ function TicketeraView() {
             precision={1}
           />
         </Box>
-        <Box sx={{ mb: 2, width: "100%" }}>
+        <Box sx={{ mb: 1, width: "100%" }}>
           <InputLabel id="descripcion-input-label">DESCRIPCIÓN</InputLabel>
           <TextField
             type="text"
@@ -402,7 +403,7 @@ function TicketeraView() {
             disabled={isSubmitting}
             sx={{
               width: "200px",
-              borderRadius: "0px",
+              borderRadius: 2,
               height: "40px",
               ml: 2,
               backgroundColor: "#0b2f6d",
@@ -421,7 +422,7 @@ function TicketeraView() {
             }}
             sx={{
               width: "200px",
-              borderRadius: "0px",
+              borderRadius: 2,
               height: "40px",
               ml: 2,
             }}
@@ -459,7 +460,7 @@ function TicketeraView() {
           color="error"
           sx={{
             width: "200px",
-            borderRadius: "0px",
+            borderRadius: 2,
             mt: 2,
             boxShadow: 2,
           }}
@@ -469,7 +470,7 @@ function TicketeraView() {
       </Box>
 
       <Box sx={{ width: "100%", mb: 2 }}>
-        <TableContainer sx={{ boxShadow: 2, backgroundColor: "white" }}>
+        <TableContainer sx={{ boxShadow: 2, backgroundColor: "white", borderRadius: 2 }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>

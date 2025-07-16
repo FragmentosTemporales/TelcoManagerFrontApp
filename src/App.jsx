@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Box } from "@mui/material";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import CreateArea from "./views/CreateArea";
 import Home from "./views/Home";

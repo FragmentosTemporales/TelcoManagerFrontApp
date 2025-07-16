@@ -187,7 +187,8 @@ function Home() {
                     sm: "180px",
                     xs: "100px",
                   },
-                  boxShadow: 2,
+                  borderRadius: 2,
+                  border: "2px solid #dfdeda",
                   backgroundColor: "white",
                   flexDirection: "column",
                   textDecoration: "none",
@@ -196,7 +197,7 @@ function Home() {
                   transition:
                     "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
                   "&:hover": {
-                    transform: "translateY(-10px)",
+                    transform: "translateY(-5px)",
                     boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)"
                   },
                 }}

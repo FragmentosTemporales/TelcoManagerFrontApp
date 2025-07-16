@@ -110,7 +110,8 @@ function UserForm() {
               alignItems: "center",
               width: { xs: "90%", sm: "80%", md: "60%" },
               backgroundColor: "#fff",
-              boxShadow: 2,
+              borderRadius: 2,
+              border: "2px solid #dfdeda",
               pt: 3,
               pb: 3,
             }}
@@ -248,7 +249,7 @@ function UserForm() {
                   sx={{
                     background: "#0b2f6d",
                     fontWeight: "bold",
-                    borderRadius: "0px",
+                    borderRadius: 2,
                     width: "200px",
                   }}
                   disabled={isSubmitting}
