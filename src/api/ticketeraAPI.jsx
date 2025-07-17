@@ -17,6 +17,21 @@ export const getCategoriasTicket = async (token) => {
   }
 };
 
+export const getStatsTicket = async (token) => {
+  try {
+    const url = `${baseUrl}//get-ticket-stats`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const createTicket = async (payload, token) => {
   try {
     const url = `${baseUrl}/create-ticket`;

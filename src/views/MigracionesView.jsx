@@ -19,7 +19,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getDataMigracionesProactivas, getMigracionesExcel } from "../api/despachoAPI";
-import extractDate from "../helpers/main";
+import extractDate, { extractDateOnly } from "../helpers/main";
 
 function MigracionesViewer() {
     const authState = useSelector((state) => state.auth);
@@ -40,7 +40,6 @@ function MigracionesViewer() {
     const fetchData = async () => {
         try {
             const response = await getDataMigracionesProactivas(token, page);
-            console.log(response);
             setData(response.data);
             setPages(response.pages);
             setTotal(response.total);
@@ -216,9 +215,8 @@ function MigracionesViewer() {
             <LineChart
                 grid={{ vertical: true, horizontal: true }}
                 xAxis={[{
-                    data: statsData.map(item => new Date(item.fecha).toLocaleDateString()),
+                    data: statsData.map(item => extractDateOnly(item.fecha)),
                     scaleType: 'point',
-                    label: 'Fecha'
                 }]}
                 series={[
                     {

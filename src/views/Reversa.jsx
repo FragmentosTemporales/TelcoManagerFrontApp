@@ -458,7 +458,8 @@ function ReversaView() {
         sx={{
           width: { lg: "80%", md: "90%", xs: "100%" },
           backgroundColor: "#fff",
-          boxShadow: 2,
+          borderRadius: 2,
+          border: "2px solid #dfdeda",
           pt: 4,
           pb: 4,
         }}

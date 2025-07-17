@@ -26,22 +26,10 @@ function Home() {
       moduloID: 2,
     },
     {
-      head: "Reparaciones",
-      title: "Creación de Reparaciones",
-      link: "/modulo:crear-reparacion",
-      moduloID: 1,
-    },
-    {
       head: "Amonestaciones",
       title: "Listado de Solicitudes de Amonestación",
       link: "/modulo:solicitudes",
       moduloID: 3,
-    },
-    {
-      head: "Mis Solicitudes",
-      title: "Revisa el estado de tus solicitudes de Amonestación",
-      link: "/mis-solicitudes",
-      moduloID: 20,
     },
     {
       head: "Área de Creación",
@@ -50,23 +38,47 @@ function Home() {
       moduloID: 4,
     },
     {
-      head: "Objetivos OnNet",
-      title: "Espacio para definir los objetivos por zona",
-      link: "/objetivos",
-      moduloID: 5,
-    },
-    {
-      head: "Asignados OnNet General",
-      title: "Espacio para visualizar Proyectos Asignados",
-      link: "/asignados",
-      moduloID: 11,
-    },
-    {
       head: "Gestión Formularios AST",
       title: "Espacio para gestionar los formulario AST",
       link: "/form-ast-list",
       moduloID: 7,
     },
+    {
+      head: "Mis Solicitudes",
+      title: "Revisa el estado de tus solicitudes de Amonestación",
+      link: "/mis-solicitudes",
+      moduloID: 20,
+    },
+    {
+      head: "Crear Ticket",
+      title: "Crear Ticket para Soporte Estadístico",
+      link: "/modulo:ticketera",
+      moduloID: 25,
+    },
+    {
+      head: "Crear Migraciones Proactivas",
+      title: "Crear Migraciones Proactivas ",
+      link: "/modulo:create-migracion-proactiva",
+      moduloID: 27,
+    },
+    {
+      head: "Objetivos OnNet",
+      title: "Espacio para definir los objetivos por zona",
+      link: "/objetivos",
+      moduloID: 5,
+    },
+    // {
+    //   head: "Reparaciones",
+    //   title: "Creación de Reparaciones",
+    //   link: "/modulo:crear-reparacion",
+    //   moduloID: 1,
+    // },
+    // {
+    //   head: "Asignados OnNet General",
+    //   title: "Espacio para visualizar Proyectos Asignados",
+    //   link: "/asignados",
+    //   moduloID: 11,
+    // },
     {
       head: "Gestión Bodega RM",
       title:
@@ -92,36 +104,36 @@ function Home() {
       link: "/supervisor",
       moduloID: 14,
     },
-    {
-      head: "Chat Soporte",
-      title: "Espacio para consulta y soporte técnico",
-      link: "/chatbot",
-      moduloID: 15,
-    },
+    // {
+    //   head: "Chat Soporte",
+    //   title: "Espacio para consulta y soporte técnico",
+    //   link: "/chatbot",
+    //   moduloID: 15,
+    // },
     {
       head: "Agendamiento",
       title: "Gestiona despachos y agendamientos",
       link: "/agendamientos",
       moduloID: 19,
     },
-    {
-      head: "Buscador de Ordenes",
-      title: "Buscador de Ordenes de Trabajo",
-      link: "/orden_info",
-      moduloID: 19,
-    },
-    {
-      head: "Auditorías",
-      title: "Gestiona y crea auditorías",
-      link: "/auditorias",
-      moduloID: 21,
-    },
-    {
-      head: "Lista de Auditorías",
-      title: "Gestiona y visualiza auditorías",
-      link: "/all_auditorias",
-      moduloID: 22,
-    },
+    // {
+    //   head: "Buscador de Ordenes",
+    //   title: "Buscador de Ordenes de Trabajo",
+    //   link: "/orden_info",
+    //   moduloID: 19,
+    // },
+    // {
+    //   head: "Auditorías",
+    //   title: "Gestiona y crea auditorías",
+    //   link: "/auditorias",
+    //   moduloID: 21,
+    // },
+    // {
+    //   head: "Lista de Auditorías",
+    //   title: "Gestiona y visualiza auditorías",
+    //   link: "/all_auditorias",
+    //   moduloID: 22,
+    // },
     {
       head: "Lista de Proyectos Consolidados",
       title: "Gestiona y visualiza Proyectos",
@@ -133,18 +145,6 @@ function Home() {
       title: "Espacio para cargar planilla de construcción",
       link: "/carga-construccion",
       moduloID: 6,
-    },
-    {
-      head: "Crear Ticket",
-      title: "Crear Ticket para Soporte Estadístico",
-      link: "/modulo:ticketera",
-      moduloID: 25,
-    },
-    {
-      head: "Crear Migraciones Proactivas",
-      title: "Crear Migraciones Proactivas ",
-      link: "/modulo:create-migracion-proactiva",
-      moduloID: 27,
     },
   ];
 

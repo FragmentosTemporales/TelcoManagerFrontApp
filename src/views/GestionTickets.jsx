@@ -14,9 +14,11 @@ import {
   Typography,
   TableContainer,
 } from "@mui/material";
+import { PieChart } from '@mui/x-charts/PieChart';
+import { Gauge } from '@mui/x-charts/Gauge';
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getTicketera } from "../api/ticketeraAPI";
+import { getTicketera, getStatsTicket } from "../api/ticketeraAPI";
 import { Link } from "react-router-dom";
 
 function GestorTicketera() {
@@ -27,6 +29,9 @@ function GestorTicketera() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alertType, setAlertType] = useState(undefined);
   const [data, setData] = useState([]);
+  const [stats, setStats] = useState([]);
+  const [statsFinalizado, setStatsFinalizado] = useState({});
+  const [totalTickets, setTotalTickets] = useState(0);
   const optionSQL = [
     "SOLICITADO",
     "EN GESTION",
@@ -67,6 +72,24 @@ function GestorTicketera() {
     }
   };
 
+  const fetchTicketStats = async () => {
+    setIsSubmitting(true);
+    try {
+      const stats = await getStatsTicket(token);
+      const filterData = stats.filter((item) => item.estado !== "FINALIZADO");
+      const filterDataFinalizada = stats.filter((item) => item.estado === "FINALIZADO");
+      const sumaQ = stats.reduce((acc, item) => acc + item.Q, 0);
+      setTotalTickets(sumaQ);
+      setStats(filterData);
+      setStatsFinalizado(filterDataFinalizada[0]);
+    } catch (error) {
+      setMessage(error.message || "Error al obtener los tickets");
+      setAlertType("error");
+      setOpen(true);
+    }
+    setIsSubmitting(false);
+  };
+
   const fetchTickets = async () => {
     setIsSubmitting(true);
     try {
@@ -83,11 +106,9 @@ function GestorTicketera() {
   const filterTickets = () => (
     <Box
       sx={{
-        width: "90%",
-        m: 2,
+        width: "95%",
         pt: 2,
         pb: 2,
-        boxShadow: 2,
         backgroundColor: "white",
         borderRadius: 2,
         border: "2px solid #dfdeda",
@@ -101,20 +122,13 @@ function GestorTicketera() {
       </Typography>
       <Divider sx={{ mb: 2 }} />
       <form onSubmit={handleSubmit}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            mb: 2,
-          }}
-        >
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: "center", justifyContent: "space-evenly", mb: 2 }}>
           <Select
             value={form.estado}
             onChange={(e) => setForm({ ...form, estado: e.target.value })}
             size="small"
             variant="standard"
-            sx={{ width: { lg: "30%", md: "50%", xs: "90%" }, mb: 2 }}
+            sx={{ width: { lg: "30%", md: "40%", xs: "90%" } }}
           >
             {optionSQL.map((option) => (
               <MenuItem key={option} value={option}>
@@ -122,15 +136,6 @@ function GestorTicketera() {
               </MenuItem>
             ))}
           </Select>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            mb: 2,
-          }}
-        >
           <Button
             variant="contained"
             disabled={isSubmitting}
@@ -139,8 +144,9 @@ function GestorTicketera() {
               background: "#0b2f6d",
               color: "white",
               fontWeight: "bold",
-              width: { lg: "30%", md: "50%", xs: "90%" },
+              width: { lg: "30%", md: "40%", xs: "90%" },
               borderRadius: 2,
+              marginTop: { xs: 2, md: 0 },
             }}
           >
             {isSubmitting ? "Cargando..." : "FILTRAR TICKETS"}
@@ -151,10 +157,9 @@ function GestorTicketera() {
   );
 
   const tablaTickets = () => (
-    <Box sx={{ width: "90%", mb: 2 }}>
+    <Box sx={{ width: "95%", mb: 2 }}>
       <TableContainer
         sx={{
-          boxShadow: 2,
           backgroundColor: "white",
           borderRadius: 2,
           border: "2px solid #dfdeda",
@@ -195,7 +200,7 @@ function GestorTicketera() {
                   sx={{
                     textDecoration: "none",
                     cursor: "pointer",
-                    "&:hover": { backgroundColor: "#f5f5f5" },
+                    "&:hover": { backgroundColor: "#f5f5f5" }
                   }}
                   component={Link}
                   to={`/ticketviewer/${row.logID}`}
@@ -245,8 +250,95 @@ function GestorTicketera() {
     </Box>
   );
 
+  const handleBarClick = (event, d) => {
+    if (d && d.dataIndex !== undefined && stats[d.dataIndex]) {
+      const selectedEstado = stats[d.dataIndex].estado;
+      setForm({ ...form, estado: selectedEstado });
+      // Filtrar automáticamente los tickets por el estado seleccionado
+      fetchTicketsWithEstado(selectedEstado);
+    }
+  };
+
+  const fetchTicketsWithEstado = async (estado) => {
+    setIsSubmitting(true);
+    try {
+      const tickets = await getTicketera({ estado }, token);
+      setData(tickets);
+    } catch (error) {
+      setMessage(error.message || "Error al obtener los tickets");
+      setAlertType("error");
+      setOpen(true);
+    }
+    setIsSubmitting(false);
+  };
+
+  const barChartData = () => {
+    // Preparar datos para el pie chart con porcentajes
+    const totalTicketsExcludingFinalized = stats.reduce((acc, item) => acc + item.Q, 0);
+    const pieData = stats.map((item, index) => ({
+      id: index,
+      value: item.Q,
+      label: `${item.estado} (${((item.Q / totalTicketsExcludingFinalized) * 100).toFixed(1)}%)`,
+      estado: item.estado
+    }));
+
+    return (
+      <Box
+        sx={{
+          width: "95%",
+          m: 2,
+          pt: 2,
+          pb: 2,
+          backgroundColor: "white",
+          borderRadius: 2,
+          border: "2px solid #dfdeda",
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <Box sx={{ width: "50%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <PieChart
+            series={[
+              {
+                data: pieData,
+                highlightScope: { faded: 'global', highlighted: 'item' },
+                faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+              },
+            ]}
+            height={150}
+            onItemClick={(event, d) => {
+              if (d && d.dataIndex !== undefined && pieData[d.dataIndex]) {
+                const selectedEstado = pieData[d.dataIndex].estado;
+                setForm({ ...form, estado: selectedEstado });
+                fetchTicketsWithEstado(selectedEstado);
+              }
+            }}
+            sx={{ cursor: 'pointer' }}
+          />
+        </Box>
+      <Box sx={{ width: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+        <Gauge 
+          width={160} 
+          height={160} 
+          value={statsFinalizado.Q} 
+          valueMax={totalTickets}
+          innerRadius="75%"
+          outerRadius="100%"
+          cornerRadius="50%"
+          text={`${statsFinalizado.Q || 0} / ${totalTickets || 0} \n Finalizados`}
+          sx={{ 
+            '& .MuiGauge-valueArc': {
+              fill: '#4caf50'
+            }
+          }}
+           />
+      </Box>
+    </Box>
+  );}
+
   useEffect(() => {
     fetchTickets();
+    fetchTicketStats();
   }, []);
 
   return (
@@ -271,6 +363,7 @@ function GestorTicketera() {
         </Alert>
       )}
       {filterTickets()}
+      {barChartData()}
       {tablaTickets()}
     </Box>
   );

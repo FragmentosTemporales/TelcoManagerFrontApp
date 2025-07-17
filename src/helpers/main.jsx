@@ -17,4 +17,18 @@ const extractDate = (gmtString) => {
   return formattedDateTime;
 };
 
+// Nueva función para extraer solo la fecha con el ajuste de zona horaria
+export const extractDateOnly = (gmtString) => {
+  const date = new Date(gmtString);
+
+  // Restar 4 horas al tiempo
+  date.setUTCHours(date.getUTCHours() + 4);
+
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+
+  return `${day}/${month}/${year}`;
+};
+
 export default extractDate;
