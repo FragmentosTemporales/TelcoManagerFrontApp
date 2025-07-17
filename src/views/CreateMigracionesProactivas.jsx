@@ -228,7 +228,7 @@ export default function CreateMigracionesProactivas() {
         {dataPendiente && dataPendiente.length > 0 ? (
           <Box
             sx={{
-              width: { lg: "20%", md: "80%", sm: "90%", xs: "90%" },
+              width: { lg: "20%", md: "80%", sm: "100%", xs: "100%" },
               height: "100%",
               display: "flex",
               flexDirection: "column",
@@ -236,17 +236,7 @@ export default function CreateMigracionesProactivas() {
               justifyContent: "center",
             }}
           >
-            <Box
-              sx={{
-                width: "96%",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {dataPendiente.map((item) => (
+            {dataPendiente.map((item) => (
                 <Box
                   key={item.id_vivienda}
                   onClick={(e) => handleSubmitPendiente(e, item.id_vivienda)}
@@ -255,9 +245,10 @@ export default function CreateMigracionesProactivas() {
                     width: "98%",
                     marginBottom: 1,
                     cursor: "pointer",
-                    padding: 1,
                     border: "2px solid #dfdeda",
                     borderRadius: 2,
+                    paddingTop: 1,
+                    paddingBottom: 1,
                     transition:
                       "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
                     "&:hover": {
@@ -271,6 +262,7 @@ export default function CreateMigracionesProactivas() {
                       textAlign: "left",
                       color: "#0b2f6d",
                       fontWeight: "bold",
+                      paddingLeft: 2,
                     }}
                   >
                     {" "}
@@ -282,6 +274,7 @@ export default function CreateMigracionesProactivas() {
                     sx={{
                       fontWeight: "bold",
                       fontSize: "11px",
+                      paddingLeft: 2,
                     }}
                   >
                     {" "}
@@ -292,6 +285,7 @@ export default function CreateMigracionesProactivas() {
                     sx={{
                       color: "#666",
                       fontSize: "11px",
+                      paddingLeft: 2,
                     }}
                   >
                     {" "}
@@ -302,6 +296,7 @@ export default function CreateMigracionesProactivas() {
                     sx={{
                       color: "#666",
                       fontSize: "11px",
+                      paddingLeft: 2,
                     }}
                   >
                     {" "}
@@ -312,6 +307,7 @@ export default function CreateMigracionesProactivas() {
                     sx={{
                       color: "#666",
                       fontSize: "11px",
+                      paddingLeft: 2,
                     }}
                   >
                     {item.bloque_horario}
@@ -323,6 +319,7 @@ export default function CreateMigracionesProactivas() {
                       fontSize: "11px",
                       fontStyle: "italic",
                       fontWeight: "bold",
+                      paddingLeft: 2,
                     }}
                   >
                     {" "}
@@ -334,13 +331,12 @@ export default function CreateMigracionesProactivas() {
                   </Typography>
                 </Box>
               ))}
-            </Box>
           </Box>
         ) : null}
 
         <Box
           sx={{
-            width: { lg: "80%", md: "80%", sm: "90%", xs: "90%" },
+            width: { lg: "80%", md: "80%", sm: "100%", xs: "100%" },
             height: "100%",
             display: "flex",
             flexDirection: "column",

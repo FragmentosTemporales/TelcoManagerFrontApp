@@ -48,6 +48,7 @@ import TicketeraView from "./views/CreateTicket";
 import GestorTicketera from "./views/GestionTickets";
 import TicketViewer from "./views/TicketView";
 import CreateMigracionesProactivas from "./views/CreateMigracionesProactivas";
+import MigracionesViewer from "./views/MigracionesView";
 
 function App() {
   return (
@@ -96,6 +97,7 @@ function App() {
           <Route path="/modulo:gestion-ticketera" element={<GestorTicketera />} />
           <Route path="/ticketviewer/:logID" element={<TicketViewer />} />
           <Route path="/modulo:create-migracion-proactiva" element={<CreateMigracionesProactivas />} />
+          <Route path="/modulo:migraciones-proactivas" element={<MigracionesViewer />} />
           <Route
             path="/componente-asignado/:componenteID"
             element={<ComponenteAsignadoView />}

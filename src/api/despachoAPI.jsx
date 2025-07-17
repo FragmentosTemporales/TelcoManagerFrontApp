@@ -239,3 +239,29 @@ export const getClienteMigracion = async (payload, token) => {
     throw error.response.data.error;
   }
 };
+
+export const getMigracionesExcel = async (token) => {
+  try {
+    const url = `${baseUrl}/despacho/get-migraciones-historicas-excel`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      responseType: "blob", // Set the response type to "blob" to handle binary data
+    });
+
+    // Create a download link for the Excel file
+    const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = urlBlob;
+    link.setAttribute("download", "migraciones.xlsx"); // Set the file name
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    return "Archivo descargado exitosamente."; // Optional success message
+  } catch (error) {
+    throw error.response?.data?.error || "Error al descargar el archivo.";
+  }
+};

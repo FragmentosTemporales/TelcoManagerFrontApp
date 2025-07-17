@@ -14,10 +14,10 @@ function Home() {
       moduloID: 26,
     },
     {
-      head: "Reportes",
-      title: "Vista de Reportes",
-      link: "/modulo:charts",
-      moduloID: 1,
+      head: "Migraciones Proactivas",
+      title: "Vista de Migraciones Proactivas",
+      link: "/modulo:migraciones-proactivas",
+      moduloID: 27,
     },
     {
       head: "Reversa",
