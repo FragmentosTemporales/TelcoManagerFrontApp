@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -183,7 +183,7 @@ function Home() {
                   display: "flex",
                   height: {
                     lg: "100px",
-                    md: "180px",
+                    md: "150px",
                     sm: "180px",
                     xs: "100px",
                   },
@@ -206,23 +206,18 @@ function Home() {
               >
                 <Typography
                   variant="h6"
-                  sx={{
-                    paddingLeft: 1,
-                    justifyContent: "start",
-                    display: "flex",
-                    width: "90%",
-                  }}
                   fontWeight="bold"
+                  sx={{
+                    textAlign: "center",
+                  }}
                 >
-                  #{acceso.head}
+                  {acceso.head}
                 </Typography>
+                <Divider sx={{ my: 1, backgroundColor: "#dfdeda" }} />
                 <Typography
                   variant="subtitle1"
                   sx={{
-                    justifyContent: "start",
-                    display: "flex",
-                    width: "90%",
-                    paddingLeft: 1,
+                    textAlign: "center",
                   }}
                 >
                   {acceso.title}

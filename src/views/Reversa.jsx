@@ -406,7 +406,8 @@ function ReversaView() {
         justifyContent: "center",
         width: "100%",
         backgroundColor: "#fff",
-        boxShadow: 2,
+        borderRadius: 2,
+        border: "2px solid #dfdeda",
         pb: 2,
       }}
     >

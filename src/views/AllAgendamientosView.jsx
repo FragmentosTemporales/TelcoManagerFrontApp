@@ -74,7 +74,7 @@ function AllAgendamientoViewer() {
           fontWeight: "bold",
           display: "flex",
           justifyContent: "space-around",
-          borderRadius: "0px",
+          borderRadius: 2,
         }}
       >
         {isSubmitting ? "Cargando..." : "Descargar Excel"}
@@ -299,6 +299,7 @@ function AllAgendamientoViewer() {
           {message}
         </Alert>
       )}
+
       <Box
         sx={{
           width: { lg: "100%", md: "100%", xs: "100%" },
@@ -311,7 +312,7 @@ function AllAgendamientoViewer() {
             variant="contained"
             sx={{
               background: "#0b2f6d",
-              borderRadius: "0px",
+              borderRadius: 2,
               marginBottom: 2,
               width: "200px",
               fontWeight: "bold",
@@ -327,7 +328,8 @@ function AllAgendamientoViewer() {
           width: "100%",
           mt: 2,
           background: "#fff",
-          boxShadow: 2,
+              borderRadius: 2,
+              border: "2px solid #dfdeda",
           pt: 2,
           pb: 2,
         }}
@@ -405,7 +407,7 @@ function AllAgendamientoViewer() {
                   background: "#0b2f6d",
                   height: 30,
                   width: "100%",
-                  borderRadius: "0px",
+                  borderRadius: 2,
                 }}
               >
                 {isSubmitting ? "Cargando..." : "Buscar"}
@@ -423,7 +425,7 @@ function AllAgendamientoViewer() {
               <Button
                 variant="outlined"
                 onClick={clearFilter}
-                sx={{ height: 30, width: "100%", borderRadius: "0px" }}
+                sx={{ height: 30, width: "100%", borderRadius: 2 }}
               >
                 Limpiar Filtro
               </Button>
@@ -433,7 +435,7 @@ function AllAgendamientoViewer() {
       </Box>
 
       {downloadExcel()}
-      <Box sx={{ width: "100%", mt: 2, background: "#fff", boxShadow: 2 }}>
+      <Box sx={{ width: "100%", mt: 2, background: "#fff", borderRadius: 2, border: "2px solid #dfdeda" }}>
         {isLoading ? (
           <Skeleton
             variant="rectangular"

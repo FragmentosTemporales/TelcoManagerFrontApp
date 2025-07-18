@@ -9,6 +9,7 @@ import {
   InputAdornment,
   InputLabel,
   Typography,
+  Divider,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useDispatch, useSelector } from "react-redux";
@@ -133,18 +134,18 @@ function Settings() {
           paddingTop: "25px",
           paddingBottom: "40px",
           backgroundColor: "white",
-          boxShadow: "2",
+          borderRadius: 2,
+          border: "2px solid #dfdeda"
         }}
       >
         <Typography
           variant="h5"
           sx={{
-            textAlign: "start",
-            marginLeft: 2,
-            marginBottom: 2,
+            textAlign: "center",
           }}>
           Configuración de Contraseña
           </Typography>
+          <Divider sx={{ margin: 1 }} />
         <form onSubmit={handleSubmit}>
 
           <Box sx={{ mb: 2, mt: 2, display: "flex", justifyContent: "center" }}>
@@ -156,7 +157,7 @@ function Settings() {
               id="clave"
               type="password"
               name="clave"
-              variant="outlined"
+              variant="standard"
               value={form.clave}
               onChange={handleChange}
               InputProps={{
@@ -178,7 +179,7 @@ function Settings() {
               id="new_clave"
               type="password"
               name="new_clave"
-              variant="outlined"
+              variant="standard"
               value={form.new_clave}
               onChange={handleChange}
               error={Boolean(errors.new_clave)}
@@ -202,7 +203,7 @@ function Settings() {
               id="new_clave_2"
               type="password"
               name="new_clave_2"
-              variant="outlined"
+              variant="standard"
               value={form.new_clave_2}
               onChange={handleChange}
               error={Boolean(errors.new_clave_2)}
@@ -221,7 +222,7 @@ function Settings() {
               type="submit"
               variant="contained"
               disabled={isSubmitting}
-              sx={{ background: "#0b2f6d", width: "350px", mt: 2 }}
+              sx={{ background: "#0b2f6d", width: "350px", mt: 2 , borderRadius: 2}}
             >
               <Typography sx={{ color: "white" }} fontStyle={"Bold"}>
                 {isSubmitting ? "Cargando..." : "Actualizar"}

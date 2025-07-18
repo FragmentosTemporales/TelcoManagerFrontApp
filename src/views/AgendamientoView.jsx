@@ -270,7 +270,8 @@ function AgendamientoViewer() {
               alignItems: "center",
               width: { lg: "90%", md: "100%", xs: "100%" },
               backgroundColor: "#fff",
-              boxShadow: 2,
+              borderRadius: 2,
+              border: "2px solid #dfdeda",
               mt: 2,
             }}
           >
@@ -363,7 +364,7 @@ function AgendamientoViewer() {
               onClick={fetchBacklog}
               sx={{
                 width: "200px",
-                borderRadius: "0px",
+                borderRadius: 2,
               }}
             >
               Ver Cliente
@@ -373,14 +374,15 @@ function AgendamientoViewer() {
             sx={{
               width: { lg: "90%", md: "100%", xs: "100%" },
               marginTop: 2,
-              boxShadow: 2,
               backgroundColor: "#fff",
+              borderRadius: 2,
+              border: "2px solid #dfdeda",
             }}
           >
             <Table>
               <TableBody>
                 {[
-                  ["Órden de Trabajo", dataBacklog.orden_de_trabajo],
+                  ["Orden de Trabajo", dataBacklog.orden_de_trabajo],
                   ["Nombre", dataBacklog.Cliente],
                   ["Rut", dataBacklog.rut_cliente],
                   ["Celular", dataBacklog.Celular],
@@ -416,7 +418,8 @@ function AgendamientoViewer() {
               alignItems: "center",
               width: { lg: "90%", md: "100%", xs: "100%" },
               backgroundColor: "#fff",
-              boxShadow: 2,
+              borderRadius: 2,
+              border: "2px solid #dfdeda",
               mt: 2,
             }}
           >
@@ -505,7 +508,7 @@ function AgendamientoViewer() {
             onClick={fetchBacklog}
             sx={{
               width: "200px",
-              borderRadius: "0px",
+              borderRadius: 2,
             }}
           >
             Ver Cliente
@@ -651,10 +654,11 @@ function AgendamientoViewer() {
       <Card
         sx={{
           width: { lg: "90%", md: "100%", xs: "100%" },
-          boxShadow: 2,
           marginTop: 2,
           pt: 2,
           pb: 2,
+              borderRadius: 2,
+              border: "2px solid #dfdeda",
         }}
       >
         <form onSubmit={SubmitBacklockForm}>
@@ -817,7 +821,7 @@ function AgendamientoViewer() {
               sx={{
                 width: "200px",
                 background: "#0b2f6d",
-                borderRadius: "0px",
+                borderRadius: 2,
               }}
             >
               {isSubmitting ? "Cargando..." : "Crear"}{" "}
@@ -838,7 +842,7 @@ function AgendamientoViewer() {
           <Button
             variant="contained"
             color="error"
-            sx={{ width: "200px", borderRadius: "0px" }}
+            sx={{ width: "200px", borderRadius: 2 }}
           >
             Ver Todas
           </Button>

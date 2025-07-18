@@ -14,12 +14,10 @@ import {
   TableRow,
   Typography,
   MenuItem,
-  TableContainer,
-  Tooltip,
+  TableContainer
 } from "@mui/material";
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -33,7 +31,7 @@ import {
 
 function TicketeraView() {
   const authState = useSelector((state) => state.auth);
-  const { token, user_id, nombre } = authState;
+  const { token, user_id } = authState;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [crear, setCrear] = useState(false);
@@ -56,39 +54,6 @@ function TicketeraView() {
     prioridad: 1,
     userID: "",
   });
-
-  const wsp_soporte = () => (
-    <Box
-      sx={{
-        position: "fixed",
-        width: "55px",
-        height: "55px",
-        lineHeight: "55px",
-        bottom: "30px",
-        right: "30px",
-        background: "#25d366",
-        color: "#fff",
-        borderRadius: "50px",
-        zIndex: "1",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-        textDecoration: "none",
-        transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-        "&:hover": {
-          transform: "translateY(-10px)",
-          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
-        },
-      }}
-      component="a"
-      href={`https://api.whatsapp.com/send?phone=56950056126&text=Hola, mi nombre es ${nombre} necesito ayuda con un Ticket.`}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <WhatsAppIcon />
-    </Box>
-  );
 
   const setTituloData = () => {
     if (form.ticketcategoriaID && form.ticketcategoriaID != "") {
@@ -640,7 +605,6 @@ function TicketeraView() {
         minHeight: "90vh",
       }}
     >
-      {wsp_soporte()}
       {open && (
         <Alert
           onClose={handleClose}

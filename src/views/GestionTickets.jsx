@@ -72,37 +72,6 @@ function GestorTicketera() {
     }
   };
 
-  const fetchTicketStats = async () => {
-    setIsSubmitting(true);
-    try {
-      const stats = await getStatsTicket(token);
-      const filterData = stats.filter((item) => item.estado !== "FINALIZADO");
-      const filterDataFinalizada = stats.filter((item) => item.estado === "FINALIZADO");
-      const sumaQ = stats.reduce((acc, item) => acc + item.Q, 0);
-      setTotalTickets(sumaQ);
-      setStats(filterData);
-      setStatsFinalizado(filterDataFinalizada[0]);
-    } catch (error) {
-      setMessage(error.message || "Error al obtener los tickets");
-      setAlertType("error");
-      setOpen(true);
-    }
-    setIsSubmitting(false);
-  };
-
-  const fetchTickets = async () => {
-    setIsSubmitting(true);
-    try {
-      const tickets = await getTicketera(form, token);
-      setData(tickets);
-    } catch (error) {
-      setMessage(error.message || "Error al obtener los tickets");
-      setAlertType("error");
-      setOpen(true);
-    }
-    setIsSubmitting(false);
-  };
-
   const filterTickets = () => (
     <Box
       sx={{
@@ -155,6 +124,38 @@ function GestorTicketera() {
       </form>
     </Box>
   );
+
+  const fetchTicketStats = async () => {
+    setIsSubmitting(true);
+    try {
+      const stats = await getStatsTicket(token);
+      const filterData = stats.filter((item) => item.estado !== "FINALIZADO");
+      const filterDataFinalizada = stats.filter((item) => item.estado === "FINALIZADO");
+      const sumaQ = stats.reduce((acc, item) => acc + item.Q, 0);
+      setTotalTickets(sumaQ);
+      setStats(filterData);
+      setStatsFinalizado(filterDataFinalizada[0]);
+    } catch (error) {
+      setMessage(error.message || "Error al obtener los tickets");
+      setAlertType("error");
+      setOpen(true);
+    }
+    setIsSubmitting(false);
+  };
+
+  const fetchTickets = async () => {
+    setIsSubmitting(true);
+    try {
+      const tickets = await getTicketera(form, token);
+      setData(tickets);
+    } catch (error) {
+      setMessage(error.message || "Error al obtener los tickets");
+      setAlertType("error");
+      setOpen(true);
+    }
+    setIsSubmitting(false);
+  };
+
 
   const tablaTickets = () => (
     <Box sx={{ width: "95%", mb: 2 }}>
@@ -249,15 +250,6 @@ function GestorTicketera() {
       </TableContainer>
     </Box>
   );
-
-  const handleBarClick = (event, d) => {
-    if (d && d.dataIndex !== undefined && stats[d.dataIndex]) {
-      const selectedEstado = stats[d.dataIndex].estado;
-      setForm({ ...form, estado: selectedEstado });
-      // Filtrar automáticamente los tickets por el estado seleccionado
-      fetchTicketsWithEstado(selectedEstado);
-    }
-  };
 
   const fetchTicketsWithEstado = async (estado) => {
     setIsSubmitting(true);
