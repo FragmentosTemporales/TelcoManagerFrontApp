@@ -224,6 +224,21 @@ export const getMigracionUnica = async (id, token) => {
   }
 };
 
+export const getMigracionGestiones = async (id, token) => {
+  try {
+    const url = `${baseUrl}/despacho/get-migracion-gestion/${id}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const getClienteMigracion = async (payload, token) => {
   try {
     const url = `${baseUrl}/despacho/get-migracion-proactiva`;

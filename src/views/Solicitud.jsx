@@ -1505,7 +1505,7 @@ function Solicitud() {
           {/* BOX PARA DEFINIR ESTADO FINALIZADA */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
-            (dataGestiones[0].estado == "FIRMADA")
+            (dataGestiones[0].estado == "FIRMADA" || dataGestiones[0].estado == "ENVIADA POR CORREO")
               ? componenteFinalizada()
               : null}
           </Box>

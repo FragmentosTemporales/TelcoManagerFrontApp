@@ -17,7 +17,9 @@ import {
   getDataMigracionesPendientes,
   getDataMigracionesComunas,
   getMigracionUnica,
+  getMigracionGestiones
 } from "../api/despachoAPI";
+import extractDate from "../helpers/main";
 
 export default function CreateMigracionesProactivas() {
   const authState = useSelector((state) => state.auth);
@@ -29,6 +31,7 @@ export default function CreateMigracionesProactivas() {
 
   const [dataPendiente, setDataPendiente] = useState([]);
   const [dataComuna, setDataComuna] = useState([]);
+  const [dataGestiones, setDataGestiones] = useState([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -71,12 +74,29 @@ export default function CreateMigracionesProactivas() {
     }
   };
 
+  const fetchGestiones = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await getMigracionGestiones(id_vivienda, token);
+      setDataGestiones(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGestiones()
+  }, [id_vivienda]);
+
   const contactoOptions = [
     "Sin Factibilidad",
     "Sin contacto",
     "Contactado",
     "Pendiente",
   ];
+
   const ingresoOptions = [
     "Ingresada",
     "Pendiente Ingreso",
@@ -84,6 +104,7 @@ export default function CreateMigracionesProactivas() {
     "Sin Contacto",
     "Sin Factibilidad",
   ];
+
   const franjasHorarias = ["10:00 - 13:00", "13:00 - 16:00", "16:00 - 19:00"];
 
   const handleClose = () => {
@@ -225,7 +246,8 @@ export default function CreateMigracionesProactivas() {
           },
         }}
       >
-        {dataPendiente && dataPendiente.length > 0 ? (
+
+        {dataPendiente && dataPendiente.length > 0 || dataGestiones && dataGestiones.length > 0 ? (
           <Box
             sx={{
               width: { lg: "20%", md: "80%", sm: "100%", xs: "100%" },
@@ -236,101 +258,224 @@ export default function CreateMigracionesProactivas() {
               justifyContent: "center",
             }}
           >
-            {dataPendiente.map((item) => (
-                <Box
-                  key={item.id_vivienda}
-                  onClick={(e) => handleSubmitPendiente(e, item.id_vivienda)}
-                  sx={{
-                    backgroundColor: "#fff",
-                    width: "98%",
-                    marginBottom: 1,
-                    cursor: "pointer",
-                    border: "2px solid #dfdeda",
-                    borderRadius: 2,
-                    paddingTop: 1,
-                    paddingBottom: 1,
-                    transition:
-                      "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-                    "&:hover": {
-                      transform: "translateY(-5px)",
-                      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
-                    },
-                  }}
-                >
-                  <Typography
+            {dataPendiente && dataPendiente.length > 0 ? (
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {dataPendiente.map((item) => (
+                  <Box
+                    key={item.id_vivienda}
+                    onClick={(e) => handleSubmitPendiente(e, item.id_vivienda)}
                     sx={{
-                      textAlign: "left",
-                      color: "#0b2f6d",
-                      fontWeight: "bold",
-                      paddingLeft: 2,
+                      backgroundColor: "#fff",
+                      width: "98%",
+                      cursor: "pointer",
+                      border: "2px solid #dfdeda",
+                      borderRadius: 2,
+                      paddingTop: 1,
+                      paddingBottom: 1,
+                      transition:
+                        "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                      "&:hover": {
+                        transform: "translateY(-5px)",
+                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+                      },
                     }}
                   >
-                    {" "}
-                    MIGRACION PENDIENTE
-                  </Typography>
-                  <Typography
-                    key={item.ID_VIVIENDA}
-                    variant="body1"
+                    <Typography
+                      sx={{
+                        textAlign: "left",
+                        color: "#0b2f6d",
+                        fontWeight: "bold",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {" "}
+                      MIGRACION PENDIENTE
+                    </Typography>
+                    <Typography
+                      key={item.ID_VIVIENDA}
+                      variant="body1"
+                      sx={{
+                        fontWeight: "bold",
+                        fontSize: "11px",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {" "}
+                      {item.Cliente}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#666",
+                        fontSize: "11px",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {" "}
+                      {item.Celular}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#666",
+                        fontSize: "11px",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {" "}
+                      {item.COMUNA}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#666",
+                        fontSize: "11px",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {item.bloque_horario}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#666",
+                        fontSize: "11px",
+                        fontStyle: "italic",
+                        fontWeight: "bold",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {" "}
+                      {item.comentario ? (
+                        <>{item.comentario}</>
+                      ) : (
+                        "Sin Comentario"
+                      )}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            ) : null}
+            <Divider sx={{ width: "98%", marginY: 2, borderColor: "#0b2f6d" }} />
+            {dataGestiones && dataGestiones.length > 0 ? (
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {dataGestiones.map((item) => (
+                  <Box
+                    key={item.id_vivienda}
                     sx={{
-                      fontWeight: "bold",
-                      fontSize: "11px",
-                      paddingLeft: 2,
+                      backgroundColor: "#fff",
+                      width: "98%",
+                      border: "2px solid #dfdeda",
+                      borderRadius: 2,
+                      paddingTop: 1,
+                      paddingBottom: 1,
                     }}
                   >
-                    {" "}
-                    {item.Cliente}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: "#666",
-                      fontSize: "11px",
-                      paddingLeft: 2,
-                    }}
-                  >
-                    {" "}
-                    {item.Celular}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: "#666",
-                      fontSize: "11px",
-                      paddingLeft: 2,
-                    }}
-                  >
-                    {" "}
-                    {item.COMUNA}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: "#666",
-                      fontSize: "11px",
-                      paddingLeft: 2,
-                    }}
-                  >
-                    {item.bloque_horario}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: "#666",
-                      fontSize: "11px",
-                      fontStyle: "italic",
-                      fontWeight: "bold",
-                      paddingLeft: 2,
-                    }}
-                  >
-                    {" "}
-                    {item.comentario ? (
-                      <>{item.comentario}</>
-                    ) : (
-                      "Sin Comentario"
-                    )}
-                  </Typography>
-                </Box>
-              ))}
+                    <Typography
+                      sx={{
+                        textAlign: "left",
+                        color: "#0b2f6d",
+                        fontWeight: "bold",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      GESTION PREVIA
+                    </Typography>
+                    <Typography
+                      key={item.id_vivienda}
+                      variant="body1"
+                      sx={{
+                        fontWeight: "bold",
+                        fontSize: "11px",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {" "}
+                      {item.contacto}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#666",
+                        fontSize: "11px",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {" "}
+                      {item.ingreso}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#666",
+                        fontSize: "11px",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {" "}
+                      {extractDate(item.fecha_registro)}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#666",
+                        fontSize: "11px",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {item.bloque_horario}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#666",
+                        fontSize: "11px",
+                        fontStyle: "italic",
+                        fontWeight: "bold",
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
+                      {" "}
+                      {item.comentario ? (
+                        <>{item.comentario}</>
+                      ) : (
+                        "Sin Comentario"
+                      )}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            ) : null}
           </Box>
         ) : null}
 
