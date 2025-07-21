@@ -129,12 +129,29 @@ function GestorTicketera() {
     setIsSubmitting(true);
     try {
       const stats = await getStatsTicket(token);
-      const filterData = stats.filter((item) => item.estado !== "FINALIZADO");
-      const filterDataFinalizada = stats.filter((item) => item.estado === "FINALIZADO");
+      const filterData = stats.filter((item) => item.estado !== "FINALIZADO" && item.estado !== "NO APLICA");
+      const filterDataFinalizada = stats.filter((item) => item.estado === "FINALIZADO" || item.estado === "NO APLICA");
+
+      // Combinar todos los elementos de filterDataFinalizada en un solo diccionario
+      const combinedStatsFinalizado = filterDataFinalizada.reduce((acc, item) => {
+        return {
+          ...acc,
+          Q: (acc.Q || 0) + item.Q,
+          estado: acc.estado ? `${acc.estado}, ${item.estado}` : item.estado,
+          // Incluir cualquier otra propiedad que pueda existir
+          ...Object.keys(item).reduce((itemAcc, key) => {
+            if (key !== 'Q' && key !== 'estado') {
+              itemAcc[key] = item[key];
+            }
+            return itemAcc;
+          }, {})
+        };
+      }, {});
+      
       const sumaQ = stats.reduce((acc, item) => acc + item.Q, 0);
       setTotalTickets(sumaQ);
       setStats(filterData);
-      setStatsFinalizado(filterDataFinalizada[0]);
+      setStatsFinalizado(combinedStatsFinalizado);
     } catch (error) {
       setMessage(error.message || "Error al obtener los tickets");
       setAlertType("error");
@@ -155,7 +172,6 @@ function GestorTicketera() {
     }
     setIsSubmitting(false);
   };
-
 
   const tablaTickets = () => (
     <Box sx={{ width: "95%", mb: 2 }}>
@@ -206,34 +222,34 @@ function GestorTicketera() {
                   component={Link}
                   to={`/ticketviewer/${row.logID}`}
                 >
-                  <TableCell align="left" sx={{ fontSize: "12px" }}>
-                    {row.ticket_id ? row.ticket_id : "Sin Información"}
+                  <TableCell align="left" sx={{ fontSize: "12px", fontWeight: "bold" }}>
+                    {row.logID ? row.logID : "Sin Información"}
                   </TableCell>
                   <TableCell
                     align="left"
-                    sx={{ fontSize: "12px", fontWeight: "bold" }}
+                    sx={{ fontSize: "12px"}}
                   >
                     {row.categoria ? row.categoria : "Sin Información"}
                   </TableCell>
-                  <TableCell align="left" sx={{ fontSize: "12px" }}>
+                  <TableCell align="left" sx={{ fontSize: "12px"}}>
                     {row.titulo ? row.titulo : "Sin titulo"}
                   </TableCell>
-                  <TableCell align="left" sx={{ fontSize: "12px" }}>
+                  <TableCell align="left" sx={{ fontSize: "12px"}}>
                     {row.fecha_solicitud
                       ? extractDate(row.fecha_solicitud)
                       : "Sin Información"}
                   </TableCell>{" "}
-                  <TableCell align="left" sx={{ fontSize: "12px" }}>
+                  <TableCell align="left" sx={{ fontSize: "12px"}}>
                     {row.prioridad ? (
                       <Rating value={row.prioridad} readOnly max={3} />
                     ) : (
                       "Sin Información"
                     )}
                   </TableCell>
-                  <TableCell align="left" sx={{ fontSize: "12px" }}>
+                  <TableCell align="left" sx={{ fontSize: "12px"}}>
                     {row.solicitante ? row.solicitante : "Sin Información"}
                   </TableCell>
-                  <TableCell align="left" sx={{ fontSize: "12px" }}>
+                  <TableCell align="left" sx={{ fontSize: "12px"}}>
                     {row.estado ? row.estado : "Sin Información"}
                   </TableCell>
                 </TableRow>
@@ -264,7 +280,7 @@ function GestorTicketera() {
     setIsSubmitting(false);
   };
 
-  const barChartData = () => {
+  const pieChartData = () => {
     // Preparar datos para el pie chart con porcentajes
     const totalTicketsExcludingFinalized = stats.reduce((acc, item) => acc + item.Q, 0);
     const pieData = stats.map((item, index) => ({
@@ -295,6 +311,8 @@ function GestorTicketera() {
                 data: pieData,
                 highlightScope: { faded: 'global', highlighted: 'item' },
                 faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                innerRadius: 30, 
+                outerRadius: 70,
               },
             ]}
             height={150}
@@ -355,7 +373,7 @@ function GestorTicketera() {
         </Alert>
       )}
       {filterTickets()}
-      {barChartData()}
+      {pieChartData()}
       {tablaTickets()}
     </Box>
   );

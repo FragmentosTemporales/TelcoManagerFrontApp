@@ -239,6 +239,21 @@ export const getMigracionGestiones = async (id, token) => {
   }
 };
 
+export const getQMigracionesPendientesdeVista = async (token) => {
+  try {
+    const url = `${baseUrl}/despacho/get-q-migraciones-pendientes`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const getClienteMigracion = async (payload, token) => {
   try {
     const url = `${baseUrl}/despacho/get-migracion-proactiva`;

@@ -51,7 +51,6 @@ function Solicitudes() {
       dispatch(onLoading());
       setIsSubmitting(true);
       const res = await getSolicitudesFiltradas(token, toFilter, page);
-      console.log("SOLICITUDES : ", res);
       dispatch(onLoad(res));
       setIsSubmitting(false);
     } catch (error) {

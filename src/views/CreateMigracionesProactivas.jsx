@@ -17,7 +17,8 @@ import {
   getDataMigracionesPendientes,
   getDataMigracionesComunas,
   getMigracionUnica,
-  getMigracionGestiones
+  getMigracionGestiones,
+  getQMigracionesPendientesdeVista
 } from "../api/despachoAPI";
 import extractDate from "../helpers/main";
 
@@ -32,6 +33,7 @@ export default function CreateMigracionesProactivas() {
   const [dataPendiente, setDataPendiente] = useState([]);
   const [dataComuna, setDataComuna] = useState([]);
   const [dataGestiones, setDataGestiones] = useState([]);
+  const [QMigracionesPendientesVista, setQMigracionesPendientesVista] = useState([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -75,6 +77,7 @@ export default function CreateMigracionesProactivas() {
   };
 
   const fetchGestiones = async () => {
+    setDataGestiones([]);
     setIsSubmitting(true);
     try {
       const response = await getMigracionGestiones(id_vivienda, token);
@@ -86,8 +89,23 @@ export default function CreateMigracionesProactivas() {
     }
   };
 
+  const fetchPendientesVista = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await getQMigracionesPendientesdeVista(token);
+      console.log(response);
+      setQMigracionesPendientesVista(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+
   useEffect(() => {
-    fetchGestiones()
+    fetchGestiones();
+    fetchPendientesVista();
   }, [id_vivienda]);
 
   const contactoOptions = [
@@ -140,6 +158,10 @@ export default function CreateMigracionesProactivas() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const settingWidth = () => {
+    return dataPendiente && dataPendiente.length > 0 || dataGestiones && dataGestiones.length > 0 ? "80%" : "100%";
   };
 
   const clearForm = () => {
@@ -218,6 +240,7 @@ export default function CreateMigracionesProactivas() {
         backgroundColor: "#f0f0f0",
         minHeight: "90vh",
         paddingBottom: "20px",
+        border: "1px solid #dfdeda",
       }}
     >
       {open && (
@@ -246,7 +269,6 @@ export default function CreateMigracionesProactivas() {
           },
         }}
       >
-
         {dataPendiente && dataPendiente.length > 0 || dataGestiones && dataGestiones.length > 0 ? (
           <Box
             sx={{
@@ -481,7 +503,7 @@ export default function CreateMigracionesProactivas() {
 
         <Box
           sx={{
-            width: { lg: "80%", md: "80%", sm: "100%", xs: "100%" },
+            width: { lg: { settingWidth }, md: { settingWidth }, sm: "100%", xs: "100%" },
             height: "100%",
             display: "flex",
             flexDirection: "column",
