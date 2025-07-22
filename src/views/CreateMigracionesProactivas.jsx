@@ -230,19 +230,77 @@ export default function CreateMigracionesProactivas() {
     window.scrollTo(0, 0);
   }, []);
 
+
   return (
     <Box
       sx={{
-        paddingTop: "80px",
+        paddingTop: "60px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: "#f0f0f0",
         minHeight: "90vh",
-        paddingBottom: "20px",
-        border: "1px solid #dfdeda",
+        paddingBottom: "20px"
       }}
     >
+
+      {QMigracionesPendientesVista && QMigracionesPendientesVista.length > 0 && (
+  <Box
+    sx={{
+      width: "100%",
+      backgroundColor: "#0b2f6d",
+      overflow: "hidden",
+      border: "1px solid black",
+      marginBottom: 2,
+      display: "flex",
+      alignItems: "center",
+    }}
+  >
+    {/* Texto fijo a la izquierda */}
+    <Box
+      sx={{
+        flexShrink: 0,
+        padding: "8px 16px",
+        backgroundColor: "#0b2f6d",
+      }}
+    >
+      <Typography fontFamily="monospace" sx={{ color: "white" }}>
+        MIGRACIONES PENDIENTES POR COMUNA
+      </Typography>
+    </Box>
+
+    {/* Texto desplazable */}
+    <Box
+      component="marquee"
+      behavior="scroll"
+      direction="left"
+      scrollAmount="5"
+      sx={{
+        flexGrow: 1,
+        whiteSpace: "nowrap",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      {QMigracionesPendientesVista.map((item) => (
+        <Box
+          key={item.id}
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            marginRight: 4,
+          }}
+        >
+          <Typography fontFamily="monospace" sx={{ color: "yellow" }}>
+            {item.COMUNA}: {item.Q}
+          </Typography>
+        </Box>
+      ))}
+    </Box>
+  </Box>
+)}
+
+
       {open && (
         <Alert
           onClose={handleClose}
@@ -250,11 +308,14 @@ export default function CreateMigracionesProactivas() {
           sx={{
             width: { lg: "80%", md: "80%", sm: "80%", xs: "90%" },
             marginBottom: 2,
+            marginTop: 2,
           }}
         >
           {message}
         </Alert>
       )}
+
+
 
       <Box
         sx={{

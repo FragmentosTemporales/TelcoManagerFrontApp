@@ -122,7 +122,6 @@ const extractDate = (gmtString) => {
   const fetchDataUsers = async () => {
     try {
       const res = await getAstUsers(token);
-      console.log(res);
       setDataUsers(res);
     } catch (error) {
       console.log(error);

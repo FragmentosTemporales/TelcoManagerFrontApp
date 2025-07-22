@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Box } from "@mui/material";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import CreateArea from "./views/CreateArea";
 import Home from "./views/Home";
@@ -13,7 +12,6 @@ import FormCalidad from "./views/CreateFormCalidad";
 import FormRRHH from "./views/CreateFormRRHH";
 import FormOperaciones from "./views/CreateFormOperaciones";
 import FormLogistica from "./views/CreateFormLogistica";
-import NotificacionesView from "./views/Notificaciones";
 import ReversaView from "./views/Reversa";
 import Charts from "./views/Charts";
 import CreateZone from "./views/CreateZone";
@@ -68,7 +66,6 @@ function App() {
           <Route path="/RECURSOS HUMANOS/:logID" element={<FormRRHH />} />
           <Route path="/OPERACIONES/:logID" element={<FormOperaciones />} />
           <Route path="/LOGISTICA/:logID" element={<FormLogistica />} />
-          <Route path="/notificaciones" element={<NotificacionesView />} />
           <Route path="/modulo:reversa" element={<ReversaView />} />
           <Route path="/createzone" element={<CreateZone />} />
           <Route path="/objetivos" element={<ObjetivosView />} />
