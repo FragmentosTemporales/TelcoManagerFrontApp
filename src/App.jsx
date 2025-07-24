@@ -25,7 +25,6 @@ import BodegaViewer from "./views/BodegaView";
 import BodegaQuintaViewer from "./views/BodegaQuintaView";
 import AtencionTotem from "./views/AtencionTotem";
 import SupervisorViewRM from "./views/SupervisorViewRM";
-import ChatBotViewer from "./views/ChatbotView";
 import AgendamientoViewer from "./views/AgendamientoView";
 import AllAgendamientoViewer from "./views/AllAgendamientosView";
 import AmonesatacionesViewer from "./views/AmonestacionesUserView";
@@ -72,7 +71,6 @@ function App() {
           <Route path="/configuraciones" element={<Settings />} />
           <Route path="/totem" element={<AtencionTotem />} />
           <Route path="/supervisor" element={<SupervisorViewRM />} />
-          <Route path="/chatbot" element={<ChatBotViewer />} />
           <Route path="/agendamientos" element={<AgendamientoViewer />} />
           <Route path="/auditorias" element={<CreateAuditoria />} />
           <Route path="/all_agendamientos" element={<AllAgendamientoViewer />} />
