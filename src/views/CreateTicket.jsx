@@ -88,7 +88,9 @@ function TicketeraView() {
           const transformedOptions2 = [
             { value: "ACCESO A REPORTE", label: "ACCESO A REPORTE" },
             { value: "CREACION DE PERMISOS", label: "CREACION DE PERMISOS" },
+            { value: "CREACION DE OT EN SGS", label: "CREACION DE OT EN SGS" },
             { value: "CREACION DE USUARIO", label: "CREACION DE USUARIO" },
+            { value: "ELIMINAR USUARIO/PERMISO", label: "ELIMINAR USUARIO/PERMISO" },
             {
               value: "OTROS",
               label: "OTROS",

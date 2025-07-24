@@ -245,60 +245,60 @@ export default function CreateMigracionesProactivas() {
     >
 
       {QMigracionesPendientesVista && QMigracionesPendientesVista.length > 0 && (
-  <Box
-    sx={{
-      width: "100%",
-      backgroundColor: "#0b2f6d",
-      overflow: "hidden",
-      border: "1px solid black",
-      marginBottom: 2,
-      display: "flex",
-      alignItems: "center",
-    }}
-  >
-    {/* Texto fijo a la izquierda */}
-    <Box
-      sx={{
-        flexShrink: 0,
-        padding: "8px 16px",
-        backgroundColor: "#0b2f6d",
-      }}
-    >
-      <Typography fontFamily="monospace" sx={{ color: "white" }}>
-        MIGRACIONES PENDIENTES POR COMUNA
-      </Typography>
-    </Box>
-
-    {/* Texto desplazable */}
-    <Box
-      component="marquee"
-      behavior="scroll"
-      direction="left"
-      scrollAmount="5"
-      sx={{
-        flexGrow: 1,
-        whiteSpace: "nowrap",
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      {QMigracionesPendientesVista.map((item) => (
         <Box
-          key={item.id}
           sx={{
-            display: "inline-flex",
+            width: "100%",
+            backgroundColor: "#0b2f6d",
+            overflow: "hidden",
+            border: "1px solid black",
+            marginBottom: 2,
+            display: "flex",
             alignItems: "center",
-            marginRight: 4,
           }}
         >
-          <Typography fontFamily="monospace" sx={{ color: "yellow" }}>
-            {item.COMUNA}: {item.Q}
-          </Typography>
+          {/* Texto fijo a la izquierda */}
+          <Box
+            sx={{
+              flexShrink: 0,
+              padding: "8px 16px",
+              backgroundColor: "#0b2f6d",
+            }}
+          >
+            <Typography fontFamily="monospace" sx={{ color: "white" }}>
+              MIGRACIONES PENDIENTES POR COMUNA
+            </Typography>
+          </Box>
+
+          {/* Texto desplazable */}
+          <Box
+            component="marquee"
+            behavior="scroll"
+            direction="left"
+            scrollAmount="5"
+            sx={{
+              flexGrow: 1,
+              whiteSpace: "nowrap",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {QMigracionesPendientesVista.map((item) => (
+              <Box
+                key={item.id}
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  marginRight: 4,
+                }}
+              >
+                <Typography fontFamily="monospace" sx={{ color: "yellow" }}>
+                  {item.COMUNA}: {item.Q}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
         </Box>
-      ))}
-    </Box>
-  </Box>
-)}
+      )}
 
 
       {open && (
@@ -933,6 +933,7 @@ export default function CreateMigracionesProactivas() {
                     Contacto
                   </InputLabel>
                   <Select
+                    required
                     id="contacto-select"
                     value={form.contacto}
                     onChange={(e) =>
@@ -961,6 +962,7 @@ export default function CreateMigracionesProactivas() {
                     Ingreso
                   </InputLabel>
                   <Select
+                    required
                     id="ingreso-select"
                     value={form.ingreso}
                     onChange={(e) =>
