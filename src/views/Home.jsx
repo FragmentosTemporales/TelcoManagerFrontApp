@@ -14,6 +14,12 @@ function Home() {
       moduloID: 26,
     },
     {
+      head: "Gestion de Proyectos",
+      title: "Gestiona tus proyectos y tareas",
+      link: "/modulo:proyecto-interno",
+      moduloID: 26,
+    },
+    {
       head: "Migraciones Proactivas",
       title: "Vista de Migraciones Proactivas",
       link: "/modulo:migraciones-proactivas",
