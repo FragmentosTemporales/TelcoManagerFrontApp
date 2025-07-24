@@ -32,7 +32,6 @@ import {
   getAuditores,
 } from "../api/calidadAPI";
 import { useSelector } from "react-redux";
-import AuditoriaCharts from "../components/auditoriaCharts";
 
 function AuditoriasView() {
   const authState = useSelector((state) => state.auth);

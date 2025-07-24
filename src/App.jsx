@@ -16,16 +16,11 @@ import ReversaView from "./views/Reversa";
 import Charts from "./views/Charts";
 import CreateZone from "./views/CreateZone";
 import ObjetivosView from "./views/Objetivos";
-import ProyectosView from "./views/Proyectos";
-import AsignadosView from "./views/AsignadosView";
-import Asignado from "./views/AsignadoView";
 import FormAstCreate from "./views/FormAstView";
 import FormAstList from "./views/AstListView";
 import AstViewer from "./views/AstFormView";
 import SuccessView from "./views/SuccessView";
-import ComponenteAsignadoView from "./views/ComponenteAsignadoView";
 import Settings from "./views/Settings";
-import AsignadosViewUser from "./views/AsignadosUserEsp";
 import BodegaViewer from "./views/BodegaView";
 import BodegaQuintaViewer from "./views/BodegaQuintaView";
 import AtencionTotem from "./views/AtencionTotem";
@@ -70,10 +65,6 @@ function App() {
           <Route path="/modulo:reversa" element={<ReversaView />} />
           <Route path="/createzone" element={<CreateZone />} />
           <Route path="/objetivos" element={<ObjetivosView />} />
-          <Route path="/proyectos" element={<ProyectosView />} />
-          <Route path="/asignados" element={<AsignadosView />} />
-          <Route path="/asignados-user" element={<AsignadosViewUser />} />
-          <Route path="/asignado/:proyectoID" element={<Asignado />} />
           <Route path="/form-ast" element={<FormAstCreate />} />
           <Route path="/form-ast-list" element={<FormAstList />} />
           <Route path="/formulario-ast/:formID" element={<AstViewer />} />
@@ -97,10 +88,6 @@ function App() {
           <Route path="/modulo:create-migracion-proactiva" element={<CreateMigracionesProactivas />} />
           <Route path="/modulo:migraciones-proactivas" element={<MigracionesViewer />} />
           <Route path="/modulo:proyecto-interno" element={<ProyectoInternoView />} />
-          <Route
-            path="/componente-asignado/:componenteID"
-            element={<ComponenteAsignadoView />}
-          />
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />
         <Route path="/bodegaQuinta" element={<BodegaQuintaViewer />} />

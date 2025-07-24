@@ -104,7 +104,7 @@ function ProyectoInternoView() {
       ...prev,
       [tareaId]: newValue
     }));
-    
+
     // Update form state for submission
     setEstadoForm({
       tarea_id: tareaId,
@@ -117,7 +117,7 @@ function ProyectoInternoView() {
     if (localEstados[tarea.id]) {
       return localEstados[tarea.id];
     }
-    
+
     // Otherwise, use the original state from the task
     return tarea.estado_tarea && tarea.estado_tarea.length > 0
       ? tarea.estado_tarea[tarea.estado_tarea.length - 1].descripcion
@@ -167,6 +167,28 @@ function ProyectoInternoView() {
         </Typography>
       </Box>
 
+      <Box
+        sx={{
+          width: "95%",
+          marginTop: 2,
+          paddingX: 2,
+          display: "flex",
+          justifyContent: "start",
+        }}
+      >
+        <Button
+          variant="contained"
+          disabled
+          sx={{ 
+            backgroundColor: "#0b2f6d", 
+            color: "white", 
+            borderRadius: 2, 
+            width: "200px" }}
+        >
+          Crear Nuevo
+        </Button>
+      </Box>
+
       {isSubmitting && (!data || data.length === 0) && (
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
           <CircularProgress size={60} />
@@ -175,189 +197,189 @@ function ProyectoInternoView() {
 
       {data && data.length > 0
         ? data.map((proyecto, index) => (
+          <Box
+            key={index}
+            sx={{
+              width: "95%",
+              backgroundColor: "white",
+              borderRadius: 2,
+              padding: 2,
+              marginY: 2,
+              border: "1px solid #dfdeda",
+            }}
+          >
             <Box
-              key={index}
+              onClick={() => toggleProject(index)}
               sx={{
-                width: "95%",
-                backgroundColor: "white",
                 borderRadius: 2,
-                padding: 2,
-                marginY: 2,
-                border: "1px solid #dfdeda",
+                paddingY: 1,
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                "&:hover": {
+                  backgroundColor: "#f9f9f9",
+                },
               }}
             >
-              <Box
-                onClick={() => toggleProject(index)}
-                sx={{
-                  borderRadius: 2,
-                  paddingY: 1,
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  "&:hover": {
-                    backgroundColor: "#f9f9f9",
-                  },
-                }}
-              >
-                <Box sx={{ flex: 1 }}>
+              <Box sx={{ flex: 1 }}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: "bold", marginBottom: 1, marginLeft: 1 }}
+                >
+                  {proyecto.nombre ? proyecto.nombre : "Sin Nombre"}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    marginBottom: 1,
+                    marginLeft: 1,
+                    fontSize: "14px",
+                    fontStyle: "italic",
+                    color: "#555",
+                  }}
+                >
+                  {proyecto.descripcion
+                    ? proyecto.descripcion
+                    : "Sin Descripcion"}
+                </Typography>
+                {proyecto.tareas && proyecto.tareas.length > 0 && (
                   <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold", marginBottom: 1, marginLeft: 1 }}
-                  >
-                    {proyecto.nombre ? proyecto.nombre : "Sin Nombre"}
-                  </Typography>
-                  <Typography
-                    variant="body1"
+                    variant="body2"
                     sx={{
-                      marginBottom: 1,
                       marginLeft: 1,
-                      fontSize: "14px",
-                      fontStyle: "italic",
-                      color: "#555",
+                      fontSize: "12px",
+                      color: "#888",
                     }}
                   >
-                    {proyecto.descripcion
-                      ? proyecto.descripcion
-                      : "Sin Descripcion"}
+                    {proyecto.tareas.length} tarea
+                    {proyecto.tareas.length !== 1 ? "s" : ""}
                   </Typography>
-                  {proyecto.tareas && proyecto.tareas.length > 0 && (
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        marginLeft: 1,
-                        fontSize: "12px",
-                        color: "#888",
-                      }}
-                    >
-                      {proyecto.tareas.length} tarea
-                      {proyecto.tareas.length !== 1 ? "s" : ""}
-                    </Typography>
-                  )}
-                </Box>
-                {proyecto.tareas && proyecto.tareas.length > 0 && (
-                  <IconButton>
-                    {expandedProjects[index] ? <ExpandLess /> : <ExpandMore />}
-                  </IconButton>
                 )}
               </Box>
-
-              {isSubmitting && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-                  <CircularProgress />
-                </Box>
+              {proyecto.tareas && proyecto.tareas.length > 0 && (
+                <IconButton>
+                  {expandedProjects[index] ? <ExpandLess /> : <ExpandMore />}
+                </IconButton>
               )}
-              {!isSubmitting && proyecto.tareas &&
-                proyecto.tareas.length > 0 &&
-                expandedProjects[index] && (
-                  <Box sx={{ marginTop: 2 }}>
-                    <Typography
-                      variant="h6"
+            </Box>
+
+            {isSubmitting && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                <CircularProgress />
+              </Box>
+            )}
+            {!isSubmitting && proyecto.tareas &&
+              proyecto.tareas.length > 0 &&
+              expandedProjects[index] && (
+                <Box sx={{ marginTop: 2 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: "bold",
+                      marginBottom: 1,
+                      marginLeft: 1,
+                    }}
+                  >
+                    Tareas
+                  </Typography>
+                  {proyecto.tareas.map((tarea, tareaIndex) => (
+                    <Box
+                      key={tareaIndex}
                       sx={{
-                        fontWeight: "bold",
+                        backgroundColor: "#f5f5f5",
+                        padding: 2,
+                        borderRadius: 1,
                         marginBottom: 1,
-                        marginLeft: 1,
+                        marginX: 1,
+                        border: "1px solid #e0e0e0",
+                        display: "flex",
+                        flexDirection: { lg: "row", xs: "column" },
                       }}
                     >
-                      Tareas
-                    </Typography>
-                    {proyecto.tareas.map((tarea, tareaIndex) => (
+                      <Box sx={{ width: { lg: "100%" } }}>
+                        <Typography
+                          variant="body1"
+                          sx={{ fontWeight: "bold", marginBottom: 0.5 }}
+                        >
+                          {tarea.titulo ? tarea.titulo : "Sin Titulo"}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ fontWeight: "bold", marginTop: 0.5 }}
+                        >
+                          {tarea.estado_tarea && tarea.estado_tarea.length > 0
+                            ? tarea.estado_tarea[
+                              tarea.estado_tarea.length - 1
+                            ].descripcion
+                            : "Sin Estado"}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ marginTop: 0.5, fontStyle: "italic" }}
+                        >
+                          {tarea.usuario && tarea.usuario.nombre
+                            ? tarea.usuario.nombre
+                            : "Sin Estado"}
+                        </Typography>
+
+                        <Typography
+                          variant="body2"
+                          sx={{ marginTop: 0.5, fontStyle: "italic" }}
+                        >
+                          {tarea.descripcion
+                            ? tarea.descripcion
+                            : "Sin Descripcion"}
+                        </Typography>
+                      </Box>
+
                       <Box
-                        key={tareaIndex}
                         sx={{
-                          backgroundColor: "#f5f5f5",
-                          padding: 2,
-                          borderRadius: 1,
-                          marginBottom: 1,
-                          marginX: 1,
-                          border: "1px solid #e0e0e0",
-                          display: "flex",
-                          flexDirection: { lg: "row", xs: "column" },
+                          width: { lg: "100%" },
+                          marginY: 1,
                         }}
                       >
-                        <Box sx={{ width: { lg: "100%" } }}>
-                          <Typography
-                            variant="body1"
-                            sx={{ fontWeight: "bold", marginBottom: 0.5 }}
+                        <form onSubmit={handleEstadoChange}>
+                          <Select
+                            disabled={!(tarea.userID == user_id) || isSubmitting}
+                            variant="standard"
+                            onChange={(e) => {
+                              console.log(e.target.value);
+                              handleSelectChange(tarea.id, e.target.value);
+                            }}
+                            sx={{ width: "100%", marginTop: 1 }}
+                            value={getSelectValue(tarea)}
                           >
-                            {tarea.titulo ? tarea.titulo : "Sin Titulo"}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ fontWeight: "bold", marginTop: 0.5 }}
+                            {estados.map((estado) => (
+                              <MenuItem
+                                key={estado.value}
+                                value={estado.value}
+                              >
+                                {estado.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              marginTop: 1,
+                              width: "100%",
+                              backgroundColor: "#0b2f6d",
+                            }}
+                            disabled={!(tarea.userID == user_id) || isSubmitting}
+                            type="submit"
+                            startIcon={isSubmitting ? <CircularProgress size={16} color="inherit" /> : null}
                           >
-                            {tarea.estado_tarea && tarea.estado_tarea.length > 0
-                              ? tarea.estado_tarea[
-                                  tarea.estado_tarea.length - 1
-                                ].descripcion
-                              : "Sin Estado"}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ marginTop: 0.5, fontStyle: "italic" }}
-                          >
-                            {tarea.usuario && tarea.usuario.nombre
-                              ? tarea.usuario.nombre
-                              : "Sin Estado"}
-                          </Typography>
-
-                          <Typography
-                            variant="body2"
-                            sx={{ marginTop: 0.5, fontStyle: "italic" }}
-                          >
-                            {tarea.descripcion
-                              ? tarea.descripcion
-                              : "Sin Descripcion"}
-                          </Typography>
-                        </Box>
-
-                        <Box
-                          sx={{
-                            width: { lg: "100%" },
-                            marginY: 1,
-                          }}
-                        >
-                          <form onSubmit={handleEstadoChange}>
-                            <Select
-                              disabled={!(tarea.userID == user_id) || isSubmitting}
-                              variant="standard"
-                              onChange={(e) => {
-                                console.log(e.target.value);
-                                handleSelectChange(tarea.id, e.target.value);
-                              }}
-                              sx={{ width: "100%", marginTop: 1 }}
-                              value={getSelectValue(tarea)}
-                            >
-                              {estados.map((estado) => (
-                                <MenuItem
-                                  key={estado.value}
-                                  value={estado.value}
-                                >
-                                  {estado.label}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                            <Button
-                              variant="contained"
-                              sx={{
-                                marginTop: 1,
-                                width: "100%",
-                                backgroundColor: "#0b2f6d",
-                              }}
-                              disabled={!(tarea.userID == user_id) || isSubmitting}
-                              type="submit"
-                              startIcon={isSubmitting ? <CircularProgress size={16} color="inherit" /> : null}
-                            >
-                              {isSubmitting ? "Actualizando..." : "Actualizar"}
-                            </Button>
-                          </form>
-                        </Box>
+                            {isSubmitting ? "Actualizando..." : "Actualizar"}
+                          </Button>
+                        </form>
                       </Box>
-                    ))}
-                  </Box>
-                )}
-            </Box>
-          ))
+                    </Box>
+                  ))}
+                </Box>
+              )}
+          </Box>
+        ))
         : null}
     </Box>
   );

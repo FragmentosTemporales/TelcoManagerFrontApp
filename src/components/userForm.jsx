@@ -2,9 +2,6 @@ import {
   Alert,
   Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   CircularProgress,
   InputLabel,
   MenuItem,
@@ -12,11 +9,10 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { createUser } from "../api/authAPI";
-import { getEmpresas } from "../api/proyectoAPI";
+import { getEmpresas } from "../api/authAPI";
 
 function UserForm() {
   const authState = useSelector((state) => state.auth);

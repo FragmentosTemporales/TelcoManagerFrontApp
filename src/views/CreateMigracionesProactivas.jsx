@@ -333,7 +333,7 @@ export default function CreateMigracionesProactivas() {
         {dataPendiente && dataPendiente.length > 0 || dataGestiones && dataGestiones.length > 0 ? (
           <Box
             sx={{
-              width: { lg: "20%", md: "80%", sm: "100%", xs: "100%" },
+              width: { lg: "20%", md: "100%", sm: "100%", xs: "100%" },
               height: "100%",
               display: "flex",
               flexDirection: "column",
@@ -464,6 +464,7 @@ export default function CreateMigracionesProactivas() {
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
+                  marginBottom: 2,
                 }}
               >
                 {dataGestiones.map((item) => (

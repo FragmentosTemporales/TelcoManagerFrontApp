@@ -73,18 +73,6 @@ function Home() {
       link: "/objetivos",
       moduloID: 5,
     },
-    // {
-    //   head: "Reparaciones",
-    //   title: "Creación de Reparaciones",
-    //   link: "/modulo:crear-reparacion",
-    //   moduloID: 1,
-    // },
-    // {
-    //   head: "Asignados OnNet General",
-    //   title: "Espacio para visualizar Proyectos Asignados",
-    //   link: "/asignados",
-    //   moduloID: 11,
-    // },
     {
       head: "Gestión Bodega RM",
       title:
@@ -110,36 +98,12 @@ function Home() {
       link: "/supervisor",
       moduloID: 14,
     },
-    // {
-    //   head: "Chat Soporte",
-    //   title: "Espacio para consulta y soporte técnico",
-    //   link: "/chatbot",
-    //   moduloID: 15,
-    // },
     {
       head: "Agendamiento",
       title: "Gestiona despachos y agendamientos",
       link: "/agendamientos",
       moduloID: 19,
     },
-    // {
-    //   head: "Buscador de Ordenes",
-    //   title: "Buscador de Ordenes de Trabajo",
-    //   link: "/orden_info",
-    //   moduloID: 19,
-    // },
-    // {
-    //   head: "Auditorías",
-    //   title: "Gestiona y crea auditorías",
-    //   link: "/auditorias",
-    //   moduloID: 21,
-    // },
-    // {
-    //   head: "Lista de Auditorías",
-    //   title: "Gestiona y visualiza auditorías",
-    //   link: "/all_auditorias",
-    //   moduloID: 22,
-    // },
     {
       head: "Lista de Proyectos Consolidados",
       title: "Gestiona y visualiza Proyectos",

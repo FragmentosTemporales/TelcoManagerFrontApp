@@ -77,3 +77,19 @@ export const updatePass = async (payload, token) => {
     throw error.response.data.error;
   }
 }
+
+export const getEmpresas = async (token) => {
+  try {
+    const url = `${baseUrl}/get-empresas`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
