@@ -34,6 +34,8 @@ import {
   getAstUsers,
 } from "../api/prevencionAPI";
 import { Link } from "react-router-dom";
+import { MainLayout } from "./Layout";
+
 
 function FormAstList() {
   const authState = useSelector((state) => state.auth);
@@ -67,8 +69,6 @@ const extractDate = (gmtString) => {
   
   return formattedDateTime;
 };
-
-
 
   const fetchData = async () => {
     try {
@@ -135,7 +135,8 @@ const extractDate = (gmtString) => {
         height: "100%",
         overflow: "auto",
         marginTop: 2,
-        boxShadow: 2,
+        borderRadius: 2,
+        border: "2px solid #dfdeda",
       }}
     >
       <Table stickyHeader>
@@ -189,7 +190,7 @@ const extractDate = (gmtString) => {
           fontWeight: "bold",
           display: "flex",
           justifyContent: "space-around",
-          borderRadius: "0px",
+          borderRadius: 2,
           background: "#0b2f6d",
         }}
       >
@@ -230,7 +231,8 @@ const extractDate = (gmtString) => {
         width: "90%",
         overflow: "hidden",
         backgroundColor: "white",
-        boxShadow: 2,
+        border: "2px solid #dfdeda",
+        borderRadius: 2,
         textAlign: "center",
         mt: 2,
         paddingTop: 3,
@@ -319,9 +321,8 @@ const extractDate = (gmtString) => {
           width: "90%",
           overflow: "hidden",
           backgroundColor: "#f5f5f5",
-          boxShadow: 5,
           textAlign: "center",
-          borderRadius: "0px",
+          borderRadius: 2,
           mt: 2,
           mb: 2,
         }}
@@ -646,6 +647,7 @@ const extractDate = (gmtString) => {
   }, [centroCosto]);
 
   return (
+    <MainLayout showNavbar={true}>
     <Box
       sx={{
         display: "flex",
@@ -655,8 +657,7 @@ const extractDate = (gmtString) => {
         height: "100%",
         width: "100%",
         overflow: "auto",
-        paddingTop: 8,
-        paddingBottom: "50px",
+        paddingY: "60px",
         backgroundColor: "#f0f0f0",
       }}
     >
@@ -690,6 +691,7 @@ const extractDate = (gmtString) => {
         </>
       )}
     </Box>
+    </MainLayout>
   );
 }
 

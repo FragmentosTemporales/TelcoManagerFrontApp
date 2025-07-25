@@ -1,15 +1,11 @@
-import { Box } from "@mui/material";
 import UserForm from "../components/userForm";
+import { MainLayout } from "./Layout";
 
 function CreateZone() {
   return (
-    <Box
-      sx={{
-        marginTop: "60px",
-      }}
-    >
-      <UserForm />
-    </Box>
+    <MainLayout>
+        <UserForm />
+    </MainLayout>
   );
 }
 

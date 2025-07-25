@@ -1116,8 +1116,7 @@ function Solicitud() {
         width: "80%",
         marginTop: 2,
         backgroundColor: "white",
-        boxShadow: 2,
-        border: "1px solid #dfdeda",
+        border: "2px solid #dfdeda",
         borderRadius: 2,
       }}
     >
@@ -1206,8 +1205,7 @@ function Solicitud() {
         width: "80%",
         marginTop: 2,
         backgroundColor: "white",
-        boxShadow: 2,
-        border: "1px solid #dfdeda",
+        border: "2px solid #dfdeda",
         borderRadius: 2,
       }}
     >
@@ -1224,26 +1222,23 @@ function Solicitud() {
         >
           <Typography
             variant="body1"
-            component="div"
-            sx={{ color: "text.secondary", pb: 6, fontFamily: "initial" }}
+            sx={{ color: "text.secondary", py: 3 }}
           >
             Sin información
           </Typography>
-          <Box paddingBottom={2}>
-            <Button
-              variant="contained"
-              sx={{
-                background: "#0b2f6d",
-                width: "300px",
-                borderRadius: 2,
-              }}
-              onClick={() => {
-                downloadInforme();
-              }}
-            >
-              Descarga Plantilla Informe
-            </Button>
-          </Box>
+          <Button
+            variant="contained"
+            sx={{
+              background: "#0b2f6d",
+              width: "300px",
+              borderRadius: 2,
+            }}
+            onClick={() => {
+              downloadInforme();
+            }}
+          >
+            Descarga Plantilla Informe
+          </Button>
           <Link to={`/${data.area}/${data.logID}`}>
             <Button
               variant="contained"
@@ -1251,6 +1246,7 @@ function Solicitud() {
                 background: "#0b2f6d",
                 width: "300px",
                 borderRadius: 2,
+                my: 1,
               }}
             >
               Crear Formulario
@@ -1267,9 +1263,8 @@ function Solicitud() {
         width: "80%",
         marginTop: 2,
         backgroundColor: "white",
-        boxShadow: 2,
         borderRadius: 2,
-        border: "1px solid #dfdeda",
+        border: "2px solid #dfdeda",
       }}
     >
       {[
@@ -1328,9 +1323,8 @@ function Solicitud() {
         alignItems: "center",
         justifyContent: "center",
         overflow: "auto",
-        paddingTop: "80px",
-        paddingBottom: "20px",
         backgroundColor: "#f0f0f0",
+        py: 2
       }}
     >
       {/* COMPONENTE MODAL PARA APROBAR AMONESTACION */}
@@ -1402,17 +1396,16 @@ function Solicitud() {
             sx={{
               width: "80%",
               overflow: "hidden",
-              mt: 3,
               mx: "auto",
             }}
           >
             <Link to="/modulo:solicitudes">
               <Button
                 variant="contained"
-                sx={{ background: "#0b2f6d", borderRadius: 2 }}
+                sx={{ background: "#0b2f6d", borderRadius: 2, width: "200px" }}
               >
                 <Typography sx={{ color: "white" }}>
-                  IR A SOLICITUDES
+                  Volver
                 </Typography>
               </Button>
             </Link>
@@ -1431,8 +1424,8 @@ function Solicitud() {
           {/* BOX PARA ANULAR AMONESTACIONES */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {(user_id == 4) &
-            (dataGestiones[0].estado != "ANULADA" &&
-              dataGestiones[0].estado != "FINALIZADA")
+              (dataGestiones[0].estado != "ANULADA" &&
+                dataGestiones[0].estado != "FINALIZADA")
               ? componenteAnulacion()
               : null}
           </Box>
@@ -1440,7 +1433,7 @@ function Solicitud() {
           {/* BOX PARA EVALUACION LEGAL */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
-            (dataGestiones[0].estado == "ENVIADA A RRHH")
+              (dataGestiones[0].estado == "ENVIADA A RRHH")
               ? componenteRequiereLegal()
               : null}
           </Box>
@@ -1448,7 +1441,7 @@ function Solicitud() {
           {/* BOX PARA EVALUACION LEGAL */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
-            (dataGestiones[0].estado == "EVALUACION LEGAL")
+              (dataGestiones[0].estado == "EVALUACION LEGAL")
               ? componenteRequiereEmpleador()
               : null}
           </Box>
@@ -1456,7 +1449,7 @@ function Solicitud() {
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
-            (dataGestiones[0].estado == "PENDIENTE FIRMA EMPLEADOR")
+              (dataGestiones[0].estado == "PENDIENTE FIRMA EMPLEADOR")
               ? componenteOperativo()
               : null}
           </Box>
@@ -1464,7 +1457,7 @@ function Solicitud() {
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
-            (dataGestiones[0].estado == "LICENCIA MEDICA")
+              (dataGestiones[0].estado == "LICENCIA MEDICA")
               ? componenteLicencia()
               : null}
           </Box>
@@ -1472,7 +1465,7 @@ function Solicitud() {
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
-            (dataGestiones[0].estado == "VACACIONES")
+              (dataGestiones[0].estado == "VACACIONES")
               ? componenteVacaciones()
               : null}
           </Box>
@@ -1480,7 +1473,7 @@ function Solicitud() {
           {/* BOX PARA DEFINIR ESTADO DE FIRMA */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {(user_id == validate) &
-            (dataGestiones[0].estado == "PENDIENTE FIRMA TRABAJADOR")
+              (dataGestiones[0].estado == "PENDIENTE FIRMA TRABAJADOR")
               ? componenteFirmada()
               : null}
           </Box>
@@ -1488,7 +1481,7 @@ function Solicitud() {
           {/* BOX PARA DEFINIR ESTADO DE NO FIRMADA */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
-            (dataGestiones[0].estado == "NO FIRMADA")
+              (dataGestiones[0].estado == "NO FIRMADA")
               ? componenteNoFirmada()
               : null}
           </Box>
@@ -1496,7 +1489,7 @@ function Solicitud() {
           {/* BOX PARA TRABAJADOR DESVINCULADO */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {area &&
-            (area.areaID === 5) &
+              (area.areaID === 5) &
               (dataGestiones[0].estado != "TRABAJADOR DESVINCULADO")
               ? componenteDesvinculado()
               : null}
@@ -1505,7 +1498,7 @@ function Solicitud() {
           {/* BOX PARA DEFINIR ESTADO FINALIZADA */}
           <Box sx={{ width: "100%", mx: "auto" }}>
             {(area && area.areaID === 5) &
-            (dataGestiones[0].estado == "FIRMADA" || dataGestiones[0].estado == "ENVIADA POR CORREO")
+              (dataGestiones[0].estado == "FIRMADA" || dataGestiones[0].estado == "ENVIADA POR CORREO")
               ? componenteFinalizada()
               : null}
           </Box>

@@ -63,21 +63,6 @@ export const getInfoProyecto = async (token, proyecto) => {
   }
 };
 
-export const getInfoSeguimiento = async (token, proyecto) => {
-  try {
-    const url = `${baseUrl}/get-seguimiento-proyecto/${proyecto}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response.data.error;
-  }
-};
-
 export const getProyectosFiltrados = async (token, payload, page) => {
   try {
     const url = `${baseUrl}/get-proyectos-filtrados/${page}`;
@@ -133,38 +118,6 @@ export const sendPlantillaAgendaProyecto = async (payload, token) => {
     });
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
-  }
-};
-
-export const createSeguimientoProyecto = async (payload, token) => {
-  try {
-    const url = `${baseUrl}/create-seguimiento-proyecto`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.log(error)
-    throw error.response.data.error;
-  }
-};
-
-export const updateSeguimientoProyecto = async (payload, token) => {
-  try {
-    const url = `${baseUrl}/update-seguimiento-proyecto`;
-    const response = await axios.put(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.log(error)
     throw error.response.data.error;
   }
 };

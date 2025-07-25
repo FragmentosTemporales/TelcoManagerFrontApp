@@ -1,5 +1,4 @@
 import {
-  Alert,
   Box,
   Card,
   CardContent,
@@ -82,18 +81,17 @@ function BodegaQuintaViewer() {
 
 const AtencionBodegaCard = ({ atencionBodega }) => (
   <Card
-    sx={{
-      borderRadius: 2,
-      overflow: "hidden",
-      m: 1,
-    }}
-  >
-    <CardHeader
-      title={
-        <Typography
-          fontWeight="bold"
-          sx={{ fontFamily: "initial", fontSize: "1.5rem" }}
-        >
+      sx={{
+        borderRadius: 2,
+        overflow: "hidden",
+        m: 1,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography
+            variant="h6"
+          >
           EN ATENCIÓN BODEGA
         </Typography>
       }
@@ -199,18 +197,17 @@ const AtencionBodegaCard = ({ atencionBodega }) => (
 
 const AtencionLogisticaCard = ({ atencionLogistica }) => (
   <Card
-    sx={{
-      borderRadius: 2,
-      overflow: "hidden",
-      m: 1,
-    }}
-  >
-    <CardHeader
-      title={
-        <Typography
-          fontWeight="bold"
-          sx={{ fontFamily: "initial", fontSize: "1.5rem" }}
-        >
+      sx={{
+        borderRadius: 2,
+        overflow: "hidden",
+        m: 1,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography
+            variant="h6"
+          >
           EN ATENCIÓN LOGÍSTICA
         </Typography>
       }
@@ -314,18 +311,17 @@ const AtencionLogisticaCard = ({ atencionLogistica }) => (
 
 const EsperaBodegaCard = ({ esperaBodega }) => (
   <Card
-    sx={{
-      borderRadius: 2,
-      overflow: "hidden",
-      m: 1,
-    }}
-  >
-    <CardHeader
-      title={
-        <Typography
-          fontWeight="bold"
-          sx={{ fontFamily: "initial", fontSize: "1.5rem" }}
-        >
+      sx={{
+        borderRadius: 2,
+        overflow: "hidden",
+        m: 1,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography
+            variant="h6"
+          >
           EN ESPERA BODEGA
         </Typography>
       }
@@ -433,18 +429,17 @@ const EsperaBodegaCard = ({ esperaBodega }) => (
 
 const EsperaLogisticaCard = ({ esperaLogistica }) => (
   <Card
-    sx={{
-      borderRadius: 2,
-      overflow: "hidden",
-      m: 1,
-    }}
-  >
-    <CardHeader
-      title={
-        <Typography
-          fontWeight="bold"
-          sx={{ fontFamily: "initial", fontSize: "1.5rem" }} 
-        >
+      sx={{
+        borderRadius: 2,
+        overflow: "hidden",
+        m: 1,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography
+            variant="h6"
+          >
           EN ESPERA LOGÍSTICA
         </Typography>
       }
@@ -552,15 +547,16 @@ const EsperaLogisticaCard = ({ esperaLogistica }) => (
 
 return (
   <Box
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      background: "white",
-      alignItems: "center",
-      marginTop: "70px",
-    }}
-  >
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        background: "#f5f5f5",
+        alignItems: "center",
+        paddingY: "40px",
+        minHeight: "90vh",
+      }}
+    >
 
     <Box sx={{ display: "flex", justifyContent: "space-evenly", width: "100%" }}>
       <CardContent sx={{width: "100%"}}>

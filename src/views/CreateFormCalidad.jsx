@@ -85,33 +85,32 @@ import {
     
     return (
       <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          background: "white",
-          alignItems: "center",
-          pt: 8,
-          height: "100%",
-        }}
-      >
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        py: 3,
+        height: "95vh",
+        background: "#f5f5f5",
+      }}
+    >
         {open && (
           <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
             {message}
           </Alert>
         )}
         <Card
-          sx={{
-            borderRadius: "10px",
-            width: "50%",
-            height: "100%",
-            overflow: "auto",
-            boxShadow: 5,
-          }}
-        >
+        sx={{
+          borderRadius: 2,
+          width: "50%",
+          overflow: "auto",
+          border: "2px solid #dfdeda",
+        }}
+      >
           <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            <Typography fontWeight="bold">
               FORMULARIO CALIDAD
             </Typography>
           }
@@ -139,7 +138,7 @@ import {
                   id="fechaEvento"
                   type="date"
                   name="fechaEvento"
-                  variant="outlined"
+                variant="standard"
                   value={form.fechaEvento}
                   onChange={handleChange}
                 />
@@ -153,7 +152,7 @@ import {
                   id="fechaAuditoria"
                   type="date"
                   name="fechaAuditoria"
-                  variant="outlined"
+                variant="standard"
                   value={form.fechaAuditoria}
                   onChange={handleChange}
                 />
@@ -167,7 +166,7 @@ import {
                   id="ubicacion"
                   type="text"
                   name="ubicacion"
-                  variant="outlined"
+                variant="standard"
                   value={form.ubicacion}
                   onChange={handleChange}
                 />
@@ -181,7 +180,7 @@ import {
                   id="nPeticion"
                   type="text"
                   name="nPeticion"
-                  variant="outlined"
+                variant="standard"
                   value={form.nPeticion}
                   onChange={handleChange}
                 />
@@ -195,7 +194,7 @@ import {
                   id="declaracion"
                   type="text"
                   name="declaracion"
-                  variant="outlined"
+                variant="standard"
                   value={form.declaracion}
                   onChange={handleChange}
                 />
@@ -209,7 +208,7 @@ import {
                   id="file"
                   type="file"
                   name="file"
-                  variant="outlined"
+                variant="standard"
                   onChange={handleFileChange}
                 />
               </Box>
@@ -218,7 +217,7 @@ import {
               <Button
                   type="submit"
                   variant="contained"
-                  sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                  sx={{ background: "#0b2f6d", fontWeight: "bold", width: "200px" }}
                   disabled={isSubmitting}  // Deshabilitar el botón cuando isSubmitting es true
                 >
                   {isSubmitting ? "Procesando..." : "Crear"}

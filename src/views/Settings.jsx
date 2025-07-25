@@ -1,23 +1,19 @@
 import {
   Alert,
   Box,
-  Card,
-  CardContent,
-  CardHeader,
   Button,
   TextField,
   InputAdornment,
-  InputLabel,
   Typography,
   Divider,
 } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
 import { useDispatch, useSelector } from "react-redux";
 import LockIcon from "@mui/icons-material/Lock";
 import { useState } from "react";
 import { updatePass } from "../api/authAPI";
 import { setLogout } from "../slices/authSlice";
 import { domsetLogout } from "../slices/dominionSlice";
+import { MainLayout } from "./Layout";
 
 function Settings() {
   const dispatch = useDispatch();
@@ -115,6 +111,7 @@ function Settings() {
   );
 
   return (
+    <MainLayout showNavbar={true}>
     <Box
       sx={{
         display: "flex",
@@ -232,6 +229,7 @@ function Settings() {
         </form>
       </Box>
     </Box>
+    </MainLayout>
   );
 }
 

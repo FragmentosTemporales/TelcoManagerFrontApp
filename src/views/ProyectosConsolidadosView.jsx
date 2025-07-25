@@ -30,6 +30,7 @@ import {
   getQProyectosConResponsable,
   getQProyectosSinResponsable,
 } from "../api/onnetAPI";
+import { MainLayout } from "./Layout";
 
 function ProyectosOnNetView() {
   const authState = useSelector((state) => state.auth);
@@ -115,8 +116,6 @@ function ProyectosOnNetView() {
     const formattedDate = `${day}-${month}-${year}`;
     return formattedDate;
   };
-
-  const handleSubmitVisitas = async (e) => {};
 
   const handleSubmitAgendas = async (e) => {
     e.preventDefault();
@@ -235,9 +234,9 @@ function ProyectosOnNetView() {
       // Mapear los resultados al formato requerido
       const mapped = Array.isArray(response)
         ? response.map((opt) => ({
-            value: opt.macro_estado || "",
-            label: opt.macro_estado || "",
-          }))
+          value: opt.macro_estado || "",
+          label: opt.macro_estado || "",
+        }))
         : [];
       setOptionsToFilter(mapped);
     } catch (error) {
@@ -315,8 +314,8 @@ function ProyectosOnNetView() {
           alignItems: "center",
           gap: 2,
           width: { lg: "50%", md: "100%", xs: "100%" },
-          boxShadow: 2,
-          borderRadius: "0px",
+          borderRadius: 2,
+          border: "1px solid #dfdeda",
           backgroundColor: "#fff",
         }}
       >
@@ -342,7 +341,7 @@ function ProyectosOnNetView() {
               background: "#0b2f6d",
               fontWeight: "bold",
               width: "200px",
-              borderRadius: "0px",
+              borderRadius: 2,
             }}
             onClick={handleSubmitAgendas}
           >
@@ -360,8 +359,8 @@ function ProyectosOnNetView() {
           alignItems: "center",
           gap: 2,
           width: { lg: "50%", md: "100%", xs: "100%" },
-          boxShadow: 2,
-          borderRadius: "0px",
+          borderRadius: 2,
+          border: "1px solid #dfdeda",
           backgroundColor: "#fff",
         }}
       >
@@ -386,7 +385,7 @@ function ProyectosOnNetView() {
               background: "#0b2f6d",
               fontWeight: "bold",
               width: "200px",
-              borderRadius: "0px",
+              borderRadius: 2,
             }}
             disabled
           >
@@ -410,7 +409,8 @@ function ProyectosOnNetView() {
         backgroundColor: "#fff",
         pt: 2,
         pb: 2,
-        boxShadow: 2,
+        borderRadius: 2,
+        border: "1px solid #dfdeda",
       }}
     >
       <form>
@@ -565,7 +565,7 @@ function ProyectosOnNetView() {
   );
 
   const setTableProyectosSin = () => (
-    <Box sx={{width: "100%" }}>
+    <Box sx={{ width: "100%" }}>
       <Typography
         variant="h6"
         sx={{ mb: 2, textAlign: "left", fontWeight: "bold" }}
@@ -616,19 +616,19 @@ function ProyectosOnNetView() {
           dataProyectoSin.map((row, index) => (
             <TableRow key={index}>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary" fontWeight="bold">
+                <Typography variant="secondary" fontWeight="bold">
                   {row.Q ? row.Q : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.macro_estado ? row.macro_estado : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.region ? row.region : "Sin Información"}
                 </Typography>
               </TableCell>
@@ -646,7 +646,7 @@ function ProyectosOnNetView() {
   );
 
   const setTableProyectosCon = () => (
-    <Box sx={{width: "100%", mb: 2 }}>
+    <Box sx={{ width: "100%", mb: 2 }}>
       <Typography
         variant="h6"
         sx={{ mb: 2, textAlign: "left", fontWeight: "bold" }}
@@ -697,19 +697,19 @@ function ProyectosOnNetView() {
           dataProyectoCon.map((row, index) => (
             <TableRow key={index}>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary" fontWeight="bold">
+                <Typography variant="secondary" fontWeight="bold">
                   {row.Q ? row.Q : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.macro_estado ? row.macro_estado : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.region ? row.region : "Sin Información"}
                 </Typography>
               </TableCell>
@@ -727,7 +727,7 @@ function ProyectosOnNetView() {
   );
 
   const setTableMacro = () => (
-    <Box sx={{width: "100%" }}>
+    <Box sx={{ width: "100%" }}>
       <Typography
         variant="h6"
         sx={{ mb: 2, textAlign: "left", fontWeight: "bold" }}
@@ -778,19 +778,19 @@ function ProyectosOnNetView() {
           dataMacro.map((row, index) => (
             <TableRow key={index}>
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary" fontWeight="bold">
+                <Typography variant="secondary" fontWeight="bold">
                   {row.Q ? row.Q : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.macro_estado ? row.macro_estado : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.region ? row.region : "Sin Información"}
                 </Typography>
               </TableCell>
@@ -872,49 +872,49 @@ function ProyectosOnNetView() {
               }}
             >
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.proyecto ? row.proyecto : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.bandeja_onnet ? row.bandeja_onnet : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.central_fttx ? row.central_fttx : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.agencia ? row.agencia : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.despliegue ? row.despliegue : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.duracion_dias ? row.duracion_dias : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.responsable ? row.responsable : "Sin Información"}
                 </Typography>
               </TableCell>
 
               <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography  variant="secondary">
+                <Typography variant="secondary">
                   {row.fecha_asignacion ? extractDate(row.fecha_asignacion) : "Sin Información"}
                 </Typography>
               </TableCell>
@@ -942,110 +942,115 @@ function ProyectosOnNetView() {
     fetchDataProyectosSin();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-        width: "100%",
-        overflow: "auto",
-        paddingBottom: "50px",
-        minHeight: "80vh",
-        paddingTop: "67px",
-        backgroundColor: "#f5f5f5",
-      }}
-    >
-      {open && (
-        <Alert
-          onClose={handleClose}
-          severity={alertType || "info"}
-          sx={{ mt: 10, mb: 3, width: "90%" }}
-        >
-          {message || "Mensaje de alerta por defecto"}
-        </Alert>
-      )}
-
-      {loaderCard()}
-
+    <MainLayout showNavbar={true}>
       <Box
         sx={{
-          width: { lg: "90%", md: "90%", xs: "100%" },
-          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+          width: "100%",
+          overflow: "auto",
+          minHeight: "80vh",
+          paddingY: "60px",
           backgroundColor: "#f5f5f5",
-          boxShadow: 2,
-          textAlign: "center",
-          borderRadius: "0px",
-          mt: 2,
         }}
       >
-        {isLoading ? (
-          <Skeleton
-            variant="rectangular"
-            animation="wave"
-            sx={{
-              width: "100%",
-              height: "200px",
-              borderRadius: "0px",
-            }}
-          />
-        ) : (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: {lg: "row", md: "column", xs: "column"},
-              alignItems: "start",
-              backgroundColor: "#fff",
-            }}
+        {open && (
+          <Alert
+            onClose={handleClose}
+            severity={alertType || "info"}
+            sx={{ mt: 10, mb: 3, width: "90%" }}
           >
-            <Box sx={{ width: "100%", display: "flex", flexDirection: "column", m:1 }}>
-              {setTableMacro()} 
-            </Box>
-            <Box sx={{ width: "100%", display: "flex", flexDirection: "column", m:1 }}>
-            {setTableProyectosCon()}
-            {setTableProyectosSin()}
-            </Box>
-          </Box>
+            {message || "Mensaje de alerta por defecto"}
+          </Alert>
         )}
-      </Box>
 
-      {filterCard()}
-      <Box
-        sx={{
-          width: { lg: "90%", md: "90%", xs: "100%" },
-          overflow: "hidden",
-          backgroundColor: "#f5f5f5",
-          boxShadow: 2,
-          textAlign: "center",
-          borderRadius: "0px",
-          mt: 2,
-        }}
-      >
-        {isLoading ? (
-          <Skeleton
-            variant="rectangular"
-            animation="wave"
-            sx={{
-              width: "100%",
-              height: "200px",
-              borderRadius: "0px",
-            }}
-          />
-        ) : (
-          setTable()
-        )}
-      </Box>
+        {loaderCard()}
 
-      <ButtonGroup
-        size="small"
-        aria-label="pagination-button-group"
-        sx={{ p: 2 }}
-      >
-        {getButtons()}
-      </ButtonGroup>
-    </Box>
+        <Box
+          sx={{
+            width: { lg: "90%", md: "90%", xs: "100%" },
+            overflow: "hidden",
+            backgroundColor: "#f5f5f5",
+            borderRadius: 2,
+            border: "1px solid #dfdeda",
+            textAlign: "center",
+            mt: 2,
+          }}
+        >
+          {isLoading ? (
+            <Skeleton
+              variant="rectangular"
+              animation="wave"
+              sx={{
+                width: "100%",
+                height: "200px",
+                borderRadius: "0px",
+              }}
+            />
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { lg: "row", md: "column", xs: "column" },
+                alignItems: "start",
+                backgroundColor: "#fff",
+              }}
+            >
+              <Box sx={{ width: "100%", display: "flex", flexDirection: "column", m: 1 }}>
+                {setTableMacro()}
+              </Box>
+              <Box sx={{ width: "100%", display: "flex", flexDirection: "column", m: 1 }}>
+                {setTableProyectosCon()}
+                {setTableProyectosSin()}
+              </Box>
+            </Box>
+          )}
+        </Box>
+
+        {filterCard()}
+        <Box
+          sx={{
+            width: { lg: "90%", md: "90%", xs: "100%" },
+            overflow: "hidden",
+            backgroundColor: "#f5f5f5",
+            textAlign: "center",
+            borderRadius: 2,
+            border: "1px solid #dfdeda",
+            mt: 2,
+          }}
+        >
+          {isLoading ? (
+            <Skeleton
+              variant="rectangular"
+              animation="wave"
+              sx={{
+                width: "100%",
+                height: "200px",
+                borderRadius: "0px",
+              }}
+            />
+          ) : (
+            setTable()
+          )}
+        </Box>
+
+        <ButtonGroup
+          size="small"
+          aria-label="pagination-button-group"
+          sx={{ p: 2 }}
+        >
+          {getButtons()}
+        </ButtonGroup>
+      </Box>
+    </MainLayout>
   );
 }
 

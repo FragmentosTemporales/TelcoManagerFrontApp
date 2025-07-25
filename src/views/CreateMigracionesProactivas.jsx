@@ -21,6 +21,7 @@ import {
   getQMigracionesPendientesdeVista
 } from "../api/despachoAPI";
 import extractDate from "../helpers/main";
+import { MainLayout } from "./Layout";
 
 export default function CreateMigracionesProactivas() {
   const authState = useSelector((state) => state.auth);
@@ -232,15 +233,15 @@ export default function CreateMigracionesProactivas() {
 
 
   return (
+    <MainLayout showNavbar={true}>
     <Box
       sx={{
-        paddingTop: "60px",
+        paddingY: "60px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: "#f0f0f0",
         minHeight: "90vh",
-        paddingBottom: "20px"
       }}
     >
 
@@ -1088,5 +1089,6 @@ export default function CreateMigracionesProactivas() {
         </Box>
       </Box>
     </Box>
+    </MainLayout>
   );
 }

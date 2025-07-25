@@ -3,7 +3,6 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import CreateArea from "./views/CreateArea";
 import Home from "./views/Home";
 import Login from "./views/Login";
-import Navbar from "./components/navbar";
 import Solicitudes from "./views/Solicitudes";
 import Solicitud from "./views/Solicitud";
 import FormFlota from "./views/CreateFormFlota";
@@ -16,10 +15,8 @@ import ReversaView from "./views/Reversa";
 import Charts from "./views/Charts";
 import CreateZone from "./views/CreateZone";
 import ObjetivosView from "./views/Objetivos";
-import FormAstCreate from "./views/FormAstView";
 import FormAstList from "./views/AstListView";
 import AstViewer from "./views/AstFormView";
-import SuccessView from "./views/SuccessView";
 import Settings from "./views/Settings";
 import BodegaViewer from "./views/BodegaView";
 import BodegaQuintaViewer from "./views/BodegaQuintaView";
@@ -28,14 +25,10 @@ import SupervisorViewRM from "./views/SupervisorViewRM";
 import AgendamientoViewer from "./views/AgendamientoView";
 import AllAgendamientoViewer from "./views/AllAgendamientosView";
 import AmonesatacionesViewer from "./views/AmonestacionesUserView";
-import CreateAuditoria from "./views/CreateAuditoria";
-import AuditoriasView from "./views/AllAuditoriasView";
-import OTFinder from "./views/OTFinder";
 import ErrorHandler from "./utils/404NotFound";
 import ProyectosOnNetView from "./views/ProyectosConsolidadosView";
 import ProyectoConsolidadoView from "./views/ProyectoConsolidadoView";
 import LoadConstruccion from "./views/PlanillaConstruccion";
-import CreateReparacionView from "./views/CreateReparacion";
 import TicketeraView from "./views/CreateTicket";
 import GestorTicketera from "./views/GestionTickets";
 import TicketViewer from "./views/TicketView";
@@ -46,7 +39,6 @@ import ProyectoInternoView from "./views/Proyecto_InternoView";
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
       <Routes>
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<Home />} />
@@ -64,22 +56,16 @@ function App() {
           <Route path="/modulo:reversa" element={<ReversaView />} />
           <Route path="/createzone" element={<CreateZone />} />
           <Route path="/objetivos" element={<ObjetivosView />} />
-          <Route path="/form-ast" element={<FormAstCreate />} />
           <Route path="/form-ast-list" element={<FormAstList />} />
           <Route path="/formulario-ast/:formID" element={<AstViewer />} />
-          <Route path="/success" element={<SuccessView />} />
           <Route path="/configuraciones" element={<Settings />} />
           <Route path="/totem" element={<AtencionTotem />} />
           <Route path="/supervisor" element={<SupervisorViewRM />} />
           <Route path="/agendamientos" element={<AgendamientoViewer />} />
-          <Route path="/auditorias" element={<CreateAuditoria />} />
           <Route path="/all_agendamientos" element={<AllAgendamientoViewer />} />
-          <Route path="/all_auditorias" element={<AuditoriasView />} />
-          <Route path="/orden_info" element={<OTFinder />} />
           <Route path="/proyectos-onnet" element={<ProyectosOnNetView />} />
           <Route path="/consolidado/:id" element={<ProyectoConsolidadoView />} />
           <Route path="/carga-construccion" element={<LoadConstruccion />} />
-          <Route path="/modulo:crear-reparacion" element={<CreateReparacionView />} />
           <Route path="/modulo:ticketera" element={<TicketeraView />} />
           <Route path="/modulo:gestion-ticketera" element={<GestorTicketera />} />
           <Route path="/ticketviewer/:logID" element={<TicketViewer />} />

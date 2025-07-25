@@ -90,10 +90,9 @@ function UserForm() {
         display: "column",
         justifyContent: "center",
         alignItems: "center",
-        paddingTop: { xs: 10, md: 8 },
-        mt: 2,
-        height: "85vh",
         backgroundColor: "#f5f5f5",
+        paddingY: "60px",
+        minHeight: "90vh",
       }}
     >
       {open && renderAlert()}

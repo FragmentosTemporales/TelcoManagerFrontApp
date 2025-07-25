@@ -60,7 +60,7 @@ function FormSolicitud() {
   const [smOptions, setSmOptions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [data, setData] = useState([]);
-  const [isLoaging, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleClose = () => {
     setOpen(false);
@@ -296,13 +296,12 @@ function FormSolicitud() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
         alignItems: "center",
-        overflow: "auto",
         height: "100%",
         width: "100%",
-        paddingTop: 1,
+        paddingTop: 2,
         paddingBottom: 2,
+        backgroundColor: "#f5f5f5",
       }}
     >
       {open && (
@@ -310,25 +309,23 @@ function FormSolicitud() {
           {message}
         </Alert>
       )}
-      {isLoaging ? (
+      {isLoading ? (
         <Box
           sx={{
             width: "50%",
-            height: "530px",
-            overflow: "hidden",
-            backgroundColor: "#f5f5f5",
-            boxShadow: 5,
-            borderRadius: "10px",
-            mt: 2,
+            minHeight: "400px",
+            backgroundColor: "#fff",
+            borderRadius: 2,
+            border: "2px solid #dfdeda",
             display: "flex",
             justifyContent: "center",
+            alignItems: "center"
           }}
         >
           <Skeleton
-            variant="rounded"
-            width={"90%"}
-            height={"400px"}
-            sx={{ p: 3, m: 3 }}
+            variant="rectangular"
+            animation="wave"
+            sx={{ width: "90%", height: "90%" }}
           />
         </Box>
       ) : (
@@ -339,9 +336,10 @@ function FormSolicitud() {
             alignItems: "center",
             width: "50%",
             paddingTop: 4,
-            paddingBottom: 4,
-            boxShadow: 2,
+            border: "2px solid #dfdeda",
+            borderRadius: 2,
             backgroundColor: "#fff",
+            minHeight: "400px",
           }}
         >
           <Typography

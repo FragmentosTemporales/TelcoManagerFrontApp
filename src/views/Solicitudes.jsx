@@ -14,7 +14,6 @@ import {
   TableHead,
   TableRow,
   Typography,
-  CardContent,
   TextField,
 } from "@mui/material";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
@@ -30,6 +29,7 @@ import {
 } from "../api/solicitudAPI";
 import { onLoad, onLoading, setMessage } from "../slices/solicitudSlice";
 import filterData from "../data/filterSolicitud";
+import { MainLayout } from "./Layout";
 
 function Solicitudes() {
   const authState = useSelector((state) => state.auth);
@@ -381,6 +381,7 @@ function Solicitudes() {
   }, []);
 
   return (
+    <MainLayout showNavbar={true}>
     <Box
       sx={{
         display: "flex",
@@ -391,8 +392,7 @@ function Solicitudes() {
         height: "100%",
         width: "100%",
         overflow: "auto",
-        paddingTop: 8,
-        paddingBottom: "50px",
+        paddingY: "60px",
         backgroundColor: "#f0f0f0",
       }}
     >
@@ -439,6 +439,7 @@ function Solicitudes() {
         </>
       )}
     </Box>
+    </MainLayout>
   );
 }
 

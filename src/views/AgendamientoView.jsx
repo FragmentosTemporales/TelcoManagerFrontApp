@@ -27,6 +27,7 @@ import { getBacklog } from "../api/backlogAPI";
 import { useSelector } from "react-redux";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
+import { MainLayout } from "./Layout";
 
 function AgendamientoViewer() {
   const authState = useSelector((state) => state.auth);
@@ -223,7 +224,11 @@ function AgendamientoViewer() {
     }
   }, [dataBacklog]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
+    <MainLayout showNavbar={true}>
     <Box
       sx={{
         display: "flex",
@@ -231,7 +236,7 @@ function AgendamientoViewer() {
         alignItems: "center",
         justifyContent: "center",
         overflow: "auto",
-        padding: 8,
+        paddingY: "60px" ,
         backgroundColor: "#f0f0f0",
         minHeight: "90vh",
       }}
@@ -849,6 +854,7 @@ function AgendamientoViewer() {
         </Link>
       </Box>
     </Box>
+    </MainLayout>
   );
 }
 export default AgendamientoViewer;

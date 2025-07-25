@@ -24,9 +24,6 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
-import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
-import SearchIcon from "@mui/icons-material/Search";
-import { BarChart } from "@mui/icons-material";
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -37,6 +34,7 @@ import {
 } from "../api/logisticaAPI";
 import extractDate from "../helpers/main";
 import ReversaCharts from "../components/reversaCharts";
+import { MainLayout } from "./Layout";
 
 function ReversaView() {
   const authState = useSelector((state) => state.auth);
@@ -431,6 +429,7 @@ function ReversaView() {
   );
 
   return (
+    <MainLayout showNavbar={true}>
     <Box
       sx={{
         display: "flex",
@@ -438,7 +437,7 @@ function ReversaView() {
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        paddingTop: 8,
+        paddingY: "60px",
         mt: 2,
         backgroundColor: "#f5f5f5",
         minHeight: "95vh",
@@ -555,6 +554,7 @@ function ReversaView() {
         {renderTableOk()}
       </Box>
     </Box>
+    </MainLayout>
   );
 }
 

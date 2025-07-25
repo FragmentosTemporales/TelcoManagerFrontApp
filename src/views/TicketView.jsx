@@ -411,7 +411,7 @@ function TicketViewer() {
   return (
     <Box
       sx={{
-        paddingTop: "60px",
+        paddingTop: 2,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",

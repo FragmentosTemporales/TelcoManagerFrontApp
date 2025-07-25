@@ -92,10 +92,10 @@ function FormFlota() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        background: "white",
         alignItems: "center",
-        pt: 8,
-        height: "100%",
+        py: 3,
+        height: "90vh",
+        background: "#f5f5f5",
       }}
     >
       {open && (
@@ -105,16 +105,15 @@ function FormFlota() {
       )}
       <Card
         sx={{
-          borderRadius: "10px",
+          borderRadius: 2,
           width: "50%",
-          height: "100%",
           overflow: "auto",
-          boxShadow: 5,
+          border: "2px solid #dfdeda",
         }}
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            <Typography fontWeight="bold">
               FORMULARIO FLOTA
             </Typography>
           }
@@ -142,7 +141,7 @@ function FormFlota() {
                 id="fechaEvento"
                 type="date"
                 name="fechaEvento"
-                variant="outlined"
+                variant="standard"
                 value={form.fechaEvento}
                 onChange={handleChange}
               />
@@ -156,7 +155,7 @@ function FormFlota() {
                 id="patente"
                 type="text"
                 name="patente"
-                variant="outlined"
+                variant="standard"
                 value={form.patente}
                 onChange={handleChange}
               />
@@ -170,7 +169,7 @@ function FormFlota() {
                 id="modeloVehiculo"
                 type="text"
                 name="modeloVehiculo"
-                variant="outlined"
+                variant="standard"
                 value={form.modeloVehiculo}
                 onChange={handleChange}
               />
@@ -184,7 +183,7 @@ function FormFlota() {
                 id="velocidad"
                 type="text"
                 name="velocidad"
-                variant="outlined"
+                variant="standard"
                 value={form.velocidad}
                 onChange={handleChange}
               />
@@ -198,7 +197,7 @@ function FormFlota() {
                 id="ubicacion"
                 type="text"
                 name="ubicacion"
-                variant="outlined"
+                variant="standard"
                 value={form.ubicacion}
                 onChange={handleChange}
               />
@@ -212,7 +211,7 @@ function FormFlota() {
                 id="fechaAsignacion"
                 type="date"
                 name="fechaAsignacion"
-                variant="outlined"
+                variant="standard"
                 value={form.fechaAsignacion}
                 onChange={handleChange}
               />
@@ -226,7 +225,7 @@ function FormFlota() {
                 id="file"
                 type="file"
                 name="file"
-                variant="outlined"
+                variant="standard"
                 onChange={handleFileChange}
               />
             </Box>
@@ -235,7 +234,7 @@ function FormFlota() {
             <Button
                   type="submit"
                   variant="contained"
-                  sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                  sx={{ background: "#0b2f6d", fontWeight: "bold", width: "200px" }}
                   disabled={isSubmitting}  // Deshabilitar el botón cuando isSubmitting es true
                 >
                   {isSubmitting ? "Procesando..." : "Crear"}

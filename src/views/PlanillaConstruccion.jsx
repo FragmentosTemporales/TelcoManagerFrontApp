@@ -12,6 +12,7 @@ import {
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { sendPlantillaConstruccion } from "../api/onnetAPI";
+import { MainLayout } from "./Layout";
 
 function LoadConstruccion() {
   const authState = useSelector((state) => state.auth);
@@ -77,7 +78,8 @@ function LoadConstruccion() {
           backgroundColor: "#fff",
           height: "200px",
           width: "500px",
-          boxShadow: 2,
+          borderRadius: 2,
+          border: "2px solid #dfdeda",
         }}
       >
         <form
@@ -102,7 +104,7 @@ function LoadConstruccion() {
             <Button
               type="submit"
               variant="contained"
-              sx={{ background: "#0b2f6d", fontWeight: "bold", pt: 1, pb: 1, width: "100%" }}
+              sx={{ background: "#0b2f6d", py: 1, width: "100%", borderRadius: 2 }}
               disabled={isSubmitting}
             >
               {isSubmitting ? "Procesando..." : "Cargar"}
@@ -113,14 +115,15 @@ function LoadConstruccion() {
   );
 
   return (
+    <MainLayout showNavbar={true}>
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
-        backgroundColor: "#f4f6f8",
+        minHeight: "90vh",
+        backgroundColor: "#f5f5f5",
       }}
     >
       {open && (
@@ -132,20 +135,9 @@ function LoadConstruccion() {
           {message}
         </Alert>
       )}
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: 1200,
-          padding: 8,
-          marginBottom: 2,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {componente_carga()}
-      </Box>
+      {componente_carga()}
     </Box>
+    </MainLayout>
   );
 }
 

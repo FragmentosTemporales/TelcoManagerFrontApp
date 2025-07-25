@@ -1,6 +1,8 @@
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { MainLayout } from "./Layout";
+import { useEffect } from "react";
 
 function Home() {
   const authState = useSelector((state) => state.auth);
@@ -123,81 +125,84 @@ function Home() {
       (permiso) => permiso.moduloID === seccion.moduloID && permiso.access
     )
   );
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-        minHeight: "90vh",
-        pb: 2,
-        paddingTop: { xs: 10, md: 8 },
-        mt: 2,
-        backgroundColor: "#f0f0f0",
-      }}
-    >
-      {accesos && accesos.length > 0 ? (
-        <Grid
-          container
-          spacing={2}
-          sx={{ width: "90%" }}
-          justifyContent="center"
-          alignItems="center"
-        >
-          {accesos.map((acceso, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <Box
-                sx={{
-                  display: "flex",
-                  height: {
-                    lg: "100px",
-                    md: "150px",
-                    sm: "180px",
-                    xs: "100px",
-                  },
-                  borderRadius: 2,
-                  border: "2px solid #dfdeda",
-                  backgroundColor: "white",
-                  flexDirection: "column",
-                  textDecoration: "none",
-                  padding: 2,
-                  position: "relative",
-                  transition:
-                    "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-                  "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)"
-                  },
-                }}
-                component={Link}
-                to={acceso.link}
-              >
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
+    <MainLayout>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          minHeight: "90vh",
+          paddingY: "60px",
+          backgroundColor: "#f0f0f0",
+        }}
+      >
+        {accesos && accesos.length > 0 ? (
+          <Grid
+            container
+            spacing={2}
+            sx={{ width: "90%" }}
+            justifyContent="center"
+            alignItems="center"
+          >
+            {accesos.map((acceso, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Box
                   sx={{
-                    textAlign: "center",
+                    display: "flex",
+                    height: {
+                      lg: "100px",
+                      md: "150px",
+                      sm: "180px",
+                      xs: "100px",
+                    },
+                    borderRadius: 2,
+                    border: "2px solid #dfdeda",
+                    backgroundColor: "white",
+                    flexDirection: "column",
+                    textDecoration: "none",
+                    padding: 2,
+                    position: "relative",
+                    transition:
+                      "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(-5px)",
+                      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)"
+                    },
                   }}
+                  component={Link}
+                  to={acceso.link}
                 >
-                  {acceso.head}
-                </Typography>
-                <Divider sx={{ my: 1, backgroundColor: "#dfdeda" }} />
-                <Typography
-                  variant="subtitle1"
-                  sx={{
-                    textAlign: "center",
-                  }}
-                >
-                  {acceso.title}
-                </Typography>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      ) : null}
-    </Box>
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {acceso.head}
+                  </Typography>
+                  <Divider sx={{ my: 1, backgroundColor: "#dfdeda" }} />
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {acceso.title}
+                  </Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        ) : null}
+      </Box>
+    </MainLayout>
   );
 }
 

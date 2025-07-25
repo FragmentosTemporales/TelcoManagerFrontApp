@@ -98,8 +98,7 @@ function BodegaViewer() {
       <CardHeader
         title={
           <Typography
-            fontWeight="bold"
-            sx={{ fontFamily: "initial", fontSize: "1.5rem" }}
+            variant="h6"
           >
             EN ATENCIÓN BODEGA
           </Typography>
@@ -215,8 +214,7 @@ function BodegaViewer() {
       <CardHeader
         title={
           <Typography
-            fontWeight="bold"
-            sx={{ fontFamily: "initial", fontSize: "1.5rem" }}
+            variant="h6"
           >
             EN ATENCIÓN LOGÍSTICA
           </Typography>
@@ -330,8 +328,7 @@ function BodegaViewer() {
       <CardHeader
         title={
           <Typography
-            fontWeight="bold"
-            sx={{ fontFamily: "initial", fontSize: "1.5rem" }}
+            variant="h6"
           >
             EN ESPERA BODEGA
           </Typography>
@@ -501,8 +498,7 @@ function BodegaViewer() {
       <CardHeader
         title={
           <Typography
-            fontWeight="bold"
-            sx={{ fontFamily: "initial", fontSize: "1.5rem" }}
+            variant="h6"
           >
             EN ESPERA LOGÍSTICA
           </Typography>
@@ -667,9 +663,10 @@ function BodegaViewer() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        background: "white",
+        background: "#f5f5f5",
         alignItems: "center",
-        marginTop: "70px",
+        paddingY: "40px",
+        minHeight: "90vh",
       }}
     >
       <Box

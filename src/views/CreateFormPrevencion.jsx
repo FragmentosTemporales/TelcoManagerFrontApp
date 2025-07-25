@@ -92,10 +92,10 @@ function FormPrevencion() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        background: "white",
         alignItems: "center",
-        pt: 8,
-        height: "100%",
+        py: 3,
+        height: "90vh",
+        background: "#f5f5f5",
       }}
     >
       {open && (
@@ -105,16 +105,16 @@ function FormPrevencion() {
       )}
       <Card
         sx={{
-          borderRadius: "10px",
+          borderRadius: 2,
           width: "50%",
           height: "100%",
           overflow: "auto",
-          boxShadow: 5,
+          border: "2px solid #dfdeda",
         }}
       >
         <CardHeader
           title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
+            <Typography fontWeight="bold">
               FORMULARIO PREVENCION
             </Typography>
           }
@@ -146,7 +146,7 @@ function FormPrevencion() {
                 id="fechaAuditoria"
                 type="date"
                 name="fechaAuditoria"
-                variant="outlined"
+                variant="standard"
                 value={form.fechaAuditoria}
                 onChange={handleChange}
               />
@@ -160,7 +160,7 @@ function FormPrevencion() {
                 id="auditor"
                 type="text"
                 name="auditor"
-                variant="outlined"
+                variant="standard"
                 value={form.auditor}
                 onChange={handleChange}
               />
@@ -174,7 +174,7 @@ function FormPrevencion() {
                 id="ubicacion"
                 type="text"
                 name="ubicacion"
-                variant="outlined"
+                variant="standard"
                 value={form.ubicacion}
                 onChange={handleChange}
               />
@@ -190,7 +190,7 @@ function FormPrevencion() {
                 id="detalleEppAuditado"
                 type="text"
                 name="detalleEppAuditado"
-                variant="outlined"
+                variant="standard"
                 value={form.detalleEppAuditado}
                 onChange={handleChange}
               />
@@ -206,7 +206,7 @@ function FormPrevencion() {
                 id="fechaEntregaEpp"
                 type="date"
                 name="fechaEntregaEpp"
-                variant="outlined"
+                variant="standard"
                 value={form.fechaEntregaEpp}
                 onChange={handleChange}
               />
@@ -220,7 +220,7 @@ function FormPrevencion() {
                 id="declaracion"
                 type="text"
                 name="declaracion"
-                variant="outlined"
+                variant="standard"
                 value={form.declaracion}
                 onChange={handleChange}
               />
@@ -234,7 +234,7 @@ function FormPrevencion() {
                 id="file"
                 type="file"
                 name="file"
-                variant="outlined"
+                variant="standard"
                 onChange={handleFileChange}
               />
             </Box>
@@ -243,7 +243,7 @@ function FormPrevencion() {
             <Button
                   type="submit"
                   variant="contained"
-                  sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                  sx={{ background: "#0b2f6d", fontWeight: "bold", width: "200px" }}
                   disabled={isSubmitting}  // Deshabilitar el botón cuando isSubmitting es true
                 >
                   {isSubmitting ? "Procesando..." : "Crear"}

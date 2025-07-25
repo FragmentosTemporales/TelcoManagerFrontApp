@@ -28,6 +28,7 @@ import {
   getUserTicket,
   sendTicketInfo,
 } from "../api/ticketeraAPI";
+import { MainLayout } from "./Layout";
 
 function TicketeraView() {
   const authState = useSelector((state) => state.auth);
@@ -596,6 +597,7 @@ function TicketeraView() {
   }, [form.ticketcategoriaID]);
 
   return (
+    <MainLayout showNavbar={true}>
     <Box
       sx={{
         paddingTop: "60px",
@@ -621,6 +623,7 @@ function TicketeraView() {
 
       {crear && createCard()}
     </Box>
+    </MainLayout>
   );
 }
 

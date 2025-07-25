@@ -57,7 +57,7 @@ function AllAgendamientoViewer() {
   const downloadExcel = () => (
     <Box
       sx={{
-        width: "100%",
+        width: "90%",
         mt: 2,
         display: "flex",
         justifyContent: "start",
@@ -277,6 +277,9 @@ function AllAgendamientoViewer() {
     fetchData();
   }, [page]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <Box
       sx={{
@@ -284,9 +287,9 @@ function AllAgendamientoViewer() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "85vh",
+        minHeight: "90vh",
         overflow: "auto",
-        padding: 8,
+        paddingY: 2,
         background: "#f5f5f5",
       }}
     >
@@ -302,7 +305,7 @@ function AllAgendamientoViewer() {
 
       <Box
         sx={{
-          width: { lg: "100%", md: "100%", xs: "100%" },
+          width: { lg: "90%", md: "100%", xs: "100%" },
           overflow: "hidden",
           mt: 3,
         }}
@@ -325,7 +328,7 @@ function AllAgendamientoViewer() {
 
       <Box
         sx={{
-          width: "100%",
+          width: "90%",
           mt: 2,
           background: "#fff",
               borderRadius: 2,
@@ -435,7 +438,7 @@ function AllAgendamientoViewer() {
       </Box>
 
       {downloadExcel()}
-      <Box sx={{ width: "100%", mt: 2, background: "#fff", borderRadius: 2, border: "2px solid #dfdeda" }}>
+      <Box sx={{ width: "90%", mt: 2, background: "#fff", borderRadius: 2, border: "2px solid #dfdeda" }}>
         {isLoading ? (
           <Skeleton
             variant="rectangular"

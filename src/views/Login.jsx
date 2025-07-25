@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { onLogin } from "../api/authAPI";
 import { onLoad, onLoading, setMessage } from "../slices/authSlice";
+import { MainLayout } from "./Layout";
 
 function Login() {
   const { message } = useSelector((state) => state.auth);
@@ -82,6 +83,7 @@ function Login() {
   }, [token]);
 
   return (
+    <MainLayout showNavbar={false}>
     <Box
       sx={{
         display: "flex",
@@ -180,6 +182,7 @@ function Login() {
         </form>
       </Box>
     </Box>
+    </MainLayout>
   );
 }
 

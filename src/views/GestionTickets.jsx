@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getTicketera, getStatsTicket } from "../api/ticketeraAPI";
 import { Link } from "react-router-dom";
+import { MainLayout } from "./Layout";
 
 function GestorTicketera() {
   const authState = useSelector((state) => state.auth);
@@ -352,9 +353,10 @@ function GestorTicketera() {
   }, []);
 
   return (
-    <Box
+    <MainLayout>
+          <Box
       sx={{
-        paddingTop: "60px",
+        paddingY: "60px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -376,6 +378,7 @@ function GestorTicketera() {
       {pieChartData()}
       {tablaTickets()}
     </Box>
+    </MainLayout>
   );
 }
 

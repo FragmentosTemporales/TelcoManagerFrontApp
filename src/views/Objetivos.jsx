@@ -20,12 +20,10 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import SportsScoreIcon from "@mui/icons-material/SportsScore";
-import EditIcon from "@mui/icons-material/Edit";
-import CalculateIcon from "@mui/icons-material/Calculate";
 import { getObjetivos, updateObjetivo } from "../api/dataAPI";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { MainLayout } from "./Layout";
 
 function ObjetivosView() {
   const authState = useSelector((state) => state.auth);
@@ -40,62 +38,6 @@ function ObjetivosView() {
   const [habilitado, setHabilitado] = useState(false);
 
   const mesOptions = [
-    {
-      value: "2024-05-01",
-      label: "Mayo 2024",
-    },
-    {
-      value: "2024-06-01",
-      label: "Junio 2024",
-    },
-    {
-      value: "2024-07-01",
-      label: "Julio 2024",
-    },
-    {
-      value: "2024-08-01",
-      label: "Agosto 2024",
-    },
-    {
-      value: "2024-09-01",
-      label: "Septiembre 2024",
-    },
-    {
-      value: "2024-10-01",
-      label: "Octubre 2024",
-    },
-    {
-      value: "2024-11-01",
-      label: "Noviembre 2024",
-    },
-    {
-      value: "2024-12-01",
-      label: "Diciembre 2024",
-    },
-    {
-      value: "2025-01-01",
-      label: "Enero 2025",
-    },
-    {
-      value: "2025-02-01",
-      label: "Febrero 2025",
-    },
-    {
-      value: "2025-03-01",
-      label: "Marzo 2025",
-    },
-    {
-      value: "2025-04-01",
-      label: "Abril 2025",
-    },
-    {
-      value: "2025-05-01",
-      label: "Mayo 2025",
-    },
-    {
-      value: "2025-06-01",
-      label: "Junio 2025",
-    },
     {
       value: "2025-07-01",
       label: "Julio 2025",
@@ -172,7 +114,7 @@ function ObjetivosView() {
   };
 
   const setFilter = () => (
-    <Box sx={{ width: "100%", marginTop: 2 }}>
+    <Box sx={{ width: "100%", marginTop: 2, backgroundColor: "white", padding: 2, borderRadius: 2, border: "2px solid #dfdeda" }}>
       <form onSubmit={handleSubmit}>
         <Box
           sx={{
@@ -246,7 +188,7 @@ function ObjetivosView() {
   );
 
   const setTable = () => (
-    <Box sx={{ width: "100%", marginTop: 2, boxShadow: 2 }}>
+    <Box sx={{ width: "100%", marginTop: 2, boxShadow: 2, backgroundColor: "white", padding: 2, borderRadius: 2, border: "2px solid #dfdeda" }}>
       <TableContainer>
         <Table>
           {setTableHead()}
@@ -271,7 +213,7 @@ function ObjetivosView() {
             <TableCell
               key={header}
               align="center"
-              sx={{ background: "#d8d8d8", fontWeight: "bold" }}
+              sx={{ background: "#0b2f6d", fontWeight: "bold", color: "white" }}
             >
               {header}
             </TableCell>
@@ -298,10 +240,10 @@ function ObjetivosView() {
                 setOpenModal(true);
               } : undefined}
               sx={{
-              textDecoration: "none",
-              cursor: "pointer",
-              "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
-            }}
+                textDecoration: "none",
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+              }}
             >
               <TableCell align="center" sx={{ fontSize: "16px" }}>
                 <Typography fontFamily={"initial"} variant="secondary">
@@ -435,97 +377,93 @@ function ObjetivosView() {
     } else null;
   }, [user_id]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column", // Coloca los hijos en columna
-        justifyContent: "center", // Centra verticalmente
-        alignItems: "center", // Centra horizontalmente
-        minHeight: "90vh",
-        paddingTop: { xs: 10, md: 8 },
-        mt: 2,
-      }}
-    >
-      {openModal && setModal()}
-      {origenes && origenes.length > 0 ? (
+    <MainLayout showNavbar={true}>
+      <Box
+        sx={{
+          paddingY: "60px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          backgroundColor: "#f0f0f0",
+          minHeight: "90vh",
+        }}
+      >
+        {openModal && setModal()}
+        {origenes && origenes.length > 0 ? (
+          <Box
+            sx={{
+              width: "50%",
+              display: "flex",
+              justifyContent: "center",
+              marginTop: 2,
+              marginBottom: 2,
+              borderRadius: 2,
+              border: "2px solid #dfdeda",
+              backgroundColor: "white",
+            }}
+          >
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {["ORIGEN", "TOTAL"].map((header) => (
+                      <TableCell
+                        key={header}
+                        align="left"
+                        sx={{ background: "#0b2f6d", fontWeight: "bold", color: "white" }}
+                      >
+                        {header}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {origenes && origenes.length > 0 ? (
+                    origenes.map((row, index) => (
+                      <TableRow key={index}>
+                        <TableCell align="left" sx={{ fontSize: "16px" }}>
+                          <Typography fontFamily={"initial"} variant="secondary">
+                            {row.origen ? row.origen : "Sin Información"}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="left" sx={{ fontSize: "16px" }}>
+                          <Typography fontFamily={"initial"} variant="secondary">
+                            {row.total ? row.total : 0}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={7} align="center">
+                        No hay datos disponibles
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        ) : null}
         <Box
           sx={{
             width: "90%",
+            borderRadius: "10",
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
-            marginTop: 2,
-            marginBottom: 2,
-            boxShadow: 2,
           }}
         >
-          <TableContainer>
-            <Table
-              sx={{
-                width: "100%",
-                display: "column",
-                justifyContent: "center",
-              }}
-            >
-              <TableHead>
-                <TableRow>
-                  {["ORIGEN", "TOTAL"].map((header) => (
-                    <TableCell
-                      key={header}
-                      align="left"
-                      sx={{ background: "#d8d8d8", fontWeight: "bold" }}
-                    >
-                      {header}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody
-                sx={{
-                  display: "column",
-                  justifyContent: "center",
-                }}
-              >
-                {origenes && origenes.length > 0 ? (
-                  origenes.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell align="left" sx={{ fontSize: "16px" }}>
-                        <Typography fontFamily={"initial"} variant="secondary">
-                          {row.origen ? row.origen : "Sin Información"}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="left" sx={{ fontSize: "16px" }}>
-                        <Typography fontFamily={"initial"} variant="secondary">
-                          {row.total ? row.total : 0}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={7} align="center">
-                      No hay datos disponibles
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {setFilter()}
+          {setTable()}
         </Box>
-      ) : null}
-      <Box
-        sx={{
-          width: "90%",
-          borderRadius: "10",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        {setFilter()}
-        {setTable()}
       </Box>
-    </Box>
+    </MainLayout>
   );
 }
 

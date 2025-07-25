@@ -26,6 +26,7 @@ import {
   getUserInfo,
 } from "../api/totemAPI";
 import { useSelector } from "react-redux";
+import { MainLayout } from "./Layout";
 
 function SupervisorViewRM() {
   const authState = useSelector((state) => state.auth);
@@ -199,14 +200,16 @@ function SupervisorViewRM() {
   }, []);
 
   return (
+    <MainLayout showNavbar={true}>
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        background: "white",
+        background: "#f5f5f5",
         alignItems: "center",
-        marginTop: "70px",
+        marginY: "60px",
+        minHeight: "90vh",
       }}
     >
       {openModalCancelar && setModalCancelar()}
@@ -551,12 +554,8 @@ function SupervisorViewRM() {
           ) : (
             <Typography
               fontWeight="bold"
+              variant="h4"
               sx={{
-                fontFamily: "initial",
-                fontSize: "1.5rem",
-                minHeight: "100px",
-                display: "flex",
-                justifyContent: "center",
                 alignItems: "center",
               }}
             >
@@ -566,6 +565,7 @@ function SupervisorViewRM() {
         </Box>
       )}
     </Box>
+    </MainLayout>
   );
 }
 

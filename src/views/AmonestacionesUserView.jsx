@@ -3,11 +3,6 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Card,
-  CardHeader,
-  MenuItem,
-  Paper,
-  Select,
   Skeleton,
   Table,
   TableBody,
@@ -16,21 +11,15 @@ import {
   TableHead,
   TableRow,
   Typography,
-  CardContent,
 } from "@mui/material";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSolicitudesByUser } from "../api/solicitudAPI";
 import { setMessage } from "../slices/solicitudSlice";
-import SolicitudChartsByUser from "../components/solicitudByUserChart";
+import { MainLayout } from "./Layout";
 
 function AmonesatacionesViewer() {
   const authState = useSelector((state) => state.auth);
@@ -57,10 +46,6 @@ function AmonesatacionesViewer() {
       setOpen(true);
       setIsSubmitting(false);
     }
-  };
-
-  const toggleStatistics = () => {
-    setShowStatistics((prev) => !prev);
   };
 
   const handlePage = (newPage) => setPage(newPage);
@@ -91,55 +76,31 @@ function AmonesatacionesViewer() {
     </>
   );
 
-  const createNew = () => (
-    <>
-      <Box
-        sx={{
-          width: "90%",
-          mt: 2,
-          display: "flex",
-          justifyContent: "start",
-        }}
-      >
-        <Link style={{ color: "white", textDecoration: "none" }} to="/create">
-          <Button
-            variant="contained"
-            color="error"
+  const setTableHead = () => (
+    <TableHead>
+      <TableRow>
+        {[
+          "N° FOLIO",
+          "MOTIVO",
+          "FORMULARIO",
+          "SOLICITANTE",
+          "AMONESTADO",
+          "ESTADO",
+        ].map((header) => (
+          <TableCell
+            key={header}
+            align="center"
             sx={{
-              width: 200,
-              height: 40,
               fontWeight: "bold",
-              display: "flex",
-              justifyContent: "space-around",
-              borderRadius: "0px",
+              backgroundColor: "#0b2f6d",
+              color: "white",
             }}
           >
-            <AddCircleOutlineIcon /> Crear Nueva
-          </Button>
-        </Link>
-      </Box>
-    </>
-  );
-
-  const setTableHead = () => (
-    <>
-      <TableHead>
-        <TableRow>
-          {[
-            "N° FOLIO",
-            "MOTIVO",
-            "FORMULARIO",
-            "SOLICITANTE",
-            "AMONESTADO",
-            "ESTADO",
-          ].map((header) => (
-            <TableCell key={header} align="center">
-              <Typography fontFamily="initial">{header}</Typography>
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-    </>
+            <Typography>{header}</Typography>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
   );
 
   const setTableBody = () => (
@@ -180,7 +141,7 @@ function AmonesatacionesViewer() {
         ) : (
           <TableRow>
             <TableCell colSpan={12} align="center">
-              <Typography fontFamily="initial">
+              <Typography >
                 No hay datos disponibles
               </Typography>
             </TableCell>
@@ -192,8 +153,15 @@ function AmonesatacionesViewer() {
 
   const setTableCard = () => (
     <TableContainer
-      component={Paper}
-      sx={{ width: "90%", height: "100%", overflow: "auto", marginTop: 2 }}
+      sx={{
+        width: "90%",
+        height: "100%",
+        overflow: "auto",
+        marginTop: 2,
+        borderRadius: 2,
+        border: "2px solid #dfdeda",
+        backgroundColor: "white",
+      }}
     >
       <Table stickyHeader>
         {setTableHead()}
@@ -202,113 +170,73 @@ function AmonesatacionesViewer() {
     </TableContainer>
   );
 
-  const statisticsCard = () => (
-    <Card
-      sx={{
-        width: "90%",
-        overflow: "hidden",
-        backgroundColor: "white",
-        boxShadow: 5,
-        textAlign: "center",
-        borderRadius: "0px",
-        mt: 2,
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-            ESTADISTICAS DE SOLICITUDES
-          </Typography>
-        }
-        avatar={<BarChartIcon />}
-        action={
-          <Button
-            onClick={toggleStatistics}
-            sx={{ color: "white", minWidth: "auto" }}
-          >
-            {showStatistics ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </Button>
-        }
-        sx={{
-          background: "#0b2f6d",
-          color: "white",
-          textAlign: "end",
-        }}
-      />
-      {showStatistics && (
-        <CardContent>
-          <SolicitudChartsByUser />
-        </CardContent>
-      )}
-    </Card>
-  );
 
   useEffect(() => {
     fetchData();
   }, [page]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-        width: "100%",
-        overflow: "auto",
-        paddingTop: 8,
-        paddingBottom: "50px",
-        backgroundColor: "#f0f0f0",
-        minHeight: "90vh",
-      }}
-    >
-      {open && (
-        <Alert
-          onClose={handleClose}
-          severity="info"
-          sx={{ marginTop: "2%", width: "80%" }}
-        >
-          <Typography fontFamily="initial" fontWeight="bold">
-            Mensaje
-          </Typography>
-        </Alert>
-      )}
-      {statisticsCard()}
-      {createNew()}
-      {isSubmitting ? (
-        <Box
-          sx={{
-            width: "90%",
-            overflow: "hidden",
-            backgroundColor: "#f5f5f5",
-            boxShadow: 5,
-            borderRadius: "10px",
-            mt: 2,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Skeleton
-            variant="rounded"
-            width={"100%"}
-            height={"800px"}
-            sx={{ p: 3, m: 3 }}
-          />
-        </Box>
-      ) : (
-        <>
-          {setTableCard()}
-          <ButtonGroup
-            size="small"
-            aria-label="pagination-button-group"
-            sx={{ p: 2 }}
+    <MainLayout showNavbar={true}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+          width: "100%",
+          overflow: "auto",
+          paddingY: "60px",
+          backgroundColor: "#f0f0f0",
+          minHeight: "90vh",
+        }}
+      >
+        {open && (
+          <Alert
+            onClose={handleClose}
+            severity="info"
+            sx={{ marginTop: "2%", width: "80%" }}
           >
-            {getButtons()}
-          </ButtonGroup>
-        </>
-      )}
-    </Box>
+            <Typography fontFamily="initial" fontWeight="bold">
+              Mensaje
+            </Typography>
+          </Alert>
+        )}
+
+        {isSubmitting ? (
+          <Box
+            sx={{
+              width: "90%",
+              overflow: "hidden",
+              backgroundColor: "#f5f5f5",
+              boxShadow: 5,
+              borderRadius: "10px",
+              mt: 2,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Skeleton
+              variant="rounded"
+              width={"100%"}
+              height={"800px"}
+              sx={{ p: 3, m: 3 }}
+            />
+          </Box>
+        ) : (
+          <>
+            {setTableCard()}
+            <ButtonGroup
+              size="small"
+              aria-label="pagination-button-group"
+              sx={{ p: 2 }}
+            >
+              {getButtons()}
+            </ButtonGroup>
+          </>
+        )}
+      </Box>
+    </MainLayout>
   );
 }
 

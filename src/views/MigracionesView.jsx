@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getDataMigracionesProactivas, getMigracionesExcel } from "../api/despachoAPI";
 import extractDate, { extractDateOnly } from "../helpers/main";
+import { MainLayout } from "./Layout";
 
 function MigracionesViewer() {
     const authState = useSelector((state) => state.auth);
@@ -210,7 +211,6 @@ function MigracionesViewer() {
             backgroundColor: "#fff",
             borderRadius: 2,
             border: "2px solid #dfdeda",
-            marginTop: 2,
         }}>
             <LineChart
                 grid={{ vertical: true, horizontal: true }}
@@ -233,6 +233,7 @@ function MigracionesViewer() {
 
 
     return (
+        <MainLayout showNavbar={true}>
         <Box
             sx={{
                 display: "flex",
@@ -296,6 +297,7 @@ function MigracionesViewer() {
                 </>
             )}
         </Box>
+        </MainLayout>
     );
 }
 

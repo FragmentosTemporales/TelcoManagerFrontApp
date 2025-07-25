@@ -25,10 +25,10 @@ import {
   saltarNumero,
   enAtencion,
 } from "../api/totemAPI";
-import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import { getReversas, updateReversas } from "../api/logisticaAPI";
 import { useSelector } from "react-redux";
 import { extractDateOnly } from "../helpers/main";
+import { MainLayout } from "./Layout";
 
 function AtencionTotem() {
   const authState = useSelector((state) => state.auth);
@@ -194,27 +194,25 @@ function AtencionTotem() {
             paddingBottom: 2,
           }}
         >
-          <Box sx={{margin:2, borderRadius: 2, background: "#fff", border: "2px solid #dfdeda"}}>
-          <Typography
-            fontWeight="bold"
-            variant="h6"
-            sx={{
-              textAlign: "center",
-              padding: "5px",
-            }}
-          >
-            LISTA DE REVERSAS PENDIENTES
-          </Typography>
-          <Box sx={{margin:2}}>
-          <Table stickyHeader>
-              {renderTableHeaders()}
-              {renderTableBody()}
-            </Table>
-          </Box>
+          <Box sx={{ margin: 2, borderRadius: 2, background: "#fff", border: "2px solid #dfdeda" }}>
+            <Typography
+              fontWeight="bold"
+              variant="h6"
+              sx={{
+                textAlign: "center",
+                padding: "5px",
+              }}
+            >
+              LISTA DE REVERSAS PENDIENTES
+            </Typography>
+            <Box sx={{ margin: 2 }}>
+              <Table stickyHeader>
+                {renderTableHeaders()}
+                {renderTableBody()}
+              </Table>
+            </Box>
 
           </Box>
-
-
           {renderBtn()}
         </Box>
       );
@@ -311,7 +309,7 @@ function AtencionTotem() {
       return () => clearInterval(intervalId);
     } else {
       // Limpiar cualquier intervalo existente si `selectedEstacion` es falso
-      return () => {};
+      return () => { };
     }
   }, [selectedEstacion, atencion]);
 
@@ -335,303 +333,177 @@ function AtencionTotem() {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        background: "white",
-        alignItems: "center",
-        marginTop: "70px",
-        backgroundColor: "#f0f0f0",
-        minHeight: "90vh",
-      }}
-    >
+    <MainLayout>
       <Box
-        sx={{ display: "flex", justifyContent: "space-evenly", width: "100%" }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          background: "white",
+          alignItems: "center",
+          marginY: "60px",
+          backgroundColor: "#f0f0f0",
+          minHeight: "90vh",
+        }}
       >
-        {!selectedEstacion ? (
-          <Box
-            sx={{
-              width: { xs: "100%", sm: "80%", lg: "70%" },
-              height: "100%",
-              borderRadius: "10px",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {estaciones.length > 0 ? (
-              <Grid
-                container
-                sx={{ width: "100%" }}
-                justifyContent="center"
-                alignItems="center"
-              >
-                {estaciones.map((estacion, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
-                    <Box
-                      sx={{
-                        minHeight: "150px",
-                        margin: "10px",
-                        backgroundColor: "#f5f5f5",
-                        border: "2px solid #dfdeda",
-                        borderRadius: 2,
-                        cursor: "pointer",
-                        position: "relative",
-                        transition:
-                          "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-                        "&:hover": {
-                          transform: "translateY(-10px)",
-                          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
-                        },
-                      }}
-                      onClick={() => {
-                        setSelectedEstacion(estacion);
-                      }}
-                    >
-                      <Typography
-                        fontWeight="bold"
-                        variant="h6"
-                        color="text.primary"
-                        sx={{
-                          textAlign: "center",
-                          paddingTop: 2,
-                        }}
-                      >
-                        {estacion.CENTRO}
-                      </Typography>
-                      <Divider sx={{ margin: "10px 0" }} />
-                      <Typography
-                        variant="body1"
-                        color="text.primary"
-                        sx={{
-                          fontWeight: "bold",
-                          textAlign: "center",
-                        }}
-                      >
-                        {estacion.Nombre_Estacion}
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        color="text.primary"
-                        sx={{
-                          fontWeight: "bold",
-                          textAlign: "center",
-                        }}
-                      >
-                        Módulo #{estacion.Modulo}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            ) : (
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <Typography variant="body1" color="text.secondary">
-                  No hay estaciones para seleccionar
-                </Typography>
-              </Box>
-            )}
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              width: { xs: "100%", sm: "100%", lg: "100%" },
-              height: "100%",
-              margin: "10px",
-              borderRadius: 2,
-            }}
-          >
-            <Typography
-              fontWeight="bold"
-              variant="h6"
-              sx={{
-                textAlign: "center",
-                background: "#0b2f6d",
-                color: "white",
-                margin: 1,
-                padding: 2,
-              }}
-            >
-              {selectedEstacion.Nombre_Estacion}
-            </Typography>
+        <Box
+          sx={{ display: "flex", justifyContent: "space-evenly", width: "100%" }}
+        >
+          {!selectedEstacion ? (
             <Box
               sx={{
+                width: { xs: "100%", sm: "80%", lg: "70%" },
+                height: "100%",
+                borderRadius: "10px",
                 display: "flex",
-                justifyContent: "start",
-                padding: 1,
+                justifyContent: "center",
               }}
             >
-              <Button
-                variant="contained"
-                onClick={() => {
-                  setSelectedEstacion(undefined);
-                }}
+              {estaciones.length > 0 ? (
+                <Grid
+                  container
+                  sx={{ width: "100%" }}
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  {estaciones.map((estacion, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <Box
+                        sx={{
+                          minHeight: "150px",
+                          margin: "10px",
+                          backgroundColor: "#f5f5f5",
+                          border: "2px solid #dfdeda",
+                          borderRadius: 2,
+                          cursor: "pointer",
+                          position: "relative",
+                          transition:
+                            "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                          "&:hover": {
+                            transform: "translateY(-10px)",
+                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+                          },
+                        }}
+                        onClick={() => {
+                          setSelectedEstacion(estacion);
+                        }}
+                      >
+                        <Typography
+                          fontWeight="bold"
+                          variant="h6"
+                          color="text.primary"
+                          sx={{
+                            textAlign: "center",
+                            paddingTop: 2,
+                          }}
+                        >
+                          {estacion.CENTRO}
+                        </Typography>
+                        <Divider sx={{ margin: "10px 0" }} />
+                        <Typography
+                          variant="body1"
+                          color="text.primary"
+                          sx={{
+                            fontWeight: "bold",
+                            textAlign: "center",
+                          }}
+                        >
+                          {estacion.Nombre_Estacion}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          color="text.primary"
+                          sx={{
+                            fontWeight: "bold",
+                            textAlign: "center",
+                          }}
+                        >
+                          Módulo #{estacion.Modulo}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <Typography variant="body1" color="text.secondary">
+                    No hay estaciones para seleccionar
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                width: { xs: "100%", sm: "100%", lg: "100%" },
+                height: "100%",
+                margin: "10px",
+                borderRadius: 2,
+              }}
+            >
+              <Typography
+                fontWeight="bold"
+                variant="h6"
                 sx={{
-                  borderRadius: 2,
+                  textAlign: "center",
                   background: "#0b2f6d",
+                  color: "white",
+                  margin: 1,
+                  padding: 2,
+                }}
+              >
+                {selectedEstacion.Nombre_Estacion}
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "start",
+                  padding: 1,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setSelectedEstacion(undefined);
+                  }}
+                  sx={{
+                    borderRadius: 2,
+                    background: "#0b2f6d",
+                    width: "100%",
+                  }}
+                >
+                  Volver
+                </Button>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: { lg: "row", xs: "column" },
                   width: "100%",
                 }}
               >
-                Volver
-              </Button>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: { lg: "row", xs: "column" },
-                width: "100%",
-              }}
-            >
-              <Box
-                sx={{
-                  width: { lg: "50%", xs: "100%" },
-                  padding: 2,
-                  border: "2px solid #dfdeda",
-                  height: "100%",
-                  margin: 1,
-                  borderRadius: 2,
-                  background: "#fff",
-                  boxShadow: 1,
-                }}
-              >
-                <Typography
-                  fontWeight="bold"
-                  variant="h6"
-                  sx={{
-                    textAlign: "center",
-                    padding: "5px",
-                  }}
-                >
-                  EN ATENCION
-                </Typography>
-                <Divider sx={{ margin: "10px 0" }} />
                 <Box
                   sx={{
-                    minHeight: "100px",
-                    width: "100%",
-                    borderRadius: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  {atencion ? (
-                    <Box
-                      sx={{
-                        padding: "10px",
-                        borderRadius: 2,
-                      }}
-                    >
-                      <Typography
-                        fontWeight="bold"
-                        variant="h3"
-                        sx={{ textAlign: "center" }}
-                      >
-                        {atencion.Numero ? atencion.Numero : "00"}
-                      </Typography>
-                      <Typography
-                        fontWeight="bold"
-                        variant="h5"
-                        sx={{ textAlign: "center" }}
-                      >
-                        {atencion.nombre ? atencion.nombre : "Sin Nombre"}
-                      </Typography>
-                      <Typography
-                        fontWeight="bold"
-                        variant="h6"
-                        sx={{ textAlign: "center" }}
-                      >
-                        {atencion.Rut ? atencion.Rut : "Sin Rut"}
-                      </Typography>
-                      <Typography
-                        fontWeight="bold"
-                        variant="h6"
-                        sx={{ textAlign: "center" }}
-                      >
-                        {atencion.Nombre_Proceso
-                          ? atencion.Nombre_Proceso
-                          : "Sin Proceso"}
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Typography
-                      fontWeight="bold"
-                      sx={{
-                        fontFamily: "initial",
-                        fontSize: "1.5rem",
-                        minHeight: "100px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      Sin Información
-                    </Typography>
-                  )}
-                  <Divider sx={{ margin: "10px 0" }} />
-                </Box>
-
-                {/* COMANDOS */}
-
-                <Box
-                  sx={{
-                    width: "100%",
+                    width: { lg: "50%", xs: "100%" },
+                    padding: 2,
+                    border: "2px solid #dfdeda",
+                    height: "100%",
+                    margin: 1,
                     borderRadius: 2,
-                    display: "flex",
-                    justifyContent: "space-evenly",
+                    background: "#fff",
                   }}
                 >
-                  <Button
-                    variant="contained"
-                    color="error"
-                    disabled={isSubmitting}
+                  <Typography
+                    fontWeight="bold"
+                    variant="h6"
                     sx={{
-                      borderRadius: 2,
-                      width: "200px",
+                      textAlign: "center",
+                      padding: "5px",
                     }}
-                    onClick={SaltarNumero}
                   >
-                    {isSubmitting ? "Procesando..." : "Saltar"}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    disabled={isSubmitting}
-                    sx={{
-                      background: "#0b2f6d",
-                      color: "white",
-                      borderRadius: 2,
-                      width: "200px",
-                    }}
-                    onClick={atenderSiguiente}
-                  >
-                    {isSubmitting ? "Procesando..." : "Llamar"}
-                  </Button>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  width: { lg: "50%", xs: "100%" },
-                  padding: 2,
-                  border: "2px solid #dfdeda",
-                  height: "100%",
-                  margin: 1,
-                  borderRadius: 2,
-                  background: "#fff",
-                  boxShadow: 1,
-                }}
-              >
-                <Typography
-                  fontWeight="bold"
-                  variant="h6"
-                  sx={{
-                    textAlign: "center",
-                    padding: "5px",
-                  }}
-                >
-                  EN ESPERA
-                </Typography>
-                <Divider sx={{ margin: "10px 0" }} />
-                <Box sx={{ borderRadius: "10px" }}>
+                    EN ATENCION
+                  </Typography>
+                  <Divider sx={{ margin: "10px 0" }} />
                   <Box
                     sx={{
                       minHeight: "100px",
@@ -640,72 +512,198 @@ function AtencionTotem() {
                       textAlign: "center",
                     }}
                   >
-                    {espera.length > 0 ? (
-                      <TableContainer
-                        sx={{ width: "100%", height: "100%", overflow: "auto" }}
+                    {atencion ? (
+                      <Box
+                        sx={{
+                          padding: "10px",
+                          borderRadius: 2,
+                        }}
                       >
-                        <Table stickyHeader>
-                          <TableHead>
-                            <TableRow>
-                              {["NUMERO", "NOMBRE"].map((header) => (
-                                <TableCell
-                                  key={header}
-                                  align="center"
-                                  sx={{
-                                    background: "#0b2f6d",
-                                    fontWeight: "bold",
-                                    color: "white",
-                                  }}
-                                >
-                                  <Typography fontWeight={"bold"}>
-                                    {header}
-                                  </Typography>
-                                </TableCell>
-                              ))}
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {espera.map((item, index) => (
-                              <TableRow key={index}>
-                                <TableCell align="center">
-                                  <Typography
-                                    fontWeight="bold"
-                                    sx={{ fontSize: "12px" }}
-                                  >
-                                    {item.Numero ? item.Numero : "Sin Numero"}
-                                  </Typography>
-                                </TableCell>
-                                <TableCell align="center">
-                                  <Typography
-                                    fontWeight="bold"
-                                    sx={{ fontSize: "12px" }}
-                                  >
-                                    {item.nombre ? item.nombre : "Sin Nombre"}
-                                  </Typography>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
+                        <Typography
+                          fontWeight="bold"
+                          variant="h3"
+                          sx={{ textAlign: "center" }}
+                        >
+                          {atencion.Numero ? atencion.Numero : "00"}
+                        </Typography>
+                        <Typography
+                          fontWeight="bold"
+                          variant="h5"
+                          sx={{ textAlign: "center" }}
+                        >
+                          {atencion.nombre ? atencion.nombre : "Sin Nombre"}
+                        </Typography>
+                        <Typography
+                          fontWeight="bold"
+                          variant="h6"
+                          sx={{ textAlign: "center" }}
+                        >
+                          {atencion.Rut ? atencion.Rut : "Sin Rut"}
+                        </Typography>
+                        <Typography
+                          fontWeight="bold"
+                          variant="h6"
+                          sx={{ textAlign: "center" }}
+                        >
+                          {atencion.Nombre_Proceso
+                            ? atencion.Nombre_Proceso
+                            : "Sin Proceso"}
+                        </Typography>
+                      </Box>
                     ) : (
                       <Typography
                         fontWeight="bold"
-                        variant="h6"
-                        sx={{ textAlign: "center", paddingTop: 2 }}
+                        sx={{
+                          fontFamily: "initial",
+                          fontSize: "1.5rem",
+                          minHeight: "100px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
                       >
-                        SIN INFORMACION
+                        Sin Información
                       </Typography>
                     )}
+                    <Divider sx={{ margin: "10px 0" }} />
+                  </Box>
+
+                  {/* COMANDOS */}
+
+                  <Box
+                    sx={{
+                      width: "100%",
+                      borderRadius: 2,
+                      display: "flex",
+                      justifyContent: "space-evenly",
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      color="error"
+                      disabled={isSubmitting}
+                      sx={{
+                        borderRadius: 2,
+                        width: "200px",
+                      }}
+                      onClick={SaltarNumero}
+                    >
+                      {isSubmitting ? "Procesando..." : "Saltar"}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      disabled={isSubmitting}
+                      sx={{
+                        background: "#0b2f6d",
+                        color: "white",
+                        borderRadius: 2,
+                        width: "200px",
+                      }}
+                      onClick={atenderSiguiente}
+                    >
+                      {isSubmitting ? "Procesando..." : "Llamar"}
+                    </Button>
+                  </Box>
+                </Box>
+
+                <Box
+                  sx={{
+                    width: { lg: "50%", xs: "100%" },
+                    padding: 2,
+                    border: "2px solid #dfdeda",
+                    height: "100%",
+                    margin: 1,
+                    borderRadius: 2,
+                    background: "#fff",
+                  }}
+                >
+                  <Typography
+                    fontWeight="bold"
+                    variant="h6"
+                    sx={{
+                      textAlign: "center",
+                      padding: "5px",
+                    }}
+                  >
+                    EN ESPERA
+                  </Typography>
+                  <Divider sx={{ margin: "10px 0" }} />
+                  <Box sx={{ borderRadius: "10px" }}>
+                    <Box
+                      sx={{
+                        minHeight: "100px",
+                        width: "100%",
+                        borderRadius: "10px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {espera.length > 0 ? (
+                        <TableContainer
+                          sx={{ width: "100%", height: "100%", overflow: "auto" }}
+                        >
+                          <Table stickyHeader>
+                            <TableHead>
+                              <TableRow>
+                                {["NUMERO", "NOMBRE"].map((header) => (
+                                  <TableCell
+                                    key={header}
+                                    align="center"
+                                    sx={{
+                                      background: "#0b2f6d",
+                                      fontWeight: "bold",
+                                      color: "white",
+                                    }}
+                                  >
+                                    <Typography fontWeight={"bold"}>
+                                      {header}
+                                    </Typography>
+                                  </TableCell>
+                                ))}
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {espera.map((item, index) => (
+                                <TableRow key={index}>
+                                  <TableCell align="center">
+                                    <Typography
+                                      fontWeight="bold"
+                                      sx={{ fontSize: "12px" }}
+                                    >
+                                      {item.Numero ? item.Numero : "Sin Numero"}
+                                    </Typography>
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    <Typography
+                                      fontWeight="bold"
+                                      sx={{ fontSize: "12px" }}
+                                    >
+                                      {item.nombre ? item.nombre : "Sin Nombre"}
+                                    </Typography>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      ) : (
+                        <Typography
+                          fontWeight="bold"
+                          variant="h6"
+                          sx={{ textAlign: "center", paddingTop: 2 }}
+                        >
+                          SIN INFORMACION
+                        </Typography>
+                      )}
+                    </Box>
                   </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-        )}
+          )}
+        </Box>
+        {data.length > 0 && renderTable()}
       </Box>
-      {data.length > 0 && renderTable()}
-    </Box>
+    </MainLayout>
   );
 }
 

@@ -1,19 +1,15 @@
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   Skeleton,
-  Paper,
   Typography,
 } from "@mui/material";
-import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAst } from "../api/prevencionAPI";
 import { useSelector } from "react-redux";
 import extractDate from "../helpers/main";
+import { MainLayout } from "./Layout";
 
 function AstViewer() {
   const { formID } = useParams();
@@ -39,6 +35,7 @@ function AstViewer() {
   }, []);
 
   return (
+    <MainLayout showNavbar={false}>
     <Box
       sx={{
         display: "flex",
@@ -48,8 +45,6 @@ function AstViewer() {
         height: "100%",
         width: "100%",
         overflow: "auto",
-        paddingTop: 8,
-        paddingBottom: "50px",
         backgroundColor: "#f0f0f0",
       }}
     >
@@ -57,13 +52,13 @@ function AstViewer() {
         sx={{
           width: "80%",
           overflow: "hidden",
-          mt: 3,
+          mt: 2,
         }}
       >
         <Link to="/form-ast-list">
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", borderRadius: "0px", width: "200px" }}
+            sx={{ background: "#0b2f6d", borderRadius: 2, width: "200px" }}
           >
             <Typography fontWeight="bold" sx={{ color: "#fff" }}>
               VOLVER
@@ -84,9 +79,9 @@ function AstViewer() {
         </Box>
       ) : (
         <Box
-          sx={{ width: "80%", mb: 3, background: "#fff", boxShadow: 2, mt: 2 }}
+          sx={{ width: "80%", mb: 3, background: "#fff", mt: 2, border: "2px solid #dfdeda", borderRadius: 2 }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", p: 2, background: "#0b2f6d" }}>
+          <Box sx={{ p: 2, background: "#0b2f6d" }}>
             <Typography variant="h5" sx={{ color: "#fff", flexGrow: 1, textAlign: "center", fontWeight: "bold" }}>
               ANALISIS SEGURO DEL TRABAJO
             </Typography>
@@ -206,6 +201,7 @@ function AstViewer() {
         </Box>
       )}
     </Box>
+    </MainLayout>
   );
 }
 export default AstViewer;

@@ -78,30 +78,29 @@ import {
   
     return (
       <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          background: "white",
-          alignItems: "center",
-          pt: 8,
-          height: "100%",
-        }}
-      >
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        py: 3,
+        height: "90vh",
+        background: "#f5f5f5",
+      }}
+    >
         {open && (
           <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
             {message}
           </Alert>
         )}
         <Card
-          sx={{
-            borderRadius: "10px",
-            width: "50%",
-            height: "100%",
-            overflow: "auto",
-            boxShadow: 5,
-          }}
-        >
+        sx={{
+          borderRadius: 2,
+          width: "50%",
+          overflow: "auto",
+          border: "2px solid #dfdeda",
+        }}
+      >
           <CardHeader
           title={
             <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
@@ -131,7 +130,7 @@ import {
                   id="fechaEvento"
                   type="date"
                   name="fechaEvento"
-                  variant="outlined"
+                  variant="standard"
                   value={form.fechaEvento}
                   onChange={handleChange}
                 />
@@ -145,7 +144,7 @@ import {
                   id="file"
                   type="file"
                   name="file"
-                  variant="outlined"
+                  variant="standard"
                   onChange={handleFileChange}
                 />
               </Box>
@@ -154,7 +153,7 @@ import {
               <Button
                   type="submit"
                   variant="contained"
-                  sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                  sx={{ background: "#0b2f6d", fontWeight: "bold", width: "200px" }}
                   disabled={isSubmitting}  // Deshabilitar el botón cuando isSubmitting es true
                 >
                   {isSubmitting ? "Procesando..." : "Crear"}

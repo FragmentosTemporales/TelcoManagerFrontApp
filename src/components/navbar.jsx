@@ -19,10 +19,10 @@ function Navbar() {
   };
 
   return (
+<>
     <AppBar position="fixed" sx={{ background: "#0b2f6d", height: "60px" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        {token && (
-          <>
+        <>
             <Link
               to={"/"}
               style={{
@@ -78,9 +78,9 @@ function Navbar() {
               </Button>
             </Box>
           </>
-        )}
       </Toolbar>
     </AppBar>
+</>
   );
 }
 
