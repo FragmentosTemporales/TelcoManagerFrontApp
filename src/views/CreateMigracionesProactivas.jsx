@@ -195,6 +195,7 @@ export default function CreateMigracionesProactivas() {
     } finally {
       setIsSubmitting(false);
       clearForm();
+      window.scrollTo(0, 0);
     }
   };
 
@@ -331,6 +332,7 @@ export default function CreateMigracionesProactivas() {
           },
         }}
       >
+
         {dataPendiente && dataPendiente.length > 0 || dataGestiones && dataGestiones.length > 0 ? (
           <Box
             sx={{
