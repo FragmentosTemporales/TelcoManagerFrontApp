@@ -15,6 +15,10 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
 
     const authState = useSelector((state) => state.auth);
     const { token } = authState;
+
+    const migracionState = useSelector((state) => state.migraciones);
+    const { id_selected } = migracionState;
+
     const [QMigracionesPendientesVista, setQMigracionesPendientesVista] = useState([]);
     const [dataGestiones, setDataGestiones] = useState([]);
     const [dataPendiente, setDataPendiente] = useState([]);
@@ -35,6 +39,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
 
     const fetchPendientesVista = async () => {
         try {
+            console.log("Fetching pending migrations for view");
             const response = await getQMigracionesPendientesdeVista(token);
             setQMigracionesPendientesVista(response);
         } catch (error) {
@@ -58,12 +63,12 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
             setDataPendiente(response.data);
         } catch (error) {
             console.log(error);
-        } 
+        }
     };
 
     useEffect(() => {
         fetchPendientesVista();
-    }, []);
+    }, [id_selected]);
 
     useEffect(() => {
         fetchPendientes();
@@ -92,18 +97,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
 
                     }}
                 >
-                    {/* Texto fijo a la izquierda */}
-                    <Box
-                        sx={{
-                            flexShrink: 0,
-                            padding: "8px 16px",
-                            backgroundColor: "#0b2f6d",
-                        }}
-                    >
-                        <Typography fontFamily="monospace" sx={{ color: "white" }}>
-                            MIGRACIONES PENDIENTES POR COMUNA
-                        </Typography>
-                    </Box>
+
 
                     <Box
                         component="marquee"
@@ -160,14 +154,14 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                     {sidebarVisible ? <ChevronLeft /> : <ChevronRight />}
                 </IconButton>
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "row", minHeight: "90vh" }}>
+            <Box sx={{ display: "flex", flexDirection: "row", minHeight: "90vh", paddingTop: QMigracionesPendientesVista.length > 0 ? "0px" : "60px" }}>
                 {sidebarVisible && (
                     <Box
                         sx={{
                             width: "20%",
                             minWidth: "200px",
                             backgroundColor: "#0b2f6d",
-                            transition: "width 0.3s ease-in-out"
+                            transition: "width 0.3s ease-in-out",
                         }}
                     >
                         {dataPendiente && dataPendiente.length > 0 ? (
@@ -180,9 +174,9 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                                     justifyContent: "center",
                                 }}
                             >
-                                {dataPendiente.map((item) => (
+                                {dataPendiente.map((item, index) => (
                                     <Box
-                                        key={item.id_vivienda}
+                                        key={index}
                                         onClick={(e) => handleSubmitPendiente(e, item.id_vivienda)}
                                         sx={{
                                             backgroundColor: "#fff",
@@ -213,7 +207,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                                             MIGRACION PENDIENTE
                                         </Typography>
                                         <Typography
-                                            key={item.ID_VIVIENDA}
+                                            key={index}
                                             variant="body1"
                                             sx={{
                                                 fontWeight: "bold",
@@ -294,9 +288,9 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                                     marginBottom: 2,
                                 }}
                             >
-                                {dataGestiones.map((item) => (
+                                {dataGestiones.map((item, index) => (
                                     <Box
-                                        key={item.id_vivienda}
+                                        key={index}
                                         sx={{
                                             backgroundColor: "#fff",
                                             width: "98%",
@@ -318,7 +312,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                                             GESTION PREVIA
                                         </Typography>
                                         <Typography
-                                            key={item.id_vivienda}
+                                            key={index}
                                             variant="body1"
                                             sx={{
                                                 fontWeight: "bold",

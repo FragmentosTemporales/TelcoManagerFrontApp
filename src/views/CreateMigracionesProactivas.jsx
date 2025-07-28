@@ -49,12 +49,6 @@ export default function CreateMigracionesProactivas() {
     userID: "",
   });
 
-  useEffect(() => {
-    if (id_selected) {
-      handleSubmitPendiente(id_selected);
-    }
-  }, [id_selected]);
-
   const fetchComunas = async () => {
     setIsSubmitting(true);
     try {
@@ -150,6 +144,12 @@ export default function CreateMigracionesProactivas() {
       window.scrollTo(0, 0);
     }
   };
+
+  useEffect(() => {
+    if (id_selected) {
+      handleSubmitPendiente(id_selected);
+    }
+  }, [id_selected]);
 
   useEffect(() => {
     fetchComunas();

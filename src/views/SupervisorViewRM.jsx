@@ -124,7 +124,6 @@ function SupervisorViewRM() {
           <Typography
             variant="h5"
             fontWeight="bold"
-            fontFamily={"initial"}
             sx={{ pt: 2 }}
           >
             ¿DESEAS CANCELAR EL NUMERO ASIGNADO?
@@ -165,7 +164,6 @@ function SupervisorViewRM() {
           <Typography
             variant="h5"
             fontWeight="bold"
-            fontFamily={"initial"}
             sx={{ pt: 2 }}
           >
             ¿DESEAS DARLE SALIDA AL TECNICO SELECCIONADO?
@@ -208,8 +206,8 @@ function SupervisorViewRM() {
         justifyContent: "center",
         background: "#f5f5f5",
         alignItems: "center",
-        marginY: "60px",
         minHeight: "90vh",
+        paddingTop: "60px",
       }}
     >
       {openModalCancelar && setModalCancelar()}
@@ -240,7 +238,7 @@ function SupervisorViewRM() {
                 title={
                   <Typography
                     fontWeight="bold"
-                    sx={{ fontFamily: "initial", fontSize: "1.5rem" }}
+                    sx={{ fontSize: "1.5rem" }}
                   >
                     TECNICO SELECCIONADO
                   </Typography>
@@ -249,7 +247,6 @@ function SupervisorViewRM() {
                   background: "#0b2f6d",
                   color: "white",
                   textAlign: "center",
-                  borderRadius: "10px",
                 }}
               />
               <CardContent>
@@ -488,7 +485,7 @@ function SupervisorViewRM() {
             <Card
               sx={{
                 borderRadius: "10px",
-                mt: "20px",
+                marginY: "20px",
               }}
             >
               <TableContainer
@@ -507,7 +504,7 @@ function SupervisorViewRM() {
                             color: "white",
                           }}
                         >
-                          <Typography fontFamily="initial">{header}</Typography>
+                          <Typography>{header}</Typography>
                         </TableCell>
                       ))}
                     </TableRow>
@@ -540,6 +537,7 @@ function SupervisorViewRM() {
                             }}
                             onClick={() => {
                               setTrabajador(item);
+                              window.scrollTo(0, 0);
                             }}
                           >
                             SELECCIONAR
