@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Alert,
   Box,
@@ -14,27 +14,23 @@ import {
 import {
   getClienteMigracion,
   createMigracion,
-  getDataMigracionesPendientes,
   getDataMigracionesComunas,
   getMigracionUnica,
-  getMigracionGestiones,
-  getQMigracionesPendientesdeVista
 } from "../api/despachoAPI";
-import extractDate from "../helpers/main";
-import { MainLayout } from "./Layout";
+import { MigracionLayout } from "./Layout";
+import { onClear } from "../slices/migracionSlice";
 
 export default function CreateMigracionesProactivas() {
   const authState = useSelector((state) => state.auth);
   const { token, user_id } = authState;
-
+  const migracionState = useSelector((state) => state.migraciones);
+  const { id_selected } = migracionState;
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState("success");
   const [message, setMessage] = useState("");
+  const dispatch = useDispatch();
 
-  const [dataPendiente, setDataPendiente] = useState([]);
   const [dataComuna, setDataComuna] = useState([]);
-  const [dataGestiones, setDataGestiones] = useState([]);
-  const [QMigracionesPendientesVista, setQMigracionesPendientesVista] = useState([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -53,17 +49,11 @@ export default function CreateMigracionesProactivas() {
     userID: "",
   });
 
-  const fetchPendientes = async () => {
-    setIsSubmitting(true);
-    try {
-      const response = await getDataMigracionesPendientes(token);
-      setDataPendiente(response.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubmitting(false);
+  useEffect(() => {
+    if (id_selected) {
+      handleSubmitPendiente(id_selected);
     }
-  };
+  }, [id_selected]);
 
   const fetchComunas = async () => {
     setIsSubmitting(true);
@@ -77,37 +67,19 @@ export default function CreateMigracionesProactivas() {
     }
   };
 
-  const fetchGestiones = async () => {
-    setDataGestiones([]);
+   const handleSubmitPendiente = async (id) => {
     setIsSubmitting(true);
     try {
-      const response = await getMigracionGestiones(id_vivienda, token);
-      setDataGestiones(response);
+      const response = await getMigracionUnica(id, token);
+      setMigracion(response);
     } catch (error) {
-      console.log(error);
+      setAlertType("error");
+      setMessage(error);
+      setOpen(true);
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  const fetchPendientesVista = async () => {
-    setIsSubmitting(true);
-    try {
-      const response = await getQMigracionesPendientesdeVista(token);
-      console.log(response);
-      setQMigracionesPendientesVista(response);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-
-  useEffect(() => {
-    fetchGestiones();
-    fetchPendientesVista();
-  }, [id_vivienda]);
 
   const contactoOptions = [
     "Sin Factibilidad",
@@ -145,26 +117,6 @@ export default function CreateMigracionesProactivas() {
     }
   };
 
-  const handleSubmitPendiente = async (e, id) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      const response = await getMigracionUnica(id, token);
-      setMigracion(response);
-      console.log(response);
-    } catch (error) {
-      setAlertType("error");
-      setMessage(error);
-      setOpen(true);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const settingWidth = () => {
-    return dataPendiente && dataPendiente.length > 0 || dataGestiones && dataGestiones.length > 0 ? "80%" : "100%";
-  };
-
   const clearForm = () => {
     setForm({
       id_vivienda: "",
@@ -184,10 +136,10 @@ export default function CreateMigracionesProactivas() {
     setIsSubmitting(true);
     try {
       const response = await createMigracion(form, token);
-      fetchPendientes();
       setAlertType("success");
       setMessage("Migración creada exitosamente.");
       setOpen(true);
+      dispatch(onClear());
     } catch (error) {
       setAlertType("error");
       setMessage(error);
@@ -201,10 +153,6 @@ export default function CreateMigracionesProactivas() {
 
   useEffect(() => {
     fetchComunas();
-  }, []);
-
-  useEffect(() => {
-    fetchPendientes();
   }, []);
 
   useEffect(() => {
@@ -234,74 +182,16 @@ export default function CreateMigracionesProactivas() {
 
 
   return (
-    <MainLayout showNavbar={true}>
+    <MigracionLayout showNavbar={true} id_vivienda={id_vivienda}>
     <Box
       sx={{
-        paddingY: "60px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: "#f0f0f0",
-        minHeight: "90vh",
+        minHeight: "110vh",
       }}
     >
-
-      {QMigracionesPendientesVista && QMigracionesPendientesVista.length > 0 && (
-        <Box
-          sx={{
-            width: "100%",
-            backgroundColor: "#0b2f6d",
-            overflow: "hidden",
-            border: "1px solid black",
-            marginBottom: 2,
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          {/* Texto fijo a la izquierda */}
-          <Box
-            sx={{
-              flexShrink: 0,
-              padding: "8px 16px",
-              backgroundColor: "#0b2f6d",
-            }}
-          >
-            <Typography fontFamily="monospace" sx={{ color: "white" }}>
-              MIGRACIONES PENDIENTES POR COMUNA
-            </Typography>
-          </Box>
-
-          {/* Texto desplazable */}
-          <Box
-            component="marquee"
-            behavior="scroll"
-            direction="left"
-            scrollAmount="5"
-            sx={{
-              flexGrow: 1,
-              whiteSpace: "nowrap",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            {QMigracionesPendientesVista.map((item) => (
-              <Box
-                key={item.id}
-                sx={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  marginRight: 4,
-                }}
-              >
-                <Typography fontFamily="monospace" sx={{ color: "yellow" }}>
-                  {item.COMUNA}: {item.Q}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      )}
-
 
       {open && (
         <Alert
@@ -317,8 +207,6 @@ export default function CreateMigracionesProactivas() {
         </Alert>
       )}
 
-
-
       <Box
         sx={{
           width: "100%",
@@ -333,242 +221,9 @@ export default function CreateMigracionesProactivas() {
         }}
       >
 
-        {dataPendiente && dataPendiente.length > 0 || dataGestiones && dataGestiones.length > 0 ? (
-          <Box
-            sx={{
-              width: { lg: "20%", md: "100%", sm: "100%", xs: "100%" },
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {dataPendiente && dataPendiente.length > 0 ? (
-              <Box
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {dataPendiente.map((item) => (
-                  <Box
-                    key={item.id_vivienda}
-                    onClick={(e) => handleSubmitPendiente(e, item.id_vivienda)}
-                    sx={{
-                      backgroundColor: "#fff",
-                      width: "98%",
-                      cursor: "pointer",
-                      border: "2px solid #dfdeda",
-                      borderRadius: 2,
-                      paddingTop: 1,
-                      paddingBottom: 1,
-                      transition:
-                        "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-                      "&:hover": {
-                        transform: "translateY(-5px)",
-                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
-                      },
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        textAlign: "left",
-                        color: "#0b2f6d",
-                        fontWeight: "bold",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {" "}
-                      MIGRACION PENDIENTE
-                    </Typography>
-                    <Typography
-                      key={item.ID_VIVIENDA}
-                      variant="body1"
-                      sx={{
-                        fontWeight: "bold",
-                        fontSize: "11px",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {" "}
-                      {item.Cliente}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#666",
-                        fontSize: "11px",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {" "}
-                      {item.Celular}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#666",
-                        fontSize: "11px",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {" "}
-                      {item.COMUNA}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#666",
-                        fontSize: "11px",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {item.bloque_horario}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#666",
-                        fontSize: "11px",
-                        fontStyle: "italic",
-                        fontWeight: "bold",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {" "}
-                      {item.comentario ? (
-                        <>{item.comentario}</>
-                      ) : (
-                        "Sin Comentario"
-                      )}
-                    </Typography>
-                  </Box>
-                ))}
-              </Box>
-            ) : null}
-            <Divider sx={{ width: "98%", marginY: 2, borderColor: "#0b2f6d" }} />
-            {dataGestiones && dataGestiones.length > 0 ? (
-              <Box
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: 2,
-                }}
-              >
-                {dataGestiones.map((item) => (
-                  <Box
-                    key={item.id_vivienda}
-                    sx={{
-                      backgroundColor: "#fff",
-                      width: "98%",
-                      border: "2px solid #dfdeda",
-                      borderRadius: 2,
-                      paddingTop: 1,
-                      paddingBottom: 1,
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        textAlign: "left",
-                        color: "#0b2f6d",
-                        fontWeight: "bold",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      GESTION PREVIA
-                    </Typography>
-                    <Typography
-                      key={item.id_vivienda}
-                      variant="body1"
-                      sx={{
-                        fontWeight: "bold",
-                        fontSize: "11px",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {" "}
-                      {item.contacto}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#666",
-                        fontSize: "11px",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {" "}
-                      {item.ingreso}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#666",
-                        fontSize: "11px",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {" "}
-                      {extractDate(item.fecha_registro)}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#666",
-                        fontSize: "11px",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {item.bloque_horario}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#666",
-                        fontSize: "11px",
-                        fontStyle: "italic",
-                        fontWeight: "bold",
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                      }}
-                    >
-                      {" "}
-                      {item.comentario ? (
-                        <>{item.comentario}</>
-                      ) : (
-                        "Sin Comentario"
-                      )}
-                    </Typography>
-                  </Box>
-                ))}
-              </Box>
-            ) : null}
-          </Box>
-        ) : null}
-
         <Box
           sx={{
-            width: { lg: { settingWidth }, md: { settingWidth }, sm: "100%", xs: "100%" },
+            width: { lg: "100%", md: "100%", sm: "100%", xs: "100%" },
             height: "100%",
             display: "flex",
             flexDirection: "column",
@@ -1091,6 +746,6 @@ export default function CreateMigracionesProactivas() {
         </Box>
       </Box>
     </Box>
-    </MainLayout>
+    </MigracionLayout>
   );
 }

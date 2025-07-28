@@ -11,6 +11,7 @@ import formReducer from "../slices/formSlice"
 import notificacionReducer from "../slices/notificacionSlice"
 import dominionReducer from "../slices/dominionSlice"
 import asignadosReducer from "../slices/asignadosSlice"
+import migracionesReducer from "../slices/migracionSlice";
 
 export const store = configureStore({
   reducer: {
@@ -25,6 +26,7 @@ export const store = configureStore({
     form: formReducer,
     notificacion: notificacionReducer,
     dominion: dominionReducer,
-    asignados: asignadosReducer
+    asignados: asignadosReducer,
+    migraciones: migracionesReducer
   },
 });
