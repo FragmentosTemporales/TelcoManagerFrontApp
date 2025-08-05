@@ -16,7 +16,7 @@ export const getNumeros = async (token) => {
     } catch (error) {
       throw error.response.data.error;
     }
-  };
+};
 
 export const getUserInfo = async (token) => {
   try {

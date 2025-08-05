@@ -12,7 +12,6 @@ import FormRRHH from "./views/CreateFormRRHH";
 import FormOperaciones from "./views/CreateFormOperaciones";
 import FormLogistica from "./views/CreateFormLogistica";
 import ReversaView from "./views/Reversa";
-import Charts from "./views/Charts";
 import CreateZone from "./views/CreateZone";
 import ObjetivosView from "./views/Objetivos";
 import FormAstList from "./views/AstListView";
@@ -35,6 +34,7 @@ import TicketViewer from "./views/TicketView";
 import CreateMigracionesProactivas from "./views/CreateMigracionesProactivas";
 import MigracionesViewer from "./views/MigracionesView";
 import ProyectoInternoView from "./views/Proyecto_InternoView";
+import NDCSinConsumoUpdate from "./views/NdcSinConsumoView";
 
 function App() {
   return (
@@ -42,7 +42,6 @@ function App() {
       <Routes>
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<Home />} />
-          <Route path="/modulo:charts" element={<Charts />} />
           <Route path="/mis-solicitudes" element={<AmonesatacionesViewer />} />
           <Route path="/modulo:solicitudes" element={<Solicitudes />} />
           <Route path="/solicitud/:solicitud_id" element={<Solicitud />} />
@@ -72,6 +71,7 @@ function App() {
           <Route path="/modulo:create-migracion-proactiva" element={<CreateMigracionesProactivas />} />
           <Route path="/modulo:migraciones-proactivas" element={<MigracionesViewer />} />
           <Route path="/modulo:proyecto-interno" element={<ProyectoInternoView />} />
+          <Route path="/modulo:ndc/pendientes-sin-consumo" element={<NDCSinConsumoUpdate />} />
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />
         <Route path="/bodegaQuinta" element={<BodegaQuintaViewer />} />

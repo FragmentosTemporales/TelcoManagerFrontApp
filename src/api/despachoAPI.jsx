@@ -254,6 +254,21 @@ export const getQMigracionesPendientesdeVista = async (token) => {
   }
 };
 
+export const getMigracionFiltrada = async (token, id_vivienda) => {
+  try {
+    const url = `${baseUrl}/despacho/get-migracion-filtrada/${id_vivienda}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const getClienteMigracion = async (payload, token) => {
   try {
     const url = `${baseUrl}/despacho/get-migracion-proactiva`;

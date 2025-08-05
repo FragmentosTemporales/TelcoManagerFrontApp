@@ -39,7 +39,6 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
 
     const fetchPendientesVista = async () => {
         try {
-            console.log("Fetching pending migrations for view");
             const response = await getQMigracionesPendientesdeVista(token);
             setQMigracionesPendientesVista(response);
         } catch (error) {

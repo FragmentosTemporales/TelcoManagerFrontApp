@@ -38,10 +38,14 @@ function BodegaQuintaViewer() {
     }
   };
 
+  const set_interval = () => {
+    return (esperaBodega.length > 0 && esperaLogistica.length > 0) ? 4000 : 10000;
+  }
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchData();
-    }, 3000);
+    }, set_interval());
     return () => clearInterval(intervalId);
   }, []);
 

@@ -69,3 +69,56 @@ export const getReversaData = async (token) => {
     throw error.message;
   }
 };
+
+export const fetchPendientesSinConsumo = async (token, tipo) => {
+  try {
+    const url = `${baseUrl}/ndc/get-pendientes-sin-consumo/${tipo}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const fetchPendientesStats = async (token) => {
+  try {
+    const url = `${baseUrl}/ndc/get-pendientes-stats`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const updateOrdenSinConsumo = async (token, payload) => {
+  try {
+    const data = { data: payload };
+    const url = `${baseUrl}/ndc/update-pendientes-sin-consumo`;
+
+    const response = await axios.put(url, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error response:",
+      error.response ? error.response.data : error.message
+    );
+    throw error.message;
+  }
+};

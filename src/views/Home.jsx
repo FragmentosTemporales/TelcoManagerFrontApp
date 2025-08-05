@@ -34,6 +34,12 @@ function Home() {
       moduloID: 2,
     },
     {
+      head: "NDC sin Consumo",
+      title: "Listado OT sin Consumos",
+      link: "/modulo:ndc/pendientes-sin-consumo",
+      moduloID: 2,
+    },
+    {
       head: "Amonestaciones",
       title: "Listado de Solicitudes de Amonestación",
       link: "/modulo:solicitudes",
@@ -41,7 +47,7 @@ function Home() {
     },
     {
       head: "Área de Creación",
-      title: "Espacio de Creación",
+      title: "Espacio para crear nuevos usuarios",
       link: "/createzone",
       moduloID: 4,
     },
