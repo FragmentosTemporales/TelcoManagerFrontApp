@@ -35,6 +35,7 @@ import CreateMigracionesProactivas from "./views/CreateMigracionesProactivas";
 import MigracionesViewer from "./views/MigracionesView";
 import ProyectoInternoView from "./views/Proyecto_InternoView";
 import NDCSinConsumoUpdate from "./views/NdcSinConsumoView";
+import CreateProyectoInterno from "./views/CreateProyectoInterno";
 
 function App() {
   return (
@@ -71,6 +72,8 @@ function App() {
           <Route path="/modulo:create-migracion-proactiva" element={<CreateMigracionesProactivas />} />
           <Route path="/modulo:migraciones-proactivas" element={<MigracionesViewer />} />
           <Route path="/modulo:proyecto-interno" element={<ProyectoInternoView />} />
+          <Route path="/modulo:crear-proyecto-interno/:proyecto_id?" element={<CreateProyectoInterno />} />
+
           <Route path="/modulo:ndc/pendientes-sin-consumo" element={<NDCSinConsumoUpdate />} />
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />

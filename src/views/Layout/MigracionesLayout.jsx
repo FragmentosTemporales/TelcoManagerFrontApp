@@ -60,6 +60,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
         try {
             const response = await getDataMigracionesPendientes(token);
             setDataPendiente(response.data);
+            console.log("Migraciones Pendientes:", response.data);
         } catch (error) {
             console.log(error);
         }
@@ -217,6 +218,19 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                                         >
                                             {" "}
                                             {item.Cliente}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            fontWeight={"bold"}
+                                            sx={{
+                                                color: "#666",
+                                                fontSize: "11px",
+                                                paddingLeft: 2,
+                                                paddingRight: 2,
+                                            }}
+                                        >
+                                            {" "}
+                                            {item.estado}
                                         </Typography>
                                         <Typography
                                             variant="body2"

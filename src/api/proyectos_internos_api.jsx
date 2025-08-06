@@ -17,10 +17,67 @@ export const getProyectosByArea = async (token, areaID, page) => {
   }
 };
 
+export const getProyectobyID = async (token, proyectoID) => {
+  try {
+    const url = `${baseUrl}/proyecto-interno/get-proyecto-by-id/${proyectoID}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const crearEstadoTarea = async (payload, token) => {
   try {
     const url = `${baseUrl}/proyecto-interno/create-estado-tarea`;
     const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const crearProyectoInterno = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/proyecto-interno/create-proyecto`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const UpdateProyectoInterno = async (proyectoID, payload, token ) => {
+  try {
+    const url = `${baseUrl}/proyecto-interno/update-proyecto-interno/${proyectoID}`;
+    const response = await axios.put(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const DeleteProyectoInterno = async (token, proyectoID) => {
+  try {
+    const url = `${baseUrl}/proyecto-interno/update-proyecto-interno/${proyectoID}`;
+    const response = await axios.delete(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

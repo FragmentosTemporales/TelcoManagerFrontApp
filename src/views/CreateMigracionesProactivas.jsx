@@ -45,6 +45,7 @@ export default function CreateMigracionesProactivas() {
     id_vivienda: "",
     contacto: "",
     ingreso: "",
+    estado: "",
     fecha_agenda: "",
     bloque_horario: "",
     comentario: "",
@@ -79,19 +80,87 @@ export default function CreateMigracionesProactivas() {
 
   const contactoOptions = [
     "Sin Factibilidad",
-    "Sin contacto",
-    "Contactado",
-    "Pendiente",
+    "Sin Contacto",
+    "Contactado"
   ];
 
-  const ingresoOptions = [
-    "Ingresada",
-    "Pendiente Ingreso",
-    "Rechazada",
-    "Sin Contacto",
-    "Sin Factibilidad",
-    "Ticket"
-  ];
+  const SinContactoOptions = ["Sin contacto"]
+  const SinFactibilidadOptions = ["Ya migrado", "Sin botón migrar", "Otros"]
+  const ContactadoOptions = ["Ingreso", "Pendiente Ingreso", "Cliente rechaza"]
+
+  const PendienteIngreso = ["Ticket", "Otra llamada"];
+  const ClienteRechaza = ["Bocas análogas", "Llamada anteriormente", "Otros"];
+
+const setIngresoOpciones = () => {
+    if (form.contacto && form.contacto != "") {
+      switch (form.contacto) {
+        case "Sin Factibilidad":
+          setIngresoOptions(SinFactibilidadOptions);
+          break;
+        case "Sin Contacto":
+          setIngresoOptions(SinContactoOptions);
+          break;
+        case "Contactado":
+          setIngresoOptions(ContactadoOptions);
+          break;
+
+        default:
+          console.log("contacto no reconocido");
+          break;
+      }
+    } else {
+      console.log("No hay submotivos disponible");
+    }
+  };
+
+const setEstadoOpciones = () => {
+    if (form.ingreso && form.ingreso != "") {
+      switch (form.ingreso) {
+        case "Pendiente Ingreso":
+          setEstadoOptions(PendienteIngreso);
+          break;
+        case "Cliente rechaza":
+          setEstadoOptions(ClienteRechaza);
+          break;
+
+
+        default:
+          console.log("Ingreso no reconocido");
+          break;
+      }
+    } else {
+      console.log("No hay submotivos disponible");
+    }
+  };
+
+  useEffect(() => {
+    if (form.contacto != "") {
+      setIngresoOpciones();
+      // Resetear ingreso y estado cuando cambia contacto
+      setForm(prevForm => ({
+        ...prevForm,
+        ingreso: "",
+        estado: ""
+      }));
+      setEstadoOptions([]);
+    }
+  }, [form.contacto]);
+
+  useEffect(() => {
+    if (form.ingreso != "") {
+      setEstadoOpciones();
+    } else {
+      // Resetear estado cuando ingreso está vacío
+      setForm(prevForm => ({
+        ...prevForm,
+        estado: ""
+      }));
+      setEstadoOptions([]);
+    }
+  }, [form.ingreso]);
+
+  const [ingresoOptions, setIngresoOptions] = useState([])
+  const [estadoOptions, setEstadoOptions] = useState([])
 
   const franjasHorarias = ["10:00 - 13:00", "13:00 - 16:00", "16:00 - 19:00"];
 
@@ -752,6 +821,34 @@ export default function CreateMigracionesProactivas() {
                       }}
                     >
                       {ingresoOptions.map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <InputLabel
+                      htmlFor="estado"
+                      sx={{
+                        fontWeight: "bold",
+                        mb: 1,
+                      }}
+                    >
+                      Estado
+                    </InputLabel>
+                    <Select
+                      id="estado-select"
+                      value={form.estado}
+                      onChange={(e) =>
+                        setForm({ ...form, estado: e.target.value })
+                      }
+                      size="small"
+                      variant="standard"
+                      sx={{
+                        width: { lg: "50%", md: "50%", sm: "80%", xs: "90%" },
+                        mb: 2,
+                      }}
+                    >
+                      {estadoOptions.map((option) => (
                         <MenuItem key={option} value={option}>
                           {option}
                         </MenuItem>

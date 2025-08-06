@@ -20,7 +20,8 @@ import {
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getProyectosByArea, crearEstadoTarea } from "../api/proyectos_internos_api";
+import { Link } from "react-router-dom";
+import { getProyectosByArea, crearEstadoTarea, DeleteProyectoInterno } from "../api/proyectos_internos_api";
 import { MainLayout } from "./Layout";
 
 function ProyectoInternoView() {
@@ -62,7 +63,6 @@ function ProyectoInternoView() {
     setIsSubmitting(true);
     try {
       const response = await getProyectosByArea(token, area.areaID, page);
-      console.log("Response from API:", response);
       setData(response.data);
       setPages(response.pages);
       setTotal(response.total);
@@ -86,7 +86,6 @@ function ProyectoInternoView() {
     try {
 
       const response = await crearEstadoTarea(estadoForm, token);
-      console.log("Estado actualizado:", response);
       setMessage("Estado de tarea actualizado correctamente");
       setAlertType("success");
       fetchData(); // Refresh data after updating estado
@@ -180,7 +179,8 @@ function ProyectoInternoView() {
         >
           <Button
             variant="contained"
-            disabled
+            component={Link}
+            to="/modulo:crear-proyecto-interno"
             sx={{
               backgroundColor: "#0b2f6d",
               color: "white",
@@ -232,6 +232,7 @@ function ProyectoInternoView() {
                   >
                     {proyecto.nombre ? proyecto.nombre : "Sin Nombre"}
                   </Typography>
+
                   <Typography
                     variant="body1"
                     sx={{
@@ -246,6 +247,53 @@ function ProyectoInternoView() {
                       ? proyecto.descripcion
                       : "Sin Descripcion"}
                   </Typography>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      sx={{ marginLeft: 1, marginBottom: 1, width: "200px", backgroundColor: "#0b2f6d" }}
+                      disabled
+                    >
+                      Gestionar Tareas
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      sx={{ marginLeft: 1, marginBottom: 1, width: "100px", backgroundColor: "#0b2f6d" }}
+                      component={Link}
+                      to={`/modulo:crear-proyecto-interno/${proyecto.id}`}
+                      disabled={!(proyecto.userID == user_id) || isSubmitting}
+                    >
+                      Editar
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      disabled={!(proyecto.userID == user_id) || isSubmitting}
+                      color="error"
+                      sx={{ marginLeft: 1, marginBottom: 1, width: "100px" }}
+                      onClick={async () => {
+                        if (window.confirm("¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.")) {
+                          setIsSubmitting(true);
+                          try {
+                            const response = await DeleteProyectoInterno(token, proyecto.id);
+                            console.log("Proyecto eliminado:", response);
+                            setMessage("Proyecto eliminado correctamente");
+                            setAlertType("success");
+                            fetchData(); // Refresh data after deletion
+                          } catch (error) {
+                            console.error("Error eliminando proyecto:", error);
+                            setMessage("Error al eliminar el proyecto");
+                            setAlertType("error");
+                          } finally {
+                            setOpen(true);
+                            setIsSubmitting(false);
+                          }
+                        }
+                      }}
+                    >
+                      Eliminar
+                    </Button>
+                  </Box>
                   {proyecto.tareas && proyecto.tareas.length > 0 && (
                     <Typography
                       variant="body2"
@@ -347,7 +395,6 @@ function ProyectoInternoView() {
                               disabled={!(tarea.userID == user_id) || isSubmitting}
                               variant="standard"
                               onChange={(e) => {
-                                console.log(e.target.value);
                                 handleSelectChange(tarea.id, e.target.value);
                               }}
                               sx={{ width: "100%", marginTop: 1 }}

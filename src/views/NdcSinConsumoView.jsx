@@ -113,6 +113,7 @@ function NDCSinConsumoUpdate() {
                         scaleType: 'band',
                         data: statsTipo.map((item) => item.tipo),
                     }]}
+                    grid={{ vertical: true, horizontal: true }}
                     series={[{
                         data: statsTipo.map((item) => item.Q),
                         color: '#0b2f6d',
