@@ -60,7 +60,6 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
         try {
             const response = await getDataMigracionesPendientes(token);
             setDataPendiente(response.data);
-            console.log("Migraciones Pendientes:", response.data);
         } catch (error) {
             console.log(error);
         }

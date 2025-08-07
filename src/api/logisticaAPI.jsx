@@ -72,7 +72,7 @@ export const getReversaData = async (token) => {
 
 export const fetchPendientesSinConsumo = async (token, tipo) => {
   try {
-    const url = `${baseUrl}/ndc/get-pendientes-sin-consumo/${tipo}`;
+    const url = `${baseUrl}/ndc-bot/get-pendientes-sin-consumo/${tipo}`;
 
     const response = await axios.get(url, {
       headers: {
@@ -88,7 +88,23 @@ export const fetchPendientesSinConsumo = async (token, tipo) => {
 
 export const fetchPendientesStats = async (token) => {
   try {
-    const url = `${baseUrl}/ndc/get-pendientes-stats`;
+    const url = `${baseUrl}/ndc-bot/get-pendientes-stats`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const fetchErroresConConsumo = async (token) => {
+  try {
+    const url = `${baseUrl}/ndc-bot/errores_con_consumo`;
 
     const response = await axios.get(url, {
       headers: {
@@ -105,7 +121,7 @@ export const fetchPendientesStats = async (token) => {
 export const updateOrdenSinConsumo = async (token, payload) => {
   try {
     const data = { data: payload };
-    const url = `${baseUrl}/ndc/update-pendientes-sin-consumo`;
+    const url = `${baseUrl}/ndc-bot/update-pendientes-sin-consumo`;
 
     const response = await axios.put(url, data, {
       headers: {
@@ -122,3 +138,4 @@ export const updateOrdenSinConsumo = async (token, payload) => {
     throw error.message;
   }
 };
+
