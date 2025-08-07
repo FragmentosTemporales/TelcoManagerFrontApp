@@ -124,6 +124,12 @@ function Home() {
       link: "/carga-construccion",
       moduloID: 6,
     },
+        {
+      head: "Monitoreo Telcomanager",
+      title: "Visualiza estadísticas de consultas Log Query para Telcomanager",
+      link: "/modulo:log-query/log-query-stats",
+      moduloID: 26,
+    }
   ];
 
   const accesos = secciones.filter((seccion) =>
