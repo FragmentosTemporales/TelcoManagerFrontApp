@@ -86,7 +86,7 @@ export default function CreateMigracionesProactivas() {
 
   const SinContactoOptions = ["Sin contacto"]
   const SinFactibilidadOptions = ["Ya migrado", "Sin botón migrar", "Otros"]
-  const ContactadoOptions = ["Ingreso", "Pendiente Ingreso", "Cliente rechaza"]
+  const ContactadoOptions = ["Ingresada", "Pendiente Ingreso", "Cliente rechaza"]
 
   const PendienteIngreso = ["Ticket", "Otra llamada"];
   const ClienteRechaza = ["Bocas análogas", "Llamada anteriormente", "Otros"];

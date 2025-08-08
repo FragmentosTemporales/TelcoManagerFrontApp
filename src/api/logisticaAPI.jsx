@@ -118,6 +118,22 @@ export const fetchErroresConConsumo = async (token) => {
   }
 };
 
+export const fetchLogsErrores = async (token) => {
+  try {
+    const url = `${baseUrl}/ndc-bot/ndc-logs-error`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const updateOrdenSinConsumo = async (token, payload) => {
   try {
     const data = { data: payload };

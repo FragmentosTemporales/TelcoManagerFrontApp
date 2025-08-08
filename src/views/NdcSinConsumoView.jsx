@@ -15,7 +15,7 @@ import {
 import { PieChart } from '@mui/x-charts/PieChart';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useSelector } from "react-redux";
-import { MainLayout } from "./Layout";
+import { NdcLayout } from "./Layout";
 import { useEffect, useState } from "react";
 import { fetchPendientesSinConsumo, updateOrdenSinConsumo, fetchPendientesStats } from "../api/logisticaAPI";
 import { extractDateOnly } from "../helpers/main";
@@ -45,7 +45,6 @@ function NDCSinConsumoUpdate() {
         const fetchData = async () => {
             try {
                 const response = await fetchPendientesStats(token);
-                console.log("Fetched stats:", response);
                 setStatsEstado(response.estado);
                 setStatsTipo(response.tipo);
             } catch (error) {
@@ -262,7 +261,6 @@ function NDCSinConsumoUpdate() {
         setIsSubmitting(true);
         try {
             const result = await fetchPendientesSinConsumo(token, tipo);
-            console.log("Fetched data:", result);
             setData(result.pendientes);
             setTotal(result.total);
         } catch (error) {
@@ -272,16 +270,14 @@ function NDCSinConsumoUpdate() {
     };
 
 
-
     useEffect(() => {
         fetchData();
         window.scrollTo(0, 0);
     }, [tipo]);
 
 
-
     return (
-        <MainLayout>
+        <NdcLayout>
             <Box
                 sx={{
                     display: "flex",
@@ -289,7 +285,7 @@ function NDCSinConsumoUpdate() {
                     alignItems: "center",
                     flexDirection: "column",
                     minHeight: "90vh",
-                    paddingY: "60px",
+                    paddingY: "20px",
                     backgroundColor: "#f0f0f0",
                 }}
             >
@@ -305,7 +301,7 @@ function NDCSinConsumoUpdate() {
                 {statsEstado && Object.keys(statsEstado).length > 0 && pieEstado()}
                 <Box sx={{ width: "90%", padding: 2, backgroundColor: "white", borderRadius: 2, border: "2px solid #dfdeda" }}>
                     <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
-                        NDC sin Consumo Ferretería
+                        Sin Consumo de Ferretería
                     </Typography>
                     <Divider sx={{ marginBottom: 2 }} />
                     {filterCard()}
@@ -324,7 +320,7 @@ function NDCSinConsumoUpdate() {
                     )}
                 </Box>
             </Box>
-        </MainLayout>
+        </NdcLayout>
     );
 }
 

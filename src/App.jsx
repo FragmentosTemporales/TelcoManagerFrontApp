@@ -37,6 +37,8 @@ import ProyectoInternoView from "./views/Proyecto_InternoView";
 import NDCSinConsumoUpdate from "./views/NdcSinConsumoView";
 import CreateProyectoInterno from "./views/CreateProyectoInterno";
 import LogQueryStats from "./views/LogQueryStatsView";
+import NDCErrorConConsumo from "./views/NdcErrorConConsumoView";
+import NDCLogsError from "./views/NdcLogsErrorsView";
 
 function App() {
   return (
@@ -76,6 +78,9 @@ function App() {
           <Route path="/modulo:crear-proyecto-interno/:proyecto_id?" element={<CreateProyectoInterno />} />
 
           <Route path="/modulo:ndc/pendientes-sin-consumo" element={<NDCSinConsumoUpdate />} />
+          <Route path="/modulo:ndc/error-con-consumo" element={<NDCErrorConConsumo />} />
+          <Route path="/modulo:ndc/logs-errors" element={<NDCLogsError />} />
+
           <Route path="/modulo:log-query/log-query-stats" element={<LogQueryStats />} />
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />

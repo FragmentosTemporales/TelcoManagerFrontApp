@@ -34,8 +34,8 @@ function Home() {
       moduloID: 2,
     },
     {
-      head: "NDC sin Consumo",
-      title: "Listado OT sin Consumos",
+      head: "NDC_Bot Manager",
+      title: "Gestiona la automatización del NDC Bot",
       link: "/modulo:ndc/pendientes-sin-consumo",
       moduloID: 2,
     },

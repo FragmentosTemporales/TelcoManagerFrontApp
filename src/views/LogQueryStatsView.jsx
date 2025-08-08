@@ -209,7 +209,7 @@ function LogQueryStats() {
                             flexDirection: { lg: "row", xs: "column" }
                         }}>
                             <Box sx={{
-                                width: { lg: "20%", xs: "100%" },
+                                width: { lg: "30%", xs: "100%" },
                                 height: { lg: "100%", xs: "250px" },
                                 display: "flex",
                                 justifyContent: "center",
@@ -218,7 +218,7 @@ function LogQueryStats() {
                                 {pieChartData()}
                             </Box>
                             <Box sx={{
-                                width: { lg: "80%", xs: "100%" },
+                                width: { lg: "70%", xs: "100%" },
                                 height: { lg: "100%", xs: "250px" },
                                 display: "flex",
                                 justifyContent: "center",
@@ -240,12 +240,16 @@ function LogQueryStats() {
                     </Box>
                 )}
 
-                <Box sx={{ width: "90%", marginY: 1, display: "flex", flexDirection: { lg: "row", xs: "column" } }}>
+                <Box sx={{ 
+                    width: "90%", 
+                    marginY: 1, 
+                    display: "flex", 
+                    flexDirection: { lg: "row", xs: "column" } }}>
                     {!isSubmittingTop && logsDataTop && logsDataTop.length > 0 ? (
                         <Box sx={{
                             width: { lg: "25%", xs: "100%" },
                             backgroundColor: "#fff",
-                            borderRadius: 0,
+                            borderRadius: 2,
                             marginRight: { lg: 2, xs: 0 },
                             boxShadow: 2
                         }}>
@@ -255,6 +259,8 @@ function LogQueryStats() {
                                 fontWeight: "bold",
                                 backgroundColor: "#0b2f6d",
                                 color: "white",
+                                borderTopLeftRadius: 8,
+                                borderTopRightRadius: 8,
                             }}>
                                 Top 10 Endpoints
                             </Typography>
@@ -290,7 +296,7 @@ function LogQueryStats() {
                                     </TableBody>
                                 </Table>
                             </TableContainer>
-                        </Box>) : (<Box sx={{ width: { lg: "25%", xs: "100%" }, textAlign: "center", backgroundColor: "#fff" }}>
+                        </Box>) : (<Box sx={{  marginRight: { lg: 2, xs: 0 }, width: { lg: "25%", xs: "100%" }, textAlign: "center", backgroundColor: "#fff" }}>
                             <Skeleton variant="rectangular" width="100%" height="100%" />
                         </Box>)}
 
@@ -300,6 +306,7 @@ function LogQueryStats() {
                         height: "100%",
                         backgroundColor: "#fff",
                         borderRadius: 0,
+                        boxShadow: 2,
                     }}>
 
                         {!isSubmittingTime && logsDataTime && logsDataTime.length > 0 ? (
@@ -342,7 +349,7 @@ function LogQueryStats() {
                                 </Typography>
                             </Box>
                         ) : (
-                            <Box sx={{ width: "100%", textAlign: "center", backgroundColor: "#fff" }}>
+                            <Box sx={{ width: "100%", textAlign: "center", backgroundColor: "#fff"}}>
                                 <Skeleton variant="rectangular" width="100%" height={250} />
                             </Box>
                         )}
@@ -387,7 +394,7 @@ function LogQueryStats() {
                                 </Typography>
                             </Box>
                         ) : (
-                            <Box sx={{ width: "100%", textAlign: "center", backgroundColor: "#fff" }}>
+                            <Box sx={{ width: "100%", textAlign: "center", backgroundColor: "#fff"}}>
                                 <Skeleton variant="rectangular" width="100%" height={250} />
                             </Box>
                         )}

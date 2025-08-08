@@ -37,16 +37,16 @@ function Navbar() {
       <AppBar position="fixed" sx={{ background: "#0b2f6d", height: "60px" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <>
-          <Box sx={{ display: "flex", minWidth:"200px", justifyContent: "center" }}> 
-            <Link
-              to={"/"}
-              style={{
-                color: "white",
-                textDecoration: "none",
-              }}
-            >
-              <AppsIcon />
-            </Link>
+            <Box sx={{ display: "flex", minWidth: "200px", justifyContent: "center", alignItems: "center" }}>
+              <Link
+                to="/"
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                }}
+              >
+                <AppsIcon />
+              </Link>
             </Box>
 
             <Typography variant="h6" fontStyle="italic" component="div" sx={{ flexGrow: 1, textAlign: 'center' }}>
@@ -54,8 +54,7 @@ function Navbar() {
                 'Hola, Invitado'}
             </Typography>
 
-
-           <Box sx={{ display: "flex", minWidth:"200px", justifyContent: "center" }}> 
+            <Box sx={{ display: "flex", minWidth: "200px", justifyContent: "center" }}>
               <Tooltip title="Configuraciones" placement="left">
                 <Link to={"/configuraciones"}>
                   <Button
@@ -90,6 +89,7 @@ function Navbar() {
               </Tooltip>
 
             </Box>
+
           </>
         </Toolbar>
       </AppBar>
