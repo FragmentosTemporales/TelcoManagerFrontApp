@@ -136,9 +136,9 @@ function ProyectoInternoView() {
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "center",
-          backgroundColor: "#f0f0f0",
+          backgroundColor: "#f5f5f5",
           minHeight: "90vh",
-          paddingY: "60px",
+          paddingY: "70px",
         }}
       >
         {open && (
@@ -182,7 +182,7 @@ function ProyectoInternoView() {
             component={Link}
             to="/modulo:crear-proyecto-interno"
             sx={{
-              backgroundColor: "#0b2f6d",
+              backgroundColor: "#142a3d",
               color: "white",
               borderRadius: 2,
               width: "200px"
@@ -250,7 +250,7 @@ function ProyectoInternoView() {
                   <Box>
                     <Button
                       variant="contained"
-                      sx={{ marginLeft: 1, marginBottom: 1, width: "200px", backgroundColor: "#0b2f6d" }}
+                      sx={{ marginLeft: 1, marginBottom: 1, width: "200px", backgroundColor: "#142a3d" }}
                       disabled
                     >
                       Gestionar Tareas
@@ -258,7 +258,7 @@ function ProyectoInternoView() {
 
                     <Button
                       variant="contained"
-                      sx={{ marginLeft: 1, marginBottom: 1, width: "100px", backgroundColor: "#0b2f6d" }}
+                      sx={{ marginLeft: 1, marginBottom: 1, width: "100px", backgroundColor: "#142a3d" }}
                       component={Link}
                       to={`/modulo:crear-proyecto-interno/${proyecto.id}`}
                       disabled={!(proyecto.userID == user_id) || isSubmitting}
@@ -414,7 +414,7 @@ function ProyectoInternoView() {
                               sx={{
                                 marginTop: 1,
                                 width: "100%",
-                                backgroundColor: "#0b2f6d",
+                                backgroundColor: "#142a3d",
                               }}
                               disabled={!(tarea.userID == user_id) || isSubmitting}
                               type="submit"

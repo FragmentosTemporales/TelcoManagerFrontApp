@@ -275,7 +275,7 @@ const setEstadoOpciones = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "#f0f0f0",
+          backgroundColor: "#f5f5f5",
           minHeight: "110vh",
         }}
       >
@@ -342,7 +342,7 @@ const setEstadoOpciones = () => {
                   variant="h6"
                   sx={{
                     padding: 2,
-                    color: "#0b2f6d",
+                    color: "#142a3d",
                     textAlign: "center",
                     fontWeight: "bold",
                   }}
@@ -388,7 +388,7 @@ const setEstadoOpciones = () => {
                     sx={{
                       width: { lg: "30%", md: "30%", sm: "100%", xs: "100%" },
                       borderRadius: 2,
-                      backgroundColor: "#0b2f6d",
+                      backgroundColor: "#142a3d",
                       marginBottom: 2,
                     }}
                   >
@@ -415,7 +415,7 @@ const setEstadoOpciones = () => {
                   variant="h6"
                   sx={{
                     padding: 2,
-                    color: "#0b2f6d",
+                    color: "#142a3d",
                     textAlign: "center",
                     fontWeight: "bold",
                   }}
@@ -453,7 +453,7 @@ const setEstadoOpciones = () => {
                     sx={{
                       width: { lg: "30%", md: "30%", sm: "100%", xs: "100%" },
                       borderRadius: 2,
-                      backgroundColor: "#0b2f6d",
+                      backgroundColor: "#142a3d",
                       marginBottom: 2,
                     }}
                   >
@@ -486,7 +486,7 @@ const setEstadoOpciones = () => {
                   sx={{
                     padding: 2,
                     textAlign: "left",
-                    color: "#0b2f6d",
+                    color: "#142a3d",
                     fontWeight: "bold",
                   }}
                 >
@@ -725,7 +725,7 @@ const setEstadoOpciones = () => {
                     padding: 2,
                     textAlign: "left",
                     fontWeight: "bold",
-                    color: "#0b2f6d",
+                    color: "#142a3d",
                   }}
                 >
                   MIGRACIONES
@@ -947,7 +947,7 @@ const setEstadoOpciones = () => {
                       sx={{
                         width: "40%",
                         borderRadius: 2,
-                        backgroundColor: "#0b2f6d",
+                        backgroundColor: "#142a3d",
                       }}
                       disabled={isSubmitting}
                     >

@@ -91,7 +91,7 @@ function UserForm() {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#f5f5f5",
-        paddingY: "60px",
+        paddingY: "70px",
         minHeight: "90vh",
       }}
     >
@@ -242,7 +242,7 @@ function UserForm() {
                   type="submit"
                   variant="contained"
                   sx={{
-                    background: "#0b2f6d",
+                    background: "#142a3d",
                     fontWeight: "bold",
                     borderRadius: 2,
                     width: "200px",

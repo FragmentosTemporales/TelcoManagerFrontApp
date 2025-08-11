@@ -1,5 +1,7 @@
 import { AppBar, Box, Button, Toolbar, Tooltip, Typography } from "@mui/material";
 import AppsIcon from "@mui/icons-material/Apps";
+import WidgetsIcon from '@mui/icons-material/Widgets';
+import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
 
@@ -34,7 +36,7 @@ function Navbar() {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ background: "#0b2f6d", height: "60px" }}>
+      <AppBar position="fixed" sx={{ background: "#142a3d", height: "60px" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <>
             <Box sx={{ display: "flex", minWidth: "200px", justifyContent: "center", alignItems: "center" }}>
@@ -45,14 +47,9 @@ function Navbar() {
                   textDecoration: "none",
                 }}
               >
-                <AppsIcon />
+                <WidgetsIcon sx={{ fontSize: "30px" }} />
               </Link>
             </Box>
-
-            <Typography variant="h6" fontStyle="italic" component="div" sx={{ flexGrow: 1, textAlign: 'center' }}>
-              {userName ? `Hola, ${userName}!` :
-                'Hola, Invitado'}
-            </Typography>
 
             <Box sx={{ display: "flex", minWidth: "200px", justifyContent: "center" }}>
               <Tooltip title="Configuraciones" placement="left">

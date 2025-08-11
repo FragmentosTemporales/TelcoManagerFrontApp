@@ -150,8 +150,8 @@ function Home() {
           alignItems: "center",
           flexDirection: "column",
           minHeight: "90vh",
-          paddingY: "60px",
-          backgroundColor: "#f0f0f0",
+          paddingY: "70px",
+          backgroundColor: "#f5f5f5",
         }}
       >
         {accesos && accesos.length > 0 ? (

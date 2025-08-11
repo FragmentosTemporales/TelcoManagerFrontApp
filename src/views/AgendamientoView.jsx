@@ -237,7 +237,7 @@ function AgendamientoViewer() {
         justifyContent: "center",
         overflow: "auto",
         paddingY: "60px" ,
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "#f5f5f5",
         minHeight: "90vh",
       }}
     >
@@ -304,15 +304,15 @@ function AgendamientoViewer() {
                     width: "200px",
                     backgroundColor:
                       selectedRegion === "metropolitana"
-                        ? "#0b2f6d"
+                        ? "#142a3d"
                         : "transparent",
                     color:
-                      selectedRegion === "metropolitana" ? "white" : "#0b2f6d",
+                      selectedRegion === "metropolitana" ? "white" : "#142a3d",
                     "&:hover": {
                       backgroundColor:
                         selectedRegion === "metropolitana"
-                          ? "#0b2f6d"
-                          : "#f0f0f0",
+                          ? "#142a3d"
+                          : "#f5f5f5",
                     },
                   }}
                 >
@@ -326,11 +326,11 @@ function AgendamientoViewer() {
                   sx={{
                     width: "200px",
                     backgroundColor:
-                      selectedRegion === "centro" ? "#0b2f6d" : "transparent",
-                    color: selectedRegion === "centro" ? "white" : "#0b2f6d",
+                      selectedRegion === "centro" ? "#142a3d" : "transparent",
+                    color: selectedRegion === "centro" ? "white" : "#142a3d",
                     "&:hover": {
                       backgroundColor:
-                        selectedRegion === "centro" ? "#0b2f6d" : "#f0f0f0",
+                        selectedRegion === "centro" ? "#142a3d" : "#f5f5f5",
                     },
                   }}
                 >
@@ -450,15 +450,15 @@ function AgendamientoViewer() {
                   width: "200px",
                   backgroundColor:
                     selectedRegion === "metropolitana"
-                      ? "#0b2f6d"
+                      ? "#142a3d"
                       : "transparent",
                   color:
-                    selectedRegion === "metropolitana" ? "white" : "#0b2f6d",
+                    selectedRegion === "metropolitana" ? "white" : "#142a3d",
                   "&:hover": {
                     backgroundColor:
                       selectedRegion === "metropolitana"
-                        ? "#0b2f6d"
-                        : "#f0f0f0",
+                        ? "#142a3d"
+                        : "#f5f5f5",
                   },
                 }}
               >
@@ -470,11 +470,11 @@ function AgendamientoViewer() {
                 sx={{
                   width: "200px",
                   backgroundColor:
-                    selectedRegion === "centro" ? "#0b2f6d" : "transparent",
-                  color: selectedRegion === "centro" ? "white" : "#0b2f6d",
+                    selectedRegion === "centro" ? "#142a3d" : "transparent",
+                  color: selectedRegion === "centro" ? "white" : "#142a3d",
                   "&:hover": {
                     backgroundColor:
-                      selectedRegion === "centro" ? "#0b2f6d" : "#f0f0f0",
+                      selectedRegion === "centro" ? "#142a3d" : "#f5f5f5",
                   },
                 }}
               >
@@ -537,7 +537,7 @@ function AgendamientoViewer() {
               </Typography>
             }
             sx={{
-              background: "#0b2f6d",
+              background: "#142a3d",
               color: "white",
               textAlign: "center",
             }}
@@ -825,7 +825,7 @@ function AgendamientoViewer() {
               disabled={isSubmitting}
               sx={{
                 width: "200px",
-                background: "#0b2f6d",
+                background: "#142a3d",
                 borderRadius: 2,
               }}
             >

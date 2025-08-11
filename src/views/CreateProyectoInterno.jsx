@@ -128,9 +128,9 @@ function CreateProyectoInterno() {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    backgroundColor: "#f0f0f0",
+                    backgroundColor: "#f5f5f5",
                     minHeight: "90vh",
-                    paddingY: "60px",
+                    paddingY: "70px",
                 }}
             >
                 {open && (
@@ -149,7 +149,7 @@ function CreateProyectoInterno() {
                         component={Link}
                         to="/modulo:proyecto-interno"
                         sx={{
-                            backgroundColor: "#0b2f6d",
+                            backgroundColor: "#142a3d",
                             color: "white",
                             borderRadius: 2,
                             width: "200px"
@@ -202,7 +202,7 @@ function CreateProyectoInterno() {
                                     type="submit"
                                     disabled={isSubmitting}
                                     sx={{
-                                        backgroundColor: "#0b2f6d",
+                                        backgroundColor: "#142a3d",
                                         color: "white",
                                         borderRadius: 2,
                                         width: "200px",

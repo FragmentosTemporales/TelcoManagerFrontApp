@@ -22,7 +22,7 @@ function ErrorHandler() {
       <Typography
         variant="h1"
         sx={{
-          color: "#0b2f6d",
+          color: "#142a3d",
           fontWeight: 700,
           fontSize: { xs: "5rem", md: "8rem" },
           mb: 2,
@@ -33,7 +33,7 @@ function ErrorHandler() {
       <Typography
         variant="h5"
         sx={{
-          color: "#0b2f6d",
+          color: "#142a3d",
           mb: 4,
           textAlign: "center",
         }}
@@ -45,7 +45,7 @@ function ErrorHandler() {
         to="/"
         variant="contained"
         sx={{
-          bgcolor: "#0b2f6d",
+          bgcolor: "#142a3d",
           color: "#fff",
           fontWeight: 600,
           px: 4,
@@ -63,7 +63,7 @@ function ErrorHandler() {
       <Typography
         variant="body2"
         sx={{
-          color: "#0b2f6d",
+          color: "#142a3d",
           mt: 2,
           textAlign: "center",
         }}

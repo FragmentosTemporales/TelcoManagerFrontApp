@@ -255,11 +255,11 @@ function ProyectosOnNetView() {
         variant="contained"
         onClick={() => handlePage(page - 1)}
         disabled={page === 1}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowBackIosIcon />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#0b2f6d" }}>
+      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
         {page}
       </Button>
       <Button
@@ -267,7 +267,7 @@ function ProyectosOnNetView() {
         variant="contained"
         onClick={() => handlePage(page + 1)}
         disabled={page === pages}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowForwardIosIcon />
       </Button>
@@ -338,7 +338,7 @@ function ProyectosOnNetView() {
             variant="contained"
             disabled={isSubmitting}
             sx={{
-              background: "#0b2f6d",
+              background: "#142a3d",
               fontWeight: "bold",
               width: "200px",
               borderRadius: 2,
@@ -382,7 +382,7 @@ function ProyectosOnNetView() {
             type="submit"
             variant="contained"
             sx={{
-              background: "#0b2f6d",
+              background: "#142a3d",
               fontWeight: "bold",
               width: "200px",
               borderRadius: 2,
@@ -537,7 +537,7 @@ function ProyectosOnNetView() {
               onClick={handleClear}
               sx={{
                 fontWeight: "bold",
-                background: "#0b2f6d",
+                background: "#142a3d",
                 minWidth: "200px",
                 height: "40px",
                 borderRadius: "0px",
@@ -590,7 +590,7 @@ function ProyectosOnNetView() {
               key={header}
               align="center"
               sx={{
-                background: "#0b2f6d",
+                background: "#142a3d",
                 fontWeight: "bold",
                 color: "white",
               }}
@@ -671,7 +671,7 @@ function ProyectosOnNetView() {
               key={header}
               align="center"
               sx={{
-                background: "#0b2f6d",
+                background: "#142a3d",
                 fontWeight: "bold",
                 color: "white",
               }}
@@ -752,7 +752,7 @@ function ProyectosOnNetView() {
               key={header}
               align="center"
               sx={{
-                background: "#0b2f6d",
+                background: "#142a3d",
                 fontWeight: "bold",
                 color: "white",
               }}
@@ -836,7 +836,7 @@ function ProyectosOnNetView() {
               key={header}
               align="center"
               sx={{
-                background: "#0b2f6d",
+                background: "#142a3d",
                 fontWeight: "bold",
                 color: "white",
                 fontSize: "14px",
@@ -958,7 +958,7 @@ function ProyectosOnNetView() {
           width: "100%",
           overflow: "auto",
           minHeight: "80vh",
-          paddingY: "60px",
+          paddingY: "70px",
           backgroundColor: "#f5f5f5",
         }}
       >

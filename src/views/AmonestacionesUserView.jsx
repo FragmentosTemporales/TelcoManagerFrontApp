@@ -57,11 +57,11 @@ function AmonesatacionesViewer() {
         variant="contained"
         onClick={() => handlePage(page - 1)}
         disabled={page === 1}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowBackIosIcon />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#0b2f6d" }}>
+      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
         {page}
       </Button>
       <Button
@@ -69,7 +69,7 @@ function AmonesatacionesViewer() {
         variant="contained"
         onClick={() => handlePage(page + 1)}
         disabled={page === pages}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowForwardIosIcon />
       </Button>
@@ -92,7 +92,7 @@ function AmonesatacionesViewer() {
             align="center"
             sx={{
               fontWeight: "bold",
-              backgroundColor: "#0b2f6d",
+              backgroundColor: "#142a3d",
               color: "white",
             }}
           >
@@ -186,8 +186,8 @@ function AmonesatacionesViewer() {
           height: "100%",
           width: "100%",
           overflow: "auto",
-          paddingY: "60px",
-          backgroundColor: "#f0f0f0",
+          paddingY: "70px",
+          backgroundColor: "#f5f5f5",
           minHeight: "90vh",
         }}
       >

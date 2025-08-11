@@ -92,7 +92,7 @@ function Login() {
         background: "white",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "#f5f5f5",
       }}
     >
       {open && renderAlert()}
@@ -171,7 +171,7 @@ function Login() {
               variant="contained"
               disabled={isSubmitting}
               sx={{
-                background: "#0b2f6d",
+                background: "#142a3d",
                 width: "200px",
                 borderRadius: 2,
               }}

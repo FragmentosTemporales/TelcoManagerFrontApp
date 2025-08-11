@@ -119,7 +119,7 @@ function FormFlota() {
           }
           avatar={<FeedIcon/>}
           sx={{
-            background: "#0b2f6d",
+            background: "#142a3d",
             color: "white",
             textAlign: "end",
           }}
@@ -234,7 +234,7 @@ function FormFlota() {
             <Button
                   type="submit"
                   variant="contained"
-                  sx={{ background: "#0b2f6d", fontWeight: "bold", width: "200px" }}
+                  sx={{ background: "#142a3d", fontWeight: "bold", width: "200px" }}
                   disabled={isSubmitting}  // Deshabilitar el botón cuando isSubmitting es true
                 >
                   {isSubmitting ? "Procesando..." : "Crear"}

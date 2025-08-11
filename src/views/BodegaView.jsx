@@ -105,7 +105,7 @@ function BodegaViewer() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "center",
           padding: "8px",
@@ -221,7 +221,7 @@ function BodegaViewer() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "center",
           padding: "8px",
@@ -335,7 +335,7 @@ function BodegaViewer() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "center",
           padding: "8px",
@@ -505,7 +505,7 @@ function BodegaViewer() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "center",
           padding: "8px",

@@ -191,7 +191,7 @@ const extractDate = (gmtString) => {
           display: "flex",
           justifyContent: "space-around",
           borderRadius: 2,
-          background: "#0b2f6d",
+          background: "#142a3d",
         }}
       >
         {isSubmitting ? "Procesando..." : "Descargar Excel"}
@@ -206,11 +206,11 @@ const extractDate = (gmtString) => {
         variant="contained"
         onClick={() => handlePage(page - 1)}
         disabled={page === 1}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowBackIosIcon />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#0b2f6d" }}>
+      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
         {page}
       </Button>
       <Button
@@ -218,7 +218,7 @@ const extractDate = (gmtString) => {
         variant="contained"
         onClick={() => handlePage(page + 1)}
         disabled={page === pages}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowForwardIosIcon />
       </Button>
@@ -290,7 +290,7 @@ const extractDate = (gmtString) => {
           disabled={isSubmitting}
           sx={{
             mt: 2,
-            background: "#0b2f6d",
+            background: "#142a3d",
             width: "200px",
             borderRadius: "0px",
           }}
@@ -343,7 +343,7 @@ const extractDate = (gmtString) => {
             </Button>
           }
           sx={{
-            background: "#0b2f6d",
+            background: "#142a3d",
             color: "white",
             textAlign: "end",
           }}
@@ -404,7 +404,7 @@ const extractDate = (gmtString) => {
               key={header}
               align="center"
               sx={{
-                background: "#0b2f6d",
+                background: "#142a3d",
                 fontWeight: "bold",
                 fontSize: "10px",
                 color: "#ffffff",
@@ -427,7 +427,7 @@ const extractDate = (gmtString) => {
               key={header}
               align="center"
               sx={{
-                background: "#0b2f6d",
+                background: "#142a3d",
                 fontWeight: "bold",
                 fontSize: "10px",
                 color: "#ffffff",
@@ -555,7 +555,7 @@ const extractDate = (gmtString) => {
             <TableCell
               key={header.label}
               align="center"
-              sx={{ backgroundColor: "#0b2f6d" }}
+              sx={{ backgroundColor: "#142a3d" }}
             >
               <Typography
                 variant="h6"
@@ -657,8 +657,8 @@ const extractDate = (gmtString) => {
         height: "100%",
         width: "100%",
         overflow: "auto",
-        paddingY: "60px",
-        backgroundColor: "#f0f0f0",
+        paddingY: "70px",
+        backgroundColor: "#f5f5f5",
       }}
     >
       {statsCard()}

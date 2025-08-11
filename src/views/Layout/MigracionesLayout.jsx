@@ -88,7 +88,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                 <Box
                     sx={{
                         width: "100%",
-                        backgroundColor: "#0b2f6d",
+                        backgroundColor: "#142a3d",
                         overflow: "hidden",
                         display: "flex",
                         alignItems: "center",
@@ -141,7 +141,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                 <IconButton
                     onClick={toggleSidebar}
                     sx={{
-                        backgroundColor: "#0b2f6d",
+                        backgroundColor: "#142a3d",
                         color: "white",
                         "&:hover": {
                             backgroundColor: "#1a3f7d",
@@ -159,7 +159,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                         sx={{
                             width: "20%",
                             minWidth: "200px",
-                            backgroundColor: "#0b2f6d",
+                            backgroundColor: "#142a3d",
                             transition: "width 0.3s ease-in-out",
                         }}
                     >
@@ -196,7 +196,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                                         <Typography
                                             sx={{
                                                 textAlign: "left",
-                                                color: "#0b2f6d",
+                                                color: "#142a3d",
                                                 fontWeight: "bold",
                                                 paddingLeft: 2,
                                                 paddingRight: 2,
@@ -315,7 +315,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
                                         <Typography
                                             sx={{
                                                 textAlign: "left",
-                                                color: "#0b2f6d",
+                                                color: "#142a3d",
                                                 fontWeight: "bold",
                                                 paddingLeft: 2,
                                                 paddingRight: 2,

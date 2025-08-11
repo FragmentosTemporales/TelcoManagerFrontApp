@@ -158,7 +158,7 @@ function ProyectoConsolidadoView() {
               <Button
                 variant="contained"
                 sx={{
-                  background: "#0b2f6d",
+                  background: "#142a3d",
                   borderRadius: 2,
                   width: "200px",
                 }}
@@ -181,7 +181,7 @@ function ProyectoConsolidadoView() {
                         textAlign: "left",
                         borderBottom: 1,
                         p: 1,
-                        bgcolor: "#0b2f6d",
+                        bgcolor: "#142a3d",
                         fontWeight: "bold",
                         color: "#fff",
                       }}
@@ -194,7 +194,7 @@ function ProyectoConsolidadoView() {
                         textAlign: "left",
                         borderBottom: 1,
                         p: 1,
-                        bgcolor: "#0b2f6d",
+                        bgcolor: "#142a3d",
                         fontWeight: "bold",
                         color: "#fff",
                       }}
@@ -207,7 +207,7 @@ function ProyectoConsolidadoView() {
                         textAlign: "left",
                         borderBottom: 1,
                         p: 1,
-                        bgcolor: "#0b2f6d",
+                        bgcolor: "#142a3d",
                         fontWeight: "bold",
                         color: "#fff",
                       }}
@@ -220,7 +220,7 @@ function ProyectoConsolidadoView() {
                         textAlign: "left",
                         borderBottom: 1,
                         p: 1,
-                        bgcolor: "#0b2f6d",
+                        bgcolor: "#142a3d",
                         fontWeight: "bold",
                         color: "#fff",
                       }}

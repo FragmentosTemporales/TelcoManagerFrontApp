@@ -115,7 +115,7 @@ function NDCSinConsumoUpdate() {
                     grid={{ vertical: true, horizontal: true }}
                     series={[{
                         data: statsTipo.map((item) => item.Q),
-                        color: '#0b2f6d',
+                        color: '#142a3d',
                     }]}
                     height={150}
                     margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
@@ -163,10 +163,10 @@ function NDCSinConsumoUpdate() {
     const tablependientes = () => (
         //crea una tabla con los datos de pendientes sin consumo
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <Box sx={{ display: "flex", justifyContent: "center", p: 1, backgroundColor: "#0b2f6d" }}>
+            <Box sx={{ display: "flex", justifyContent: "center", p: 1, backgroundColor: "#142a3d" }}>
                 <Typography
                     sx={{
-                        backgroundColor: "#0b2f6d",
+                        backgroundColor: "#142a3d",
                         color: "white",
                         padding: 1,
                         fontStyle: "italic",
@@ -195,7 +195,7 @@ function NDCSinConsumoUpdate() {
                                 align="center"
                                 sx={{
                                     fontWeight: "bold",
-                                    backgroundColor: "#0b2f6d",
+                                    backgroundColor: "#142a3d",
                                     color: "white",
                                 }}
                             >
@@ -286,7 +286,7 @@ function NDCSinConsumoUpdate() {
                     flexDirection: "column",
                     minHeight: "90vh",
                     paddingY: "20px",
-                    backgroundColor: "#f0f0f0",
+                    backgroundColor: "#f5f5f5",
                 }}
             >
                 {open && (

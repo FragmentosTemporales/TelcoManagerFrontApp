@@ -344,7 +344,7 @@ function FormSolicitud() {
         >
           <Typography
             variant="h5"
-            sx={{ mb: 4, fontWeight: "bold", color: "#0b2f6d" }}
+            sx={{ mb: 4, fontWeight: "bold", color: "#142a3d" }}
           >
             CREAR SOLICITUD DE AMONESTACION
           </Typography>
@@ -445,7 +445,7 @@ function FormSolicitud() {
                 type="submit"
                 variant="contained"
                 sx={{
-                  background: "#0b2f6d",
+                  background: "#142a3d",
                   fontWeight: "bold",
                   width: "200px",
                 }}

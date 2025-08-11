@@ -18,7 +18,7 @@ function CreateArea({ open, handleClose, message }) {
         alignItems: "center",
         height: "90vh",
         backgroundColor: "#f5f5f5",
-        paddingY: "60px",
+        paddingY: "70px",
       }}
     >
       {open && renderAlert()}
@@ -30,7 +30,7 @@ function CreateArea({ open, handleClose, message }) {
         <Link to="/modulo:solicitudes">
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", borderRadius: 2, width: "200px" }}
+            sx={{ background: "#142a3d", borderRadius: 2, width: "200px" }}
           >
             <Typography sx={{ color: "white" }}>
               Volver

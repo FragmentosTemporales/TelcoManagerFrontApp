@@ -120,7 +120,7 @@ function Settings() {
         background: "white",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "#f5f5f5",
       }}
     >
       {open && renderAlert()}
@@ -219,7 +219,7 @@ function Settings() {
               type="submit"
               variant="contained"
               disabled={isSubmitting}
-              sx={{ background: "#0b2f6d", width: "350px", mt: 2 , borderRadius: 2}}
+              sx={{ background: "#142a3d", width: "350px", mt: 2 , borderRadius: 2}}
             >
               <Typography sx={{ color: "white" }} fontStyle={"Bold"}>
                 {isSubmitting ? "Cargando..." : "Actualizar"}

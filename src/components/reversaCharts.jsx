@@ -81,13 +81,16 @@ function ReversaCharts() {
       {isLoading ? (
         <Box
           sx={{
-            width: "90%",
-            marginTop: 2,
-            padding: 2,
             display: "flex",
+            flexDirection: { xs: "column", lg: "row" },
             justifyContent: "center",
             alignItems: "center",
-            height: 400,
+            width: "100%",
+            marginTop: 2,
+            borderRadius: 2,
+            border: "2px solid #dfdeda",
+            backgroundColor: "#fff",
+            minHeight: "250px",
           }}
         >
           <CircularProgress />

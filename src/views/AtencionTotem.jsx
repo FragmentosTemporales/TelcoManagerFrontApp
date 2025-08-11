@@ -70,7 +70,7 @@ function AtencionTotem() {
         <Box sx={{ textAlign: "center", marginTop: "20px" }}>
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", width: "250px", borderRadius: "10px" }}
+            sx={{ background: "#142a3d", width: "250px", borderRadius: "10px" }}
             onClick={handleSubmitUpdate}
             disabled={isSubmitting}
           >
@@ -174,7 +174,7 @@ function AtencionTotem() {
           <TableCell
             key={header}
             align="center"
-            sx={{ background: "#0b2f6d", color: "white" }}
+            sx={{ background: "#142a3d", color: "white" }}
           >
             <Typography fontWeight="bold">{header}</Typography>
           </TableCell>
@@ -342,7 +342,7 @@ function AtencionTotem() {
           background: "white",
           alignItems: "center",
           marginY: "60px",
-          backgroundColor: "#f0f0f0",
+          backgroundColor: "#f5f5f5",
           minHeight: "90vh",
         }}
       >
@@ -446,7 +446,7 @@ function AtencionTotem() {
                 variant="h6"
                 sx={{
                   textAlign: "center",
-                  background: "#0b2f6d",
+                  background: "#142a3d",
                   color: "white",
                   margin: 1,
                   padding: 2,
@@ -468,7 +468,7 @@ function AtencionTotem() {
                   }}
                   sx={{
                     borderRadius: 2,
-                    background: "#0b2f6d",
+                    background: "#142a3d",
                     width: "100%",
                   }}
                 >
@@ -594,7 +594,7 @@ function AtencionTotem() {
                       variant="contained"
                       disabled={isSubmitting}
                       sx={{
-                        background: "#0b2f6d",
+                        background: "#142a3d",
                         color: "white",
                         borderRadius: 2,
                         width: "200px",
@@ -649,7 +649,7 @@ function AtencionTotem() {
                                     key={header}
                                     align="center"
                                     sx={{
-                                      background: "#0b2f6d",
+                                      background: "#142a3d",
                                       fontWeight: "bold",
                                       color: "white",
                                     }}

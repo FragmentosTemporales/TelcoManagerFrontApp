@@ -42,10 +42,10 @@ function AstViewer() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        height: "100%",
+        minHeight: "100vh",
         width: "100%",
         overflow: "auto",
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "#f5f5f5",
       }}
     >
       <Box
@@ -58,7 +58,7 @@ function AstViewer() {
         <Link to="/form-ast-list">
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", borderRadius: 2, width: "200px" }}
+            sx={{ background: "#142a3d", borderRadius: 2, width: "200px" }}
           >
             <Typography fontWeight="bold" sx={{ color: "#fff" }}>
               VOLVER
@@ -81,7 +81,7 @@ function AstViewer() {
         <Box
           sx={{ width: "80%", mb: 3, background: "#fff", mt: 2, border: "2px solid #dfdeda", borderRadius: 2 }}
         >
-          <Box sx={{ p: 2, background: "#0b2f6d" }}>
+          <Box sx={{ p: 2, background: "#142a3d" }}>
             <Typography variant="h5" sx={{ color: "#fff", flexGrow: 1, textAlign: "center", fontWeight: "bold" }}>
               ANALISIS SEGURO DEL TRABAJO
             </Typography>

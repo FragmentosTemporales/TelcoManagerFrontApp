@@ -45,10 +45,10 @@ function NDCLogsError() {
     const tableDataError = () => (
         //crea una tabla con los datos de pendientes sin consumo
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <Box sx={{ display: "flex", justifyContent: "center", p: 1, backgroundColor: "#0b2f6d" }}>
+            <Box sx={{ display: "flex", justifyContent: "center", p: 1, backgroundColor: "#142a3d" }}>
                 <Typography
                     sx={{
-                        backgroundColor: "#0b2f6d",
+                        backgroundColor: "#142a3d",
                         color: "white",
                         padding: 1,
                         fontStyle: "italic",
@@ -73,7 +73,7 @@ function NDCLogsError() {
                                 align="center"
                                 sx={{
                                     fontWeight: "bold",
-                                    backgroundColor: "#0b2f6d",
+                                    backgroundColor: "#142a3d",
                                     color: "white",
                                 }}
                             >
@@ -119,7 +119,7 @@ function NDCLogsError() {
                     flexDirection: "column",
                     minHeight: "90vh",
                     paddingY: "20px",
-                    backgroundColor: "#f0f0f0",
+                    backgroundColor: "#f5f5f5",
                 }}
             >
                 {open && (

@@ -93,10 +93,14 @@ function Solicitudes() {
   };
 
   const getExcel = async () => {
+    setIsSubmitting(true);
     try {
       await getSolicitudesExcel(token);
     } catch (error) {
       console.log(error);
+    }
+    finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -109,11 +113,11 @@ function Solicitudes() {
         variant="contained"
         onClick={() => handlePage(page - 1)}
         disabled={page === 1}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowBackIosIcon />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#0b2f6d" }}>
+      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
         {page}
       </Button>
       <Button
@@ -121,7 +125,7 @@ function Solicitudes() {
         variant="contained"
         onClick={() => handlePage(page + 1)}
         disabled={page === pages}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowForwardIosIcon />
       </Button>
@@ -207,7 +211,7 @@ function Solicitudes() {
             onClick={handleClear}
             sx={{
               fontWeight: "bold",
-              background: "#0b2f6d",
+              background: "#142a3d",
               minWidth: "200px",
               height: "40px",
               borderRadius: 2,
@@ -248,6 +252,7 @@ function Solicitudes() {
       </Link>
       <Button
         variant="contained"
+        disabled={isSubmitting}
         onClick={getExcel}
         sx={{
           width: 200,
@@ -256,7 +261,7 @@ function Solicitudes() {
           display: "flex",
           justifyContent: "space-around",
           borderRadius: 2,
-          backgroundColor: "#0b2f6d",
+          backgroundColor: "#142a3d",
           color: "white",
         }}
       >
@@ -281,7 +286,7 @@ function Solicitudes() {
             align="center"
             sx={{
               fontWeight: "bold",
-              backgroundColor: "#0b2f6d",
+              backgroundColor: "#142a3d",
               color: "white",
             }}
           >
@@ -343,10 +348,10 @@ function Solicitudes() {
       component={Paper}
       sx={{ width: "90%", height: "100%", overflow: "auto", marginTop: 2, borderRadius: 2 }}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", p: 1, backgroundColor: "#0b2f6d" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", p: 1, backgroundColor: "#142a3d" }}>
         <Typography
           sx={{
-            backgroundColor: "#0b2f6d",
+            backgroundColor: "#142a3d",
             color: "white",
             padding: 1,
             fontStyle: "italic",
@@ -358,7 +363,7 @@ function Solicitudes() {
         </Typography>
         <Typography
           sx={{
-            backgroundColor: "#0b2f6d",
+            backgroundColor: "#142a3d",
             color: "white",
             padding: 1,
             fontStyle: "italic",
@@ -392,8 +397,8 @@ function Solicitudes() {
         height: "100%",
         width: "100%",
         overflow: "auto",
-        paddingY: "60px",
-        backgroundColor: "#f0f0f0",
+        paddingY: "70px",
+        backgroundColor: "#f5f5f5",
       }}
     >
       {open && (

@@ -132,7 +132,7 @@ function SupervisorViewRM() {
           <Box sx={{ display: "flex", justifyContent: "space-evenly", mt: 2 }}>
             <Button
               variant="contained"
-              sx={{ backgroundColor: "#0b2f6d" }}
+              sx={{ backgroundColor: "#142a3d" }}
               disabled={isSubmittingModal}
               onClick={handleSubmitCancelar}
             >
@@ -172,7 +172,7 @@ function SupervisorViewRM() {
           <Box sx={{ display: "flex", justifyContent: "space-evenly", mt: 2 }}>
             <Button
               variant="contained"
-              sx={{ backgroundColor: "#0b2f6d" }}
+              sx={{ backgroundColor: "#142a3d" }}
               disabled={isSubmittingModal}
               onClick={handleSubmitSalida}
             >
@@ -244,7 +244,7 @@ function SupervisorViewRM() {
                   </Typography>
                 }
                 sx={{
-                  background: "#0b2f6d",
+                  background: "#142a3d",
                   color: "white",
                   textAlign: "center",
                 }}
@@ -499,7 +499,7 @@ function SupervisorViewRM() {
                           key={header}
                           align="center"
                           sx={{
-                            background: "#0b2f6d",
+                            background: "#142a3d",
                             fontWeight: "bold",
                             color: "white",
                           }}
@@ -531,7 +531,7 @@ function SupervisorViewRM() {
                           <Button
                             variant="contained"
                             sx={{
-                              background: "#0b2f6d",
+                              background: "#142a3d",
                               color: "white",
                               borderRadius: "10px",
                             }}

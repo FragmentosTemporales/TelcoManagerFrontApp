@@ -104,7 +104,7 @@ function LoadConstruccion() {
             <Button
               type="submit"
               variant="contained"
-              sx={{ background: "#0b2f6d", py: 1, width: "100%", borderRadius: 2 }}
+              sx={{ background: "#142a3d", py: 1, width: "100%", borderRadius: 2 }}
               disabled={isSubmitting}
             >
               {isSubmitting ? "Procesando..." : "Cargar"}
@@ -122,7 +122,7 @@ function LoadConstruccion() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "90vh",
+        minHeight: "100vh",
         backgroundColor: "#f5f5f5",
       }}
     >

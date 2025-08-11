@@ -158,7 +158,7 @@ function ReversaView() {
           <TableCell
             key={header}
             align="center"
-            sx={{ background:"#0b2f6d", color: "white", fontSize: "12px" }}
+            sx={{ background:"#142a3d", color: "white", fontSize: "12px" }}
           >
             <Typography fontWeight="bold">{header}</Typography>
           </TableCell>
@@ -298,7 +298,7 @@ function ReversaView() {
         <Box sx={{ textAlign: "center", marginTop: 2 }}>
           <Button
             variant="contained"
-            sx={{ background: "#0b2f6d", width: "200px", borderRadius: "0px" }}
+            sx={{ background: "#142a3d", width: "200px", borderRadius: "0px" }}
             onClick={handleSubmitUpdate}
             disabled={isSubmitting}
           >
@@ -359,7 +359,7 @@ function ReversaView() {
       );
     }
     return (
-      <Card sx={{ borderRadius: "0px" }}>
+      <Card sx={{ borderRadius: "10px" }}>
         <CardHeader
           title={
             <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
@@ -376,7 +376,7 @@ function ReversaView() {
             </Button>
           }
           sx={{
-            background: "#0b2f6d",
+            background: "#142a3d",
             color: "white",
             textAlign: "end",
           }}
@@ -437,7 +437,7 @@ function ReversaView() {
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        paddingY: "60px",
+        paddingY: "70px",
         mt: 2,
         backgroundColor: "#f5f5f5",
         minHeight: "95vh",
@@ -531,7 +531,7 @@ function ReversaView() {
             <Button
               type="submit"
               variant="contained"
-              sx={{ background: "#0b2f6d", width: "200px", mt: 2 }}
+              sx={{ background: "#142a3d", width: "200px", mt: 2 }}
               disabled={isSubmitting}
             >
               <Typography>

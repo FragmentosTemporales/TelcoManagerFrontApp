@@ -162,7 +162,7 @@ function AllAgendamientoViewer() {
               key={header}
               align="center"
               sx={{
-                background: "#0b2f6d",
+                background: "#142a3d",
                 fontWeight: "bold",
                 width: "20%",
                 color: "white",
@@ -254,11 +254,11 @@ function AllAgendamientoViewer() {
         variant="contained"
         onClick={() => handlePage(page - 1)}
         disabled={page === 1}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowBackIosIcon />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#0b2f6d" }}>
+      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
         {page}
       </Button>
       <Button
@@ -266,7 +266,7 @@ function AllAgendamientoViewer() {
         variant="contained"
         onClick={() => handlePage(page + 1)}
         disabled={page === pages}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowForwardIosIcon />
       </Button>
@@ -314,7 +314,7 @@ function AllAgendamientoViewer() {
           <Button
             variant="contained"
             sx={{
-              background: "#0b2f6d",
+              background: "#142a3d",
               borderRadius: 2,
               marginBottom: 2,
               width: "200px",
@@ -407,7 +407,7 @@ function AllAgendamientoViewer() {
                 type="submit"
                 disabled={isSubmitting}
                 sx={{
-                  background: "#0b2f6d",
+                  background: "#142a3d",
                   height: 30,
                   width: "100%",
                   borderRadius: 2,

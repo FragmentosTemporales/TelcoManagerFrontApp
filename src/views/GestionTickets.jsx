@@ -111,7 +111,7 @@ function GestorTicketera() {
             disabled={isSubmitting}
             type="submit"
             sx={{
-              background: "#0b2f6d",
+              background: "#142a3d",
               color: "white",
               fontWeight: "bold",
               width: { lg: "30%", md: "40%", xs: "90%" },
@@ -198,7 +198,7 @@ function GestorTicketera() {
                 <TableCell
                   key={header}
                   align="left"
-                  sx={{ backgroundColor: "#0b2f6d" }}
+                  sx={{ backgroundColor: "#142a3d" }}
                 >
                   <Typography
                     fontWeight={"bold"}
@@ -356,12 +356,12 @@ function GestorTicketera() {
     <MainLayout>
           <Box
       sx={{
-        paddingY: "60px",
+        paddingY: "70px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "#f5f5f5",
         minHeight: "90vh",
       }}
     >

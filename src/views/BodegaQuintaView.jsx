@@ -100,7 +100,7 @@ const AtencionBodegaCard = ({ atencionBodega }) => (
         </Typography>
       }
       sx={{
-        background: "#0b2f6d",
+        background: "#142a3d",
         color: "white",
         textAlign: "center",
         padding: "8px",
@@ -216,7 +216,7 @@ const AtencionLogisticaCard = ({ atencionLogistica }) => (
         </Typography>
       }
       sx={{
-        background: "#0b2f6d",
+        background: "#142a3d",
         color: "white",
         textAlign: "center",
         padding: "8px",
@@ -330,7 +330,7 @@ const EsperaBodegaCard = ({ esperaBodega }) => (
         </Typography>
       }
       sx={{
-        background: "#0b2f6d",
+        background: "#142a3d",
         color: "white",
         textAlign: "center",
         padding: "8px",
@@ -448,7 +448,7 @@ const EsperaLogisticaCard = ({ esperaLogistica }) => (
         </Typography>
       }
       sx={{
-        background: "#0b2f6d",
+        background: "#142a3d",
         color: "white",
         textAlign: "center",
         padding: "8px",

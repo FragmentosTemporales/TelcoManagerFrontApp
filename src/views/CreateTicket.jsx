@@ -268,7 +268,7 @@ function TicketeraView() {
           width: "90%",
           textAlign: "start",
           fontWeight: "bold",
-          color: "#0b2f6d",
+          color: "#142a3d",
         }}
       >
         CREAR TICKET
@@ -374,7 +374,7 @@ function TicketeraView() {
               borderRadius: 2,
               height: "40px",
               ml: 2,
-              backgroundColor: "#0b2f6d",
+              backgroundColor: "#142a3d",
               color: "white",
             }}
           >
@@ -455,7 +455,7 @@ function TicketeraView() {
                   <TableCell
                     key={header}
                     align="center"
-                    sx={{ backgroundColor: "#0b2f6d" }}
+                    sx={{ backgroundColor: "#142a3d" }}
                   >
                     <Typography
                       fontWeight={"bold"}
@@ -542,11 +542,11 @@ function TicketeraView() {
         variant="contained"
         onClick={() => handlePage(page - 1)}
         disabled={page === 1}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowBackIosIcon />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#0b2f6d" }}>
+      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
         {page}
       </Button>
       <Button
@@ -554,7 +554,7 @@ function TicketeraView() {
         variant="contained"
         onClick={() => handlePage(page + 1)}
         disabled={page === pages}
-        sx={{ background: "#0b2f6d" }}
+        sx={{ background: "#142a3d" }}
       >
         <ArrowForwardIosIcon />
       </Button>
@@ -605,7 +605,7 @@ function TicketeraView() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "#f5f5f5",
         minHeight: "90vh",
       }}
     >

@@ -137,7 +137,7 @@ function TicketViewer() {
             marginTop: 2,
             justifyContent: "start",
             width: "95%",
-            color: "#0b2f6d",
+            color: "#142a3d",
           }}
         >
           DETALLES
@@ -416,7 +416,7 @@ function TicketViewer() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "#f5f5f5",
         minHeight: "90vh",
       }}
     >
@@ -442,7 +442,7 @@ function TicketViewer() {
             sx={{
               width: "200px",
               marginBottom: 2,
-              backgroundColor: "#0b2f6d",
+              backgroundColor: "#142a3d",
               borderRadius: 2,
               fontWeight: "bold",
             }}
@@ -474,7 +474,7 @@ function TicketViewer() {
             borderRadius: 2,
           }}
         >
-          <Typography variant="h5" sx={{ marginBottom: 4, color: "#0b2f6d" }}>
+          <Typography variant="h5" sx={{ marginBottom: 4, color: "#142a3d" }}>
             Cargando los recursos...
           </Typography>
           <CircularProgress />
@@ -527,7 +527,7 @@ function TicketViewer() {
                 marginTop: 2,
                 justifyContent: "start",
                 width: "95%",
-                color: "#0b2f6d",
+                color: "#142a3d",
               }}
             >
               GESTIONAR TICKET
@@ -590,7 +590,7 @@ function TicketViewer() {
                     handleUpdate();
                   }}
                   sx={{
-                    background: "#0b2f6d",
+                    background: "#142a3d",
                     color: "white",
                     fontWeight: "bold",
                     width: { lg: "40%", md: "90%", xs: "90%" },

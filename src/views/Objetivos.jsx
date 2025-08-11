@@ -174,7 +174,7 @@ function ObjetivosView() {
             variant="contained"
             sx={{
               fontWeight: "bold",
-              background: "#0b2f6d",
+              background: "#142a3d",
               minWidth: "200px",
               height: "40px",
             }}
@@ -213,7 +213,7 @@ function ObjetivosView() {
             <TableCell
               key={header}
               align="center"
-              sx={{ background: "#0b2f6d", fontWeight: "bold", color: "white" }}
+              sx={{ background: "#142a3d", fontWeight: "bold", color: "white" }}
             >
               {header}
             </TableCell>
@@ -330,7 +330,7 @@ function ObjetivosView() {
           <Button
             variant="contained"
             onClick={ActualizarObjetivo}
-            sx={{ backgroundColor: "#0b2f6d" }}
+            sx={{ backgroundColor: "#142a3d" }}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Procesando..." : "Actualizar"}
@@ -385,11 +385,11 @@ function ObjetivosView() {
     <MainLayout showNavbar={true}>
       <Box
         sx={{
-          paddingY: "60px",
+          paddingY: "70px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "#f0f0f0",
+          backgroundColor: "#f5f5f5",
           minHeight: "90vh",
         }}
       >
@@ -415,7 +415,7 @@ function ObjetivosView() {
                       <TableCell
                         key={header}
                         align="left"
-                        sx={{ background: "#0b2f6d", fontWeight: "bold", color: "white" }}
+                        sx={{ background: "#142a3d", fontWeight: "bold", color: "white" }}
                       >
                         {header}
                       </TableCell>

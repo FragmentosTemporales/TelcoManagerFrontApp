@@ -743,7 +743,7 @@ function Solicitud() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "start",
         }}
@@ -773,7 +773,7 @@ function Solicitud() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "start",
         }}
@@ -805,7 +805,7 @@ function Solicitud() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "start",
         }}
@@ -835,7 +835,7 @@ function Solicitud() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "start",
         }}
@@ -865,7 +865,7 @@ function Solicitud() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "start",
         }}
@@ -897,7 +897,7 @@ function Solicitud() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "start",
         }}
@@ -928,7 +928,7 @@ function Solicitud() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "start",
         }}
@@ -959,7 +959,7 @@ function Solicitud() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "start",
         }}
@@ -989,7 +989,7 @@ function Solicitud() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "start",
         }}
@@ -1020,7 +1020,7 @@ function Solicitud() {
           </Typography>
         }
         sx={{
-          background: "#0b2f6d",
+          background: "#142a3d",
           color: "white",
           textAlign: "start",
         }}
@@ -1125,19 +1125,19 @@ function Solicitud() {
           <TableHead>
             <TableRow>
               <TableCell
-                sx={{ background: "#0b2f6d", fontWeight: "bold", borderTopLeftRadius: 5 }}
+                sx={{ background: "#142a3d", fontWeight: "bold", borderTopLeftRadius: 5 }}
                 align="center"
               >
                 <Typography color={"white"}>FECHA</Typography>
               </TableCell>
               <TableCell
-                sx={{ background: "#0b2f6d", fontWeight: "bold" }}
+                sx={{ background: "#142a3d", fontWeight: "bold" }}
                 align="center"
               >
                 <Typography color={"white"}>ESTADO</Typography>
               </TableCell>
               <TableCell
-                sx={{ background: "#0b2f6d", fontWeight: "bold", borderTopRightRadius: 5 }}
+                sx={{ background: "#142a3d", fontWeight: "bold", borderTopRightRadius: 5 }}
                 align="center"
               >
                 <Typography color={"white"}>GESTIONADO POR</Typography>
@@ -1229,7 +1229,7 @@ function Solicitud() {
           <Button
             variant="contained"
             sx={{
-              background: "#0b2f6d",
+              background: "#142a3d",
               width: "300px",
               borderRadius: 2,
             }}
@@ -1243,7 +1243,7 @@ function Solicitud() {
             <Button
               variant="contained"
               sx={{
-                background: "#0b2f6d",
+                background: "#142a3d",
                 width: "300px",
                 borderRadius: 2,
                 my: 1,
@@ -1323,7 +1323,7 @@ function Solicitud() {
         alignItems: "center",
         justifyContent: "center",
         overflow: "auto",
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "#f5f5f5",
         py: 2
       }}
     >
@@ -1375,7 +1375,7 @@ function Solicitud() {
         <Box
           sx={{
             width: "100%",
-            height: "90vh",
+            minHeight: "100vh",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -1402,7 +1402,7 @@ function Solicitud() {
             <Link to="/modulo:solicitudes">
               <Button
                 variant="contained"
-                sx={{ background: "#0b2f6d", borderRadius: 2, width: "200px" }}
+                sx={{ background: "#142a3d", borderRadius: 2, width: "200px" }}
               >
                 <Typography sx={{ color: "white" }}>
                   Volver
