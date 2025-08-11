@@ -65,6 +65,7 @@ function NDCLogsError() {
                     <TableRow>
                         {[
                             "FECHA",
+                            "SESSION ID",
                             "N° ORDEN",
                             "ERROR"
                         ].map((header) => (
@@ -85,6 +86,7 @@ function NDCLogsError() {
                         {data.map((item, index) => (
                             <TableRow key={index}>
                                 <TableCell align="center" sx={{ fontSize: "12px" }} >{item.fecha_registro ? extractDateOnly(item.fecha_registro) : 'N/A'}</TableCell>
+                                <TableCell sx={{ fontWeight: "bold", fontSize: "12px" }} align="center">{item.session_id}</TableCell>
                                 <TableCell sx={{ fontWeight: "bold", fontSize: "12px" }} align="center">{item.orden}</TableCell>
                                 <TableCell align="center" sx={{ fontSize: "12px" }} >{item.validacion ? item.validacion : 'N/A'}</TableCell>
                             </TableRow>

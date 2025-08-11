@@ -134,6 +134,38 @@ export const fetchLogsErrores = async (token) => {
   }
 };
 
+export const fetchLogsSessions = async (token) => {
+  try {
+    const url = `${baseUrl}/ndc-bot/ndc-sessions-info-stats`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
+export const fetchSessionsFamiliaMateriales = async (token, sessionId) => {
+  try {
+    const url = `${baseUrl}/ndc-bot/ndc-sessions-info-grupo-material/${sessionId}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};
+
 export const updateOrdenSinConsumo = async (token, payload) => {
   try {
     const data = { data: payload };

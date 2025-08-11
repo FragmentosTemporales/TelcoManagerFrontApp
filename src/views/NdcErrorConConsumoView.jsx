@@ -64,10 +64,14 @@ function NDCErrorConConsumo() {
                 <Table>
                     <TableRow>
                         {[
+                            "FECHA",
+                            "REGION",
+                            "SESSION ID",
                             "N° ORDEN",
                             "MATERIAL",
-                            "FECHA",
-                            "ERROR"
+                            "STOCK INGRESADO",
+                            "STOCK DISPONIBLE",
+                            "OBSERVACION",
                         ].map((header) => (
                             <TableCell
                                 key={header}
@@ -85,10 +89,14 @@ function NDCErrorConConsumo() {
                     <TableBody>
                         {data.map((item, index) => (
                             <TableRow key={index}>
+                                <TableCell align="center" sx={{ fontSize: "12px" }} >{item.fecha_registro ? extractDateOnly(item.fecha_registro) : 'N/A'}</TableCell>
+                                <TableCell sx={{ fontSize: "12px" }} align="center">{item.region}</TableCell>
+                                <TableCell sx={{ fontWeight: "bold", fontSize: "12px" }} align="center">{item.session_id}</TableCell>
                                 <TableCell sx={{ fontWeight: "bold", fontSize: "12px" }} align="center">{item.orden}</TableCell>
                                 <TableCell align="center" sx={{ fontSize: "12px" }} >{item.material ? item.material : 'N/A'}</TableCell>
-                                <TableCell align="center" sx={{ fontSize: "12px" }} >{item.fecha_registro ? extractDateOnly(item.fecha_registro) : 'N/A'}</TableCell>
-                                <TableCell align="center" sx={{ fontSize: "12px" }} >{item.error ? item.error : 'N/A'}</TableCell>
+                                <TableCell align="center" sx={{ fontSize: "12px" }} >{item.cantidad ? item.cantidad : 'N/A'}</TableCell>
+                                <TableCell align="center" sx={{ fontSize: "12px" }} >{item.stock_disponible}</TableCell>
+                                <TableCell align="center" sx={{ fontSize: "12px" }} >{item.observacion ? item.observacion : 'N/A'}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -136,7 +144,7 @@ function NDCErrorConConsumo() {
                 {!isSubmitting ? (
                     <Box sx={{ width: "90%", padding: 2, backgroundColor: "white", borderRadius: 2, border: "2px solid #dfdeda" }}>
                         <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
-                            Error con Consumo de Ferretería
+                            Error Stock Consumo de Ferretería
                         </Typography>
                         <Divider sx={{ marginBottom: 2 }} />
                         {data && data.length > 0 ? (

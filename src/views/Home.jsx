@@ -36,7 +36,7 @@ function Home() {
     {
       head: "NDC_Bot Manager",
       title: "Gestiona la automatización del NDC Bot",
-      link: "/modulo:ndc/pendientes-sin-consumo",
+      link: "/modulo:ndc/session-logs",
       moduloID: 2,
     },
     {

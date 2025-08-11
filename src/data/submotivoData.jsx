@@ -36,6 +36,11 @@ const motivoData20 = [
     descri: "SIN MARCAJE REGISTRADO",
     motivoID: "20",
   },
+  {
+    submotivoID: "1012",
+    descri: "INCUMPLIMIENTO EN HORARIO DE ENTRADA O SALIDA",
+    motivoID: "20",
+  },
 ];
 export { motivoData20 };
 

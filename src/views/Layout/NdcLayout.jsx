@@ -20,8 +20,9 @@ function NdcLayout({ children, showNavbar = true }) {
   useEffect(() => {
     const path = location.pathname;
     if (path.includes("pendientes-sin-consumo")) setSelected(1);
-    else if (path.includes("error-con-consumo")) setSelected(2);
+    else if (path.includes("error-stock-consumo")) setSelected(2);
     else if (path.includes("logs-errors")) setSelected(3);
+    else if (path.includes("session-logs")) setSelected(4);
   }, [location.pathname]);
 
   return (
@@ -36,22 +37,61 @@ function NdcLayout({ children, showNavbar = true }) {
           }}
         >
           <Link
-            to="/modulo:ndc/pendientes-sin-consumo"
+            to="/modulo:ndc/session-logs"
             style={{
               color: "white",
               textDecoration: "none",
-              width: "30%",
+              width: "20%",
               display: "flex",
               justifyContent: "center",
             }}
-              onClick={() => setSelected(1)}
+            onClick={() => setSelected(1)}
           >
             <Box
               sx={{
                 width: "100%",
                 height: "40px",
+                borderRadius: 5,
+                border: selected === 4 ? "2px solid #dfdeda" : "none",
+                background: selected === 4 ? "#ff9800" : "#2d5e89",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                transition:
+                  "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "translateY(-5px)",
+                  boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+                },
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                fontFamily="monospace"
+                sx={{ color: "white", textAlign: "center" }}
+              >
+                REGISTRO EJECUCIONES
+              </Typography>
+            </Box>
+          </Link>
+          <Link
+            to="/modulo:ndc/pendientes-sin-consumo"
+            style={{
+              color: "white",
+              textDecoration: "none",
+              width: "20%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+            onClick={() => setSelected(1)}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                height: "40px",
+                borderRadius: 5,
                 border: selected === 1 ? "2px solid #dfdeda" : "none",
-                background: "#2d5e89",
+                background: selected === 1 ? "#ff9800" : "#2d5e89",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -73,20 +113,21 @@ function NdcLayout({ children, showNavbar = true }) {
             </Box>
           </Link>
           <Link
-            to="/modulo:ndc/error-con-consumo"
+            to="/modulo:ndc/error-stock-consumo"
             style={{
               color: "white",
               textDecoration: "none",
-              width: "30%",
+              width: "20%",
             }}
-              onClick={() => setSelected(2)}
+            onClick={() => setSelected(2)}
           >
             <Box
               sx={{
                 width: "100%",
                 height: "40px",
+                borderRadius: 5,
                 border: selected === 2 ? "2px solid #dfdeda" : "none",
-                background: "#2d5e89",
+                background: selected === 2 ? "#ff9800" : "#2d5e89",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -103,7 +144,7 @@ function NdcLayout({ children, showNavbar = true }) {
                 fontFamily="monospace"
                 sx={{ color: "white", textAlign: "center" }}
               >
-                ERROR CON CONSUMO
+                ERROR STOCK CONSUMO
               </Typography>
             </Box>
           </Link>
@@ -112,16 +153,17 @@ function NdcLayout({ children, showNavbar = true }) {
             style={{
               color: "white",
               textDecoration: "none",
-              width: "30%",
+              width: "20%",
             }}
-              onClick={() => setSelected(3)}
+            onClick={() => setSelected(3)}
           >
             <Box
               sx={{
                 width: "100%",
                 height: "40px",
+                borderRadius: 5,
                 border: selected === 3 ? "2px solid #dfdeda" : "none",
-                background: "#2d5e89",
+                background: selected === 3 ? "#ff9800" : "#2d5e89",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
