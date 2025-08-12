@@ -1,10 +1,11 @@
 import axios from "axios";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
+const prefixUrl = `${baseUrl}/proyecto-interno`;
 
 export const getProyectosByArea = async (token, areaID, page) => {
   try {
-    const url = `${baseUrl}/proyecto-interno/get-proyectos-by-area/${page}&${areaID}`;
+    const url = `${prefixUrl}/get-proyectos-by-area/${page}&${areaID}`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -19,7 +20,7 @@ export const getProyectosByArea = async (token, areaID, page) => {
 
 export const getProyectobyID = async (token, proyectoID) => {
   try {
-    const url = `${baseUrl}/proyecto-interno/get-proyecto-by-id/${proyectoID}`;
+    const url = `${prefixUrl}/get-proyecto-by-id/${proyectoID}`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -48,7 +49,7 @@ export const crearEstadoTarea = async (payload, token) => {
 
 export const crearProyectoInterno = async (payload, token) => {
   try {
-    const url = `${baseUrl}/proyecto-interno/create-proyecto`;
+    const url = `${prefixUrl}/create-proyecto`;
     const response = await axios.post(url, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -62,7 +63,7 @@ export const crearProyectoInterno = async (payload, token) => {
 
 export const UpdateProyectoInterno = async (proyectoID, payload, token ) => {
   try {
-    const url = `${baseUrl}/proyecto-interno/update-proyecto-interno/${proyectoID}`;
+    const url = `${prefixUrl}/update-proyecto-interno/${proyectoID}`;
     const response = await axios.put(url, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -76,7 +77,7 @@ export const UpdateProyectoInterno = async (proyectoID, payload, token ) => {
 
 export const DeleteProyectoInterno = async (token, proyectoID) => {
   try {
-    const url = `${baseUrl}/proyecto-interno/update-proyecto-interno/${proyectoID}`;
+    const url = `${prefixUrl}/update-proyecto-interno/${proyectoID}`;
     const response = await axios.delete(url, {
       headers: {
         Authorization: `Bearer ${token}`,
