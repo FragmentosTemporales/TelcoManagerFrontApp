@@ -40,6 +40,7 @@ import LogQueryStats from "./views/LogQueryStatsView";
 import NDCErrorConConsumo from "./views/NdcErrorConConsumoView";
 import NDCLogsError from "./views/NdcLogsErrorsView";
 import NDCSessionLogs from "./views/NdcSessionLogsView";
+import CreateReparacionView from "./views/CreateReparacion";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
           <Route path="/modulo:migraciones-proactivas" element={<MigracionesViewer />} />
           <Route path="/modulo:proyecto-interno" element={<ProyectoInternoView />} />
           <Route path="/modulo:crear-proyecto-interno/:proyecto_id?" element={<CreateProyectoInterno />} />
+          <Route path="/modulo:registro-reparacion" element={<CreateReparacionView />} />
 
           <Route path="/modulo:ndc/pendientes-sin-consumo" element={<NDCSinConsumoUpdate />} />
           <Route path="/modulo:ndc/error-stock-consumo" element={<NDCErrorConConsumo />} />

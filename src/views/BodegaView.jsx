@@ -39,7 +39,7 @@ function BodegaViewer() {
   };
 
   const set_interval = () => {
-    return (esperaBodega.length > 0 && esperaLogistica.length > 0) ? 4000 : 10000;
+    return (esperaBodega.length > 0 && esperaLogistica.length > 0) ? 7000 : 15000;
   }
 
   useEffect(() => {

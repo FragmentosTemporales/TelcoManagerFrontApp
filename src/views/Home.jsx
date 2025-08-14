@@ -34,6 +34,12 @@ function Home() {
       moduloID: 2,
     },
     {
+      head: "Registro de Reparaciones",
+      title: "Carga las pruebas de las reparaciones realizadas",
+      link: "/modulo:registro-reparacion",
+      moduloID: 26,
+    },
+    {
       head: "NDC_Bot Manager",
       title: "Gestiona la automatización del NDC Bot",
       link: "/modulo:ndc/session-logs",
