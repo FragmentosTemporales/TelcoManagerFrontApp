@@ -41,6 +41,8 @@ import NDCErrorConConsumo from "./views/NdcErrorConConsumoView";
 import NDCLogsError from "./views/NdcLogsErrorsView";
 import NDCSessionLogs from "./views/NdcSessionLogsView";
 import CreateReparacionView from "./views/CreateReparacion";
+import ReparacionesView from "./views/ReparacionesView";
+import InventarioView from "./views/InventarioView";
 
 function App() {
   return (
@@ -78,7 +80,9 @@ function App() {
           <Route path="/modulo:migraciones-proactivas" element={<MigracionesViewer />} />
           <Route path="/modulo:proyecto-interno" element={<ProyectoInternoView />} />
           <Route path="/modulo:crear-proyecto-interno/:proyecto_id?" element={<CreateProyectoInterno />} />
+
           <Route path="/modulo:registro-reparacion" element={<CreateReparacionView />} />
+          <Route path="/modulo:reparaciones" element={<ReparacionesView />} />
 
           <Route path="/modulo:ndc/pendientes-sin-consumo" element={<NDCSinConsumoUpdate />} />
           <Route path="/modulo:ndc/error-stock-consumo" element={<NDCErrorConConsumo />} />
@@ -86,6 +90,7 @@ function App() {
           <Route path="/modulo:ndc/session-logs" element={<NDCSessionLogs />} />
 
           <Route path="/modulo:log-query/log-query-stats" element={<LogQueryStats />} />
+          <Route path="/modulo:inventario" element={<InventarioView />} />
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />
         <Route path="/bodegaQuinta" element={<BodegaQuintaViewer />} />

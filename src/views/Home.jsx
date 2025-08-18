@@ -9,11 +9,18 @@ function Home() {
   const { permisos } = authState;
 
   const secciones = [
+
     {
       head: "Gestión de Tickets",
       title: "Gestiona los tickets de soporte",
       link: "/modulo:gestion-ticketera",
       moduloID: 26,
+    },
+    {
+      head: "Gestión Inventario",
+      title: "Gestiona lista de asistentes a inventario",
+      link: "/modulo:inventario",
+      moduloID: 28,
     },
     {
       head: "Gestion de Proyectos",
@@ -34,9 +41,15 @@ function Home() {
       moduloID: 2,
     },
     {
-      head: "Registro de Reparaciones",
+      head: "Creación de Reparaciones",
       title: "Carga las pruebas de las reparaciones realizadas",
       link: "/modulo:registro-reparacion",
+      moduloID: 26,
+    },
+    {
+      head: "Registro de Reparaciones",
+      title: "Visualiza las reparaciones realizadas",
+      link: "/modulo:reparaciones",
       moduloID: 26,
     },
     {
@@ -130,7 +143,7 @@ function Home() {
       link: "/carga-construccion",
       moduloID: 6,
     },
-        {
+    {
       head: "Monitoreo Telcomanager",
       title: "Visualiza estadísticas de consultas Log Query para Telcomanager",
       link: "/modulo:log-query/log-query-stats",

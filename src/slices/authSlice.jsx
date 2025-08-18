@@ -13,6 +13,7 @@ const state = {
   empresa: null,
   message: null,
   area: null,
+  estacion: null
 };
 
 export const authSlice = createSlice({
@@ -53,6 +54,7 @@ export const authSlice = createSlice({
       state.permisos = usuario.permisos;
       state.empresa = usuario.empresa;
       state.area = usuario.area;
+      state.estacion = usuario.estacion;
       state.is_loading = false;
       state.is_load = true;
     },

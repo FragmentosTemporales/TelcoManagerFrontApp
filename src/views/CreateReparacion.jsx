@@ -2,17 +2,13 @@ import {
   Alert,
   Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   InputLabel,
   TextField,
   Typography,
 } from "@mui/material";
-import FeedIcon from "@mui/icons-material/Feed";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { createRegistroReparacion } from "../api/despachoAPI";
+import { createRegistroReparacion } from "../api/calidadAPI";
 import { MainLayout } from "./Layout";
 
 function CreateReparacionView() {
@@ -26,7 +22,7 @@ function CreateReparacionView() {
   const [form, setForm] = useState({
     orden: "",
     img_1: null,
-    ticket: "",
+    descripcion: "",
     userID: "",
   });
 
@@ -85,7 +81,7 @@ function CreateReparacionView() {
 
     const formData = new FormData();
     formData.append("orden", form.orden);
-    formData.append("ticket", form.ticket);
+    formData.append("descripcion", form.descripcion);
     formData.append("userID", user_id);
 
     if (form.img_1) {
@@ -106,7 +102,7 @@ function CreateReparacionView() {
       setForm({
         orden: "",
         img_1: null,
-        ticket: "",
+        descripcion: "",
         userID: user_id,
       });
       setOpen(true);
@@ -173,16 +169,16 @@ function CreateReparacionView() {
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <InputLabel id="orden-label">Ticket</InputLabel>
+              <InputLabel id="descripcion-label">Descripción</InputLabel>
               <TextField
                 fullWidth
                 size="small"
                 required
-                id="ticket"
+                id="descripcion"
                 type="text"
-                name="ticket"
+                name="descripcion"
                 variant="standard"
-                value={form.ticket}
+                value={form.descripcion}
                 onChange={handleChange}
               />
             </Box>
