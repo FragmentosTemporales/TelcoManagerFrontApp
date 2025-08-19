@@ -1,15 +1,6 @@
 import {
   Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
   Divider,
-  FormControl,
-  MenuItem,
-  Modal,
-  InputLabel,
-  Select,
   Skeleton,
   Table,
   TableBody,
@@ -17,9 +8,12 @@ import {
   TableRow,
   TableContainer,
   TableHead,
-  TextField,
-  Tooltip,
   Typography,
+  Chip,
+  Tooltip,
+  Fade,
+  IconButton,
+  Stack
 } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts/PieChart";
@@ -33,6 +27,8 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { MainLayout } from "./Layout";
 import { extractDateOnly } from "../helpers/main";
+import { palette } from "../theme/palette";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 function LogQueryStats() {
   const authState = useSelector((state) => state.auth);
@@ -197,29 +193,63 @@ function LogQueryStats() {
     <MainLayout showNavbar={true}>
       <Box
         sx={{
-          paddingY: "70px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: "#f5f5f5",
-          minHeight: "90vh",
+          py: '70px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          minHeight: '90vh',
+          background: palette.bgGradient,
+          position: 'relative',
+          overflow: 'hidden',
+          '::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 18% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.06), transparent 65%)',
+            pointerEvents: 'none'
+          }
         }}
       >
-        {!isSubmittingSemanal &&
-        logsDataSemanal &&
-        logsDataSemanal.length > 0 ? (
+        <Box sx={{ width: '90%', mb: 2.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant='h5' sx={{ fontWeight: 600, color: '#fff', letterSpacing: .5, textShadow: '0 2px 6px rgba(0,0,0,0.35)' }}>Monitoreo de Consultas</Typography>
+          <Tooltip title='Refrescar datos'>
+            <span>
+              <IconButton size='small' disabled={isSubmittingSemanal || isSubmittingTop || isSubmittingTime} onClick={async ()=> { await fetchLogQuerySemanal(); await fetchTopLogQuery(); await fetchQueryLogsTime(); if(selectedEndpoint) await fetchLogQueryTimeByEndpoint(selectedEndpoint);} } sx={{ color: '#fff', bgcolor: 'rgba(255,255,255,0.12)', '&:hover': { bgcolor: 'rgba(255,255,255,0.25)' } }}>
+                <RefreshIcon fontSize='small' />
+              </IconButton>
+            </span>
+          </Tooltip>
+        </Box>
+        {/* Summary chips (overall stats) */}
+        <Fade in timeout={500}>
+          <Stack direction='row' spacing={1.2} flexWrap='wrap' sx={{ width: '90%', mb: 2 }}>
+            <Chip label={`Total semanal: ${logsDataSemanal.reduce((a,c)=> a + (c.total||0),0)}`} size='small' sx={{ bgcolor: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)', fontWeight: 500 }} />
+            <Chip label={`Intervalos (día): ${logsDataTime.length}`} size='small' sx={{ bgcolor: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)', fontWeight: 500 }} />
+            <Chip label={`Top endpoints: ${logsDataTop.length}`} size='small' sx={{ bgcolor: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)', fontWeight: 500 }} />
+            {selectedEndpoint && (
+              <Chip label={`Endpoint activo: ${selectedEndpoint}`} size='small' color='primary' sx={{ fontWeight: 600, bgcolor: palette.primary, color: '#fff' }} />
+            )}
+          </Stack>
+        </Fade>
+        {!isSubmittingSemanal && logsDataSemanal && logsDataSemanal.length > 0 ? (
           <Box
             sx={{
               width: "90%",
               marginY: 1,
-              backgroundColor: "#fff",
-              borderRadius: 2,
-              border: "2px solid #dfdeda",
+              background: palette.cardBg,
+              borderRadius: 3,
+              border: `1px solid ${palette.borderSubtle}`,
+              backdropFilter: 'blur(6px)',
+              boxShadow: '0 10px 30px -8px rgba(0,0,0,0.45)',
               display: "flex",
               flexDirection: "column",
+              position: 'relative',
+              overflow: 'hidden',
+              '&:before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0) 65%)', opacity: 0, transition: 'opacity .6s', pointerEvents: 'none' },
+              '&:hover:before': { opacity: 1 }
             }}
           >
-            <Typography variant="h6" sx={{ padding: 1, textAlign: "center" }}>
+            <Typography variant="h6" sx={{ py: 1.2, px: 2, textAlign: "center", fontWeight: 600, color: palette.primary, letterSpacing: .4 }}>
               Semanal de Consultas
             </Typography>
             <Box
@@ -235,6 +265,7 @@ function LogQueryStats() {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  p: 1.5
                 }}
               >
                 {pieChartData()}
@@ -246,11 +277,31 @@ function LogQueryStats() {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  p: 1.5
                 }}
               >
                 {lineChartData()}
               </Box>
             </Box>
+            {logsDataTop.length > 0 && (
+              <Stack direction='row' spacing={1} flexWrap='wrap' sx={{ px: 2, pb: 2 }}>
+                {logsDataTop.slice(0,6).map(ep => (
+                  <Chip key={ep.id}
+                    size='small'
+                    clickable
+                    onClick={()=> setSelectedEndpoint(ep.endpoint)}
+                    label={ep.endpoint.split('/').pop() || ep.endpoint}
+                    sx={{
+                      fontWeight: 500,
+                      border: `1px solid ${palette.borderSubtle}`,
+                      bgcolor: selectedEndpoint === ep.endpoint ? palette.primary : palette.cardBg,
+                      color: selectedEndpoint === ep.endpoint ? '#fff' : palette.primary,
+                      '&:hover': { bgcolor: selectedEndpoint === ep.endpoint ? palette.primaryDark : palette.accentSoft }
+                    }}
+                  />
+                ))}
+              </Stack>
+            )}
           </Box>
         ) : !isSubmittingSemanal &&
           logsDataSemanal &&
@@ -260,7 +311,9 @@ function LogQueryStats() {
               width: "90%",
               paddingY: 3,
               textAlign: "center",
-              backgroundColor: "#fff",
+              background: palette.cardBg,
+              borderRadius: 3,
+              border: `1px solid ${palette.borderSubtle}`,
             }}
           >
             <Typography variant="h6" color="textSecondary">
@@ -269,7 +322,7 @@ function LogQueryStats() {
           </Box>
         ) : (
           <Box
-            sx={{ width: "90%", textAlign: "center", backgroundColor: "#fff" }}
+            sx={{ width: "90%", textAlign: "center", background: palette.cardBg, borderRadius: 3, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)' }}
           >
             <Skeleton variant="rectangular" width="100%" height={250} />
           </Box>
@@ -287,9 +340,13 @@ function LogQueryStats() {
             <Box
               sx={{
                 width: { lg: "25%", xs: "100%" },
-                backgroundColor: "#fff",
+                background: palette.cardBg,
                 marginRight: { lg: 2, xs: 0 },
-                marginBottom: { lg: 0, xs: 2 }
+                marginBottom: { lg: 0, xs: 2 },
+                borderRadius: 3,
+                border: `1px solid ${palette.borderSubtle}`,
+                boxShadow: '0 6px 20px -6px rgba(0,0,0,0.30)',
+                backdropFilter: 'blur(4px)',
               }}
             >
               <TableContainer>
@@ -302,8 +359,9 @@ function LogQueryStats() {
                           align="left"
                           sx={{
                             fontWeight: "bold",
-                            backgroundColor: "#142a3d",
-                            color: "white",
+                            backgroundColor: palette.primary,
+                            color: '#fff',
+                            borderBottom: `1px solid ${palette.borderSubtle}`
                           }}
                         >
                           <Typography sx={{ fontSize: "12px" }}>
@@ -320,7 +378,11 @@ function LogQueryStats() {
                         onClick={() => setSelectedEndpoint(log.endpoint)}
                         sx={{
                           cursor: "pointer",
-                          "&:hover": { backgroundColor: "#f5f5f5" },
+                          transition: 'background-color .3s, box-shadow .3s',
+                          '&:hover': { backgroundColor: palette.accentSoft },
+                          backgroundColor: selectedEndpoint === log.endpoint ? palette.accentSoft : 'transparent',
+                          '&:active': { boxShadow: 'inset 0 0 0 1px ' + palette.accent },
+                          '&:nth-of-type(odd)': { backgroundColor: selectedEndpoint === log.endpoint ? palette.accentSoft : 'rgba(255,255,255,0.10)' }
                         }}
                       >
                         <TableCell align="left" sx={{ fontSize: "12px" }}>
@@ -341,7 +403,10 @@ function LogQueryStats() {
                 marginRight: { lg: 2, xs: 0 },
                 width: { lg: "25%", xs: "100%" },
                 textAlign: "center",
-                backgroundColor: "#fff",
+                background: palette.cardBg,
+                borderRadius: 3,
+                border: `1px solid ${palette.borderSubtle}`,
+                backdropFilter: 'blur(4px)'
               }}
             >
               <Skeleton variant="rectangular" width="100%" height="100%" />
@@ -352,16 +417,18 @@ function LogQueryStats() {
             sx={{
               width: { lg: "75%", xs: "100%" },
               height: "100%",
-              backgroundColor: "#fff",
-              borderRadius: 2,
-              border: "2px solid #dfdeda",
+              background: palette.cardBg,
+              borderRadius: 3,
+              border: `1px solid ${palette.borderSubtle}`,
+              backdropFilter: 'blur(6px)',
+              boxShadow: '0 8px 26px -8px rgba(0,0,0,0.35)',
             }}
           >
             {!isSubmittingTime && logsDataTime && logsDataTime.length > 0 ? (
               <Box sx={{ marginY: 1, height: "50%" }}>
                 <Typography
-                  variant="h6"
-                  sx={{ padding: 1, textAlign: "center" }}
+                  variant="subtitle1"
+                  sx={{ py: 1.2, px: 2, textAlign: "center", fontWeight: 600, color: palette.primary, letterSpacing: .4 }}
                 >
                   Diario de Consultas
                 </Typography>
@@ -398,8 +465,8 @@ function LogQueryStats() {
             ) : !isSubmittingTime &&
               logsDataTime &&
               logsDataTime.length === 0 ? (
-              <Box sx={{ width: "100%", textAlign: "center" }}>
-                <Typography variant="h6" color="textSecondary">
+              <Box sx={{ width: "100%", textAlign: "center", py: 3 }}>
+                <Typography variant="subtitle1" color="textSecondary">
                   No hay datos disponibles para mostrar.
                 </Typography>
               </Box>
@@ -408,7 +475,7 @@ function LogQueryStats() {
                 sx={{
                   width: "100%",
                   textAlign: "center",
-                  backgroundColor: "#fff",
+                  background: 'transparent',
                 }}
               >
                 <Skeleton variant="rectangular" width="100%" height={250} />
@@ -420,8 +487,8 @@ function LogQueryStats() {
             logDataEndpoint.length > 0 ? (
               <Box sx={{ marginY: 1, height: "50%" }}>
                 <Typography
-                  variant="h6"
-                  sx={{ padding: 1, textAlign: "center" }}
+                  variant="subtitle1"
+                  sx={{ py: 1.2, px: 2, textAlign: "center", fontWeight: 600, color: palette.primary, letterSpacing: .4 }}
                 >
                   {selectedEndpoint
                     ? selectedEndpoint
@@ -460,8 +527,8 @@ function LogQueryStats() {
             ) : !isSubmittingEndpoint &&
               logDataEndpoint &&
               logDataEndpoint.length === 0 ? (
-              <Box sx={{ width: "100%", textAlign: "center" }}>
-                <Typography variant="h6" color="textSecondary">
+              <Box sx={{ width: "100%", textAlign: "center", py: 3 }}>
+                <Typography variant="subtitle1" color="textSecondary">
                   No hay datos disponibles para mostrar.
                 </Typography>
               </Box>
@@ -470,7 +537,7 @@ function LogQueryStats() {
                 sx={{
                   width: "100%",
                   textAlign: "center",
-                  backgroundColor: "#fff",
+                  background: 'transparent',
                 }}
               >
                 <Skeleton variant="rectangular" width="100%" height={250} />

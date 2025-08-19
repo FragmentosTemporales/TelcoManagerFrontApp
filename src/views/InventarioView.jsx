@@ -13,6 +13,8 @@ import {
     TableRow,
     Typography,
     CircularProgress,
+    Divider,
+    Chip,
 } from "@mui/material";
 import { BarChart } from '@mui/x-charts/BarChart';
 import SearchIcon from '@mui/icons-material/Search';
@@ -20,6 +22,7 @@ import { useSelector } from "react-redux";
 import { MainLayout } from "./Layout";
 import { useEffect, useState } from "react";
 import { getTecnicos, avanzarTecnico, getTecnicosStats } from "../api/inventarioAPI";
+import { palette } from "../theme/palette";
 
 export default function InventarioView() {
     const authState = useSelector((state) => state.auth);
@@ -123,16 +126,25 @@ export default function InventarioView() {
             sx={{
                 width: { lg: "70%", md: "90%", xs: "95%" },
                 overflow: "hidden",
-                backgroundColor: "white",
+                position: 'relative',
+                background: palette.cardBg,
                 textAlign: "center",
                 my: 2,
                 py:2,
-                border: "2px solid #dfdeda",
+                border: `1px solid ${palette.borderSubtle}`,
                 borderRadius: 2,
                 display: "flex",
                 justifyContent: "space-evenly",
                 alignItems: "center",
                 flexDirection: "column",
+                boxShadow: '0 4px 14px rgba(0,0,0,0.06)',
+                '&:before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 70%)',
+                    pointerEvents: 'none'
+                }
             }}
         >
             {loadingStats ? (
@@ -146,7 +158,7 @@ export default function InventarioView() {
                     series={[{
                         dataKey: 'total',
                         label: 'Cantidad de técnicos por estación',
-                        color: '#2a5980', // color base más claro
+                        color: palette.accent,
                         valueFormatter: (value, context) => {
                             const item = context?.dataset?.[context.dataIndex];
                             if (!item) return value;
@@ -180,25 +192,36 @@ export default function InventarioView() {
             sx={{
                 width: { lg: "70%", md: "90%", xs: "95%" },
                 overflow: "hidden",
-                backgroundColor: "white",
+                position: 'relative',
+                background: palette.cardBg,
                 textAlign: "center",
                 my: 2,
-                paddingBottom: 3,
-                border: "2px solid #dfdeda",
+                pb: 3,
+                border: `1px solid ${palette.borderSubtle}`,
                 borderRadius: 2,
                 display: "flex",
                 justifyContent: "space-evenly",
                 alignItems: "center",
-                flexDirection: "column"
+                flexDirection: "column",
+                boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                '&:before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 65%)',
+                    pointerEvents: 'none'
+                }
             }}
         >
-            <Typography variant="h5" sx={{
-                fontWeight: "bold",
-                borderBottom: "2px solid #dfdeda",
+            <Typography variant="h6" sx={{
+                fontWeight: 600,
                 width: "100%",
-                py: 2
+                py: 2,
+                color: palette.primary,
+                letterSpacing: .5
             }}>
                 FILTRAR POR</Typography>
+            <Divider sx={{ width: '100%', mb: 1, borderColor: palette.borderSubtle }} />
             <Box sx={{
                 display: "flex",
                 justifyContent: "space-evenly",
@@ -260,19 +283,28 @@ export default function InventarioView() {
                 transform: "translate(-50%, -50%)",
                 height: "150px",
                 width: "600px",
-                bgcolor: "background.paper",
-                boxShadow: 24,
+                background: palette.cardBg,
+                border: `1px solid ${palette.borderSubtle}`,
+                boxShadow: '0 10px 32px -8px rgba(0,0,0,0.35)',
                 p: 4,
+                borderRadius: 3,
+                '&:before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(130deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 60%)',
+                    pointerEvents: 'none',
+                    borderRadius: 'inherit'
+                }
             }}>
-                <Typography id="modal-title" variant="h6" component="h2">
+                <Typography id="modal-title" variant="h6" component="h2" sx={{ fontWeight: 600, color: palette.primary }}>
                     ¿Desea avanzar de estación?
                 </Typography>
-                <Typography id="modal-description" sx={{ mt: 2 }}>
+                <Typography id="modal-description" sx={{ mt: 2, color: palette.textMuted, fontSize: '.9rem' }}>
                     Al avanzar de estación, no podrá volver a visualizar la información del trabajador actual.
                 </Typography>
-
                 <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-                    <Button variant="contained" sx={{ backgroundColor: "#142a3d" }} onClick={generarAvance} disabled={isSubmitting}>
+                    <Button variant="contained" sx={{ background: palette.primary, '&:hover': { background: palette.primaryDark } }} onClick={generarAvance} disabled={isSubmitting}>
                         {isSubmitting ? "Procesando..." : "Confirmar"}
                     </Button>
                 </Box>
@@ -281,8 +313,8 @@ export default function InventarioView() {
     )
 
     const tecnicosTable = () => (
-        <Box sx={{ overflowX: "auto", width: "95%", marginY: 4 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Box sx={{ overflowX: "auto", width: "95%", marginY: 4, borderRadius: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.05)', border: `1px solid ${palette.borderSubtle}`, background: palette.cardBg, position: 'relative', '&:before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 65%)', pointerEvents: 'none', borderRadius: 'inherit' } }}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table" stickyHeader>
                 <TableHead>
                     <TableRow>
                         {[
@@ -295,9 +327,10 @@ export default function InventarioView() {
                                 key={header}
                                 align="left"
                                 sx={{
-                                    fontWeight: "bold",
-                                    backgroundColor: "#142a3d",
-                                    color: "white",
+                                    fontWeight: 600,
+                                    background: palette.bgGradient,
+                                    color: 'white',
+                                    borderBottom: 'none',
                                 }}
                             >
                                 <Typography>{header}</Typography>
@@ -320,7 +353,9 @@ export default function InventarioView() {
                                 sx={{
                                     textDecoration: "none",
                                     cursor: "pointer",
-                                    "&:hover": { backgroundColor: "#f5f5f5" },
+                                    transition: 'background .2s',
+                                    '&:nth-of-type(even)': { backgroundColor: '#fafbfd' },
+                                    '&:hover': { backgroundColor: palette.accentSoft },
                                 }}
                             >
                                 <TableCell align="left" width={"30%"}>{row.nombre ? row.nombre : "N/A"}</TableCell>
@@ -361,7 +396,15 @@ export default function InventarioView() {
                     flexDirection: "column",
                     minHeight: "90vh",
                     paddingY: "70px",
-                    backgroundColor: "#f5f5f5",
+                    position: 'relative',
+                    background: palette.bgGradient,
+                    '::before': {
+                        content: '""',
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'radial-gradient(circle at 15% 20%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 85% 75%, rgba(255,255,255,0.06), transparent 65%)',
+                        pointerEvents: 'none'
+                    }
                 }}
             >      {open && (
                 <Alert
@@ -384,7 +427,38 @@ export default function InventarioView() {
                         borderRadius: 2,
                     }}
                 >
-                    <Button variant="contained" sx={{ backgroundColor: "#142a3d", width: "200px" }} onClick={() => fetchTecnicos()}>
+                    <Button 
+                        variant="contained" 
+                        sx={{ 
+                            width: "200px",
+                            background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+                            color: '#fff',
+                            fontWeight: 600,
+                            letterSpacing: '.5px',
+                            borderRadius: 2,
+                            position: 'relative',
+                            overflow: 'hidden',
+                            textShadow: '0 1px 2px rgba(0,0,0,0.35)',
+                            boxShadow: '0 6px 18px -4px rgba(0,0,0,0.45), 0 2px 6px -1px rgba(0,0,0,0.35)',
+                            transition: 'all .35s',
+                            '&:before': {
+                                content: '""',
+                                position: 'absolute',
+                                inset: 0,
+                                background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+                                mixBlendMode: 'overlay',
+                                pointerEvents: 'none'
+                            },
+                            '&:hover': {
+                                transform: 'translateY(-3px)',
+                                boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                                background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+                            },
+                            '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+                            '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+                        }} 
+                        onClick={() => fetchTecnicos()}
+                    >
                         Actualizar
                     </Button>
                 </Box>
@@ -394,18 +468,21 @@ export default function InventarioView() {
                 {loading ? (
                     <Box
                         sx={{
-                            backgroundColor: "white",
+                            position: 'relative',
+                            background: palette.cardBg,
                             height: "30vh",
                             width: { lg: "70%", md: "90%", xs: "95%" },
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                             flexDirection: "column",
-                            border: "2px solid #dfdeda",
+                            border: `1px solid ${palette.borderSubtle}`,
                             borderRadius: 2,
+                            boxShadow: '0 4px 14px rgba(0,0,0,0.06)',
+                            '&:before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%)', pointerEvents: 'none', borderRadius: 'inherit' }
                         }}
                     >
-                        <Typography variant="h5" sx={{ marginBottom: 4, color: "#142a3d" }}>
+                        <Typography variant="h6" sx={{ mb: 4, color: '#fff', fontWeight: 600, textShadow: '0 2px 4px rgba(0,0,0,0.4)' }}>
                             Cargando los recursos...
                         </Typography>
                         <CircularProgress />
@@ -413,15 +490,17 @@ export default function InventarioView() {
                 ) : (
                     <Box
                         sx={{
-                            backgroundColor: "white",
+                            position: 'relative',
+                            background: palette.cardBg,
                             width: { lg: "70%", md: "90%", xs: "95%" },
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
                             height: "100%",
-                            paddingBottom: 4,
                             borderRadius: 2,
-                            border: "2px solid #dfdeda",
+                            border: `1px solid ${palette.borderSubtle}`,
+                            boxShadow: '0 4px 14px rgba(0,0,0,0.06)',
+                            '&:before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 65%)', pointerEvents: 'none', borderRadius: 'inherit' }
                         }}
                     >
                         {tecnicosTable()}

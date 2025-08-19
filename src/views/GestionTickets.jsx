@@ -13,6 +13,8 @@ import {
   TableRow,
   Typography,
   TableContainer,
+  Chip,
+  Tooltip,
 } from "@mui/material";
 import { PieChart } from '@mui/x-charts/PieChart';
 import { Gauge } from '@mui/x-charts/Gauge';
@@ -21,6 +23,7 @@ import { useEffect, useState } from "react";
 import { getTicketera, getStatsTicket } from "../api/ticketeraAPI";
 import { Link } from "react-router-dom";
 import { MainLayout } from "./Layout";
+import palette from "../theme/palette";
 
 function GestorTicketera() {
   const authState = useSelector((state) => state.auth);
@@ -73,15 +76,33 @@ function GestorTicketera() {
     }
   };
 
+  const estadoColors = {
+    "SOLICITADO": palette.accent,
+    "EN GESTION": "#ffb74d", // amber lighten
+    "FINALIZADO": "#4caf50",
+    "NO APLICA": palette.textMuted,
+    "DERIVADO A TI": "#ab47bc", // purple accent
+  };
+
   const filterTickets = () => (
     <Box
       sx={{
         width: "95%",
         pt: 2,
         pb: 2,
-        backgroundColor: "white",
+        position: 'relative',
+        background: palette.cardBg,
         borderRadius: 2,
-        border: "2px solid #dfdeda",
+        border: `1px solid ${palette.borderSubtle}`,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+        '&:before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 65%)',
+          pointerEvents: 'none',
+          borderRadius: 8
+        }
       }}
     >
       <Typography
@@ -93,12 +114,34 @@ function GestorTicketera() {
       <Divider sx={{ mb: 2 }} />
       <form onSubmit={handleSubmit}>
         <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: "center", justifyContent: "space-evenly", mb: 2 }}>
-          <Select
+      <Select
             value={form.estado}
             onChange={(e) => setForm({ ...form, estado: e.target.value })}
             size="small"
             variant="standard"
-            sx={{ width: { lg: "30%", md: "40%", xs: "90%" } }}
+            sx={{ 
+              width: { lg: "30%", md: "40%", xs: "90%" },
+              background: palette.accentSoft,
+              px: 1,
+              borderRadius: 1,
+              boxShadow: 'inset 0 0 0 1px '+palette.borderSubtle,
+              '&:before, &:after': { borderBottomColor: palette.primaryDark+ ' !important' },
+              '& .MuiSelect-select': { py: 1 },
+              '&:hover': { background: '#f0faff' }
+            }}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  bgcolor: '#ffffff',
+                  border: '1px solid '+palette.borderSubtle,
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                  '& .MuiMenuItem-root': {
+                    fontSize: '13px',
+                    '&:hover': { bgcolor: palette.accentSoft }
+                  }
+                }
+              }
+            }}
           >
             {optionSQL.map((option) => (
               <MenuItem key={option} value={option}>
@@ -111,12 +154,15 @@ function GestorTicketera() {
             disabled={isSubmitting}
             type="submit"
             sx={{
-              background: "#142a3d",
-              color: "white",
+        background: palette.primary,
+        color: "white",
               fontWeight: "bold",
               width: { lg: "30%", md: "40%", xs: "90%" },
               borderRadius: 2,
               marginTop: { xs: 2, md: 0 },
+        textShadow: "0 1px 2px rgba(0,0,0,0.25)",
+        transition: "background .25s",
+        '&:hover': { background: palette.primaryDark },
             }}
           >
             {isSubmitting ? "Cargando..." : "FILTRAR TICKETS"}
@@ -175,12 +221,14 @@ function GestorTicketera() {
   };
 
   const tablaTickets = () => (
-    <Box sx={{ width: "95%", mb: 2 }}>
+  <Box sx={{ width: "95%", mb: 2 }}>
       <TableContainer
         sx={{
-          backgroundColor: "white",
-          borderRadius: 2,
-          border: "2px solid #dfdeda",
+      background: palette.cardBg,
+      backdropFilter: "blur(3px)",
+      borderRadius: 2,
+      border: `1px solid ${palette.borderSubtle}`,
+      boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
         }}
       >
         <Table stickyHeader>
@@ -198,7 +246,13 @@ function GestorTicketera() {
                 <TableCell
                   key={header}
                   align="left"
-                  sx={{ backgroundColor: "#142a3d" }}
+                  sx={{
+                    background: palette.bgGradient,
+                    color: "white",
+                    borderBottom: "none",
+                    '&:first-of-type': { borderTopLeftRadius: 8 },
+                    '&:last-of-type': { borderTopRightRadius: 8 },
+                  }}
                 >
                   <Typography
                     fontWeight={"bold"}
@@ -218,7 +272,10 @@ function GestorTicketera() {
                   sx={{
                     textDecoration: "none",
                     cursor: "pointer",
-                    "&:hover": { backgroundColor: "#f5f5f5" }
+                    transition: "background .2s",
+                    '&:nth-of-type(even)': { backgroundColor: "#fafbfd" },
+                    '&:hover': { backgroundColor: palette.accentSoft },
+                    '& td': { borderBottom: '1px solid '+palette.borderSubtle },
                   }}
                   component={Link}
                   to={`/ticketviewer/${row.logID}`}
@@ -251,7 +308,21 @@ function GestorTicketera() {
                     {row.solicitante ? row.solicitante : "Sin Información"}
                   </TableCell>
                   <TableCell align="left" sx={{ fontSize: "12px"}}>
-                    {row.estado ? row.estado : "Sin Información"}
+                    {row.estado ? (
+                      <Tooltip title={`Estado: ${row.estado}`} arrow>
+                        <Chip 
+                          label={row.estado}
+                          size="small"
+                          sx={{
+                            fontSize: '11px',
+                            fontWeight: 'bold',
+                            color: 'white',
+                            backgroundColor: estadoColors[row.estado] || palette.primary,
+                            letterSpacing: '.5px'
+                          }}
+                        />
+                      </Tooltip>
+                    ) : "Sin Información"}
                   </TableCell>
                 </TableRow>
               ))
@@ -298,11 +369,21 @@ function GestorTicketera() {
           m: 2,
           pt: 2,
           pb: 2,
-          backgroundColor: "white",
+          position: 'relative',
+          background: palette.cardBg,
           borderRadius: 2,
-          border: "2px solid #dfdeda",
+          border: `1px solid ${palette.borderSubtle}`,
           display: "flex",
           flexDirection: "row",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
+          '&:before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%)',
+            pointerEvents: 'none',
+            borderRadius: 8
+          }
         }}
       >
         <Box sx={{ width: "50%", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -324,25 +405,41 @@ function GestorTicketera() {
                 fetchTicketsWithEstado(selectedEstado);
               }
             }}
+            colors={pieData.map(d => estadoColors[d.estado] || palette.accent)}
             sx={{ cursor: 'pointer' }}
           />
         </Box>
       <Box sx={{ width: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <Gauge 
-          width={160} 
-          height={160} 
-          value={statsFinalizado.Q} 
-          valueMax={totalTickets}
-          innerRadius="75%"
-          outerRadius="100%"
-          cornerRadius="50%"
-          text={`${statsFinalizado.Q || 0} / ${totalTickets || 0} \n Finalizados`}
-          sx={{ 
-            '& .MuiGauge-valueArc': {
-              fill: '#4caf50'
-            }
-          }}
-           />
+        <Box sx={{
+          p:1.5,
+          borderRadius: 3,
+          position: 'relative',
+          background: 'transparent',
+          boxShadow: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <Gauge 
+            width={160} 
+            height={160} 
+            value={statsFinalizado.Q} 
+            valueMax={totalTickets}
+            innerRadius="75%"
+            outerRadius="100%"
+            cornerRadius="50%"
+            text={`${statsFinalizado.Q || 0} / ${totalTickets || 0} \n Finalizados`}
+            sx={{ 
+              '& .MuiGauge-valueArc': {
+                fill: '#4caf50'
+              },
+              '& .MuiGauge-referenceArc': {
+                stroke: palette.borderSubtle
+              },
+              '& text': { fill: palette.primaryDark, fontWeight: 'bold' }
+            }}
+             />
+        </Box>
       </Box>
     </Box>
   );}
@@ -356,13 +453,21 @@ function GestorTicketera() {
     <MainLayout>
           <Box
       sx={{
+        position: 'relative',
         paddingY: "70px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f5f5f5",
+        background: palette.bgGradient,
         minHeight: "90vh",
+        '::before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(circle at 15% 20%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 85% 75%, rgba(255,255,255,0.06), transparent 65%)',
+          pointerEvents: 'none'
+        }
       }}
     >
       {open && (

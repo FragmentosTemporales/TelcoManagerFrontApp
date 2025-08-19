@@ -1,8 +1,9 @@
-import { Box, Divider, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography, Paper, Chip, Fade } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainLayout } from "./Layout";
 import { useEffect } from "react";
+import { palette } from "../theme/palette";
 
 function Home() {
   const authState = useSelector((state) => state.auth);
@@ -164,74 +165,168 @@ function Home() {
     <MainLayout>
       <Box
         sx={{
+          position: "relative",
+          minHeight: "100vh",
+          py: 10,
+          px: { xs: 2, sm: 4 },
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           flexDirection: "column",
-          minHeight: "90vh",
-          paddingY: "70px",
-          backgroundColor: "#f5f5f5",
+          alignItems: "center",
+          background: palette.bgGradient,
+          overflow: "hidden",
+          '::before': {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at 15% 20%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 85% 75%, rgba(255,255,255,0.06), transparent 65%)",
+            pointerEvents: "none",
+          },
         }}
       >
+        <Fade in timeout={600}>
+          <Box sx={{ width: "100%", maxWidth: 1320, mb: 6 }}>
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 600,
+                letterSpacing: 0.5,
+                color: "#fff",
+                textShadow: "0 2px 4px rgba(0,0,0,0.4)",
+              }}
+            >
+              Panel Principal
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ mt: 1, color: "rgba(255,255,255,0.8)", maxWidth: 760 }}
+            >
+              Selecciona un módulo para comenzar. Acceso filtrado de acuerdo a tus permisos.
+            </Typography>
+          </Box>
+        </Fade>
         {accesos && accesos.length > 0 ? (
           <Grid
             container
-            spacing={2}
-            sx={{ width: "90%" }}
-            justifyContent="center"
-            alignItems="center"
+            rowSpacing={{ xs: 5, sm: 6, md: 7 }}
+            columnSpacing={{ xs: 2.5, sm: 3, md: 3.5, lg: 4 }}
+            sx={{ width: "100%", maxWidth: 1320, mb: 14 }}
+            alignItems="stretch"
           >
             {accesos.map((acceso, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    height: {
-                      lg: "100px",
-                      md: "150px",
-                      sm: "180px",
-                      xs: "100px",
-                    },
-                    borderRadius: 2,
-                    border: "2px solid #dfdeda",
-                    backgroundColor: "white",
-                    flexDirection: "column",
-                    textDecoration: "none",
-                    padding: 2,
-                    position: "relative",
-                    transition:
-                      "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-                    "&:hover": {
-                      transform: "translateY(-5px)",
-                      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)"
-                    },
-                  }}
+              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                <Paper
                   component={Link}
                   to={acceso.link}
+                  elevation={10}
+                  sx={{
+                    textDecoration: "none",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    position: "relative",
+                    p: 2.5,
+                    borderRadius: 3,
+                    background: palette.cardBg,
+                    border: `1px solid ${palette.borderSubtle}`,
+                    backdropFilter: "blur(4px)",
+                    transition: "all .35s",
+                    overflow: "hidden",
+                    willChange: "transform, box-shadow",
+                    transformOrigin: "top center",
+                    mt: 0.5,
+                    '&:before': {
+                      content: '""',
+                      position: "absolute",
+                      inset: 0,
+                      background:
+                        "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)",
+                      opacity: 0,
+                      transition: "opacity .4s",
+                      pointerEvents: "none",
+                    },
+                    '&:hover': {
+                      transform: 'translateY(-8px)',
+                      boxShadow:
+                        "0 14px 34px -6px rgba(0,0,0,0.42), 0 6px 16px -2px rgba(0,0,0,0.30)",
+                      borderColor: palette.accent,
+                      '&:before': { opacity: 1 },
+                    },
+                    '&:active': { transform: 'translateY(-3px)', boxShadow: "0 8px 20px -8px rgba(0,0,0,0.4)" },
+                  }}
                 >
+                  <Box>
+                    <Chip
+                      label={acceso.head}
+                      size="small"
+                      sx={{
+                        mb: 1.5,
+                        fontWeight: 600,
+                        bgcolor: palette.accentSoft,
+                        color: palette.primary,
+                        letterSpacing: 0.3,
+                      }}
+                    />
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        lineHeight: 1.25,
+                        color: palette.primary,
+                        mb: 1,
+                      }}
+                    >
+                      {acceso.head}
+                    </Typography>
+                    <Divider sx={{ mb: 1.5, borderColor: palette.borderSubtle }} />
+                    <Typography
+                      variant="body2"
+                      sx={{ color: palette.textMuted, fontSize: "0.85rem" }}
+                    >
+                      {acceso.title}
+                    </Typography>
+                  </Box>
                   <Typography
-                    variant="h6"
-                    fontWeight="bold"
+                    variant="caption"
                     sx={{
-                      textAlign: "center",
+                      mt: 2,
+                      color: palette.accent,
+                      fontWeight: 500,
+                      letterSpacing: 0.5,
+                      opacity: 0.9,
+                      transition: "opacity .3s",
+                      '.MuiPaper-root:hover &': { opacity: 1 },
                     }}
                   >
-                    {acceso.head}
+                    Ingresar →
                   </Typography>
-                  <Divider sx={{ my: 1, backgroundColor: "#dfdeda" }} />
-                  <Typography
-                    variant="subtitle1"
-                    sx={{
-                      textAlign: "center",
-                    }}
-                  >
-                    {acceso.title}
-                  </Typography>
-                </Box>
+                </Paper>
               </Grid>
             ))}
           </Grid>
-        ) : null}
+        ) : (
+          <Paper
+            elevation={6}
+            sx={{
+              px: 5,
+              py: 6,
+              borderRadius: 4,
+              background: palette.cardBg,
+              border: `1px solid ${palette.borderSubtle}`,
+              backdropFilter: "blur(4px)",
+              textAlign: "center",
+              maxWidth: 520,
+            }}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 600, color: palette.primary }}>
+              Sin accesos disponibles
+            </Typography>
+            <Typography variant="body2" sx={{ mt: 1.5, color: palette.textMuted }}>
+              No se encontraron módulos asociados a tus permisos. Contacta a un administrador si esto es un error.
+            </Typography>
+          </Paper>
+        )}
       </Box>
     </MainLayout>
   );

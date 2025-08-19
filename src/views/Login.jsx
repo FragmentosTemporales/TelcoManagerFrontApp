@@ -6,6 +6,8 @@ import {
   TextField,
   InputAdornment,
   Typography,
+  Paper,
+  Divider,
 } from "@mui/material";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LockIcon from "@mui/icons-material/Lock";
@@ -15,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { onLogin } from "../api/authAPI";
 import { onLoad, onLoading, setMessage } from "../slices/authSlice";
 import { MainLayout } from "./Layout";
+import { palette } from "../theme/palette";
 
 function Login() {
   const { message } = useSelector((state) => state.auth);
@@ -84,104 +87,185 @@ function Login() {
 
   return (
     <MainLayout showNavbar={false}>
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        background: "white",
-        alignItems: "center",
-        height: "100vh",
-        backgroundColor: "#f5f5f5",
-      }}
-    >
-      {open && renderAlert()}
       <Box
         sx={{
-          width: "100%",
-          maxWidth: "400px",
-          paddingTop: "25px",
-          paddingBottom: "40px",
-          backgroundColor: "white",
-          border: "2px solid #dfdeda",
-          borderRadius: 2,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          padding: 2,
+          background: palette.bgGradient,
+          position: "relative",
+          overflow: "hidden",
+          '::before': {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08), transparent 60%)",
+            pointerEvents: "none",
+          },
         }}
       >
-        <form onSubmit={handleSubmit}>
-          <Box sx={{ mb: 2, mt: 2, display: "flex", justifyContent: "center" }}>
-            <TextField
-              required
-              size="small"
-              sx={{ minWidth: "350px" }}
-              id="correo"
-              label="Correo"
-              type="email"
-              name="correo"
-              variant="standard"
-              value={form.correo}
-              onChange={handleChange}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AccountBoxIcon />
-                  </InputAdornment>
-                ),
+        {open && (
+          <Box sx={{ width: "100%", maxWidth: 420, mb: 2 }}>{renderAlert()}</Box>
+        )}
+        <Paper
+          elevation={8}
+          sx={{
+            width: "100%",
+            maxWidth: 420,
+            px: 5,
+            pt: 5,
+            pb: 6,
+            borderRadius: 4,
+            position: "relative",
+            background: palette.cardBg,
+            backdropFilter: "blur(6px)",
+            boxShadow:
+              "0 8px 24px -6px rgba(0,0,0,0.25), 0 2px 6px -1px rgba(0,0,0,0.15)",
+          }}
+        >
+          <Box sx={{ textAlign: "center", mb: 3 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 600,
+                letterSpacing: 0.5,
+                color: palette.primary,
               }}
-            />
+            >
+              Dominion Telco
+            </Typography>
+            <Typography variant="body2" sx={{ color: palette.textMuted, mt: 0.5 }}>
+              Inicia sesión para continuar
+            </Typography>
           </Box>
-          <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
-            <TextField
-              required
-              sx={{ minWidth: "350px" }}
-              id="clave"
-              size="small"
-              label="Clave"
-              type="password"
-              name="clave"
-              variant="standard"
-              value={form.clave}
-              onChange={handleChange}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LockIcon />
-                  </InputAdornment>
-                ),
+          <form onSubmit={handleSubmit}>
+            <Box sx={{ mb: 3 }}>
+              <TextField
+                required
+                size="small"
+                fullWidth
+                id="correo"
+                label="Correo"
+                type="email"
+                name="correo"
+                variant="outlined"
+                value={form.correo}
+                onChange={handleChange}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AccountBoxIcon fontSize="small" sx={{ color: palette.primary }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    bgcolor: "white",
+                    transition: "box-shadow .25s, background-color .25s",
+                    '&:hover': { bgcolor: "#fafafa" },
+                    '&.Mui-focused': {
+                      boxShadow: `0 0 0 3px ${palette.accentSoft}`,
+                      '& fieldset': { borderColor: palette.accent },
+                    },
+                  },
+                }}
+              />
+            </Box>
+            <Box sx={{ mb: 2.5 }}>
+              <TextField
+                required
+                fullWidth
+                size="small"
+                id="clave"
+                label="Clave"
+                type="password"
+                name="clave"
+                variant="outlined"
+                value={form.clave}
+                onChange={handleChange}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockIcon fontSize="small" sx={{ color: palette.primary }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    bgcolor: "white",
+                    transition: "box-shadow .25s, background-color .25s",
+                    '&:hover': { bgcolor: "#fafafa" },
+                    '&.Mui-focused': {
+                      boxShadow: `0 0 0 3px ${palette.accentSoft}`,
+                      '& fieldset': { borderColor: palette.accent },
+                    },
+                  },
+                }}
+              />
+            </Box>
+            <Box
+              sx={{
+                mb: 3,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                userSelect: "none",
               }}
-            />
-          </Box>
-          <Box
-            sx={{
-              mb: 2,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Checkbox
-              checked={rememberMe}
-              onChange={handleRememberMeChange}
-              color="primary"
-            />
-            <Typography>Recordar usuario</Typography>
-          </Box>
-          <Box sx={{ textAlign: "center" }}>
+            >
+              <Checkbox
+                checked={rememberMe}
+                onChange={handleRememberMeChange}
+                color="primary"
+                size="small"
+                sx={{
+                  p: 0.5,
+                  '&.Mui-checked': { color: palette.primary },
+                }}
+              />
+              <Typography variant="body2" sx={{ color: palette.textMuted }}>
+                Recordar usuario
+              </Typography>
+            </Box>
             <Button
               type="submit"
               variant="contained"
               disabled={isSubmitting}
+              fullWidth
               sx={{
-                background: "#142a3d",
-                width: "200px",
-                borderRadius: 2,
+                py: 1.1,
+                fontWeight: 600,
+                textTransform: "none",
+                fontSize: "0.95rem",
+                letterSpacing: 0.3,
+                borderRadius: 2.5,
+                background: `linear-gradient(145deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+                boxShadow: "0 4px 12px -2px rgba(10,27,43,0.5)",
+                transition: "all .3s",
+                '&:hover': {
+                  background: palette.primaryDark,
+                  boxShadow: "0 6px 16px -4px rgba(10,27,43,0.6)",
+                },
+                '&:disabled': { opacity: 0.6 },
               }}
             >
               {isSubmitting ? "Cargando..." : "Ingresar"}
             </Button>
-          </Box>
-        </form>
+            <Divider sx={{ mt: 4, mb: 0, opacity: 0.5 }} />
+            <Typography
+              variant="caption"
+              sx={{ display: "block", textAlign: "center", mt: 2, color: palette.textMuted }}
+            >
+              © {new Date().getFullYear()} Dominion Telco. Todos los derechos reservados.
+            </Typography>
+          </form>
+        </Paper>
       </Box>
-    </Box>
     </MainLayout>
   );
 }

@@ -2,19 +2,17 @@ import {
     Alert,
     Box,
     Button,
-    Card,
-    CardContent,
-    CardHeader,
     Divider,
-    InputLabel,
     TextField,
-    Typography
+    Typography,
+    CircularProgress
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { crearProyectoInterno, getProyectobyID, UpdateProyectoInterno } from "../api/proyectos_internos_api";
+import { palette } from "../theme/palette";
 import { MainLayout } from "./Layout";
 
 function CreateProyectoInterno() {
@@ -123,55 +121,90 @@ function CreateProyectoInterno() {
 
     return (
         <MainLayout>
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    backgroundColor: "#f5f5f5",
-                    minHeight: "90vh",
-                    paddingY: "70px",
-                }}
-            >
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                minHeight: '90vh',
+                py: '70px',
+                background: palette.bgGradient,
+                position: 'relative',
+                overflow: 'hidden',
+                '::before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'radial-gradient(circle at 18% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.06), transparent 65%)',
+                    pointerEvents: 'none'
+                }
+            }}>
                 {open && (
-                    <Alert onClose={handleClose} severity={alertType} sx={{ marginBottom: 3 }}>
+                    <Alert onClose={handleClose} severity={alertType} sx={{ mb: 3, width: '80%', borderRadius: 3, boxShadow: 4, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}` }}>
                         {message}
                     </Alert>
                 )}
-                <Box
-                    sx={{
-                        width: "80%",
-                        marginY: 2,
-                    }}
-                >
+                <Box sx={{ width: '80%', my: 2, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
                     <Button
                         variant="contained"
                         component={Link}
                         to="/modulo:proyecto-interno"
                         sx={{
-                            backgroundColor: "#142a3d",
-                            color: "white",
+                            background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 75%)`,
+                            color: '#fff',
                             borderRadius: 2,
-                            width: "200px"
+                            width: '200px', // mantener ancho
+                            fontWeight: 600,
+                            letterSpacing: .6,
+                            textTransform: 'none',
+                            boxShadow: '0 8px 22px -6px rgba(0,0,0,0.45)',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            '&:before': {
+                                content: '""',
+                                position: 'absolute',
+                                inset: 0,
+                                background: 'radial-gradient(circle at 25% 20%, rgba(255,255,255,0.35), transparent 55%)',
+                                opacity: .55,
+                                mixBlendMode: 'overlay',
+                                transition: 'opacity .4s'
+                            },
+                            '&:hover': { boxShadow: '0 12px 30px -8px rgba(0,0,0,0.55)', transform: 'translateY(-3px)', '&:before': { opacity: .85 } },
+                            '&:active': { transform: 'translateY(-1px)' }
                         }}
                     >
                         VOLVER
                     </Button>
                 </Box>
-
-                <Box sx={{ border: "2px solid #dfdeda", backgroundColor: "white", paddingY: 1, borderRadius: 2, width: '80%' }}>
-                    <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'left', width: '90%', marginLeft: 3 }}>
-                        {titulo}
-                    </Typography>
-                    <Divider sx={{ marginY: 1 }} />
-
-                    <Box sx={{ paddingX: 3, paddingBottom: 3 }}>
+                <Box sx={{
+                    width: '80%',
+                    borderRadius: 3,
+                    background: palette.cardBg,
+                    border: `1px solid ${palette.borderSubtle}`,
+                    boxShadow: '0 10px 32px -10px rgba(0,0,0,0.40)',
+                    backdropFilter: 'blur(6px)',
+                    overflow: 'hidden',
+                    position: 'relative'
+                }}>
+                    <Box sx={{
+                        px: 3,
+                        py: 2.2,
+                        background: `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 55%, ${palette.accent} 130%)`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}>
+                        <Typography variant='h5' sx={{ fontWeight: 600, color: '#fff', letterSpacing: .5 }}>
+                            {titulo}
+                        </Typography>
+                        {isSubmitting && <CircularProgress size={26} sx={{ color: '#fff' }} />}
+                    </Box>
+                    <Box sx={{ px: 3, pb: 3, pt: 2 }}>
                         <form onSubmit={proyecto_id ? handleUpdate : handleSubmit}>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                                 <TextField
                                     label="Nombre del Proyecto"
                                     variant="standard"
-                                    sx={{ marginBottom: 2, width: { xs: "100%", sm: "400px", lg: "400px" } }}
+                                    sx={{ mb: 2, width: { xs: '100%', sm: '400px', lg: '400px' } }}
                                     inputProps={{ maxLength: 99, minLength: 5 }}
                                     required
                                     name="nombre"
@@ -181,14 +214,14 @@ function CreateProyectoInterno() {
                                 <TextField
                                     label="Area"
                                     variant="standard"
-                                    sx={{ marginBottom: 2, width: { xs: "100%", sm: "400px", lg: "400px" } }}
+                                    sx={{ mb: 2, width: { xs: '100%', sm: '400px', lg: '400px' } }}
                                     value={area.descri || ''}
                                     disabled
                                 />
                                 <TextField
                                     label="Descripción"
                                     variant="standard"
-                                    sx={{ marginBottom: 2, width: { xs: "100%", sm: "500px", lg: "700px" } }}
+                                    sx={{ mb: 2, width: { xs: '100%', sm: '500px', lg: '700px' } }}
                                     inputProps={{ maxLength: 249, minLength: 5 }}
                                     required
                                     name="descripcion"
@@ -198,27 +231,41 @@ function CreateProyectoInterno() {
                                     maxRows={4}
                                 />
                                 <Button
-                                    variant="contained"
-                                    type="submit"
+                                    variant='contained'
+                                    type='submit'
                                     disabled={isSubmitting}
                                     sx={{
-                                        backgroundColor: "#142a3d",
-                                        color: "white",
+                                        background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 75%)`,
+                                        color: '#fff',
                                         borderRadius: 2,
-                                        width: "200px",
-                                        marginTop: 2
-                                    }}>
+                                        width: '200px', // mantener ancho
+                                        mt: 2,
+                                        fontWeight: 600,
+                                        letterSpacing: .6,
+                                        textTransform: 'none',
+                                        boxShadow: '0 8px 22px -6px rgba(0,0,0,0.45)',
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                        '&:before': {
+                                            content: '""',
+                                            position: 'absolute',
+                                            inset: 0,
+                                            background: 'radial-gradient(circle at 25% 20%, rgba(255,255,255,0.35), transparent 55%)',
+                                            opacity: .55,
+                                            mixBlendMode: 'overlay',
+                                            transition: 'opacity .4s'
+                                        },
+                                        '&:hover': { boxShadow: '0 12px 30px -8px rgba(0,0,0,0.55)', transform: 'translateY(-3px)', '&:before': { opacity: .85 } },
+                                        '&:active': { transform: 'translateY(-1px)' }
+                                    }}
+                                >
                                     {proyecto_id ? (isSubmitting ? 'Actualizando...' : 'Actualizar Proyecto') : (isSubmitting ? 'Creando...' : 'Crear Proyecto')}
                                 </Button>
-
                             </Box>
-
                         </form>
                     </Box>
                 </Box>
-
             </Box>
-
         </MainLayout>
     );
 }

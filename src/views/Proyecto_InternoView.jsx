@@ -2,29 +2,26 @@ import {
   Alert,
   Box,
   Button,
-  Divider,
   Modal,
   MenuItem,
-  Rating,
   Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   Typography,
-  TableContainer,
   IconButton,
-  FormLabel,
   CircularProgress,
+  Chip,
+  Tooltip,
+  Fade,
+  Divider,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import CloseIcon from '@mui/icons-material/Close';
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getProyectosByArea, UpdateTarea, DeleteProyectoInterno } from "../api/proyectos_internos_api";
+import { palette } from "../theme/palette";
 import { MainLayout } from "./Layout";
 
 function ProyectoInternoView() {
@@ -112,6 +109,12 @@ function ProyectoInternoView() {
     setOpenModal(false);
   };
 
+  const handlePage = (newPage) => {
+    if (newPage < 1 || newPage > pages) return;
+    setPage(newPage);
+    fetchData();
+  };
+
     const getButtons = () => (
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Button
@@ -146,27 +149,49 @@ function ProyectoInternoView() {
       aria-describedby="modal-description"
     >
       <Box sx={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        height: "150px",
-        width: "600px",
-        bgcolor: "background.paper",
-        boxShadow: 24,
-        p: 4,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '600px',   // mantener ancho
+        bgcolor: palette.cardBg,
+        borderRadius: 3,
+        border: `1px solid ${palette.borderSubtle}`,
+        boxShadow: '0 18px 48px -12px rgba(0,0,0,0.55)',
+        overflow: 'hidden',
+        backdropFilter: 'blur(6px)',
+        maxHeight: '70vh',
+        display: 'flex',
+        flexDirection: 'column'
       }}>
-        <Typography id="modal-title" variant="h6" component="h2">
-          ¿Desea modificar el estado de la tarea?
-        </Typography>
-        <Typography id="modal-description" sx={{ mt: 2 }}>
-          El nuevo estado será : {tarea.estado}
-        </Typography>
-
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-          <Button variant="contained" sx={{ backgroundColor: "#142a3d" }} onClick={handleEstadoChange} disabled={isSubmitting}>
-            {isSubmitting ? "Procesando..." : "Confirmar"}
-          </Button>
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          px: 2.5,
+          py: 1.2,
+          background: `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 55%, ${palette.accent} 130%)`,
+          color: '#fff'
+        }}>
+          <Typography id="modal-title" variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: .5 }}>
+            Confirmar cambio de estado
+          </Typography>
+          <IconButton size="small" onClick={handleCloseModal} sx={{ color: 'rgba(255,255,255,0.85)', '&:hover': { color: '#fff' } }}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Box>
+        <Box sx={{ p: 2.5, flex: 1, display: 'flex', flexDirection: 'column', gap: 2, justifyContent: 'space-between' }}>
+          <Typography id="modal-description" sx={{ fontSize: '.95rem', color: palette.primaryDark, lineHeight: 1.35 }}>
+            El nuevo estado será:
+            {' '}<Chip size='small' label={tarea.estado || '—'} sx={{ ml: .5, fontWeight: 600, bgcolor: tarea.estado === 'FINALIZADA' ? palette.accent : (tarea.estado === 'CANCELADA' ? palette.danger : palette.primary), color: '#fff' }} />
+          </Typography>
+          <Divider sx={{ borderColor: palette.borderSubtle }} />
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1.5, pt: .5 }}>
+            <Button onClick={handleCloseModal} variant="outlined" sx={{ minWidth: 120, textTransform: 'none', borderColor: palette.borderSubtle, color: palette.primary, fontWeight: 500, '&:hover': { borderColor: palette.accent, backgroundColor: palette.accentSoft } }} disabled={isSubmitting}>Cancelar</Button>
+            <Button variant="contained" onClick={handleEstadoChange} disabled={isSubmitting} sx={{ minWidth: 140, backgroundColor: palette.primary, textTransform: 'none', fontWeight: 600, letterSpacing: .4, boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)', '&:hover': { backgroundColor: palette.primaryDark } }}>
+              {isSubmitting ? 'Procesando...' : 'Confirmar'}
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Modal>
@@ -197,16 +222,25 @@ function ProyectoInternoView() {
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "center",
-          backgroundColor: "#f5f5f5",
           minHeight: "90vh",
-          paddingY: "70px",
+          py: "70px",
+          position: "relative",
+          background: palette.bgGradient,
+          overflow: "hidden",
+          '::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: "radial-gradient(circle at 18% 25%, rgba(255,255,255,0.09), transparent 60%), radial-gradient(circle at 85% 80%, rgba(255,255,255,0.06), transparent 65%)",
+            pointerEvents: 'none'
+          }
         }}
       >
         {open && (
           <Alert
             onClose={handleClose}
             severity={alertType}
-            sx={{ width: "90%", marginBottom: 2 }}
+            sx={{ width: "90%", mb: 2, borderRadius: 3, boxShadow: 4, backdropFilter: 'blur(4px)', background: palette.cardBg, border: `1px solid ${palette.borderSubtle}` }}
           >
             {message}
           </Alert>
@@ -215,15 +249,17 @@ function ProyectoInternoView() {
         <Box
           sx={{
             width: "95%",
-            backgroundColor: "white",
-            borderRadius: 2,
-            padding: 2,
-            border: "2px solid #dfdeda",
+            background: palette.cardBg,
+            borderRadius: 3,
+            p: 2,
+            border: `1px solid ${palette.borderSubtle}`,
+            backdropFilter: 'blur(4px)',
+            boxShadow: "0 4px 18px -4px rgba(0,0,0,0.25)",
           }}
         >
           <Typography
             variant="h5"
-            sx={{ fontWeight: "bold", textAlign: "center" }}
+            sx={{ fontWeight: 600, textAlign: "center", color: palette.primary, letterSpacing: 0.4 }}
           >
             {area ? area.descri : "Cargando..."}
           </Typography>
@@ -232,8 +268,8 @@ function ProyectoInternoView() {
         <Box
           sx={{
             width: "95%",
-            marginTop: 2,
-            paddingX: 2,
+            mt: 2,
+            px: 2,
             display: "flex",
             justifyContent: "start",
           }}
@@ -243,10 +279,33 @@ function ProyectoInternoView() {
             component={Link}
             to="/modulo:crear-proyecto-interno"
             sx={{
-              backgroundColor: "#142a3d",
-              color: "white",
+              background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 75%)`,
+              color: '#fff',
               borderRadius: 2,
-              width: "200px"
+              width: '200px', // mantener dimensión
+              position: 'relative',
+              boxShadow: '0 8px 22px -6px rgba(0,0,0,0.45)',
+              textTransform: 'none',
+              fontWeight: 600,
+              letterSpacing: 0.6,
+              border: '1px solid rgba(255,255,255,0.35)',
+              overflow: 'hidden',
+              '&:before': {
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                background: 'radial-gradient(circle at 25% 20%, rgba(255,255,255,0.35), transparent 55%)',
+                opacity: .55,
+                mixBlendMode: 'overlay',
+                transition: 'opacity .4s'
+              },
+              '&:hover': {
+                boxShadow: '0 12px 30px -8px rgba(0,0,0,0.55)',
+                transform: 'translateY(-3px)',
+                '&:before': { opacity: 0.85 }
+              },
+              '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 20px -8px rgba(0,0,0,0.55)' },
+              '&:focus-visible': { outline: `2px solid ${palette.accent}`, outlineOffset: 2 }
             }}
           >
             Crear Nuevo
@@ -254,236 +313,201 @@ function ProyectoInternoView() {
         </Box>
 
         {isSubmitting && (!data || data.length === 0) && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
             <CircularProgress size={60} />
           </Box>
         )}
         {modalRender()}
-        {data && data.length > 0
-          ? data.map((proyecto, index) => (
+        {data && data.length > 0 && data.map((proyecto, index) => (
+          <Box
+            key={index}
+            sx={{
+              width: '95%',
+              background: palette.cardBg,
+              borderRadius: 3,
+              p: 2,
+              my: 2,
+              border: `1px solid ${palette.borderSubtle}`,
+              backdropFilter: 'blur(4px)',
+              transition: 'border-color .3s, box-shadow .35s, transform .35s',
+              boxShadow: '0 6px 20px -6px rgba(0,0,0,0.25)',
+              position: 'relative',
+              overflow: 'hidden',
+              '&:before': {
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 60%)',
+                opacity: 0,
+                transition: 'opacity .6s'
+              },
+              '&:hover': { borderColor: palette.accent, boxShadow: '0 14px 34px -6px rgba(0,0,0,0.42)', transform: 'translateY(-4px)', '&:before': { opacity: 1 } }
+            }}
+          >
             <Box
-              key={index}
+              onClick={() => toggleProject(index)}
               sx={{
-                width: "95%",
-                backgroundColor: "white",
                 borderRadius: 2,
-                padding: 2,
-                marginY: 2,
-                border: "1px solid #dfdeda",
+                py: 1,
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                '&:hover': { backgroundColor: palette.accentSoft }
               }}
             >
-              <Box
-                onClick={() => toggleProject(index)}
-                sx={{
-                  borderRadius: 2,
-                  paddingY: 1,
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  "&:hover": {
-                    backgroundColor: "#f9f9f9",
-                  },
-                }}
-              >
-                <Box sx={{ flex: 1 }}>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold", marginBottom: 1, marginLeft: 1 }}
-                  >
-                    {proyecto.nombre ? proyecto.nombre : "Sin Nombre"}
-                  </Typography>
-
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      marginBottom: 1,
-                      marginLeft: 1,
-                      fontSize: "14px",
-                      fontStyle: "italic",
-                      color: "#555",
-                    }}
-                  >
-                    {proyecto.descripcion
-                      ? proyecto.descripcion
-                      : "Sin Descripcion"}
-                  </Typography>
-                  <Box>
-                    <Button
-                      component={Link}
-                      to={`/modulo:crear-tarea-interna/${proyecto.id}`}
-                      variant="contained"
-                      sx={{ marginLeft: 1, marginBottom: 1, width: "200px", backgroundColor: "#142a3d" }}
-                      disabled={!(proyecto.userID == user_id) || isSubmitting}
-                    >
-                      Gestionar Tareas
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      sx={{ marginLeft: 1, marginBottom: 1, width: "100px", backgroundColor: "#142a3d" }}
-                      component={Link}
-                      to={`/modulo:crear-proyecto-interno/${proyecto.id}`}
-                      disabled={!(proyecto.userID == user_id) || isSubmitting}
-                    >
-                      Editar
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      disabled={!(proyecto.userID == user_id) || isSubmitting}
-                      color="error"
-                      sx={{ marginLeft: 1, marginBottom: 1, width: "100px" }}
-                      onClick={async () => {
-                        if (window.confirm("¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.")) {
-                          setIsSubmitting(true);
-                          try {
-                            const response = await DeleteProyectoInterno(token, proyecto.id);
-                            console.log("Proyecto eliminado:", response);
-                            setMessage("Proyecto eliminado correctamente");
-                            setAlertType("success");
-                            fetchData(); // Refresh data after deletion
-                          } catch (error) {
-                            console.error("Error eliminando proyecto:", error);
-                            setMessage("Error al eliminar el proyecto");
-                            setAlertType("error");
-                          } finally {
-                            setOpen(true);
-                            setIsSubmitting(false);
-                          }
-                        }
-                      }}
-                    >
-                      Eliminar
-                    </Button>
-                  </Box>
+              <Box sx={{ flex: 1 }}>
+                <Typography
+                  variant='h6'
+                  sx={{ fontWeight: 600, mb: 1, ml: 1, color: palette.primary, display: 'flex', alignItems: 'center', gap: 1 }}
+                >
+                  {proyecto.nombre ? proyecto.nombre : 'Sin Nombre'}
                   {proyecto.tareas && proyecto.tareas.length > 0 && (
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        marginLeft: 1,
-                        fontSize: "12px",
-                        color: "#888",
-                      }}
-                    >
-                      {proyecto.tareas.length} tarea
-                      {proyecto.tareas.length !== 1 ? "s" : ""}
-                    </Typography>
+                    <Chip size='small' label={`${proyecto.tareas.length} tarea${proyecto.tareas.length !== 1 ? 's' : ''}`} sx={{ bgcolor: palette.accentSoft, color: palette.primary, fontWeight: 500 }} />
                   )}
-                </Box>
-                {proyecto.tareas && proyecto.tareas.length > 0 && (
-                  <IconButton>
-                    {expandedProjects[index] ? <ExpandLess /> : <ExpandMore />}
-                  </IconButton>
-                )}
-              </Box>
-
-              {isSubmitting && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-                  <CircularProgress />
-                </Box>
-              )}
-              {!isSubmitting && proyecto.tareas &&
-                proyecto.tareas.length > 0 &&
-                expandedProjects[index] && (
-                  <Box sx={{ marginTop: 2 }}>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: "bold",
-                        marginBottom: 1,
-                        marginLeft: 1,
-                      }}
-                    >
-                      Tareas
-                    </Typography>
-                    {proyecto.tareas.map((tarea, tareaIndex) => (
-                      <Box
-                        key={tareaIndex}
-                        sx={{
-                          backgroundColor: "#f5f5f5",
-                          padding: 2,
-                          borderRadius: 1,
-                          marginBottom: 1,
-                          marginX: 1,
-                          border: "1px solid #e0e0e0",
-                          display: "flex",
-                          flexDirection: { lg: "row", xs: "column" },
+                </Typography>
+                <Typography
+                  variant='body1'
+                  sx={{ mb: 1, ml: 1, fontSize: '14px', fontStyle: 'italic', color: palette.textMuted }}
+                >
+                  {proyecto.descripcion ? proyecto.descripcion : 'Sin Descripcion'}
+                </Typography>
+                <Box>
+                  <Button
+                    component={Link}
+                    to={`/modulo:crear-tarea-interna/${proyecto.id}`}
+                    variant='contained'
+                    sx={{ ml: 1, mb: 1, width: '200px', backgroundColor: palette.primary, textTransform: 'none', fontWeight: 600, letterSpacing: .4, '&:hover': { backgroundColor: palette.primaryDark } }}
+                    disabled={!(proyecto.userID == user_id) || isSubmitting}
+                  >
+                    Gestionar Tareas
+                  </Button>
+                  <Button
+                    variant='contained'
+                    sx={{ ml: 1, mb: 1, width: '100px', backgroundColor: palette.primary, textTransform: 'none', fontWeight: 600, letterSpacing: .4, '&:hover': { backgroundColor: palette.primaryDark } }}
+                    component={Link}
+                    to={`/modulo:crear-proyecto-interno/${proyecto.id}`}
+                    disabled={!(proyecto.userID == user_id) || isSubmitting}
+                  >
+                    Editar
+                  </Button>
+                  <Tooltip title={!(proyecto.userID == user_id) ? 'Solo el creador puede eliminar' : 'Eliminar proyecto definitivamente'} arrow>
+                    <span>
+                      <Button
+                        variant='contained'
+                        disabled={!(proyecto.userID == user_id) || isSubmitting}
+                        color='error'
+                        sx={{ ml: 1, mb: 1, width: '100px', textTransform: 'none', fontWeight: 600, letterSpacing: .4 }}
+                        onClick={async () => {
+                          if (window.confirm('¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.')) {
+                            setIsSubmitting(true);
+                            try {
+                              const response = await DeleteProyectoInterno(token, proyecto.id);
+                              console.log('Proyecto eliminado:', response);
+                              setMessage('Proyecto eliminado correctamente');
+                              setAlertType('success');
+                              fetchData();
+                            } catch (error) {
+                              console.error('Error eliminando proyecto:', error);
+                              setMessage('Error al eliminar el proyecto');
+                              setAlertType('error');
+                            } finally {
+                              setOpen(true);
+                              setIsSubmitting(false);
+                            }
+                          }
                         }}
                       >
-                        <Box sx={{ width: { lg: "100%" } }}>
-                          <Typography
-                            variant="body1"
-                            sx={{ fontWeight: "bold", marginBottom: 0.5 }}
-                          >
-                            {tarea.titulo ? tarea.titulo : "Sin Titulo"}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ fontWeight: "bold", marginTop: 0.5 }}
-                          >
-                            {tarea.estado && tarea.estado
-                              ? tarea.estado
-                              : "Sin Estado"}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ marginTop: 0.5, fontStyle: "italic" }}
-                          >
-                            {tarea.usuario && tarea.usuario.nombre
-                              ? tarea.usuario.nombre
-                              : "Sin Estado"}
-                          </Typography>
-
-                          <Typography
-                            variant="body2"
-                            sx={{ marginTop: 0.5, fontStyle: "italic" }}
-                          >
-                            {tarea.descripcion
-                              ? tarea.descripcion
-                              : "Sin Descripcion"}
-                          </Typography>
-                        </Box>
-
-                        <Box
-                          sx={{
-                            width: { lg: "100%" },
-                            marginY: 1,
-                          }}
-                        >
-                          <form>
-                            <Select
-                              disabled={!(tarea.userID == user_id) || isSubmitting}
-                              variant="standard"
-                              onChange={(e) => {
-                                //                                handleSelectChange(tarea.id, e.target.value);
-                                setTarea({ ...tarea, estado: e.target.value })
-                                setOpenModal(true);
-
-                              }}
-                              sx={{ width: "100%", marginTop: 1 }}
-                              value={getSelectValue(tarea)}
-                            >
-                              {estados.map((estado) => (
-                                <MenuItem
-                                  key={estado.value}
-                                  value={estado.value}
-                                >
-                                  {estado.label}
-                                </MenuItem>
-                              ))}
-                            </Select>
-
-                          </form>
-                        </Box>
-                      </Box>
-                    ))}
-                  </Box>
-                )}
+                        Eliminar
+                      </Button>
+                    </span>
+                  </Tooltip>
+                </Box>
+              </Box>
+              {proyecto.tareas && proyecto.tareas.length > 0 && (
+                <IconButton sx={{ transition: 'transform .4s', color: palette.primary, '&:hover': { color: palette.accent }, transform: expandedProjects[index] ? 'rotate(180deg)' : 'none' }}>
+                  {expandedProjects[index] ? <ExpandLess /> : <ExpandMore />}
+                </IconButton>
+              )}
             </Box>
-          ))
-          : null}
-          {getButtons()}
+            {!isSubmitting && proyecto.tareas && proyecto.tareas.length > 0 && expandedProjects[index] && (
+              <Box sx={{ mt: 2 }}>
+                <Typography variant='h6' sx={{ fontWeight: 600, mb: 1, ml: 1, color: palette.primary }}>Tareas</Typography>
+                {proyecto.tareas.map((tarea, tareaIndex) => (
+                  <Box
+                    key={tareaIndex}
+                    sx={{
+                      backgroundColor: palette.accentSoft,
+                      p: 2,
+                      borderRadius: 2,
+                      mb: 1,
+                      mx: 1,
+                      border: `1px solid ${palette.borderSubtle}`,
+                      display: 'flex',
+                      flexDirection: { lg: 'row', xs: 'column' },
+                      position: 'relative',
+                      overflow: 'hidden',
+                      transition: 'box-shadow .35s, transform .35s, border-color .35s',
+                      boxShadow: '0 3px 12px -4px rgba(0,0,0,0.18)',
+                      '&:hover': { boxShadow: '0 10px 26px -6px rgba(0,0,0,0.30)', borderColor: palette.accent, transform: 'translateY(-3px)' }
+                    }}
+                  >
+                    <Box sx={{ width: { lg: '100%' } }}>
+                      <Typography variant='body1' sx={{ fontWeight: 600, mb: 0.5, color: palette.primary }}>
+                        {tarea.titulo ? tarea.titulo : 'Sin Titulo'}
+                      </Typography>
+                {/* Estado como chip visual */}
+                <Typography
+                  variant='body2'
+                  sx={{ fontWeight: 600, mt: 0.5, color: palette.primaryDark, display: 'inline-flex', alignItems: 'center', gap: 1 }}
+                >
+                  {tarea.estado && (
+                    <Chip
+                      label={tarea.estado}
+                      size='small'
+                      sx={{
+                        fontWeight: 600,
+                        letterSpacing: .4,
+                        bgcolor: tarea.estado === 'FINALIZADA' ? palette.accent : (tarea.estado === 'CANCELADA' ? palette.danger : palette.primary),
+                        color: '#fff'
+                      }}
+                    />
+                  )}
+                </Typography>
+                      <Typography variant='body2' sx={{ mt: 0.5, fontStyle: 'italic', color: palette.textMuted }}>
+                        {tarea.usuario && tarea.usuario.nombre ? tarea.usuario.nombre : 'Sin Estado'}
+                      </Typography>
+                      <Typography variant='body2' sx={{ mt: 0.5, fontStyle: 'italic', color: palette.textMuted }}>
+                        {tarea.descripcion ? tarea.descripcion : 'Sin Descripcion'}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ width: { lg: '100%' }, my: 1 }}>
+                      <form>
+                        <Select
+                          disabled={!(tarea.userID == user_id) || isSubmitting}
+                          variant='outlined'
+                          size='small'
+                          onChange={(e) => { setTarea({ ...tarea, estado: e.target.value }); setOpenModal(true); }}
+                          sx={{ width: '100%', mt: 1, bgcolor: 'white', borderRadius: 2, '& .MuiOutlinedInput-notchedOutline': { borderColor: palette.borderSubtle }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: palette.accent }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: palette.accent }, fontSize: '.85rem' }}
+                          value={getSelectValue(tarea)}
+                        >
+                          {estados.map((estado) => (
+                            <MenuItem key={estado.value} value={estado.value}>
+                              {estado.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </form>
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </Box>
+        ))}
+          <Fade in timeout={400}>
+            <Box sx={{ mt: 1 }}>{getButtons()}</Box>
+          </Fade>
       </Box>
     </MainLayout>
   );
