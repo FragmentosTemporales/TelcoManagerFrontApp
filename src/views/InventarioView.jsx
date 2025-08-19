@@ -14,11 +14,12 @@ import {
     Typography,
     CircularProgress,
 } from "@mui/material";
+import { BarChart } from '@mui/x-charts/BarChart';
 import SearchIcon from '@mui/icons-material/Search';
 import { useSelector } from "react-redux";
 import { MainLayout } from "./Layout";
 import { useEffect, useState } from "react";
-import { getTecnicos, avanzarTecnico } from "../api/inventarioAPI";
+import { getTecnicos, avanzarTecnico, getTecnicosStats } from "../api/inventarioAPI";
 
 export default function InventarioView() {
     const authState = useSelector((state) => state.auth);
@@ -30,6 +31,8 @@ export default function InventarioView() {
     const [mensaje, setMensaje] = useState("");
     const [alertSeverity, setAlertSeverity] = useState("info");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [statsUsers, setStatsUsers] = useState([]);
+    const [loadingStats, setLoadingStats] = useState(true);
 
     const [formSiguiente, setFormSiguiente] = useState({
         numDoc: null,
@@ -42,10 +45,6 @@ export default function InventarioView() {
     });
 
     const [dataFiltered, setDataFiltered] = useState([]);
-
-    useEffect(() => {
-        console.log(formSiguiente);
-    }, [formSiguiente]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -61,6 +60,19 @@ export default function InventarioView() {
             console.error(error);
         }
         setLoading(false);
+        fetchStats();
+    };
+
+    const fetchStats = async () => {
+        setLoadingStats(true);
+        try {
+            const res = await getTecnicosStats(token);
+            setStatsUsers(res);
+            console.log(res);
+        } catch (error) {
+            console.error(error);
+        }
+        setLoadingStats(false);
     };
 
     const generarAvance = async () => {
@@ -89,6 +101,79 @@ export default function InventarioView() {
         });
         setDataFiltered(filtered);
     };
+
+    const chartSetting = {
+            yAxis: [
+                {
+                    scaleType: 'band',
+                    dataKey: 'nombre',
+                },
+            ],
+            xAxis: [
+                {
+                    label: 'Total',
+                },
+            ],
+            margin: { left: 180, right: 50 },
+            height: 400,
+    };
+
+    const statsCard = () => (
+        <Box
+            sx={{
+                width: { lg: "70%", md: "90%", xs: "95%" },
+                overflow: "hidden",
+                backgroundColor: "white",
+                textAlign: "center",
+                my: 2,
+                py:2,
+                border: "2px solid #dfdeda",
+                borderRadius: 2,
+                display: "flex",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                flexDirection: "column",
+            }}
+        >
+            {loadingStats ? (
+                <Box sx={{ p: 2 }}>
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <BarChart
+                    dataset={statsUsers}
+                    grid={{ vertical: true, horizontal: true }}
+                    series={[{
+                        dataKey: 'total',
+                        label: 'Cantidad de técnicos por estación',
+                        color: '#2a5980', // color base más claro
+                        valueFormatter: (value, context) => {
+                            const item = context?.dataset?.[context.dataIndex];
+                            if (!item) return value;
+                            return `id: ${item.id} | nombre: ${item.nombre} | total: ${item.total}`;
+                        }
+                    }]}
+                    layout="horizontal"
+                    slotProps={{
+                        tooltip: {
+                            renderContent: (params) => {
+                                const item = params?.series?.[0]?.data?.[params.dataIndex];
+                                const d = item || (params?.series?.[0]?.context?.dataset?.[params.dataIndex]);
+                                if (!d) return null;
+                                return (
+                                    <Box sx={{ p: 1 }}>
+                                        <Typography variant="caption">id: {d.id}</Typography><br />
+                                        <Typography variant="caption">nombre: {d.nombre}</Typography><br />
+                                        <Typography variant="caption" fontWeight="bold">total: {d.total}</Typography>
+                                    </Box>
+                                );
+                            }
+                        }
+                    }}
+                    {...chartSetting}
+                />)}
+        </Box>
+    );
 
     const filterCard = () => (
         <Box
@@ -187,7 +272,7 @@ export default function InventarioView() {
                 </Typography>
 
                 <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-                    <Button variant="contained" sx={{backgroundColor: "#142a3d"}} onClick={generarAvance} disabled={isSubmitting}>
+                    <Button variant="contained" sx={{ backgroundColor: "#142a3d" }} onClick={generarAvance} disabled={isSubmitting}>
                         {isSubmitting ? "Procesando..." : "Confirmar"}
                     </Button>
                 </Box>
@@ -290,8 +375,22 @@ export default function InventarioView() {
                     {mensaje}
                 </Alert>
             )}
+                {statsCard()}
+                <Box
+                    sx={{
+                        width: { lg: "70%", md: "90%", xs: "95%" },
+                        display: "flex",
+                        flexDirection: "column",
+                        borderRadius: 2,
+                    }}
+                >
+                    <Button variant="contained" sx={{ backgroundColor: "#142a3d", width: "200px" }} onClick={() => fetchTecnicos()}>
+                        Actualizar
+                    </Button>
+                </Box>
                 {modalRender()}
                 {filterCard()}
+
                 {loading ? (
                     <Box
                         sx={{

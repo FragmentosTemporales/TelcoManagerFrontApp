@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Divider,
+  Modal,
   MenuItem,
   Rating,
   Select,
@@ -17,11 +18,13 @@ import {
   FormLabel,
   CircularProgress,
 } from "@mui/material";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getProyectosByArea, crearEstadoTarea, DeleteProyectoInterno } from "../api/proyectos_internos_api";
+import { getProyectosByArea, UpdateTarea, DeleteProyectoInterno } from "../api/proyectos_internos_api";
 import { MainLayout } from "./Layout";
 
 function ProyectoInternoView() {
@@ -36,16 +39,16 @@ function ProyectoInternoView() {
   const [pages, setPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [expandedProjects, setExpandedProjects] = useState({});
+  const [openModal, setOpenModal] = useState(false);
   const estados = [
     { value: "PENDIENTE", label: "PENDIENTE" },
     { value: "GESTIONANDO", label: "GESTIONANDO" },
     { value: "FINALIZADA", label: "FINALIZADA" },
     { value: "CANCELADA", label: "CANCELADA" },
   ];
-  const [estadoForm, setEstadoForm] = useState({
-    tarea_id: "",
-    descripcion: "",
-  });
+
+  const [tarea, setTarea] = useState({});
+
   const [localEstados, setLocalEstados] = useState({});
 
   const handleClose = () => {
@@ -81,11 +84,17 @@ function ProyectoInternoView() {
   };
 
   const handleEstadoChange = async (e) => {
+    const payload = {
+      titulo: tarea.titulo,
+      estado: tarea.estado,
+      descripcion: tarea.descripcion,
+      proyecto_id: tarea.proyecto_id,
+      userID: tarea.userID
+    }
     e.preventDefault();
     setIsSubmitting(true);
     try {
-
-      const response = await crearEstadoTarea(estadoForm, token);
+      await UpdateTarea(tarea.id, payload, token);
       setMessage("Estado de tarea actualizado correctamente");
       setAlertType("success");
       fetchData(); // Refresh data after updating estado
@@ -96,21 +105,73 @@ function ProyectoInternoView() {
     }
     setOpen(true);
     setIsSubmitting(false);
+    setOpenModal(false);
   };
 
-  const handleSelectChange = (tareaId, newValue) => {
-    // Update local state for immediate UI feedback
-    setLocalEstados(prev => ({
-      ...prev,
-      [tareaId]: newValue
-    }));
-
-    // Update form state for submission
-    setEstadoForm({
-      tarea_id: tareaId,
-      descripcion: newValue,
-    });
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
+
+    const getButtons = () => (
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Button
+                key="prev"
+                variant="contained"
+                onClick={() => handlePage(page - 1)}
+                disabled={page === 1}
+                sx={{ background: "#142a3d" }}
+            >
+                <ArrowBackIosIcon />
+            </Button>
+            <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
+                {page}
+            </Button>
+            <Button
+                key="next"
+                variant="contained"
+                onClick={() => handlePage(page + 1)}
+                disabled={page === pages}
+                sx={{ background: "#142a3d" }}
+            >
+                <ArrowForwardIosIcon />
+            </Button>
+        </Box>
+    );
+
+  const modalRender = () => (
+    <Modal
+      open={openModal}
+      onClose={handleCloseModal}
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+    >
+      <Box sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        height: "150px",
+        width: "600px",
+        bgcolor: "background.paper",
+        boxShadow: 24,
+        p: 4,
+      }}>
+        <Typography id="modal-title" variant="h6" component="h2">
+          ¿Desea modificar el estado de la tarea?
+        </Typography>
+        <Typography id="modal-description" sx={{ mt: 2 }}>
+          El nuevo estado será : {tarea.estado}
+        </Typography>
+
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+          <Button variant="contained" sx={{ backgroundColor: "#142a3d" }} onClick={handleEstadoChange} disabled={isSubmitting}>
+            {isSubmitting ? "Procesando..." : "Confirmar"}
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  )
+
 
   const getSelectValue = (tarea) => {
     // First check if there's a local state for this task
@@ -119,8 +180,8 @@ function ProyectoInternoView() {
     }
 
     // Otherwise, use the original state from the task
-    return tarea.estado_tarea && tarea.estado_tarea.length > 0
-      ? tarea.estado_tarea[tarea.estado_tarea.length - 1].descripcion
+    return tarea.estado
+      ? tarea.estado
       : "";
   };
 
@@ -197,7 +258,7 @@ function ProyectoInternoView() {
             <CircularProgress size={60} />
           </Box>
         )}
-
+        {modalRender()}
         {data && data.length > 0
           ? data.map((proyecto, index) => (
             <Box
@@ -249,9 +310,11 @@ function ProyectoInternoView() {
                   </Typography>
                   <Box>
                     <Button
+                      component={Link}
+                      to={`/modulo:crear-tarea-interna/${proyecto.id}`}
                       variant="contained"
                       sx={{ marginLeft: 1, marginBottom: 1, width: "200px", backgroundColor: "#142a3d" }}
-                      disabled
+                      disabled={!(proyecto.userID == user_id) || isSubmitting}
                     >
                       Gestionar Tareas
                     </Button>
@@ -359,10 +422,8 @@ function ProyectoInternoView() {
                             variant="body2"
                             sx={{ fontWeight: "bold", marginTop: 0.5 }}
                           >
-                            {tarea.estado_tarea && tarea.estado_tarea.length > 0
-                              ? tarea.estado_tarea[
-                                tarea.estado_tarea.length - 1
-                              ].descripcion
+                            {tarea.estado && tarea.estado
+                              ? tarea.estado
                               : "Sin Estado"}
                           </Typography>
                           <Typography
@@ -390,12 +451,15 @@ function ProyectoInternoView() {
                             marginY: 1,
                           }}
                         >
-                          <form onSubmit={handleEstadoChange}>
+                          <form>
                             <Select
                               disabled={!(tarea.userID == user_id) || isSubmitting}
                               variant="standard"
                               onChange={(e) => {
-                                handleSelectChange(tarea.id, e.target.value);
+                                //                                handleSelectChange(tarea.id, e.target.value);
+                                setTarea({ ...tarea, estado: e.target.value })
+                                setOpenModal(true);
+
                               }}
                               sx={{ width: "100%", marginTop: 1 }}
                               value={getSelectValue(tarea)}
@@ -409,19 +473,7 @@ function ProyectoInternoView() {
                                 </MenuItem>
                               ))}
                             </Select>
-                            <Button
-                              variant="contained"
-                              sx={{
-                                marginTop: 1,
-                                width: "100%",
-                                backgroundColor: "#142a3d",
-                              }}
-                              disabled={!(tarea.userID == user_id) || isSubmitting}
-                              type="submit"
-                              startIcon={isSubmitting ? <CircularProgress size={16} color="inherit" /> : null}
-                            >
-                              {isSubmitting ? "Actualizando..." : "Actualizar"}
-                            </Button>
+
                           </form>
                         </Box>
                       </Box>
@@ -431,6 +483,7 @@ function ProyectoInternoView() {
             </Box>
           ))
           : null}
+          {getButtons()}
       </Box>
     </MainLayout>
   );
