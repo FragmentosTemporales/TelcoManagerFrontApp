@@ -4,17 +4,21 @@ import {
   Button,
   InputLabel,
   TextField,
-  Typography,
   Paper,
-  Divider,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { createRegistroReparacion } from "../api/calidadAPI";
 import { MainLayout } from "./Layout";
 import { palette } from "../theme/palette";
+import ModuleHeader from "../components/ModuleHeader";
 
 function CreateReparacionView() {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const authState = useSelector((state) => state.auth);
   const { token, user_id } = authState;
   const [open, setOpen] = useState(false);
@@ -30,10 +34,7 @@ function CreateReparacionView() {
   });
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleFileChange = (e) => {
@@ -152,6 +153,11 @@ function CreateReparacionView() {
             {message}
           </Alert>
         )}
+        <ModuleHeader
+          title="Registro de Reparación"
+          subtitle="Crear nuevo registro fotográfico de reparación"
+          divider
+        />
         <Paper
           elevation={10}
           sx={{
@@ -170,20 +176,6 @@ function CreateReparacionView() {
               "0 12px 32px -12px rgba(0,0,0,0.38), 0 6px 12px -4px rgba(0,0,0,0.26)",
           }}
         >
-          <Typography
-            variant="h5"
-            sx={{
-              mb: 3.5,
-              fontWeight: 600,
-              color: palette.primary,
-              letterSpacing: 0.5,
-              textAlign: "center",
-              textShadow: "0 2px 4px rgba(0,0,0,0.15)",
-            }}
-          >
-            CREAR REGISTRO DE REPARACIÓN
-          </Typography>
-          <Divider sx={{ mb: 3, width: "100%", opacity: 0.5 }} />
           <form
             onSubmit={handleSubmit}
             style={{ width: "80%" }}

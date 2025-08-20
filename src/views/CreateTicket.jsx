@@ -30,6 +30,7 @@ import {
   sendTicketInfo,
 } from "../api/ticketeraAPI";
 import { MainLayout } from "./Layout";
+import ModuleHeader from "../components/ModuleHeader";
 
 function TicketeraView() {
   const authState = useSelector((state) => state.auth);
@@ -502,6 +503,12 @@ function TicketeraView() {
           {message}
         </Alert>
       )}
+
+      <ModuleHeader
+        title="Ticketera"
+        subtitle="Creación y seguimiento de tickets de soporte"
+        divider
+      />
 
   {!crear && tableView()}
   {crear && createCard()}

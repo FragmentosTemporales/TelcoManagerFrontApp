@@ -152,23 +152,23 @@ function LoadConstruccion() {
     <MainLayout showNavbar={true}>
       <Box
         sx={{
-          py: { xs: 4, md: 5 },
-          flex: 1,
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "flex-start",
+          pt: '70px', // offset navbar
+          width: '100%',
+          minHeight: '85vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
           background: gradient,
-          position: "relative",
-          "::before": {
+          position: 'relative',
+          overflow: 'hidden',
+          '::before': {
             content: '""',
-            position: "absolute",
+            position: 'absolute',
             inset: 0,
-            background:
-              "radial-gradient(circle at 18% 22%, rgba(255,255,255,0.10), transparent 60%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.08), transparent 65%)",
-            pointerEvents: "none",
-          },
+            background: 'radial-gradient(circle at 18% 22%, rgba(255,255,255,0.10), transparent 60%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.08), transparent 65%)',
+            pointerEvents: 'none'
+          }
         }}
       >
         {open && (
@@ -176,17 +176,23 @@ function LoadConstruccion() {
             onClose={handleClose}
             severity={alertType}
             sx={{
-              mb: 3,
-              width: "100%",
+              position: 'absolute',
+              top: 90,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '100%',
               maxWidth: 520,
               borderRadius: 2,
               boxShadow: 3,
+              zIndex: 2
             }}
           >
             {message}
           </Alert>
         )}
-        {componente_carga()}
+        <Box sx={{ position: 'relative', zIndex: 1 }}>
+          {componente_carga()}
+        </Box>
       </Box>
     </MainLayout>
   );

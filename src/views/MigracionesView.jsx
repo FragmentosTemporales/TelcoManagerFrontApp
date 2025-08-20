@@ -27,6 +27,7 @@ import {
 import extractDate, { extractDateOnly } from "../helpers/main";
 import { MainLayout } from "./Layout";
 import { palette } from "../theme/palette";
+import ModuleHeader from "../components/ModuleHeader";
 
 function MigracionesViewer() {
   const authState = useSelector((state) => state.auth);
@@ -61,6 +62,7 @@ function MigracionesViewer() {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchData();
   }, [page]);
 
@@ -314,6 +316,12 @@ function MigracionesViewer() {
             {message}
           </Alert>
         )}
+
+        <ModuleHeader
+          title="Migraciones Proactivas"
+          subtitle="Seguimiento y análisis de migraciones proactivas"
+          divider
+        />
 
         {is_loading ? (
           <Box

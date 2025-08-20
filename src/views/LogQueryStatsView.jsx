@@ -29,6 +29,7 @@ import { MainLayout } from "./Layout";
 import { extractDateOnly } from "../helpers/main";
 import { palette } from "../theme/palette";
 import RefreshIcon from '@mui/icons-material/Refresh';
+import ModuleHeader from "../components/ModuleHeader";
 
 function LogQueryStats() {
   const authState = useSelector((state) => state.auth);
@@ -210,8 +211,8 @@ function LogQueryStats() {
           }
         }}
       >
-        <Box sx={{ width: '90%', mb: 2.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant='h5' sx={{ fontWeight: 600, color: '#fff', letterSpacing: .5, textShadow: '0 2px 6px rgba(0,0,0,0.35)' }}>Monitoreo de Consultas</Typography>
+        <ModuleHeader title="Monitoreo de Consultas" subtitle="Estadísticas de consultas y rendimiento de endpoints" />
+        <Box sx={{ width: '90%', mb: 1.5, display: 'flex', justifyContent: 'flex-end' }}>
           <Tooltip title='Refrescar datos'>
             <span>
               <IconButton size='small' disabled={isSubmittingSemanal || isSubmittingTop || isSubmittingTime} onClick={async ()=> { await fetchLogQuerySemanal(); await fetchTopLogQuery(); await fetchQueryLogsTime(); if(selectedEndpoint) await fetchLogQueryTimeByEndpoint(selectedEndpoint);} } sx={{ color: '#fff', bgcolor: 'rgba(255,255,255,0.12)', '&:hover': { bgcolor: 'rgba(255,255,255,0.25)' } }}>
@@ -283,25 +284,7 @@ function LogQueryStats() {
                 {lineChartData()}
               </Box>
             </Box>
-            {logsDataTop.length > 0 && (
-              <Stack direction='row' spacing={1} flexWrap='wrap' sx={{ px: 2, pb: 2 }}>
-                {logsDataTop.slice(0,6).map(ep => (
-                  <Chip key={ep.id}
-                    size='small'
-                    clickable
-                    onClick={()=> setSelectedEndpoint(ep.endpoint)}
-                    label={ep.endpoint.split('/').pop() || ep.endpoint}
-                    sx={{
-                      fontWeight: 500,
-                      border: `1px solid ${palette.borderSubtle}`,
-                      bgcolor: selectedEndpoint === ep.endpoint ? palette.primary : palette.cardBg,
-                      color: selectedEndpoint === ep.endpoint ? '#fff' : palette.primary,
-                      '&:hover': { bgcolor: selectedEndpoint === ep.endpoint ? palette.primaryDark : palette.accentSoft }
-                    }}
-                  />
-                ))}
-              </Stack>
-            )}
+            {/* Chips de selección de endpoint removidos a petición del usuario */}
           </Box>
         ) : !isSubmittingSemanal &&
           logsDataSemanal &&
@@ -347,6 +330,7 @@ function LogQueryStats() {
                 border: `1px solid ${palette.borderSubtle}`,
                 boxShadow: '0 6px 20px -6px rgba(0,0,0,0.30)',
                 backdropFilter: 'blur(4px)',
+                overflow: 'hidden' // ensure header respects rounded corners
               }}
             >
               <TableContainer>

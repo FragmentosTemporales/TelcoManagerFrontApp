@@ -33,6 +33,7 @@ import { onLoad, onLoading, setMessage } from "../slices/solicitudSlice";
 import filterData from "../data/filterSolicitud";
 import { MainLayout } from "./Layout";
 import { palette } from "../theme/palette";
+import ModuleHeader from "../components/ModuleHeader";
 
 function Solicitudes() {
   const authState = useSelector((state) => state.auth);
@@ -478,6 +479,11 @@ function Solicitudes() {
             {message}
           </Alert>
         )}
+        <ModuleHeader
+          title="Solicitudes"
+          subtitle="Gestión y seguimiento de solicitudes de amonestación"
+          divider
+        />
         {filterCard()}
         {createNew()}
         {is_loading && !is_load ? (

@@ -32,6 +32,7 @@ import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
 import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
+import ModuleHeader from "../components/ModuleHeader";
 
 function AgendamientoViewer() {
   const authState = useSelector((state) => state.auth);
@@ -365,6 +366,11 @@ function AgendamientoViewer() {
         }}
       >
         <Box sx={{ width: "100%", maxWidth: 1350, mx: "auto" }}>
+          <ModuleHeader
+            title="Agendamientos"
+            subtitle="Gestión y seguimiento de órdenes agendadas"
+            divider
+          />
           {open && (
             <Alert
               severity={alertType}

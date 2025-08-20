@@ -23,6 +23,7 @@ import { Link } from "react-router-dom";
 import { getProyectosByArea, UpdateTarea, DeleteProyectoInterno } from "../api/proyectos_internos_api";
 import { palette } from "../theme/palette";
 import { MainLayout } from "./Layout";
+import ModuleHeader from "../components/ModuleHeader";
 
 function ProyectoInternoView() {
   const authState = useSelector((state) => state.auth);
@@ -246,24 +247,11 @@ function ProyectoInternoView() {
           </Alert>
         )}
 
-        <Box
-          sx={{
-            width: "95%",
-            background: palette.cardBg,
-            borderRadius: 3,
-            p: 2,
-            border: `1px solid ${palette.borderSubtle}`,
-            backdropFilter: 'blur(4px)',
-            boxShadow: "0 4px 18px -4px rgba(0,0,0,0.25)",
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: 600, textAlign: "center", color: palette.primary, letterSpacing: 0.4 }}
-          >
-            {area ? area.descri : "Cargando..."}
-          </Typography>
-        </Box>
+        <ModuleHeader
+          title={area ? area.descri : "Cargando..."}
+          subtitle="Gestión y seguimiento de proyectos internos"
+          divider
+        />
 
         <Box
           sx={{

@@ -38,6 +38,7 @@ import extractDate from "../helpers/main";
 import ReversaCharts from "../components/reversaCharts";
 import { MainLayout } from "./Layout";
 import { palette } from "../theme/palette";
+import ModuleHeader from "../components/ModuleHeader";
 
 function ReversaView() {
   const authState = useSelector((state) => state.auth);
@@ -95,6 +96,7 @@ function ReversaView() {
   );
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchTecnicos();
   }, []);
 
@@ -506,6 +508,12 @@ function ReversaView() {
     >
       {open && renderAlert()}
 
+      <ModuleHeader
+        title="Reversas"
+        subtitle="Consulta y actualización de reversas logísticas"
+        divider
+      />
+
       <Box
         sx={{
           width: { lg: "80%", md: "90%", xs: "100%" },
@@ -527,13 +535,6 @@ function ReversaView() {
           boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
         }}
       >
-        <Typography
-          variant="h5"
-          fontWeight="bold"
-          sx={{ textAlign: "center", mb: 4, color: palette.primary, letterSpacing: 0.4 }}
-        >
-          CONSULTA DE REVERSAS
-        </Typography>
         <form onSubmit={handleSubmit}>
           <Box
             sx={{

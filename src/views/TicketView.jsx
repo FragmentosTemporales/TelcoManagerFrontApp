@@ -10,6 +10,10 @@ import {
   Typography,
   CircularProgress,
   Tooltip,
+  Chip,
+  Fade,
+  Paper,
+  Stack,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -17,6 +21,7 @@ import { updateTicketEstado, getTicketInfo } from "../api/ticketeraAPI";
 import { useParams, Link } from "react-router-dom";
 import { fetchFileUrl } from "../api/downloadApi";
 import confetti from "canvas-confetti";
+import palette from "../theme/palette";
 
 function TicketViewer() {
   const authState = useSelector((state) => state.auth);
@@ -126,231 +131,100 @@ function TicketViewer() {
     }, 200);
   };
 
+  const LabelRow = ({ label, children }) => (
+    <Box sx={{
+      width: '95%',
+      display: 'flex',
+      flexDirection: { lg: 'row', md: 'column', xs: 'column' },
+      mb: 1.5,
+      pl: { xs: 1.5, sm: 2, lg: 2.5 },   // indent general
+      pr: { xs: 1, lg: 1.5 },
+      gap: { lg: 2, xs: 0.5 },           // espacio entre label y valor en layout stacked
+    }}>
+      <Typography
+        variant="subtitle2"
+        sx={{
+          width: { lg: '22%', md: '100%', xs: '100%' },
+          fontWeight: 600,
+          color: palette.primaryDark,
+          letterSpacing: .45,
+          pr: { lg: 3, xs: 0 },          // separación extra cuando es horizontal
+          mb: { lg: 0, md: 0.25, xs: 0.25 }
+        }}
+      >
+        {label}
+      </Typography>
+      <Typography
+        variant="body2"
+        sx={{
+          width: { lg: '78%', md: '100%', xs: '100%' },
+          color: palette.primaryDark,
+          lineHeight: 1.45,
+          position: 'relative',
+          '&:before': {
+            content: '""',
+            display: { lg: 'none', xs: 'block' }, // marcador sutil en móviles
+            position: 'absolute',
+            left: -8,
+            top: 8,
+            width: 4,
+            height: 4,
+            borderRadius: '50%',
+            background: palette.accent
+          }
+        }}
+      >
+        {children}
+      </Typography>
+    </Box>
+  );
+
   const TicketPreview = () => (
     <>
-      <>
-        <Typography
-          variant="h4"
-          fontWeight="bold"
-          sx={{
-            marginBottom: 2,
-            marginTop: 2,
-            justifyContent: "start",
-            width: "95%",
-            color: "#142a3d",
-          }}
-        >
-          DETALLES
-        </Typography>
-        <Divider sx={{ width: "95%", marginBottom: 2 }} />
-      </>
-      <Box
+      <Typography
+        variant="h5"
         sx={{
-          width: "95%",
-          display: "flex",
-          flexDirection: { lg: "row", md: "column", xs: "column" },
+          fontWeight: 600,
+          width: '95%',
+          mt: 2,
+          mb: 1.5,
+          letterSpacing: .8,
+          color: palette.primary,
+          textShadow: '0 2px 4px rgba(0,0,0,0.15)'
         }}
       >
-        <Typography
-          variant="h7"
-          fontWeight="bold"
-          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
-        >
-          CATEGORIA :
-        </Typography>
-        <Typography variant="h7" sx={{ width: "80%" }}>
-          {data.categoria ? data.categoria : "No disponible"}
-        </Typography>
-      </Box>
-      <Divider sx={{ width: "95%", margin: 2 }} />
-      <Box
-        sx={{
-          width: "95%",
-          display: "flex",
-          flexDirection: { lg: "row", md: "column", xs: "column" },
-        }}
-      >
-        <Typography
-          variant="h7"
-          fontWeight="bold"
-          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
-        >
-          TITULO :
-        </Typography>
-        <Typography variant="h7" sx={{ width: "80%" }}>
-          {data.titulo ? data.titulo : "No disponible"}
-        </Typography>
-      </Box>
-      <Divider sx={{ width: "95%", margin: 2 }} />
-      <Box
-        sx={{
-          width: "95%",
-          display: "flex",
-          flexDirection: { lg: "row", md: "column", xs: "column" },
-        }}
-      >
-        <Typography
-          variant="h7"
-          fontWeight="bold"
-          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
-        >
-          DESCRIPCION :
-        </Typography>
-        <Typography variant="h7" sx={{ width: "80%" }}>
-          {data.descripcion ? data.descripcion : "No disponible"}
-        </Typography>
-      </Box>
-      <Divider sx={{ width: "95%", margin: 2 }} />
-      <Box
-        sx={{
-          width: "95%",
-          display: "flex",
-          flexDirection: { lg: "row", md: "column", xs: "column" },
-        }}
-      >
-        <Typography
-          variant="h7"
-          fontWeight="bold"
-          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
-        >
-          SOLICITANTE :
-        </Typography>
-        <Typography variant="h7" sx={{ width: "80%" }}>
-          {data.solicitante ? data.solicitante : "No disponible"}
-        </Typography>
-      </Box>
-      <Divider sx={{ width: "95%", margin: 2 }} />{" "}
-      <Box
-        sx={{
-          width: "95%",
-          display: "flex",
-          flexDirection: { lg: "row", md: "column", xs: "column" },
-        }}
-      >
-        <Typography
-          variant="h7"
-          fontWeight="bold"
-          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
-        >
-          PRIORIDAD :
-        </Typography>
-        <Typography variant="h7" sx={{ width: "80%" }}>
-          {data.prioridad ? (
-            <Rating readOnly value={data.prioridad} max={3} />
-          ) : (
-            "No disponible"
-          )}
-        </Typography>
-      </Box>
-      <Divider sx={{ width: "95%", margin: 2 }} />{" "}
-      <Box
-        sx={{
-          width: "95%",
-          display: "flex",
-          flexDirection: { lg: "row", md: "column", xs: "column" },
-        }}
-      >
-        <Typography
-          variant="h7"
-          fontWeight="bold"
-          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
-        >
-          CREACION :
-        </Typography>
-        <Typography variant="h7" sx={{ width: "80%" }}>
-          {data.fecha_solicitud
-            ? extractDate(data.fecha_solicitud)
-            : "No disponible"}
-        </Typography>
-      </Box>
-      <Divider sx={{ width: "95%", margin: 2 }} />{" "}
-      <Box
-        sx={{
-          width: "95%",
-          display: "flex",
-          flexDirection: { lg: "row", md: "column", xs: "column" },
-        }}
-      >
-        <Typography
-          variant="h7"
-          fontWeight="bold"
-          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
-        >
-          ESTADO :
-        </Typography>
-        <Typography variant="h7" sx={{ width: "80%" }}>
-          {data.estado ? data.estado : "No disponible"}
-        </Typography>
-      </Box>
-      <Divider sx={{ width: "95%", margin: 2 }} />{" "}
-      <Box
-        sx={{
-          width: "95%",
-          display: "flex",
-          flexDirection: { lg: "row", md: "column", xs: "column" },
-        }}
-      >
-        <Typography
-          variant="h7"
-          fontWeight="bold"
-          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
-        >
-          COMENTARIOS :
-        </Typography>
-        <Typography variant="h7" sx={{ width: "80%" }}>
-          {data.comentario ? data.comentario : "No disponible"}
-        </Typography>
-      </Box>
-      <Divider sx={{ width: "95%", margin: 2 }} />{" "}
-      <Box
-        sx={{
-          width: "95%",
-          display: "flex",
-          flexDirection: { lg: "row", md: "column", xs: "column" },
-        }}
-      >
-        <Typography
-          variant="h7"
-          fontWeight="bold"
-          sx={{ width: { lg: "20%", md: "100%", xs: "100%" } }}
-        >
-          IMAGEN :
-        </Typography>{" "}
-        <Typography variant="h7" sx={{ width: "80%" }}>
+        Detalles del Ticket
+      </Typography>
+      <Divider sx={{ width: '95%', mb: 2, borderColor: palette.borderSubtle }} />
+      <Stack spacing={1.5} sx={{ width: '100%' }}>
+        <LabelRow label="CATEGORÍA:">{data.categoria || 'No disponible'}</LabelRow>
+        <LabelRow label="TÍTULO:">{data.titulo || 'No disponible'}</LabelRow>
+        <LabelRow label="DESCRIPCIÓN:">{data.descripcion || 'No disponible'}</LabelRow>
+        <LabelRow label="SOLICITANTE:">{data.solicitante || 'No disponible'}</LabelRow>
+        <LabelRow label="PRIORIDAD:">{data.prioridad ? <Rating readOnly value={data.prioridad} max={3} /> : 'No disponible'}</LabelRow>
+        <LabelRow label="CREACIÓN:">{data.fecha_solicitud ? extractDate(data.fecha_solicitud) : 'No disponible'}</LabelRow>
+        <LabelRow label="ESTADO:">{data.estado ? <Chip size="small" label={data.estado} sx={{ fontSize: '11px', fontWeight: 600, letterSpacing: .5, bgcolor: palette.accent, color: palette.primaryDark }} /> : 'No disponible'}</LabelRow>
+        <LabelRow label="COMENTARIOS:">{data.comentario || 'No disponible'}</LabelRow>
+        <LabelRow label="IMAGEN:">
           {respaldo && !loading ? (
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              <Tooltip title="Ver imagen" placement="top">
-                <a href={respaldo} target="_blank" rel="noopener noreferrer">
-                  <img
-                    src={respaldo}
-                    alt="Imagen del ticket"
-                    style={{
-                      maxHeight: "400px",
-                      maxWidth: "450px",
-                      cursor: "pointer",
-                    }}
-                  />
-                </a>
-              </Tooltip>
-            </Typography>
+            <Tooltip title="Ver imagen" placement="top">
+              <a href={respaldo} target="_blank" rel="noopener noreferrer">
+                <img
+                  src={respaldo}
+                  alt="Imagen del ticket"
+                  style={{ maxHeight: 260, maxWidth: 400, cursor: 'pointer', borderRadius: 8, boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)' }}
+                />
+              </a>
+            </Tooltip>
           ) : loading ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100px",
-              }}
-            >
-              <CircularProgress />
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', height: 100 }}>
+              <CircularProgress size={32} />
             </Box>
           ) : (
-            <Typography variant="h7" sx={{ width: "80%" }}>
-              Sin documento
-            </Typography>
+            'Sin documento'
           )}
-        </Typography>
-      </Box>
+        </LabelRow>
+      </Stack>
     </>
   );
 
@@ -411,13 +285,22 @@ function TicketViewer() {
   return (
     <Box
       sx={{
-        paddingTop: 2,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#f5f5f5",
-        minHeight: "90vh",
+        position: 'relative',
+        pt: 10,
+        pb: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        background: palette.bgGradient,
+        minHeight: '90vh',
+        overflow: 'hidden',
+        '::before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(circle at 18% 25%, rgba(255,255,255,0.09), transparent 60%), radial-gradient(circle at 82% 70%, rgba(255,255,255,0.07), transparent 65%)',
+          pointerEvents: 'none'
+        }
       }}
     >
       <Box
@@ -440,11 +323,15 @@ function TicketViewer() {
           <Button
             variant="contained"
             sx={{
-              width: "200px",
-              marginBottom: 2,
-              backgroundColor: "#142a3d",
-              borderRadius: 2,
-              fontWeight: "bold",
+              width: 200,
+              mb: 2,
+              background: `linear-gradient(135deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+              borderRadius: 2.5,
+              fontWeight: 600,
+              letterSpacing: .6,
+              boxShadow: '0 6px 16px -4px rgba(0,0,0,0.45)',
+              textShadow: '0 1px 2px rgba(0,0,0,0.25)',
+              '&:hover': { background: `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 100%)` }
             }}
           >
             VOLVER
@@ -452,26 +339,30 @@ function TicketViewer() {
         </Box>
       </Box>
       {open && (
-        <Alert
-          onClose={handleClose}
-          severity={alertType}
-          sx={{ width: "80%", marginBottom: 2 }}
-        >
-          {message}
-        </Alert>
+        <Fade in={open}>
+          <Alert
+            onClose={handleClose}
+            severity={alertType}
+            sx={{ width: "80%", mb: 2, boxShadow: '0 6px 16px -4px rgba(0,0,0,0.3)' }}
+          >
+            {message}
+          </Alert>
+        </Fade>
       )}
       {isSubmitting ? (
         <Box
           sx={{
-            backgroundColor: "white",
-            height: "30vh",
-            width: "80%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            border: "2px solid #dfdeda",
-            borderRadius: 2,
+            background: 'rgba(255,255,255,0.92)',
+            height: '30vh',
+            width: '80%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            border: `1px solid ${palette.borderSubtle}`,
+            borderRadius: 3,
+            boxShadow: '0 10px 28px -8px rgba(0,0,0,0.45)',
+            backdropFilter: 'blur(6px) saturate(160%)'
           }}
         >
           <Typography variant="h5" sx={{ marginBottom: 4, color: "#142a3d" }}>
@@ -480,34 +371,57 @@ function TicketViewer() {
           <CircularProgress />
         </Box>
       ) : (
-        <Box
+        <Paper
+          elevation={12}
           sx={{
-            backgroundColor: "white",
-            width: "80%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            height: "100%",
-            paddingBottom: 4,
-            borderRadius: 2,
-            border: "2px solid #dfdeda",
+            width: '80%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            pb: 4,
+            pt: 1,
+            background: 'rgba(255,255,255,0.92)',
+            borderRadius: 3,
+            border: `1px solid ${palette.borderSubtle}`,
+            backdropFilter: 'blur(6px) saturate(160%)',
+            boxShadow: '0 10px 28px -6px rgba(0,0,0,0.40)',
+            position: 'relative',
+            overflow: 'hidden',
+            '&:before': {
+              content: '""',
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 65%)',
+              pointerEvents: 'none'
+            }
           }}
         >
           {TicketPreview()}
-        </Box>
+        </Paper>
       )}
       {area && area.areaID == 7 && (
-        <Box
+        <Paper
+          elevation={10}
           sx={{
-            width: "80%",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 2,
-            backgroundColor: "#fff",
-            marginBottom: 4,
-            borderRadius: 2,
-            border: "2px solid #dfdeda",
+            width: '80%',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            mt: 3,
+            mb: 5,
+            background: 'rgba(255,255,255,0.94)',
+            borderRadius: 3,
+            border: `1px solid ${palette.borderSubtle}`,
+            backdropFilter: 'blur(6px) saturate(160%)',
+            position: 'relative',
+            overflow: 'hidden',
+            '&:before': {
+              content: '""',
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 70%)',
+              pointerEvents: 'none'
+            }
           }}
         >
           <Box
@@ -519,20 +433,10 @@ function TicketViewer() {
               alignItems: "center",
             }}
           >
-            <Typography
-              variant="h4"
-              fontWeight="bold"
-              sx={{
-                marginBottom: 2,
-                marginTop: 2,
-                justifyContent: "start",
-                width: "95%",
-                color: "#142a3d",
-              }}
-            >
-              GESTIONAR TICKET
+            <Typography variant="h5" sx={{ fontWeight: 600, mb: 1.5, mt: 2, width: '95%', letterSpacing: .7, color: palette.primary }}>
+              Gestionar Ticket
             </Typography>
-            <Divider sx={{ width: "95%", marginBottom: 2 }} />
+            <Divider sx={{ width: '95%', mb: 2, borderColor: palette.borderSubtle }} />
             <Box
               sx={{
                 width: "95%",
@@ -551,6 +455,12 @@ function TicketViewer() {
                 sx={{
                   width: { lg: "40%", md: "90%", xs: "90%" },
                   marginBottom: 2,
+                  background: palette.accentSoft,
+                  px: 1,
+                  borderRadius: 1,
+                  boxShadow: 'inset 0 0 0 1px '+palette.borderSubtle,
+                  '&:before, &:after': { borderBottomColor: palette.primaryDark+' !important' },
+                  '&:hover': { background: '#f0faff' }
                 }}
               >
                 {optionSelect.map((option) => (
@@ -571,6 +481,11 @@ function TicketViewer() {
                 sx={{
                   width: { lg: "90%", md: "90%", xs: "90%" },
                   marginBottom: 2,
+                  background: 'rgba(255,255,255,0.6)',
+                  px: 1,
+                  borderRadius: 1,
+                  boxShadow: 'inset 0 0 0 1px '+palette.borderSubtle,
+                  '& .MuiInputBase-root': { fontSize: '0.85rem' }
                 }}
                 multiline
                 rows={4}
@@ -590,11 +505,17 @@ function TicketViewer() {
                     handleUpdate();
                   }}
                   sx={{
-                    background: "#142a3d",
-                    color: "white",
-                    fontWeight: "bold",
+                    background: `linear-gradient(135deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+                    color: 'white',
+                    fontWeight: 600,
+                    letterSpacing: .6,
                     width: { lg: "40%", md: "90%", xs: "90%" },
-                    borderRadius: 2,
+                    borderRadius: 2.5,
+                    textShadow: '0 1px 2px rgba(0,0,0,0.25)',
+                    boxShadow: '0 6px 16px -4px rgba(0,0,0,0.45)',
+                    transition: 'all .35s',
+                    '&:hover': { background: `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 100%)` },
+                    '&:active': { transform: 'translateY(2px)' }
                   }}
                 >
                   {isSubmitting ? "Cargando..." : "ACTUALIZAR ESTADO"}
@@ -602,7 +523,7 @@ function TicketViewer() {
               </Box>
             </Box>
           </Box>
-        </Box>
+        </Paper>
       )}
     </Box>
   );

@@ -21,6 +21,7 @@ import { useParams, Link } from "react-router-dom";
 import { fetchFileUrl } from "../api/downloadApi";
 import { CalidadLayout } from "./Layout";
 import { palette } from "../theme/palette";
+import ModuleHeader from "../components/ModuleHeader";
 
 function ReparacionesView() {
     const authState = useSelector((state) => state.auth);
@@ -169,6 +170,7 @@ function ReparacionesView() {
     );
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         fetchData();
     }, [page]);
 
@@ -210,6 +212,11 @@ function ReparacionesView() {
                         {message}
                     </Alert>
                 )}
+                                <ModuleHeader
+                                    title="Registros de Reparaciones"
+                                    subtitle="Listado y seguimiento de reparaciones registradas"
+                                    divider
+                                />
                 {loading ? (
                     <Paper
                         elevation={8}
@@ -227,8 +234,8 @@ function ReparacionesView() {
                             boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
                         }}
                     >
-                        <Typography variant="h5" sx={{ mb: 4, color: palette.primary, fontWeight: 600 }}>
-                            Cargando los recursos...
+                        <Typography variant="h6" sx={{ mb: 3, color: palette.primary, fontWeight: 600 }}>
+                            Cargando recursos...
                         </Typography>
                         <CircularProgress />
                     </Paper>

@@ -23,6 +23,7 @@ import { MainLayout } from "./Layout";
 import { useEffect, useState } from "react";
 import { getTecnicos, avanzarTecnico, getTecnicosStats } from "../api/inventarioAPI";
 import { palette } from "../theme/palette";
+import ModuleHeader from "../components/ModuleHeader";
 
 export default function InventarioView() {
     const authState = useSelector((state) => state.auth);
@@ -406,7 +407,12 @@ export default function InventarioView() {
                         pointerEvents: 'none'
                     }
                 }}
-            >      {open && (
+            >
+                <ModuleHeader
+                    title="Gestión Inventario"
+                    subtitle="Gestiona lista de asistentes a inventario."
+                />
+            {open && (
                 <Alert
                     onClose={handleClose}
                     severity={alertSeverity}

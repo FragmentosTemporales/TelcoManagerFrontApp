@@ -34,6 +34,7 @@ import {
 import { Link } from "react-router-dom";
 import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
+import ModuleHeader from "../components/ModuleHeader";
 
 function FormAstList() {
   const authState = useSelector((state) => state.auth);
@@ -708,6 +709,11 @@ function FormAstList() {
           },
         }}
       >
+        <ModuleHeader
+          title="Formularios AST"
+          subtitle="Listado, filtros y estadísticas de AST"
+          divider
+        />
         {statsCard()}
         {filterCard()}
         {downloadExcel()}

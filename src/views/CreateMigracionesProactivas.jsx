@@ -21,6 +21,7 @@ import {
 import { MigracionLayout } from "./Layout";
 import { palette } from "../theme/palette";
 import { onClear } from "../slices/migracionSlice";
+import ModuleHeader from "../components/ModuleHeader";
 
 export default function CreateMigracionesProactivas() {
   const authState = useSelector((state) => state.auth);
@@ -290,6 +291,11 @@ const setEstadoOpciones = () => {
           }
         }}
       >
+        <ModuleHeader
+          title="Migraciones Proactivas"
+          subtitle="Búsqueda, carga y creación de migraciones proactivas"
+          divider
+        />
 
         {open && (
           <Alert
