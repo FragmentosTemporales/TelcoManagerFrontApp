@@ -1,15 +1,9 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, CardHeader, Grid, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getNumeros } from "../api/totemAPI";
 import { playAlertSound } from "../helpers/sounds";
+import palette from "../theme/palette";
+import React from "react";
 
 function BodegaViewer() {
   const [dataBodega, setDataBodega] = useState([]);
@@ -19,7 +13,37 @@ function BodegaViewer() {
   const [esperaBodega, setEsperaBodega] = useState([]);
   const [esperaLogistica, setEsperaLogistica] = useState([]);
 
-  const estilo = { fontSize: "1rem", paddingY: "5px" };
+  const estilo = { fontSize: '1rem', paddingY: '5px' };
+
+  // shared styles
+  const glassCard = {
+    borderRadius: 3,
+    overflow: 'hidden',
+    m: 1,
+    border: `1px solid ${palette.borderSubtle}`,
+    background: palette.cardBg,
+    backdropFilter: 'blur(10px)',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.25)'
+  };
+  const headerSx = {
+    background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`,
+    color: '#fff',
+    textAlign: 'center',
+    py: 1
+  };
+  const personPaper = {
+    p: '10px',
+    m: '10px auto',
+    background: 'rgba(255,255,255,0.55)',
+    backdropFilter: 'blur(6px)',
+    border: `1px solid ${palette.borderSubtle}`,
+    transition: 'transform .25s, box-shadow .25s, background .3s',
+    '&:hover': {
+      transform: 'translateY(-3px)',
+      boxShadow: '0 6px 18px rgba(0,0,0,0.25)',
+      background: 'rgba(255,255,255,0.75)'
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -38,9 +62,7 @@ function BodegaViewer() {
     }
   };
 
-  const set_interval = () => {
-    return (esperaBodega.length > 0 && esperaLogistica.length > 0) ? 7000 : 15000;
-  }
+  const set_interval = () => (esperaBodega.length > 0 && esperaLogistica.length > 0 ? 7000 : 15000);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -71,233 +93,32 @@ function BodegaViewer() {
   }, [dataLogistica]);
 
   const verificarAtencion = (data, flag) => {
+    if (data.length === 0) return;
     if (flag === 1) {
-      if (
-        JSON.stringify(atencionBodega) !== JSON.stringify(data) &&
-        JSON.stringify(data).length > 0
-      ) {
-        playAlertSound();
-      }
+      if (JSON.stringify(atencionBodega) !== JSON.stringify(data)) playAlertSound();
     } else if (flag === 2) {
-      if (
-        JSON.stringify(atencionLogistica) !== JSON.stringify(data) &&
-        JSON.stringify(data).length > 0
-      ) {
-        playAlertSound();
-      }
+      if (JSON.stringify(atencionLogistica) !== JSON.stringify(data)) playAlertSound();
     }
   };
 
-  const AtencionBodegaCard = ({ atencionBodega }) => (
-    <Card
-      sx={{
-        borderRadius: 2,
-        overflow: "hidden",
-        m: 1,
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography
-            variant="h6"
-          >
-            EN ATENCIÓN BODEGA
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "center",
-          padding: "8px",
-        }}
-      />
+  const AtencionBodegaCard = ({ atencion }) => (
+    <Card sx={glassCard}>
+      <CardHeader title={<Typography variant="h6">EN ATENCIÓN BODEGA</Typography>} sx={headerSx} />
       <CardContent>
-        {atencionBodega && atencionBodega.length > 0 ? (
-          <Grid container spacing={2}>
-            {/* Primera columna */}
-            <Grid item xs={12}>
-              {atencionBodega
-                .map((item, index) => (
-                  <Paper
-                    elevation={2}
-                    key={`col1-${index}`}
-                    sx={{
-                      padding: "10px",
-                      margin: "10px auto",
-                      backgroundColor: "#f9f9f9",
-                    }}
-                  >
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} sx={{ display: 'flex' }}>
-                        <Grid item xs={3}>
-                          <Typography
-                            variant="body2"
-                            color="text.primary"
-                            sx={{
-                              fontSize: "2rem",
-                              paddingTop: "1px",
-                              paddingBot: "1px",
-                              textAlign: "center",
-                              height: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}
-                          >
-                            N° {item.Numero}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={9}>
-                          <Typography
-                            variant="body2"
-                            color="text.primary"
-                            sx={{
-                              fontSize: "2rem",
-                              paddingTop: "3px",
-                              paddingBot: "3px",
-                              textAlign: "center",
-                            }}
-                          >
-                            {item.nombre}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{
-                              fontSize: "1rem",
-                              paddingTop: "3px",
-                              paddingBot: "3px",
-                              textAlign: "center",
-                            }}
-                          >
-                            Proceso: {item.Proceso}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{
-                              fontSize: "1rem",
-                              paddingTop: "3px",
-                              paddingBot: "3px",
-                              textAlign: "center",
-                            }}
-                          >
-                            Atiende: {item.Atendedor}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                ))}
-            </Grid>
-          </Grid>
-        ) : (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ fontSize: "1rem" }}
-          >
-            No hay personas en atención
-          </Typography>
-        )}
-      </CardContent>
-    </Card>
-  );
-
-  const AtencionLogisticaCard = ({ atencionLogistica }) => (
-    <Card
-      sx={{
-        borderRadius: 2,
-        overflow: "hidden",
-        m: 1,
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography
-            variant="h6"
-          >
-            EN ATENCIÓN LOGÍSTICA
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "center",
-          padding: "8px",
-        }}
-      />
-      <CardContent>
-        {atencionLogistica && atencionLogistica.length > 0 ? (
+        {atencion && atencion.length > 0 ? (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              {atencionLogistica.map((item, index) => (
-                <Paper
-                  elevation={2}
-                  key={`col1-${index}`}
-                  sx={{
-                    padding: "10px",
-                    margin: "10px auto",
-                    backgroundColor: "#f9f9f9",
-                  }}
-                >
+              {atencion.map((item, index) => (
+                <Paper elevation={0} key={`ab-${index}`} sx={personPaper}>
                   <Grid container spacing={1}>
                     <Grid item xs={12} sx={{ display: 'flex' }}>
                       <Grid item xs={3}>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={{
-                            fontSize: "2rem",
-                            paddingTop: "1px",
-                            paddingBot: "1px",
-                            textAlign: "center",
-                            height: '100%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}
-                        >
-                          N° {item.Numero}
-                        </Typography>
+                        <Typography variant="body2" color="text.primary" sx={{ fontSize: '2rem', textAlign: 'center', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>N° {item.Numero}</Typography>
                       </Grid>
                       <Grid item xs={9}>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={{
-                            fontSize: "2rem",
-                            paddingTop: "3px",
-                            paddingBot: "3px",
-                            textAlign: "center",
-                          }}
-                        >
-                          {item.nombre}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{
-                            fontSize: "1rem",
-                            paddingTop: "3px",
-                            paddingBot: "3px",
-                            textAlign: "center",
-                          }}
-                        >
-                          Proceso: {item.Proceso}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{
-                            fontSize: "1rem",
-                            paddingTop: "3px",
-                            paddingBot: "3px",
-                            textAlign: "center",
-                          }}
-                        >
-                          Atiende: {item.Atendedor}
-                        </Typography>
+                        <Typography variant="body2" color="text.primary" sx={{ fontSize: '2rem', textAlign: 'center' }}>{item.nombre}</Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem', textAlign: 'center' }}>Proceso: {item.Proceso}</Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem', textAlign: 'center' }}>Atiende: {item.Atendedor}</Typography>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -306,380 +127,106 @@ function BodegaViewer() {
             </Grid>
           </Grid>
         ) : (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ fontSize: "1rem" }}
-          >
-            No hay personas en atención
-          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem' }}>No hay personas en atención</Typography>
         )}
       </CardContent>
     </Card>
   );
 
-  const EsperaBodegaCard = ({ esperaBodega }) => (
-    <Card
-      sx={{
-        borderRadius: 2,
-        overflow: "hidden",
-        m: 1,
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography
-            variant="h6"
-          >
-            EN ESPERA BODEGA
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "center",
-          padding: "8px",
-        }}
-      />
+  const AtencionLogisticaCard = ({ atencion }) => (
+    <Card sx={glassCard}>
+      <CardHeader title={<Typography variant="h6">EN ATENCIÓN LOGÍSTICA</Typography>} sx={headerSx} />
       <CardContent>
-        {esperaBodega && esperaBodega.length > 0 ? (
+        {atencion && atencion.length > 0 ? (
           <Grid container spacing={2}>
-            {/* Primera columna */}
-            <Grid item xs={6}>
-              {esperaBodega
-                .filter((_, index) => index % 2 === 0) // Filtra los elementos en posiciones pares para la columna izquierda
-                .map((item, index) => (
-                  <Paper
-                    elevation={2}
-                    key={`col1-${index}`}
-                    sx={{
-                      padding: "10px",
-                      margin: "10px auto",
-                      backgroundColor: "#f9f9f9",
-                    }}
-                  >
-                    <Grid container spacing={1}>
-                      <Grid item xs={4}>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Proceso:
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Número:
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Nombre:
-                        </Typography>
+            <Grid item xs={12}>
+              {atencion.map((item, index) => (
+                <Paper elevation={0} key={`al-${index}`} sx={personPaper}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} sx={{ display: 'flex' }}>
+                      <Grid item xs={3}>
+                        <Typography variant="body2" color="text.primary" sx={{ fontSize: '2rem', textAlign: 'center', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>N° {item.Numero}</Typography>
                       </Grid>
-                      <Grid item xs={8}>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.Proceso}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.Numero}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.nombre}
-                        </Typography>
+                      <Grid item xs={9}>
+                        <Typography variant="body2" color="text.primary" sx={{ fontSize: '2rem', textAlign: 'center' }}>{item.nombre}</Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem', textAlign: 'center' }}>Proceso: {item.Proceso}</Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem', textAlign: 'center' }}>Atiende: {item.Atendedor}</Typography>
                       </Grid>
                     </Grid>
-                  </Paper>
-                ))}
-            </Grid>
-            {/* Segunda columna */}
-            <Grid item xs={6}>
-              {esperaBodega
-                .filter((_, index) => index % 2 !== 0) // Filtra los elementos en posiciones impares para la columna derecha
-                .map((item, index) => (
-                  <Paper
-                    elevation={2}
-                    key={`col2-${index}`}
-                    sx={{
-                      padding: "10px",
-                      margin: "10px auto",
-                      backgroundColor: "#f9f9f9",
-                    }}
-                  >
-                    <Grid container spacing={1}>
-                      <Grid item xs={4}>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Proceso:
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Número:
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Nombre:
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={8}>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.Proceso}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.Numero}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.nombre}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                ))}
+                  </Grid>
+                </Paper>
+              ))}
             </Grid>
           </Grid>
         ) : (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ fontSize: "1rem" }}
-          >
-            No hay personas en espera
-          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem' }}>No hay personas en atención</Typography>
         )}
       </CardContent>
     </Card>
   );
 
-  const EsperaLogisticaCard = ({ esperaLogistica }) => (
-    <Card
-      sx={{
-        borderRadius: 2,
-        overflow: "hidden",
-        m: 1,
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography
-            variant="h6"
-          >
-            EN ESPERA LOGÍSTICA
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "center",
-          padding: "8px",
-        }}
-      />
+  const EsperaCard = ({ data, title }) => (
+    <Card sx={glassCard}>
+      <CardHeader title={<Typography variant="h6">{title}</Typography>} sx={headerSx} />
       <CardContent>
-        {esperaLogistica && esperaLogistica.length > 0 ? (
+        {data && data.length > 0 ? (
           <Grid container spacing={2}>
-            {/* Primera columna */}
             <Grid item xs={6}>
-              {esperaLogistica
-                .filter((_, index) => index % 2 === 0) // Filtra los elementos en posiciones pares para la columna izquierda
-                .map((item, index) => (
-                  <Paper
-                    elevation={2}
-                    key={`col1-${index}`}
-                    sx={{
-                      padding: "10px",
-                      margin: "10px auto",
-                      backgroundColor: "#f9f9f9",
-                    }}
-                  >
-                    <Grid container spacing={1}>
-                      <Grid item xs={4}>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Proceso:
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Número:
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Nombre:
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={8}>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.Proceso}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.Numero}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.nombre}
-                        </Typography>
-                      </Grid>
+              {data.filter((_, i) => i % 2 === 0).map((item, idx) => (
+                <Paper elevation={0} key={`e1-${idx}`} sx={personPaper}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={4}>
+                      <Typography variant="body2" color="text.secondary" sx={estilo}>Proceso:</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={estilo}>Número:</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={estilo}>Nombre:</Typography>
                     </Grid>
-                  </Paper>
-                ))}
+                    <Grid item xs={8}>
+                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.Proceso}</Typography>
+                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.Numero}</Typography>
+                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.nombre}</Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              ))}
             </Grid>
-            {/* Segunda columna */}
             <Grid item xs={6}>
-              {esperaLogistica
-                .filter((_, index) => index % 2 !== 0) // Filtra los elementos en posiciones impares para la columna derecha
-                .map((item, index) => (
-                  <Paper
-                    elevation={2}
-                    key={`col2-${index}`}
-                    sx={{
-                      padding: "10px",
-                      margin: "10px auto",
-                      backgroundColor: "#f9f9f9",
-                    }}
-                  >
-                    <Grid container spacing={1}>
-                      <Grid item xs={4}>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Proceso:
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Número:
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={estilo}
-                        >
-                          Nombre:
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={8}>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.Proceso}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.Numero}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.primary"
-                          sx={estilo}
-                        >
-                          {item.nombre}
-                        </Typography>
-                      </Grid>
+              {data.filter((_, i) => i % 2 !== 0).map((item, idx) => (
+                <Paper elevation={0} key={`e2-${idx}`} sx={personPaper}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={4}>
+                      <Typography variant="body2" color="text.secondary" sx={estilo}>Proceso:</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={estilo}>Número:</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={estilo}>Nombre:</Typography>
                     </Grid>
-                  </Paper>
-                ))}
+                    <Grid item xs={8}>
+                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.Proceso}</Typography>
+                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.Numero}</Typography>
+                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.nombre}</Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              ))}
             </Grid>
           </Grid>
         ) : (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ fontSize: "1rem" }}
-          >
-            No hay personas en espera
-          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem' }}>No hay personas en espera</Typography>
         )}
       </CardContent>
     </Card>
   );
+
+  const EsperaLogisticaCard = null; // legacy removed
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        background: "#f5f5f5",
-        alignItems: "center",
-        paddingY: "40px",
-        minHeight: "90vh",
-      }}
-    >
-      <Box
-        sx={{ display: "flex", justifyContent: "space-evenly", width: "100%" }}
-      >
-        <CardContent sx={{ width: "100%" }}>
-          <AtencionLogisticaCard atencionLogistica={atencionLogistica} />
-          <EsperaLogisticaCard esperaLogistica={esperaLogistica} />
+    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', py: 6, minHeight: '90vh', background: palette.bgGradient, position: 'relative', '::before': { content: '""', position: 'absolute', inset: 0, background: 'radial-gradient(circle at 18% 22%, rgba(255,255,255,0.09), transparent 60%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.07), transparent 65%)', pointerEvents: 'none' } }}>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-evenly', width: '100%', gap: 2, px: 2 }}>
+        <CardContent sx={{ width: '100%' }}>
+          <AtencionLogisticaCard atencion={atencionLogistica} />
+          <EsperaCard data={esperaLogistica} title="EN ESPERA LOGÍSTICA" />
         </CardContent>
-        <CardContent sx={{ width: "100%" }}>
-          <AtencionBodegaCard atencionBodega={atencionBodega} />
-          <EsperaBodegaCard esperaBodega={esperaBodega} />
+        <CardContent sx={{ width: '100%' }}>
+          <AtencionBodegaCard atencion={atencionBodega} />
+          <EsperaCard data={esperaBodega} title="EN ESPERA BODEGA" />
         </CardContent>
       </Box>
     </Box>

@@ -1,16 +1,4 @@
-import {
-  Alert,
-  Autocomplete,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  InputLabel,
-  Skeleton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Autocomplete, Box, Button, Skeleton, TextField, Typography } from "@mui/material";
 import FeedIcon from "@mui/icons-material/Feed";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -38,6 +26,7 @@ import {
 import { getPersona } from "../api/personaAPI";
 
 import { onLoad, onLoading, setMessage } from "../slices/solicitudSlice";
+import palette from "../theme/palette";
 
 function FormSolicitud() {
   const authState = useSelector((state) => state.auth);
@@ -291,167 +280,124 @@ function FormSolicitud() {
     }
   }, [data]);
 
+  const gradientBtn = {
+    background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 100%)`,
+    color: '#fff',
+    textTransform: 'none',
+    fontWeight: 600,
+    fontSize: 15,
+    letterSpacing: 0.3,
+    px: 3,
+    py: 1.2,
+    borderRadius: 3,
+    boxShadow: '0 6px 18px rgba(0,0,0,0.18)',
+    '&:hover': {
+      background: `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 100%)`,
+      boxShadow: '0 10px 28px rgba(0,0,0,0.28)'
+    }
+  };
+
+  const fieldBox = { mb: 2, '& .MuiInputLabel-root': { fontWeight: 600 } };
+
+  const cardSx = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: { xs: '95%', sm: '80%', md: '60%' },
+    px: { xs: 3, md: 6 },
+    py: 5,
+    border: `1px solid ${palette.borderSubtle}`,
+    background: palette.cardBg,
+    backdropFilter: 'blur(10px)',
+    borderRadius: 4,
+    boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+    position: 'relative',
+    overflow: 'hidden'
+  };
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100%",
-        width: "100%",
-        paddingTop: 2,
-        paddingBottom: 2,
-        backgroundColor: "#f5f5f5",
-      }}
-    >
+    <Box sx={{ position: 'relative', minHeight: '40vh', width: '100%', py: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', background: palette.bgGradient }}>
+      {/* decorative overlays */}
+      <Box sx={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+        <Box sx={{ position: 'absolute', top: -120, left: -80, width: 300, height: 300, borderRadius: '50%', background: `${palette.accent}22`, filter: 'blur(80px)' }} />
+        <Box sx={{ position: 'absolute', bottom: -140, right: -100, width: 360, height: 360, borderRadius: '50%', background: `${palette.primary}1f`, filter: 'blur(90px)' }} />
+      </Box>
+
       {open && (
-        <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
+        <Alert onClose={handleClose} severity="info" sx={{ mb: 3, fontWeight: 500, backdropFilter: 'blur(6px)', background: `${palette.cardBg}aa`, border: `1px solid ${palette.borderSubtle}` }}>
           {message}
         </Alert>
       )}
+
       {isLoading ? (
-        <Box
-          sx={{
-            width: "50%",
-            minHeight: "400px",
-            backgroundColor: "#fff",
-            borderRadius: 2,
-            border: "2px solid #dfdeda",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <Skeleton
-            variant="rectangular"
-            animation="wave"
-            sx={{ width: "90%", height: "90%" }}
-          />
+        <Box sx={{ ...cardSx, justifyContent: 'center', minHeight: 420 }}>
+          <Skeleton variant="rectangular" animation="wave" sx={{ width: '100%', height: '260px', borderRadius: 3 }} />
         </Box>
       ) : (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "50%",
-            paddingTop: 4,
-            border: "2px solid #dfdeda",
-            borderRadius: 2,
-            backgroundColor: "#fff",
-            minHeight: "400px",
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{ mb: 4, fontWeight: "bold", color: "#142a3d" }}
-          >
+        <Box sx={cardSx}>
+          <Typography variant="h5" sx={{ mb: 4, fontWeight: 700, background: `linear-gradient(90deg, ${palette.primary} 0%, ${palette.accent} 60%)`, WebkitBackgroundClip: 'text', color: 'transparent', letterSpacing: 0.5 }}>
             CREAR SOLICITUD DE AMONESTACION
           </Typography>
-          <form onSubmit={handleSubmit} style={{ width: "80%" }}>
-            <Box sx={{ mb: 2 }}>
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+            <Box sx={fieldBox}>
               <Autocomplete
                 options={areaOptions}
                 variant="standard"
                 size="small"
                 getOptionLabel={(option) => option.label}
-                value={
-                  areaOptions.find((option) => option.value === form.areaID) ||
-                  null
-                }
+                value={areaOptions.find((option) => option.value === form.areaID) || null}
                 onChange={(event, newValue) => {
-                  setForm({
-                    ...form,
-                    areaID: newValue ? newValue.value : "",
-                  });
+                  setForm({ ...form, areaID: newValue ? newValue.value : '' });
                 }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Area" fullWidth />
-                )}
+                renderInput={(params) => <TextField {...params} label="Area" fullWidth />}
               />
             </Box>
 
-            <Box sx={{ mb: 2 }}>
+            <Box sx={fieldBox}>
               <Autocomplete
                 options={personaOptions}
                 variant="standard"
                 size="small"
                 getOptionLabel={(option) => option.label}
-                value={
-                  personaOptions.find(
-                    (option) => option.value === form.personaID
-                  ) || null
-                }
+                value={personaOptions.find((option) => option.value === form.personaID) || null}
                 onChange={(event, newValue) => {
-                  setForm({
-                    ...form,
-                    personaID: newValue ? newValue.value : "",
-                  });
+                  setForm({ ...form, personaID: newValue ? newValue.value : '' });
                 }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Persona" fullWidth />
-                )}
+                renderInput={(params) => <TextField {...params} label="Persona" fullWidth />}
               />
             </Box>
 
-            <Box sx={{ mb: 2 }}>
+            <Box sx={fieldBox}>
               <Autocomplete
                 options={motivoOptions}
                 getOptionLabel={(option) => option.label}
                 variant="standard"
                 size="small"
-                value={
-                  motivoOptions.find(
-                    (option) => option.value === form.motivoID
-                  ) || null
-                }
+                value={motivoOptions.find((option) => option.value === form.motivoID) || null}
                 onChange={(event, newValue) => {
-                  setForm({
-                    ...form,
-                    motivoID: newValue ? newValue.value : "",
-                  });
+                  setForm({ ...form, motivoID: newValue ? newValue.value : '' });
                 }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Motivo" fullWidth />
-                )}
+                renderInput={(params) => <TextField {...params} label="Motivo" fullWidth />}
               />
             </Box>
 
-            <Box sx={{ mb: 2 }}>
+            <Box sx={fieldBox}>
               <Autocomplete
                 options={smOptions}
                 variant="standard"
                 size="small"
                 getOptionLabel={(option) => option.label}
-                value={
-                  smOptions.find(
-                    (option) => option.value === form.submotivoID
-                  ) || null
-                }
+                value={smOptions.find((option) => option.value === form.submotivoID) || null}
                 onChange={(event, newValue) => {
-                  setForm({
-                    ...form,
-                    submotivoID: newValue ? newValue.value : "",
-                  });
+                  setForm({ ...form, submotivoID: newValue ? newValue.value : '' });
                 }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Submotivo" fullWidth />
-                )}
+                renderInput={(params) => <TextField {...params} label="Submotivo" fullWidth />}
               />
             </Box>
 
-            <Box sx={{ textAlign: "center" }}>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  background: "#142a3d",
-                  fontWeight: "bold",
-                  width: "200px",
-                }}
-                disabled={isSubmitting} // Deshabilitar el botón cuando isSubmitting es true
-              >
-                {isSubmitting ? "Procesando..." : "Crear"}
+            <Box sx={{ textAlign: 'center', mt: 4 }}>
+              <Button type="submit" disabled={isSubmitting} sx={gradientBtn}>
+                {isSubmitting ? 'Procesando...' : 'Crear'}
               </Button>
             </Box>
           </form>

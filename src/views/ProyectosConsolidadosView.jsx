@@ -16,6 +16,8 @@ import {
   Typography,
   InputLabel,
   FormControl,
+  Paper,
+  Divider,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -31,6 +33,7 @@ import {
   getQProyectosSinResponsable,
 } from "../api/onnetAPI";
 import { MainLayout } from "./Layout";
+import { palette } from "../theme/palette";
 
 function ProyectosOnNetView() {
   const authState = useSelector((state) => state.auth);
@@ -255,11 +258,24 @@ function ProyectosOnNetView() {
         variant="contained"
         onClick={() => handlePage(page - 1)}
         disabled={page === 1}
-        sx={{ background: "#142a3d" }}
+        sx={{
+          bgcolor: palette.primary,
+          fontWeight: 600,
+          '&:hover': { bgcolor: palette.primaryDark },
+        }}
       >
         <ArrowBackIosIcon />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
+      <Button
+        key="current"
+        variant="contained"
+        sx={{
+          bgcolor: palette.primary,
+          fontWeight: 600,
+          cursor: 'default',
+          '&:hover': { bgcolor: palette.primary },
+        }}
+      >
         {page}
       </Button>
       <Button
@@ -267,7 +283,11 @@ function ProyectosOnNetView() {
         variant="contained"
         onClick={() => handlePage(page + 1)}
         disabled={page === pages}
-        sx={{ background: "#142a3d" }}
+        sx={{
+          bgcolor: palette.primary,
+          fontWeight: 600,
+          '&:hover': { bgcolor: palette.primaryDark },
+        }}
       >
         <ArrowForwardIosIcon />
       </Button>
@@ -305,94 +325,80 @@ function ProyectosOnNetView() {
         mb: 2,
       }}
     >
-      <Box
-        sx={{
-          pt: 2,
-          pb: 2,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 2,
-          width: { lg: "50%", md: "100%", xs: "100%" },
-          borderRadius: 2,
-          border: "1px solid #dfdeda",
-          backgroundColor: "#fff",
-        }}
-      >
-        <Box sx={{ pb: 2 }}>
-          <InputLabel id="file-label">Agendas</InputLabel>
-          <TextField
-            required
-            size="small"
-            fullWidth
-            id="file"
-            type="file"
-            name="file"
-            variant="standard"
-            onChange={handleFileChangeAgendas}
-          />
-        </Box>
-        <Box>
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={isSubmitting}
-            sx={{
-              background: "#142a3d",
-              fontWeight: "bold",
-              width: "200px",
-              borderRadius: 2,
-            }}
-            onClick={handleSubmitAgendas}
-          >
-            {isSubmitting ? "Procesando..." : "Cargar"}
-          </Button>
-        </Box>
-      </Box>
-
-      <Box
-        sx={{
-          pt: 2,
-          pb: 2,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 2,
-          width: { lg: "50%", md: "100%", xs: "100%" },
-          borderRadius: 2,
-          border: "1px solid #dfdeda",
-          backgroundColor: "#fff",
-        }}
-      >
-        <Box sx={{ pb: 2 }}>
-          <InputLabel id="file-label">Visitas</InputLabel>
-          <TextField
-            required
-            size="small"
-            fullWidth
-            id="file"
-            type="file"
-            name="file"
-            variant="standard"
-            onChange={handleFileChangeVisitas}
-          />
-        </Box>
-        <Box>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              background: "#142a3d",
-              fontWeight: "bold",
-              width: "200px",
-              borderRadius: 2,
-            }}
-            disabled
-          >
-            {isSubmitting ? "Procesando..." : "Cargar"}
-          </Button>
-        </Box>
-      </Box>
+      {[{
+        label: 'Agendas',
+        onChange: handleFileChangeAgendas,
+        onClick: handleSubmitAgendas,
+        disabled: isSubmitting,
+      }, {
+        label: 'Visitas',
+        onChange: handleFileChangeVisitas,
+        onClick: () => {},
+        disabled: true,
+      }].map((cfg, idx) => (
+        <Paper
+          key={cfg.label}
+          elevation={6}
+          sx={{
+            pt: 2,
+            pb: 2,
+            px: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+            width: { lg: "50%", md: "100%", xs: "100%" },
+            borderRadius: 3,
+            position: 'relative',
+            background: palette.cardBg,
+            border: `1px solid ${palette.borderSubtle}`,
+            backdropFilter: 'blur(4px)',
+            overflow: 'hidden',
+            '&:before': {
+              content: '""',
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%)',
+              pointerEvents: 'none'
+            }
+          }}
+        >
+          <Box sx={{ pb: 1, width: '100%' }}>
+            <InputLabel id={`${cfg.label}-label`} sx={{ fontWeight: 600, color: palette.primary }}>{cfg.label}</InputLabel>
+            <TextField
+              required
+              size="small"
+              fullWidth
+              id={`file-${idx}`}
+              type="file"
+              name="file"
+              variant="standard"
+              onChange={cfg.onChange}
+              InputProps={{ disableUnderline: false }}
+            />
+          </Box>
+          <Divider flexItem sx={{ width: '100%', borderColor: palette.borderSubtle }} />
+          <Box>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={cfg.disabled}
+              sx={{
+                bgcolor: palette.primary,
+                fontWeight: 600,
+                width: "200px",
+                borderRadius: 2,
+                letterSpacing: .5,
+                boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)',
+                '&:hover': { bgcolor: palette.primaryDark },
+              }}
+              onClick={cfg.onClick}
+            >
+              {isSubmitting && !cfg.disabled ? 'Procesando...' : 'Cargar'}
+            </Button>
+          </Box>
+        </Paper>
+      ))}
     </Box>
   );
 
@@ -401,16 +407,27 @@ function ProyectosOnNetView() {
   };
 
   const filterCard = () => (
-    <Box
+    <Paper
+      elevation={8}
       sx={{
         width: "90%",
         mb: 2,
-        mt: 2,
-        backgroundColor: "#fff",
-        pt: 2,
-        pb: 2,
-        borderRadius: 2,
-        border: "1px solid #dfdeda",
+        mt: 3,
+        pt: 3,
+        pb: 3,
+        borderRadius: 3,
+        background: palette.cardBg,
+        border: `1px solid ${palette.borderSubtle}`,
+        backdropFilter: 'blur(4px)',
+        position: 'relative',
+        overflow: 'hidden',
+        '&:before': {
+          content: '""',
+          position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%)',
+            pointerEvents: 'none'
+        }
       }}
     >
       <form>
@@ -418,129 +435,103 @@ function ProyectosOnNetView() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 2,
+            gap: 2.5,
             alignItems: "center",
           }}
         >
-          {/* Primera fila: ambos selects */}
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              alignItems: "center",
-              gap: 2,
-              width: "100%",
+              display: 'flex',
+              flexDirection: { xs: 'column', md: 'row' },
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+              gap: 3,
+              width: '100%',
             }}
           >
-            <FormControl>
-              <TextField
-                label="Proyecto"
-                variant="standard"
-                id="proyecto-textfield"
-                value={toFilter.proyecto || ""}
-                sx={{ minWidth: "200px" }}
-                size="small"
-                onChange={(event) => {
-                  setToFilter((prev) => ({
-                    ...prev,
-                    proyecto: event.target.value,
-                  }));
-                }}
-              />
-            </FormControl>
-            <FormControl>
+            {[{
+              label: 'Proyecto',
+              value: toFilter.proyecto || '',
+              onChange: (val) => setToFilter((p)=>({...p, proyecto: val}))
+            }].map(cfg => (
+              <FormControl key={cfg.label} sx={{ minWidth: 200 }}>
+                <TextField
+                  label={cfg.label}
+                  variant="standard"
+                  value={cfg.value}
+                  size="small"
+                  onChange={(e)=>cfg.onChange(e.target.value)}
+                />
+              </FormControl>
+            ))}
+            <FormControl sx={{ minWidth: 200 }}>
               <InputLabel id="bandeja-label">Bandeja</InputLabel>
               <Select
                 label="bandeja-label"
                 id="bandeja-select"
                 variant="standard"
-                value={toFilter.bandeja || ""}
-                sx={{ minWidth: "200px" }}
+                value={toFilter.bandeja || ''}
                 size="small"
-                onChange={(event) => {
-                  setToFilter((prev) => ({
-                    ...prev,
-                    bandeja: event.target.value,
-                  }));
-                }}
+                onChange={(event)=>setToFilter(p=>({...p, bandeja: event.target.value}))}
               >
-                {optionsToFilter.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
+                {optionsToFilter.map((option)=>(
+                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                 ))}
               </Select>
             </FormControl>
-            <FormControl>
+            <FormControl sx={{ minWidth: 200 }}>
               <InputLabel id="agencia-label">Agencia</InputLabel>
               <Select
                 label="agencia-label"
                 id="agencia-select"
                 variant="standard"
-                value={toFilter.agencia || ""}
-                sx={{ minWidth: "200px" }}
+                value={toFilter.agencia || ''}
                 size="small"
-                onChange={(event) => {
-                  setToFilter((prev) => ({
-                    ...prev,
-                    agencia: event.target.value,
-                  }));
-                }}
+                onChange={(e)=>setToFilter(p=>({...p, agencia: e.target.value}))}
               >
-                {agencias &&
-                  agencias.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
+                {agencias && agencias.map(option => (
+                  <MenuItem key={option} value={option}>{option}</MenuItem>
+                ))}
               </Select>
             </FormControl>
-            <FormControl>
+            <FormControl sx={{ minWidth: 200 }}>
               <InputLabel id="categoria-label">Categoria</InputLabel>
               <Select
                 labelId="categoria-label"
                 id="categoria-select"
                 variant="standard"
-                value={toFilter.categoria || ""}
-                sx={{ minWidth: "200px" }}
+                value={toFilter.categoria || ''}
                 size="small"
-                onChange={(event) => {
-                  setToFilter((prev) => ({
-                    ...prev,
-                    categoria: event.target.value,
-                  }));
-                }}
+                onChange={(e)=>setToFilter(p=>({...p, categoria: e.target.value}))}
               >
-                {categorias.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
+                {categorias.map(option => (
+                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Box>
-          {/* Segunda fila: ambos botones */}
+          <Divider flexItem sx={{ width: '100%', borderColor: palette.borderSubtle }} />
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              alignItems: "center",
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              justifyContent: 'center',
+              alignItems: 'center',
               gap: 2,
-              width: "100%",
-              pt: 2,
+              width: '100%',
             }}
           >
             <Button
               variant="contained"
               onClick={handleClear}
               sx={{
-                fontWeight: "bold",
-                background: "#142a3d",
-                minWidth: "200px",
-                height: "40px",
-                borderRadius: "0px",
+                fontWeight: 600,
+                bgcolor: palette.primary,
+                minWidth: 200,
+                height: 42,
+                letterSpacing: .6,
+                boxShadow: '0 4px 12px -3px rgba(0,0,0,.35)',
+                '&:hover': { bgcolor: palette.primaryDark },
               }}
             >
               LIMPIAR FILTROS
@@ -549,19 +540,23 @@ function ProyectosOnNetView() {
               variant="outlined"
               onClick={fetchData}
               sx={{
-                fontWeight: "bold",
-                minWidth: "200px",
-                height: "40px",
-                borderRadius: "0px",
+                fontWeight: 600,
+                minWidth: 200,
+                height: 42,
+                letterSpacing: .6,
+                borderWidth: 2,
+                borderColor: palette.primary,
+                color: palette.primary,
+                '&:hover': { borderColor: palette.accent, color: palette.accent, bgcolor: palette.accentSoft },
               }}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Procesando..." : "Actualizar"}
+              {isSubmitting ? 'Procesando...' : 'Actualizar'}
             </Button>
           </Box>
         </Box>
       </form>
-    </Box>
+    </Paper>
   );
 
   const setTableProyectosSin = () => (
@@ -590,7 +585,7 @@ function ProyectosOnNetView() {
               key={header}
               align="center"
               sx={{
-                background: "#142a3d",
+                background: palette.primary,
                 fontWeight: "bold",
                 color: "white",
               }}
@@ -671,7 +666,7 @@ function ProyectosOnNetView() {
               key={header}
               align="center"
               sx={{
-                background: "#142a3d",
+                background: palette.primary,
                 fontWeight: "bold",
                 color: "white",
               }}
@@ -752,7 +747,7 @@ function ProyectosOnNetView() {
               key={header}
               align="center"
               sx={{
-                background: "#142a3d",
+                background: palette.primary,
                 fontWeight: "bold",
                 color: "white",
               }}
@@ -836,7 +831,7 @@ function ProyectosOnNetView() {
               key={header}
               align="center"
               sx={{
-                background: "#142a3d",
+                background: palette.primary,
                 fontWeight: "bold",
                 color: "white",
                 fontSize: "14px",
@@ -868,7 +863,8 @@ function ProyectosOnNetView() {
               sx={{
                 textDecoration: "none",
                 cursor: "pointer",
-                "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+                transition: 'background-color .25s',
+                '&:hover': { backgroundColor: palette.accentSoft },
               }}
             >
               <TableCell align="center" sx={{ fontSize: "12px" }}>
@@ -950,16 +946,25 @@ function ProyectosOnNetView() {
     <MainLayout showNavbar={true}>
       <Box
         sx={{
+          position: 'relative',
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           height: "100%",
           width: "100%",
           overflow: "auto",
-          minHeight: "80vh",
-          paddingY: "70px",
-          backgroundColor: "#f5f5f5",
+          minHeight: "100vh",
+          py: 10,
+          px: { xs: 1.5, sm: 2 },
+          background: palette.bgGradient,
+          '::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 20% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 65%)',
+            pointerEvents: 'none'
+          }
         }}
       >
         {open && (
@@ -978,11 +983,10 @@ function ProyectosOnNetView() {
           sx={{
             width: { lg: "90%", md: "90%", xs: "100%" },
             overflow: "hidden",
-            backgroundColor: "#f5f5f5",
-            borderRadius: 2,
-            border: "1px solid #dfdeda",
+            borderRadius: 3,
             textAlign: "center",
             mt: 2,
+            background: 'transparent',
           }}
         >
           {isLoading ? (
@@ -996,22 +1000,34 @@ function ProyectosOnNetView() {
               }}
             />
           ) : (
-            <Box
+            <Paper
+              elevation={10}
               sx={{
-                display: "flex",
-                flexDirection: { lg: "row", md: "column", xs: "column" },
-                alignItems: "start",
-                backgroundColor: "#fff",
+                display: 'flex',
+                flexDirection: { lg: 'row', md: 'column', xs: 'column' },
+                alignItems: 'flex-start',
+                background: palette.cardBg,
+                border: `1px solid ${palette.borderSubtle}`,
+                backdropFilter: 'blur(6px)',
+                p: 2,
+                borderRadius: 3,
+                position: 'relative',
+                overflow: 'hidden',
+                '&:before': {
+                  content: '""',
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)',
+                  pointerEvents: 'none'
+                }
               }}
             >
-              <Box sx={{ width: "100%", display: "flex", flexDirection: "column", m: 1 }}>
-                {setTableMacro()}
-              </Box>
-              <Box sx={{ width: "100%", display: "flex", flexDirection: "column", m: 1 }}>
+              <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', m: 1 }}>{setTableMacro()}</Box>
+              <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', m: 1 }}>
                 {setTableProyectosCon()}
                 {setTableProyectosSin()}
               </Box>
-            </Box>
+            </Paper>
           )}
         </Box>
 
@@ -1020,10 +1036,8 @@ function ProyectosOnNetView() {
           sx={{
             width: { lg: "90%", md: "90%", xs: "100%" },
             overflow: "hidden",
-            backgroundColor: "#f5f5f5",
             textAlign: "center",
-            borderRadius: 2,
-            border: "1px solid #dfdeda",
+            borderRadius: 3,
             mt: 2,
           }}
         >
@@ -1038,7 +1052,27 @@ function ProyectosOnNetView() {
               }}
             />
           ) : (
-            setTable()
+            <Paper
+              elevation={10}
+              sx={{
+                p: 2,
+                background: palette.cardBg,
+                border: `1px solid ${palette.borderSubtle}`,
+                borderRadius: 3,
+                backdropFilter: 'blur(6px)',
+                position: 'relative',
+                overflow: 'hidden',
+                '&:before': {
+                  content: '""',
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)',
+                  pointerEvents: 'none'
+                }
+              }}
+            >
+              {setTable()}
+            </Paper>
           )}
         </Box>
 

@@ -8,11 +8,13 @@ import {
   InputLabel,
   TextField,
   Typography,
+  LinearProgress,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { sendPlantillaConstruccion } from "../api/onnetAPI";
 import { MainLayout } from "./Layout";
+import palette from "../theme/palette";
 
 function LoadConstruccion() {
   const authState = useSelector((state) => state.auth);
@@ -68,75 +70,124 @@ function LoadConstruccion() {
     }
   };
 
+  const gradient = palette.bgGradient;
+  const glass = {
+    position: "relative",
+    background:
+      "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.88) 60%, rgba(255,255,255,0.80) 100%)",
+    backdropFilter: "blur(14px)",
+    border: `1px solid ${palette.borderSubtle}`,
+    borderRadius: 3,
+    boxShadow: "0 8px 28px -4px rgba(0,0,0,0.25)",
+    overflow: "hidden",
+    "::before": {
+      content: '""',
+      position: "absolute",
+      inset: 0,
+      background:
+        "linear-gradient(120deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%)",
+      pointerEvents: "none",
+      mixBlendMode: "overlay",
+    },
+  };
+  const primaryBtn = {
+    background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`,
+    color: "#fff",
+    fontWeight: "bold",
+    borderRadius: 2,
+    boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
+    "&:hover": { background: palette.primaryDark },
+  };
+
   const componente_carga = () => (
-      <Box
+    <Card sx={{ ...glass, width: "100%", maxWidth: 520 }}>
+      <CardHeader
+        titleTypographyProps={{ fontSize: 18, fontWeight: "bold" }}
+        title="Carga de Planilla de Construcción"
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#fff",
-          height: "200px",
-          width: "500px",
-          borderRadius: 2,
-          border: "2px solid #dfdeda",
+          background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`,
+          color: "#fff",
+          py: 1.5,
+          textAlign: "center",
         }}
-      >
+      />
+      <CardContent sx={{ pt: 3 }}>
         <form
           onSubmit={handleSubmit}
-          style={{ width: "80%" }}
           encType="multipart/form-data"
+          style={{ width: "100%" }}
         >
-          <Box sx={{ mb: 2 }}>
-            <InputLabel id="file-label">Archivo</InputLabel>
-            <TextField
-              required
-              fullWidth
-              id="file"
-              type="file"
-              name="file"
-              variant="standard"
-              onChange={handleFileChange}
-            />
-          </Box>
-
-          <Box sx={{ textAlign: "center" }}>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ background: "#142a3d", py: 1, width: "100%", borderRadius: 2 }}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Procesando..." : "Cargar"}
-            </Button>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <Box>
+              <InputLabel id="file-label">Archivo</InputLabel>
+              <TextField
+                required
+                fullWidth
+                id="file"
+                type="file"
+                name="file"
+                variant="standard"
+                onChange={handleFileChange}
+                inputProps={{ accept: ".xlsx,.xls,.csv" }}
+              />
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{ ...primaryBtn, py: 1.2 }}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Procesando..." : "Cargar"}
+              </Button>
+              {isSubmitting && <LinearProgress />}
+            </Box>
           </Box>
         </form>
-      </Box>
+      </CardContent>
+    </Card>
   );
 
   return (
     <MainLayout showNavbar={true}>
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
-      }}
-    >
-      {open && (
-        <Alert
-          onClose={handleClose}
-          severity={alertType}
-          sx={{ mb: 3, width: "90%" }}
-        >
-          {message}
-        </Alert>
-      )}
-      {componente_carga()}
-    </Box>
+      <Box
+        sx={{
+          py: { xs: 4, md: 5 },
+          flex: 1,
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          background: gradient,
+          position: "relative",
+          "::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at 18% 22%, rgba(255,255,255,0.10), transparent 60%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.08), transparent 65%)",
+            pointerEvents: "none",
+          },
+        }}
+      >
+        {open && (
+          <Alert
+            onClose={handleClose}
+            severity={alertType}
+            sx={{
+              mb: 3,
+              width: "100%",
+              maxWidth: 520,
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          >
+            {message}
+          </Alert>
+        )}
+        {componente_carga()}
+      </Box>
     </MainLayout>
   );
 }

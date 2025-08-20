@@ -15,6 +15,8 @@ import {
   TableRow,
   Typography,
   TextField,
+  Divider,
+  Chip,
 } from "@mui/material";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -30,6 +32,7 @@ import {
 import { onLoad, onLoading, setMessage } from "../slices/solicitudSlice";
 import filterData from "../data/filterSolicitud";
 import { MainLayout } from "./Layout";
+import { palette } from "../theme/palette";
 
 function Solicitudes() {
   const authState = useSelector((state) => state.auth);
@@ -113,11 +116,25 @@ function Solicitudes() {
         variant="contained"
         onClick={() => handlePage(page - 1)}
         disabled={page === 1}
-        sx={{ background: "#142a3d" }}
+        sx={{
+          background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+          boxShadow: "0 3px 10px -2px rgba(10,27,43,0.5)",
+          "&:hover": { background: palette.primaryDark },
+          "&:disabled": { opacity: 0.5 },
+        }}
       >
         <ArrowBackIosIcon />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
+      <Button
+        key="current"
+        variant="contained"
+        sx={{
+          background: palette.accent,
+          color: "#fff",
+          fontWeight: 600,
+          "&:hover": { background: palette.accent },
+        }}
+      >
         {page}
       </Button>
       <Button
@@ -125,27 +142,38 @@ function Solicitudes() {
         variant="contained"
         onClick={() => handlePage(page + 1)}
         disabled={page === pages}
-        sx={{ background: "#142a3d" }}
+        sx={{
+          background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+          boxShadow: "0 3px 10px -2px rgba(10,27,43,0.5)",
+          "&:hover": { background: palette.primaryDark },
+          "&:disabled": { opacity: 0.5 },
+        }}
       >
         <ArrowForwardIosIcon />
       </Button>
     </>
   );
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const filterCard = () => (
-    <Box
+    <Paper
+      elevation={10}
       sx={{
         width: "90%",
-        overflow: "hidden",
-        backgroundColor: "white",
+        mt: 3,
+        py: 4,
         textAlign: "center",
-        mt: 2,
-        paddingTop: 3,
-        paddingBottom: 3,
-        border: "2px solid #dfdeda",
-        borderRadius: 2,
+        background: palette.cardBg,
+        border: `1px solid ${palette.borderSubtle}`,
+        borderRadius: 3,
+        backdropFilter: "blur(6px)",
+        boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
       }}
     >
+
       <form>
         <Box
           sx={{
@@ -153,7 +181,7 @@ function Solicitudes() {
             justifyContent: "space-around",
             alignItems: "center",
             flexWrap: "wrap",
-            gap: 2,
+            gap: 3,
           }}
         >
           <TextField
@@ -167,7 +195,7 @@ function Solicitudes() {
                 folio: event.target.value,
               }));
             }}
-            sx={{ minWidth: "200px" }}
+            sx={{ minWidth: 200 }}
             size="small"
           />
           <Select
@@ -176,7 +204,7 @@ function Solicitudes() {
             variant="standard"
             id="estado-select"
             value={toFilter.estado || ""}
-            sx={{ minWidth: "200px" }}
+            sx={{ minWidth: 220 }}
             size="small"
             onChange={(event) => {
               setToFilter((prev) => ({
@@ -191,60 +219,70 @@ function Solicitudes() {
               </MenuItem>
             ))}
           </Select>
-
           <Button
             variant="outlined"
             onClick={fetchData}
             sx={{
-              fontWeight: "bold",
-              minWidth: "200px",
-              height: "40px",
+              fontWeight: 600,
+              minWidth: 200,
+              height: 40,
               borderRadius: 2,
+              borderColor: palette.accent,
+              color: palette.accent,
+              "&:hover": { borderColor: palette.accent, background: "rgba(255,255,255,0.08)" },
             }}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Procesando..." : "Actualizar"}
           </Button>
-
           <Button
             variant="contained"
             onClick={handleClear}
             sx={{
-              fontWeight: "bold",
-              background: "#142a3d",
-              minWidth: "200px",
-              height: "40px",
+              fontWeight: 600,
+              background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+              minWidth: 200,
+              height: 40,
               borderRadius: 2,
+              boxShadow:
+                "0 6px 16px -4px rgba(10,27,43,0.55), 0 2px 6px -2px rgba(10,27,43,0.35)",
+              "&:hover": { background: palette.primaryDark },
             }}
           >
             LIMPIAR FILTROS
           </Button>
         </Box>
       </form>
-    </Box>
+    </Paper>
   );
 
   const createNew = () => (
     <Box
       sx={{
         width: "90%",
-        mt: 2,
+        mt: 3,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: 2,
       }}
     >
       <Link style={{ color: "white", textDecoration: "none" }} to="/create">
         <Button
           variant="contained"
-          color="error"
           sx={{
-            width: 200,
-            height: 40,
-            fontWeight: "bold",
+            width: 220,
+            height: 44,
+            fontWeight: 600,
             display: "flex",
             justifyContent: "space-around",
             borderRadius: 2,
+            letterSpacing: 0.4,
+            background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 100%)`,
+            boxShadow:
+              "0 6px 16px -4px rgba(10,27,43,0.55), 0 2px 6px -2px rgba(10,27,43,0.35)",
+            "&:hover": { background: palette.primaryDark },
           }}
         >
           <AddCircleOutlineIcon /> Crear Nueva
@@ -255,17 +293,21 @@ function Solicitudes() {
         disabled={isSubmitting}
         onClick={getExcel}
         sx={{
-          width: 200,
-          height: 40,
-          fontWeight: "bold",
+          width: 220,
+          height: 44,
+          fontWeight: 600,
+          letterSpacing: 0.4,
           display: "flex",
           justifyContent: "space-around",
           borderRadius: 2,
-          backgroundColor: "#142a3d",
-          color: "white",
+          background: `linear-gradient(145deg, ${palette.accent} 0%, ${palette.primaryDark} 100%)`,
+          boxShadow:
+            "0 6px 16px -4px rgba(10,27,43,0.55), 0 2px 6px -2px rgba(10,27,43,0.35)",
+          "&:hover": { background: palette.primaryDark },
+          "&:disabled": { opacity: 0.6 },
         }}
       >
-        <InsertDriveFileIcon /> Descargar
+        <InsertDriveFileIcon /> {isSubmitting ? "Descargando..." : "Descargar"}
       </Button>
     </Box>
   );
@@ -285,9 +327,11 @@ function Solicitudes() {
             key={header}
             align="center"
             sx={{
-              fontWeight: "bold",
-              backgroundColor: "#142a3d",
+              fontWeight: 600,
+              backgroundColor: palette.primary,
               color: "white",
+              letterSpacing: 0.4,
+              borderBottom: `2px solid ${palette.primaryDark}`,
             }}
           >
             <Typography>{header}</Typography>
@@ -308,35 +352,23 @@ function Solicitudes() {
             sx={{
               textDecoration: "none",
               cursor: "pointer",
-              "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+              transition: "background-color .25s",
+              backgroundColor: index % 2 === 0 ? "rgba(255,255,255,0.04)" : "transparent",
+              "&:hover": { backgroundColor: palette.accentSoft },
             }}
           >
-            <TableCell align="center" sx={{ fontSize: "12px" }}>
-              {row.Folio ? row.Folio : "Sin Folio"}
-            </TableCell>
-            <TableCell align="center" sx={{ fontSize: "12px" }}>
-              {row.Motivo ? row.Motivo : "Sin Información"}
-            </TableCell>
-            <TableCell align="center" sx={{ fontSize: "12px" }}>
-              {row.Formulario ? row.Formulario : "Sin área asignada"}
-            </TableCell>
-            <TableCell align="center" sx={{ fontSize: "12px" }}>
-              {row.Solicitante ? row.Solicitante : "Sin Información"}
-            </TableCell>
-            <TableCell align="center" sx={{ fontSize: "12px" }}>
-              {row.Amonestado ? row.Amonestado : "Sin Información"}
-            </TableCell>
-            <TableCell align="center" sx={{ fontSize: "12px" }}>
-              {row.Estado ? row.Estado : "Sin Información"}
-            </TableCell>
+            <TableCell align="center" sx={{ fontSize: "12px" }}>{row.Folio ? row.Folio : "Sin Folio"}</TableCell>
+            <TableCell align="center" sx={{ fontSize: "12px" }}>{row.Motivo ? row.Motivo : "Sin Información"}</TableCell>
+            <TableCell align="center" sx={{ fontSize: "12px" }}>{row.Formulario ? row.Formulario : "Sin área asignada"}</TableCell>
+            <TableCell align="center" sx={{ fontSize: "12px" }}>{row.Solicitante ? row.Solicitante : "Sin Información"}</TableCell>
+            <TableCell align="center" sx={{ fontSize: "12px" }}>{row.Amonestado ? row.Amonestado : "Sin Información"}</TableCell>
+            <TableCell align="center" sx={{ fontSize: "12px" }}>{row.Estado ? row.Estado : "Sin Información"}</TableCell>
           </TableRow>
         ))
       ) : (
         <TableRow>
           <TableCell colSpan={12} align="center">
-            <Typography fontFamily="initial">
-              No hay datos disponibles
-            </Typography>
+            <Typography fontFamily="initial">No hay datos disponibles</Typography>
           </TableCell>
         </TableRow>
       )}
@@ -346,16 +378,36 @@ function Solicitudes() {
   const setTableCard = () => (
     <TableContainer
       component={Paper}
-      sx={{ width: "90%", height: "100%", overflow: "auto", marginTop: 2, borderRadius: 2 }}
+      elevation={10}
+      sx={{
+        width: "90%",
+        height: "100%",
+        overflow: "auto",
+        mt: 3,
+        borderRadius: 3,
+        background: palette.cardBg,
+        border: `1px solid ${palette.borderSubtle}`,
+        backdropFilter: "blur(4px)",
+        boxShadow: "0 10px 28px -10px rgba(0,0,0,0.38), 0 6px 12px -4px rgba(0,0,0,0.24)",
+      }}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", p: 1, backgroundColor: "#142a3d" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          p: 1,
+          background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
+        }}
+      >
         <Typography
           sx={{
-            backgroundColor: "#142a3d",
             color: "white",
-            padding: 1,
+            p: 1,
             fontStyle: "italic",
             fontSize: "12px",
+            fontWeight: 500,
           }}
           align="left"
         >
@@ -363,11 +415,11 @@ function Solicitudes() {
         </Typography>
         <Typography
           sx={{
-            backgroundColor: "#142a3d",
             color: "white",
-            padding: 1,
+            p: 1,
             fontStyle: "italic",
             fontSize: "12px",
+            fontWeight: 500,
           }}
           align="right"
         >
@@ -387,63 +439,79 @@ function Solicitudes() {
 
   return (
     <MainLayout showNavbar={true}>
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "90vh",
-        height: "100%",
-        width: "100%",
-        overflow: "auto",
-        paddingY: "70px",
-        backgroundColor: "#f5f5f5",
-      }}
-    >
-      {open && (
-        <Alert
-          onClose={handleClose}
-          severity="info"
-          sx={{
-            width: "88%",
-            boxShadow: 2,
-          }}
-        >
-          {message}
-        </Alert>
-      )}
-      {filterCard()}
-      {createNew()}
-      {is_loading && !is_load ? (
-        <Box
-          sx={{
-            width: "90%",
-            overflow: "hidden",
-            backgroundColor: "#f5f5f5",
-            boxShadow: 5,
-            borderRadius: "10px",
-            mt: 2,
-            display: "flex",
-            justifyContent: "center",
-            height: "30vh",
-          }}
-        >
-          <Skeleton sx={{ width: "90%", height: "100%" }} />
-        </Box>
-      ) : (
-        <>
-          {setTableCard()}
-          <ButtonGroup
-            size="small"
-            aria-label="pagination-button-group"
-            sx={{ p: 2 }}
+      <Box
+        sx={{
+          display: "flex",
+            flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          minHeight: "100vh",
+          height: "100%",
+          width: "100%",
+          overflow: "auto",
+          pt: { xs: 10, md: 11 },
+          pb: 8,
+          background: palette.bgGradient,
+          position: "relative",
+          "::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at 20% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 65%)",
+            pointerEvents: "none",
+          },
+        }}
+      >
+        {open && (
+          <Alert
+            onClose={handleClose}
+            severity="info"
+            sx={{
+              width: "88%",
+              boxShadow: 4,
+              borderRadius: 3,
+              background: palette.cardBg,
+              border: `1px solid ${palette.borderSubtle}`,
+            }}
           >
-            {getButtons()}
-          </ButtonGroup>
-        </>
-      )}
-    </Box>
+            {message}
+          </Alert>
+        )}
+        {filterCard()}
+        {createNew()}
+        {is_loading && !is_load ? (
+          <Paper
+            elevation={8}
+            sx={{
+              width: "90%",
+              overflow: "hidden",
+              background: palette.cardBg,
+              border: `1px solid ${palette.borderSubtle}`,
+              borderRadius: 3,
+              mt: 3,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "30vh",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            <Skeleton sx={{ width: "90%", height: "100%" }} />
+          </Paper>
+        ) : (
+          <>
+            {setTableCard()}
+            <ButtonGroup
+              size="small"
+              aria-label="pagination-button-group"
+              sx={{ p: 2, "& .MuiButton-root": { borderColor: palette.primaryDark } }}
+            >
+              {getButtons()}
+            </ButtonGroup>
+          </>
+        )}
+      </Box>
     </MainLayout>
   );
 }

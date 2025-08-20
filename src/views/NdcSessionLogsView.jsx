@@ -3,18 +3,18 @@ import {
     Box,
     CircularProgress,
     Divider,
-    MenuItem,
-    Select,
     TableContainer,
     Table,
     TableBody,
     TableHead,
     TableRow,
     TableCell,
-    Typography
+    Typography,
+    Paper,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { NdcLayout } from "./Layout";
+import { palette } from "../theme/palette";
 import { useEffect, useState } from "react";
 import { fetchLogsSessions, fetchSessionsFamiliaMateriales } from "../api/logisticaAPI";
 
@@ -77,12 +77,10 @@ function NDCSessionLogs() {
     };
 
     const tableDataSession = () => (
-        //crea una tabla con los datos de pendientes sin consumo
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <Box sx={{ display: "flex", justifyContent: "center", p: 1, backgroundColor: "#142a3d" }}>
+            <Box sx={{ display: "flex", justifyContent: "center", p: 1, background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`, borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
                 <Typography
                     sx={{
-                        backgroundColor: "#142a3d",
                         color: "white",
                         padding: 1,
                         fontStyle: "italic",
@@ -92,10 +90,9 @@ function NDCSessionLogs() {
                 >
                     Total de Ejecuciones: {total}
                 </Typography>
-
             </Box>
             <TableContainer>
-                <Table>
+                <Table stickyHeader>
                     <TableRow>
                         {[
                             "SESSION ID",
@@ -109,9 +106,11 @@ function NDCSessionLogs() {
                                 key={header}
                                 align="center"
                                 sx={{
-                                    fontWeight: "bold",
-                                    backgroundColor: "#142a3d",
+                                    fontWeight: 600,
+                                    backgroundColor: palette.primary,
                                     color: "white",
+                                    letterSpacing: 0.4,
+                                    borderBottom: `2px solid ${palette.primaryDark}`,
                                 }}
                             >
                                 <Typography>{header}</Typography>
@@ -122,7 +121,7 @@ function NDCSessionLogs() {
                         {data.map((item, index) => (
                             <TableRow
                                 key={index}
-                                sx={{ cursor: "pointer", "&:hover": { backgroundColor: "#f5f5f5" } }}
+                                sx={{ cursor: "pointer", transition: 'background-color .25s', backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'transparent', '&:hover': { backgroundColor: palette.accentSoft } }}
                                 onClick={() => setID(item.session_id)}>
                                 <TableCell sx={{ fontWeight: "bold", fontSize: "12px" }} align="center">{item.session_id}</TableCell>
                                 <TableCell align="center" sx={{ fontSize: "12px" }} >{item.inicio ? extractDate(item.inicio) : 'N/A'}</TableCell>
@@ -160,106 +159,120 @@ function NDCSessionLogs() {
                     display: "flex",
                     alignItems: "center",
                     flexDirection: "column",
-                    minHeight: "90vh",
-                    paddingY: "20px",
-                    backgroundColor: "#f5f5f5",
+                    minHeight: "100vh",
+                    py: 8,
+                    px: 1,
+                    background: palette.bgGradient,
+                    position: 'relative',
+                    '::before': {
+                        content: '""',
+                        position: 'absolute',
+                        inset: 0,
+                        background: "radial-gradient(circle at 20% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 65%)",
+                        pointerEvents: 'none'
+                    }
                 }}
             >
                 {open && (
                     <Alert
                         onClose={handleClose}
                         severity={alertType}
-                        sx={{ width: "90%", marginBottom: 2 }}
+                        sx={{ width: "90%", mb: 3, boxShadow: 4, borderRadius: 3, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}` }}
                     >
                         {message}
                     </Alert>
                 )}
-                <Box sx={{ display: "flex", flexDirection: { lg: "row", xs: "column" }, width: "90%", marginBottom: 2, justifyContent: "center" }}>
-
-
+                <Box sx={{ display: "flex", flexDirection: { lg: "row", xs: "column" }, width: "92%", mb: 3, justifyContent: "center" }}>
                     {!isSubmitting ? (
-                        <Box sx={{
+                        <Paper elevation={12} sx={{
                             width: { lg: "60%", xs: "100%" },
-                            padding: 1,
-                            margin: 1,
-                            backgroundColor: "white",
-                            borderRadius: 2,
-                            border: "2px solid #dfdeda",
+                            p: 3,
+                            m: 1,
+                            background: palette.cardBg,
+                            borderRadius: 3,
+                            border: `1px solid ${palette.borderSubtle}`,
+                            backdropFilter: 'blur(4px)',
                             height: "100%",
+                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)"
                         }}>
-                            <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
+                            <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: 700 }}>
                                 REGISTRO DE EJECUCIONES - NDC
                             </Typography>
-                            <Divider sx={{ marginBottom: 2 }} />
+                            <Divider sx={{ mb: 2 }} />
                             {data && data.length > 0 ? (
                                 tableDataSession()
                             ) : null}
-                        </Box>
+                        </Paper>
                     ) : (
-                        <Box sx={{
-                            width: "90%",
-                            padding: 2,
-                            backgroundColor: "white",
-                            borderRadius: 2,
-                            border: "2px solid #dfdeda",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            minHeight: "200px"
+                        <Paper elevation={8} sx={{
+                            width: { lg: "60%", xs: "100%" },
+                            p: 2,
+                            m: 1,
+                            background: palette.cardBg,
+                            borderRadius: 3,
+                            border: `1px solid ${palette.borderSubtle}`,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            minHeight: 200
                         }}>
                             <CircularProgress />
-                        </Box>
-                    )
-                    }
+                        </Paper>
+                    )}
                     {familiaData && familiaData.length > 0 ? (
-                        <Box sx={{
+                        <Paper elevation={12} sx={{
                             width: { lg: "40%", xs: "100%" },
-                            padding: 1,
-                            margin: 1,
-                            backgroundColor: "white",
-                            borderRadius: 2,
-                            border: "2px solid #dfdeda",
-                            height: "100%"
+                            p: 3,
+                            m: 1,
+                            background: palette.cardBg,
+                            borderRadius: 3,
+                            border: `1px solid ${palette.borderSubtle}`,
+                            backdropFilter: 'blur(4px)',
+                            height: "100%",
+                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)"
                         }}>
-                            <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
+                            <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: 700 }}>
                                 GRUPO DE MATERIALES
                             </Typography>
-                            <Divider sx={{ marginBottom: 2 }} />
+                            <Divider sx={{ mb: 2 }} />
                             <TableContainer>
-                                <Table>
+                                <Table stickyHeader>
                                     <TableHead>
                                         <TableRow>
                                             <TableCell sx={{
-                                                fontWeight: "bold",
-                                                backgroundColor: "#142a3d",
-                                                color: "white",
+                                                fontWeight: 600,
+                                                backgroundColor: palette.primary,
+                                                color: 'white',
+                                                borderBottom: `2px solid ${palette.primaryDark}`
                                             }} align="center">SESSION ID</TableCell>
                                             <TableCell align="center" sx={{
-                                                fontWeight: "bold",
-                                                backgroundColor: "#142a3d",
-                                                color: "white",
-                                                fontSize: "12px"
+                                                fontWeight: 600,
+                                                backgroundColor: palette.primary,
+                                                color: 'white',
+                                                fontSize: '12px',
+                                                borderBottom: `2px solid ${palette.primaryDark}`
                                             }} >GRUPO</TableCell>
                                             <TableCell align="center" sx={{
-                                                fontWeight: "bold",
-                                                backgroundColor: "#142a3d",
-                                                color: "white",
-                                                fontSize: "12px"
+                                                fontWeight: 600,
+                                                backgroundColor: palette.primary,
+                                                color: 'white',
+                                                fontSize: '12px',
+                                                borderBottom: `2px solid ${palette.primaryDark}`
                                             }} >TOTAL</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {familiaData.map((item, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell sx={{ fontWeight: "bold", fontSize: "12px" }} align="center">{item.session_id}</TableCell>
-                                                <TableCell align="center" sx={{ fontSize: "12px" }} >{item.familia}</TableCell>
-                                                <TableCell align="center" sx={{ fontSize: "12px" }} >{item.total}</TableCell>
+                                            <TableRow key={index} sx={{ backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'transparent', '&:hover': { backgroundColor: palette.accentSoft } }}>
+                                                <TableCell sx={{ fontWeight: 'bold', fontSize: '12px' }} align="center">{item.session_id}</TableCell>
+                                                <TableCell align="center" sx={{ fontSize: '12px' }} >{item.familia}</TableCell>
+                                                <TableCell align="center" sx={{ fontSize: '12px' }} >{item.total}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
                                 </Table>
                             </TableContainer>
-                        </Box>) : null}
+                        </Paper>) : null}
                 </Box>
             </Box>
         </NdcLayout>

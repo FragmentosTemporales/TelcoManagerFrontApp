@@ -2,19 +2,15 @@ import {
     Alert,
     Box,
     Button,
-    Divider,
-    MenuItem,
-    Rating,
-    Select,
-    TextField,
+    Typography,
+    CircularProgress,
     Table,
     TableHead,
     TableBody,
     TableCell,
     TableRow,
-    Typography,
-    CircularProgress,
-    Tooltip,
+    Paper,
+    ButtonGroup,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -24,6 +20,7 @@ import { getReparaciones } from "../api/calidadAPI";
 import { useParams, Link } from "react-router-dom";
 import { fetchFileUrl } from "../api/downloadApi";
 import { CalidadLayout } from "./Layout";
+import { palette } from "../theme/palette";
 
 function ReparacionesView() {
     const authState = useSelector((state) => state.auth);
@@ -31,7 +28,6 @@ function ReparacionesView() {
     const { token, area } = authState;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [alertType, setAlertType] = useState(undefined);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -60,23 +56,20 @@ function ReparacionesView() {
     };
 
     const repaTable = () => (
-        <Box sx={{ overflowX: "auto", width: "95%", marginY: 4 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Box sx={{ overflowX: "auto", width: "95%", my: 4 }}>
+            <Table sx={{ minWidth: 650 }} aria-label="reparaciones-table" stickyHeader>
                 <TableHead>
                     <TableRow>
-                        {[
-                            "FECHA",
-                            "ORDEN",
-                            "TECNICO",
-                            "DESCRIPCION",
-                        ].map((header) => (
+                        {["FECHA", "ORDEN", "TECNICO", "DESCRIPCION"].map((header) => (
                             <TableCell
                                 key={header}
                                 align="center"
                                 sx={{
-                                    fontWeight: "bold",
-                                    backgroundColor: "#142a3d",
+                                    fontWeight: 600,
+                                    backgroundColor: palette.primary,
                                     color: "white",
+                                    letterSpacing: 0.4,
+                                    borderBottom: `2px solid ${palette.primaryDark}`,
                                 }}
                             >
                                 <Typography>{header}</Typography>
@@ -92,7 +85,9 @@ function ReparacionesView() {
                                 sx={{
                                     textDecoration: "none",
                                     cursor: "pointer",
-                                    "&:hover": { backgroundColor: "#f5f5f5" },
+                                    transition: "background-color .25s",
+                                    backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'transparent',
+                                    '&:hover': { backgroundColor: palette.accentSoft },
                                 }}
                             >
                                 <TableCell align="center" width={"15%"}>{extractDate(row.fecha_registro)}</TableCell>
@@ -104,14 +99,14 @@ function ReparacionesView() {
                     ) : (
                         <TableRow>
                             <TableCell colSpan={4} align="center">
-                                <Typography>No hay datos disponibles</Typography>
+                                <Typography fontFamily="initial">No hay datos disponibles</Typography>
                             </TableCell>
                         </TableRow>
                     )}
                 </TableBody>
             </Table>
         </Box>
-    )
+    );
 
     const fetchData = async () => {
         setLoading(true);
@@ -129,17 +124,31 @@ function ReparacionesView() {
     };
 
     const getButtons = () => (
-        <>
+        <ButtonGroup size="small" sx={{ '& .MuiButton-root': { borderColor: palette.primaryDark } }}>
             <Button
                 key="prev"
                 variant="contained"
                 onClick={() => handlePage(page - 1)}
                 disabled={page === 1}
-                sx={{ background: "#142a3d" }}
+                sx={{
+                    background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+                    boxShadow: "0 3px 10px -2px rgba(10,27,43,0.5)",
+                    '&:hover': { background: palette.primaryDark },
+                    '&:disabled': { opacity: 0.5 },
+                }}
             >
-                <ArrowBackIosIcon />
+                <ArrowBackIosIcon fontSize="inherit" />
             </Button>
-            <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
+            <Button
+                key="current"
+                variant="contained"
+                sx={{
+                    background: palette.accent,
+                    color: '#fff',
+                    fontWeight: 600,
+                    '&:hover': { background: palette.accent },
+                }}
+            >
                 {page}
             </Button>
             <Button
@@ -147,11 +156,16 @@ function ReparacionesView() {
                 variant="contained"
                 onClick={() => handlePage(page + 1)}
                 disabled={page === pages}
-                sx={{ background: "#142a3d" }}
+                sx={{
+                    background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+                    boxShadow: "0 3px 10px -2px rgba(10,27,43,0.5)",
+                    '&:hover': { background: palette.primaryDark },
+                    '&:disabled': { opacity: 0.5 },
+                }}
             >
-                <ArrowForwardIosIcon />
+                <ArrowForwardIosIcon fontSize="inherit" />
             </Button>
-        </>
+        </ButtonGroup>
     );
 
     useEffect(() => {
@@ -162,13 +176,21 @@ function ReparacionesView() {
         <CalidadLayout>
             <Box
                 sx={{
-                    paddingTop: 2,
+                    pt: 8,
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
+                    justifyContent: 'flex-start',
                     alignItems: "center",
-                    backgroundColor: "#f5f5f5",
-                    minHeight: "90vh",
+                    background: palette.bgGradient,
+                    minHeight: "80vh",
+                    position: 'relative',
+                    '::before': {
+                        content: '""',
+                        position: 'absolute',
+                        inset: 0,
+                        background: "radial-gradient(circle at 20% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 65%)",
+                        pointerEvents: 'none',
+                    }
                 }}
             >
 
@@ -176,49 +198,62 @@ function ReparacionesView() {
                     <Alert
                         onClose={handleClose}
                         severity={alertType}
-                        sx={{ width: "80%", marginBottom: 2 }}
+                        sx={{
+                            width: "80%",
+                            mb: 3,
+                            boxShadow: 4,
+                            borderRadius: 3,
+                            background: palette.cardBg,
+                            border: `1px solid ${palette.borderSubtle}`,
+                        }}
                     >
                         {message}
                     </Alert>
                 )}
                 {loading ? (
-                    <Box
+                    <Paper
+                        elevation={8}
                         sx={{
-                            backgroundColor: "white",
+                            background: palette.cardBg,
                             height: "30vh",
                             width: "80%",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                             flexDirection: "column",
-                            border: "2px solid #dfdeda",
-                            borderRadius: 2,
+                            border: `1px solid ${palette.borderSubtle}`,
+                            borderRadius: 3,
+                            backdropFilter: 'blur(4px)',
+                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
                         }}
                     >
-                        <Typography variant="h5" sx={{ marginBottom: 4, color: "#142a3d" }}>
+                        <Typography variant="h5" sx={{ mb: 4, color: palette.primary, fontWeight: 600 }}>
                             Cargando los recursos...
                         </Typography>
                         <CircularProgress />
-                    </Box>
+                    </Paper>
                 ) : (
-                    <Box
+                    <Paper
+                        elevation={10}
                         sx={{
-                            backgroundColor: "white",
+                            background: palette.cardBg,
                             width: "90%",
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
                             height: "100%",
-                            paddingBottom: 4,
-                            borderRadius: 2,
-                            border: "2px solid #dfdeda",
+                            pb: 4,
+                            borderRadius: 3,
+                            border: `1px solid ${palette.borderSubtle}`,
+                            backdropFilter: 'blur(4px)',
+                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
                         }}
                     >
                         {repaTable()}
-                    </Box>
+                    </Paper>
                 )}
 
-                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginY: 4 }}>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", my: 4 }}>
                     {getButtons()}
                 </Box>
             </Box>

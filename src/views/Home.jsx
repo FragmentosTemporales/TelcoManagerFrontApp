@@ -9,6 +9,10 @@ function Home() {
   const authState = useSelector((state) => state.auth);
   const { permisos } = authState;
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const secciones = [
 
     {
@@ -210,11 +214,17 @@ function Home() {
             container
             rowSpacing={{ xs: 5, sm: 6, md: 7 }}
             columnSpacing={{ xs: 2.5, sm: 3, md: 3.5, lg: 4 }}
-            sx={{ width: "100%", maxWidth: 1320, mb: 14 }}
+            // Mantener 3 columnas en pantallas grandes y permitir que el ancho de cada card crezca
+            sx={{
+              width: "100%",
+              maxWidth: { xs: 1320, lg: 1460, xl: 1600 },
+              mb: 14,
+              transition: 'max-width .4s ease'
+            }}
             alignItems="stretch"
           >
             {accesos.map((acceso, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Grid item xs={12} sm={6} md={4} lg={4} xl={4} key={index}>
                 <Paper
                   component={Link}
                   to={acceso.link}

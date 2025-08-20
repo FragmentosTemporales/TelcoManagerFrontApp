@@ -5,11 +5,14 @@ import {
   InputLabel,
   TextField,
   Typography,
+  Paper,
+  Divider,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { createRegistroReparacion } from "../api/calidadAPI";
 import { MainLayout } from "./Layout";
+import { palette } from "../theme/palette";
 
 function CreateReparacionView() {
   const authState = useSelector((state) => state.auth);
@@ -116,45 +119,80 @@ function CreateReparacionView() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          background: "white",
+          justifyContent: "flex-start",
           alignItems: "center",
-          pt: 8,
-          height: "90vh",
-          backgroundColor: "#f5f5f5",
+          pt: { xs: 10, md: 10 },
+          pb: 10,
+          minHeight: "100vh",
+          background: palette.bgGradient,
+          position: "relative",
+          '::before': {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at 20% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 65%)",
+            pointerEvents: "none",
+          },
         }}
       >
         {open && (
-          <Alert onClose={handleClose} severity={alertSeverity} sx={{ marginBottom: 3 }}>
+          <Alert
+            onClose={handleClose}
+            severity={alertSeverity}
+            sx={{
+              mb: 3,
+              width: { xs: "90%", sm: "70%", md: "50%" },
+              boxShadow: 4,
+              borderRadius: 3,
+              background: palette.cardBg,
+              border: `1px solid ${palette.borderSubtle}`,
+            }}
+          >
             {message}
           </Alert>
         )}
-        <Box
+        <Paper
+          elevation={10}
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            boxShadow: 2,
             width: "50%",
-            paddingTop: 4,
-            paddingBottom: 4,
-            backgroundColor: "#fff",
+            px: { xs: 3, md: 6 },
+            pt: 5,
+            pb: 6,
+            background: palette.cardBg,
+            border: `1px solid ${palette.borderSubtle}`,
+            borderRadius: 4,
+            backdropFilter: "blur(6px)",
+            boxShadow:
+              "0 12px 32px -12px rgba(0,0,0,0.38), 0 6px 12px -4px rgba(0,0,0,0.26)",
           }}
         >
           <Typography
             variant="h5"
-            sx={{ mb: 4, fontWeight: "bold", color: "#142a3d" }}
+            sx={{
+              mb: 3.5,
+              fontWeight: 600,
+              color: palette.primary,
+              letterSpacing: 0.5,
+              textAlign: "center",
+              textShadow: "0 2px 4px rgba(0,0,0,0.15)",
+            }}
           >
             CREAR REGISTRO DE REPARACIÓN
           </Typography>
+          <Divider sx={{ mb: 3, width: "100%", opacity: 0.5 }} />
           <form
             onSubmit={handleSubmit}
             style={{ width: "80%" }}
             encType="multipart/form-data"
           >
-
-            <Box sx={{ mb: 2 }}>
-              <InputLabel id="orden-label">Orden de Trabajo</InputLabel>
+            <Box sx={{ mb: 3 }}>
+              <InputLabel id="orden-label" sx={{ fontWeight: 500, color: palette.primary }}>
+                Orden de Trabajo
+              </InputLabel>
               <TextField
                 fullWidth
                 size="small"
@@ -165,11 +203,18 @@ function CreateReparacionView() {
                 variant="standard"
                 value={form.orden}
                 onChange={handleChange}
+                sx={{
+                  '& .MuiInputBase-root:before': { borderColor: palette.borderSubtle },
+                  '& .MuiInputBase-root:hover:before': { borderColor: palette.accent },
+                  '& .MuiInputBase-root.Mui-focused:after': { borderColor: palette.accent },
+                }}
               />
             </Box>
 
-            <Box sx={{ mb: 2 }}>
-              <InputLabel id="descripcion-label">Descripción</InputLabel>
+            <Box sx={{ mb: 3 }}>
+              <InputLabel id="descripcion-label" sx={{ fontWeight: 500, color: palette.primary }}>
+                Descripción
+              </InputLabel>
               <TextField
                 fullWidth
                 size="small"
@@ -180,11 +225,18 @@ function CreateReparacionView() {
                 variant="standard"
                 value={form.descripcion}
                 onChange={handleChange}
+                sx={{
+                  '& .MuiInputBase-root:before': { borderColor: palette.borderSubtle },
+                  '& .MuiInputBase-root:hover:before': { borderColor: palette.accent },
+                  '& .MuiInputBase-root.Mui-focused:after': { borderColor: palette.accent },
+                }}
               />
             </Box>
 
-            <Box sx={{ mb: 2 }}>
-              <InputLabel id="img_1-label">Registro 1</InputLabel>
+            <Box sx={{ mb: 3 }}>
+              <InputLabel id="img_1-label" sx={{ fontWeight: 500, color: palette.primary }}>
+                Registro 1
+              </InputLabel>
               <TextField
                 required
                 size="small"
@@ -194,6 +246,11 @@ function CreateReparacionView() {
                 name="img_1"
                 variant="standard"
                 onChange={handleFileChange}
+                sx={{
+                  '& .MuiInputBase-root:before': { borderColor: palette.borderSubtle },
+                  '& .MuiInputBase-root:hover:before': { borderColor: palette.accent },
+                  '& .MuiInputBase-root.Mui-focused:after': { borderColor: palette.accent },
+                }}
               />
             </Box>
 
@@ -201,14 +258,25 @@ function CreateReparacionView() {
               <Button
                 type="submit"
                 variant="contained"
-                sx={{ background: "#142a3d", fontWeight: "bold", width: "200px", borderRadius: "0px", marginTop: "20px" }}
-                disabled={isSubmitting} // Deshabilitar el botón cuando isSubmitting es true
+                sx={{
+                  background: `linear-gradient(145deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+                  fontWeight: 600,
+                  width: "200px",
+                  borderRadius: 2.5,
+                  mt: 2,
+                  letterSpacing: 0.5,
+                  textTransform: "none",
+                  boxShadow: "0 6px 16px -4px rgba(10,27,43,0.55),0 2px 6px -2px rgba(10,27,43,0.35)",
+                  '&:hover': { background: palette.primaryDark },
+                  '&:disabled': { opacity: 0.6 },
+                }}
+                disabled={isSubmitting}
               >
                 {isSubmitting ? "Procesando..." : "Crear"}
               </Button>
             </Box>
           </form>
-        </Box>
+        </Paper>
       </Box>
     </MainLayout>
   );

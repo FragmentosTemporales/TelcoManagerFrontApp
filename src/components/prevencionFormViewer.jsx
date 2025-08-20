@@ -1,14 +1,8 @@
-import {
-  Box,
-  Button,
-  CardContent,
-  Paper,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { downloadFile } from "../api/downloadApi";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import palette from "../theme/palette";
 
 function PrevencionViewer({ data }) {
   const [filePath, setFilePath] = useState("");
@@ -31,225 +25,91 @@ function PrevencionViewer({ data }) {
     }
   }, [data]);
 
+  const rowSx = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: 2,
+    px: 2,
+    py: 1.2,
+    mb: 1.2,
+    border: `1px solid ${palette.borderSubtle}`,
+    background: palette.cardBg,
+    backdropFilter: "blur(6px)",
+    borderRadius: 2,
+    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    transition: "border-color .25s, box-shadow .25s, transform .25s",
+    '&:hover': {
+      borderColor: palette.accent,
+      boxShadow: "0 6px 18px rgba(0,0,0,0.15)",
+      transform: "translateY(-2px)"
+    }
+  };
+
+  const labelSx = {
+    width: { lg: "25%", md: "40%", sm: "50%", xs: "55%" },
+    color: palette.primary,
+    fontWeight: 600,
+    fontSize: 14.5,
+    letterSpacing: 0.2,
+    pr: 2,
+    lineHeight: 1.4
+  };
+
+  const valueSx = {
+    width: "75%",
+    color: palette.textMuted,
+    fontWeight: 500,
+    fontSize: 14.5,
+    lineHeight: 1.4,
+    wordBreak: "break-word"
+  };
+
+  const gradientBtn = {
+    background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 100%)`,
+    color: '#fff',
+    textTransform: 'none',
+    fontWeight: 600,
+    fontSize: 13,
+    px: 2.2,
+    py: 0.9,
+    borderRadius: 2,
+    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+    '&:hover': {
+      background: `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 100%)`,
+      boxShadow: '0 6px 18px rgba(0,0,0,0.22)'
+    }
+  };
+
+  const rows = [
+    { key: 'Auditor', label: 'Auditor' },
+    { key: 'Fecha Auditoria', label: 'Fecha Auditoria' },
+    { key: 'Epp Auditado', label: 'Epp Auditado' },
+    { key: 'Fecha Entrega Epp', label: 'Fecha Entrega Epp' },
+    { key: 'Dirección', label: 'Dirección' },
+    { key: 'Declaración', label: 'Declaración' }
+  ];
+
   return (
-    <>
-      <Box sx={{ width: "100%", textAlign: "start" }}>
-        {data && data["Auditor"] !== "Sin información" && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
-            <Typography
-              sx={{
-                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
-              }}
-            >
-              Auditor:
-            </Typography>
-            <Typography
-              sx={{
-                color: "text.secondary",
-                width: "75%",
-              }}
-            >
-              {data["Auditor"]}
-            </Typography>
+    <Box sx={{ width: '100%', textAlign: 'start' }}>
+      {rows.map(r => (
+        data && data[r.key] !== 'Sin información' && (
+          <Box key={r.key} sx={rowSx}>
+            <Typography sx={labelSx}>{r.label}:</Typography>
+            <Typography sx={valueSx}>{data[r.key]}</Typography>
           </Box>
-        )}
+        )
+      ))}
 
-        {data && data["Fecha Auditoria"] !== "Sin información" && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
-            <Typography
-              sx={{
-                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
-              }}
-            >
-              Fecha Auditoria:
-            </Typography>
-            <Typography
-              sx={{
-                color: "text.secondary",
-                width: "75%",
-              }}
-            >
-              {data["Fecha Auditoria"]}
-            </Typography>
+      {data && data['Archivo'] !== 'None' && (
+        <Box sx={rowSx}>
+          <Typography sx={labelSx}>Archivo:</Typography>
+          <Box sx={{ width: '75%', display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Button onClick={downloader} size="small" sx={gradientBtn}>Descargar</Button>
           </Box>
-        )}
-
-        {data && data["Epp Auditado"] !== "Sin información" && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
-            <Typography
-              sx={{
-                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
-              }}
-            >
-              Epp Auditado:
-            </Typography>
-            <Typography
-              sx={{
-                color: "text.secondary",
-                width: "75%",
-              }}
-            >
-              {data["Epp Auditado"]}
-            </Typography>
-          </Box>
-        )}
-
-        {data && data["Fecha Entrega Epp"] !== "Sin información" && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
-            <Typography
-              sx={{
-                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
-              }}
-            >
-              Fecha Entrega Epp:
-            </Typography>
-            <Typography
-              sx={{
-                color: "text.secondary",
-                width: "75%",
-              }}
-            >
-              {data["Fecha Entrega Epp"]}
-            </Typography>
-          </Box>
-        )}
-
-        {data && data["Dirección"] !== "Sin información" && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
-            <Typography
-              sx={{
-                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
-              }}
-            >
-              Dirección:
-            </Typography>
-            <Typography
-              sx={{
-                color: "text.secondary",
-                width: "75%",
-              }}
-            >
-              {data["Dirección"]}
-            </Typography>
-          </Box>
-        )}
-
-        {data && data["Declaración"] !== "Sin información" && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
-            <Typography
-              sx={{
-                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
-              }}
-            >
-              Declaración:
-            </Typography>
-            <Typography
-              sx={{
-                color: "text.secondary",
-                width: "75%",
-              }}
-            >
-              {data["Declaración"]}
-            </Typography>
-          </Box>
-        )}
-
-        {data && data["Archivo"] !== "None" && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
-            <Typography
-              sx={{
-                width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
-              }}
-            >
-              Archivo:
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                width: "75%",
-                p: 1,
-              }}
-            >
-              <Button
-                onClick={downloader}
-                variant="outlined"
-                size="small"
-                sx={{
-                  textDecoration: "none",
-                  color: "#1976d2",
-                  fontWeight: "bold",
-                }}
-              >
-                Descargar
-              </Button>
-            </Box>
-          </Box>
-        )}
-      </Box>
-    </>
+        </Box>
+      )}
+    </Box>
   );
 }
 

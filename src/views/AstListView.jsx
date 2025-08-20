@@ -1,5 +1,4 @@
 import {
-  Alert,
   Autocomplete,
   Box,
   Button,
@@ -7,7 +6,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Grid,
   Skeleton,
   Table,
   TableBody,
@@ -21,7 +19,7 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import SearchIcon from "@mui/icons-material/Search";
+// import SearchIcon from "@mui/icons-material/Search"; // no longer used
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useState, useEffect } from "react";
@@ -35,7 +33,7 @@ import {
 } from "../api/prevencionAPI";
 import { Link } from "react-router-dom";
 import { MainLayout } from "./Layout";
-
+import palette from "../theme/palette";
 
 function FormAstList() {
   const authState = useSelector((state) => state.auth);
@@ -54,21 +52,21 @@ function FormAstList() {
   const [form, setForm] = useState({ fecha: "", numDoc: "" });
   const [selectedUser, setSelectedUser] = useState(null); // Nuevo estado para Autocomplete
 
-const extractDate = (gmtString) => {
-  const date = new Date(gmtString);
+  const extractDate = (gmtString) => {
+    const date = new Date(gmtString);
 
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(date.getUTCDate()).padStart(2, "0");
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
 
-  const hours = String(date.getUTCHours()).padStart(2, "0");
-  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-  const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+    const seconds = String(date.getUTCSeconds()).padStart(2, "0");
 
-  const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}-${month}-${year} `;
-  
-  return formattedDateTime;
-};
+    const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}-${month}-${year} `;
+
+    return formattedDateTime;
+  };
 
   const fetchData = async () => {
     try {
@@ -82,8 +80,13 @@ const extractDate = (gmtString) => {
     } finally {
       setIsLoading(false);
       setIsSubmitting(false);
+      window.scrollTo(0, 0); // Scroll to top after fetching data
     }
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -134,9 +137,12 @@ const extractDate = (gmtString) => {
         width: "90%",
         height: "100%",
         overflow: "auto",
-        marginTop: 2,
-        borderRadius: 2,
-        border: "2px solid #dfdeda",
+        mt: 2,
+        borderRadius: 3,
+        border: `1px solid ${palette.borderSubtle}`,
+        background: palette.cardBg,
+        backdropFilter: "blur(8px)",
+        boxShadow: "0 6px 24px rgba(0,0,0,0.15)",
       }}
     >
       <Table stickyHeader>
@@ -170,6 +176,33 @@ const extractDate = (gmtString) => {
     }
   };
 
+  const gradientBtn = {
+    background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 95%)`,
+    color: "#fff",
+    fontWeight: 600,
+    letterSpacing: 0.4,
+    textTransform: "none",
+    boxShadow: "0 4px 14px -4px rgba(0,0,0,0.4)",
+    "&:hover": {
+      background: `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 90%)`,
+      boxShadow: "0 6px 22px -4px rgba(0,0,0,0.55)",
+    },
+    "&:disabled": { background: palette.primaryDark, opacity: 0.5 },
+  };
+
+  const subtleBtn = {
+    border: `1px solid ${palette.borderSubtle}`,
+    color: palette.primary,
+    fontWeight: 600,
+    textTransform: "none",
+    background: "rgba(255,255,255,0.6)",
+    backdropFilter: "blur(6px)",
+    "&:hover": {
+      borderColor: palette.accent,
+      background: "rgba(255,255,255,0.85)",
+    },
+  };
+
   const downloadExcel = () => (
     <Box
       sx={{
@@ -181,18 +214,9 @@ const extractDate = (gmtString) => {
       }}
     >
       <Button
-        variant="contained"
         onClick={getExcel}
         disabled={isSubmitting}
-        sx={{
-          width: 250,
-          height: 40,
-          fontWeight: "bold",
-          display: "flex",
-          justifyContent: "space-around",
-          borderRadius: 2,
-          background: "#142a3d",
-        }}
+        sx={{ ...gradientBtn, width: 260, height: 44, borderRadius: 2 }}
       >
         {isSubmitting ? "Procesando..." : "Descargar Excel"}
       </Button>
@@ -203,24 +227,22 @@ const extractDate = (gmtString) => {
     <>
       <Button
         key="prev"
-        variant="contained"
         onClick={() => handlePage(page - 1)}
         disabled={page === 1}
-        sx={{ background: "#142a3d" }}
+        sx={subtleBtn}
       >
-        <ArrowBackIosIcon />
+        <ArrowBackIosIcon fontSize="small" />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
+      <Button key="current" disabled sx={{ ...subtleBtn, fontWeight: 700 }}>
         {page}
       </Button>
       <Button
         key="next"
-        variant="contained"
         onClick={() => handlePage(page + 1)}
         disabled={page === pages}
-        sx={{ background: "#142a3d" }}
+        sx={subtleBtn}
       >
-        <ArrowForwardIosIcon />
+        <ArrowForwardIosIcon fontSize="small" />
       </Button>
     </>
   );
@@ -230,17 +252,25 @@ const extractDate = (gmtString) => {
       sx={{
         width: "90%",
         overflow: "hidden",
-        backgroundColor: "white",
-        border: "2px solid #dfdeda",
-        borderRadius: 2,
+        background: palette.cardBg,
+        border: `1px solid ${palette.borderSubtle}`,
+        borderRadius: 3,
         textAlign: "center",
         mt: 2,
-        paddingTop: 3,
-        paddingBottom: 3,
+        py: 3,
+        backdropFilter: "blur(8px)",
+        boxShadow: "0 6px 24px rgba(0,0,0,0.15)",
       }}
     >
       <form onSubmit={handleSubmit}>
-        <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            justifyContent: "center",
+            flexWrap: "wrap",
+          }}
+        >
           <Autocomplete
             variant="standard"
             options={dataUsers || []}
@@ -248,9 +278,9 @@ const extractDate = (gmtString) => {
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
             }
-            value={selectedUser} // Controlar valor
+            value={selectedUser}
             onChange={(event, value) => {
-              setSelectedUser(value); // Actualizar estado
+              setSelectedUser(value);
               setForm((prev) => ({
                 ...prev,
                 numDoc: value ? value.value : "",
@@ -264,100 +294,102 @@ const extractDate = (gmtString) => {
                 size="small"
               />
             )}
-            sx={{ width: "30%" }}
+            sx={{ width: { xs: "100%", sm: "45%", md: "30%" } }}
           />
           <TextField
             label="Fecha"
             type="date"
             variant="standard"
             size="small"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={(e) => {
-              setForm((prev) => ({
-                ...prev,
-                fecha: e.target.value,
-              }));
-            }}
-            sx={{ width: "30%" }}
+            InputLabelProps={{ shrink: true }}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, fecha: e.target.value }))
+            }
+            sx={{ width: { xs: "100%", sm: "45%", md: "30%" } }}
             value={form.fecha}
           />
         </Box>
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={isSubmitting}
+        <Box
           sx={{
-            mt: 2,
-            background: "#142a3d",
-            width: "200px",
-            borderRadius: "0px",
+            mt: 3,
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+            flexWrap: "wrap",
           }}
         >
-          {isSubmitting ? "Procesando..." : "Filtrar"}
-        </Button>
-        <Button
-          variant="outlined"
-          disabled={isSubmitting}
-          onClick={handleClear}
-          sx={{
-            mt: 2,
-            ml: 2,
-            width: "200px",
-            borderRadius: "0px",
-          }}
-        >
-          {isSubmitting ? "Procesando..." : "Limpiar Filtros"}
-        </Button>
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            sx={{ ...gradientBtn, width: 200, borderRadius: 2 }}
+          >
+            {isSubmitting ? "Procesando..." : "Filtrar"}
+          </Button>
+          <Button
+            disabled={isSubmitting}
+            onClick={handleClear}
+            sx={{ ...subtleBtn, width: 200, borderRadius: 2 }}
+          >
+            {isSubmitting ? "Procesando..." : "Limpiar Filtros"}
+          </Button>
+        </Box>
       </form>
     </Box>
   );
 
   const statsCard = () => (
-    <>
-      <Card
+    <Card
+      sx={{
+        width: "90%",
+        overflow: "hidden",
+        background: palette.cardBg,
+        textAlign: "center",
+        borderRadius: 3,
+        mt: 2,
+        mb: 2,
+        border: `1px solid ${palette.borderSubtle}`,
+        backdropFilter: "blur(8px)",
+        boxShadow: "0 6px 24px rgba(0,0,0,0.18)",
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography fontWeight={700} sx={{ letterSpacing: 0.5 }}>
+            DATOS NO REALIZADAS
+          </Typography>
+        }
+        avatar={<BarChartIcon sx={{ color: palette.accent }} />}
+        action={
+          <Button
+            onClick={toggleStats}
+            sx={{ ...subtleBtn, minWidth: 44, height: 36, borderRadius: 2 }}
+          >
+            {showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </Button>
+        }
         sx={{
-          width: "90%",
-          overflow: "hidden",
-          backgroundColor: "#f5f5f5",
-          textAlign: "center",
-          borderRadius: 2,
-          mt: 2,
-          mb: 2,
+          background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 70%)`,
+          color: "white",
+          textAlign: "end",
+          "& .MuiCardHeader-action": { alignSelf: "center" },
         }}
-      >
-        <CardHeader
-          title={
-            <Typography fontWeight="bold">
-              DATOS NO REALIZADAS
-            </Typography>
-          }
-          avatar={<BarChartIcon />}
-          action={
-            <Button
-              onClick={toggleStats}
-              sx={{ color: "white", minWidth: "auto" }}
-            >
-              {showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </Button>
-          }
-          sx={{
-            background: "#142a3d",
-            color: "white",
-            textAlign: "end",
-          }}
-        />
-        {showStats && dataStatsCC ? (
-          <CardContent>
-            <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-              {setTableStatsCC()}
-              {setTableStatsCCFilteres()}
-            </Box>
-          </CardContent>
-        ) : null}
-      </Card>
-    </>
+      />
+      {showStats && dataStatsCC && (
+        <CardContent>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            {setTableStatsCC()}
+            {setTableStatsCCFilteres()}
+          </Box>
+        </CardContent>
+      )}
+    </Card>
   );
 
   const setTableStatsCC = () => (
@@ -404,7 +436,7 @@ const extractDate = (gmtString) => {
               key={header}
               align="center"
               sx={{
-                background: "#142a3d",
+                background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 70%)`,
                 fontWeight: "bold",
                 fontSize: "10px",
                 color: "#ffffff",
@@ -427,7 +459,7 @@ const extractDate = (gmtString) => {
               key={header}
               align="center"
               sx={{
-                background: "#142a3d",
+                background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 70%)`,
                 fontWeight: "bold",
                 fontSize: "10px",
                 color: "#ffffff",
@@ -555,13 +587,15 @@ const extractDate = (gmtString) => {
             <TableCell
               key={header.label}
               align="center"
-              sx={{ backgroundColor: "#142a3d" }}
+              sx={{
+                background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 80%)`,
+              }}
             >
               <Typography
                 variant="h6"
                 sx={{
                   fontWeight: "bold",
-                  color: "#ffffff",
+                  color: "#fff",
                   fontSize: "14px",
                 }}
               >
@@ -590,8 +624,12 @@ const extractDate = (gmtString) => {
               sx={{
                 textDecoration: "none",
                 cursor: "pointer",
-                backgroundColor: "#ffffff",
-                "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+                backgroundColor: "#ffffffcc",
+                backdropFilter: "blur(4px)",
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  transition: "background-color .25s",
+                },
               }}
               key={index}
             >
@@ -648,49 +686,57 @@ const extractDate = (gmtString) => {
 
   return (
     <MainLayout showNavbar={true}>
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-        width: "100%",
-        overflow: "auto",
-        paddingY: "70px",
-        backgroundColor: "#f5f5f5",
-      }}
-    >
-      {statsCard()}
-      {filterCard()}
-      {downloadExcel()}
-      {isLoading ? (
-        <Box
-          sx={{
-            width: "100%",
-            height: "90vh",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Skeleton variant="rounded" width={"90%"} height={"100%"} />
-        </Box>
-      ) : (
-        <>
-          {setTableCard()}
-
-          <ButtonGroup
-            size="small"
-            aria-label="pagination-button-group"
-            sx={{ p: 2 }}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          width: "100%",
+          minHeight: "100vh",
+          py: 8,
+          position: "relative",
+          overflow: "auto",
+          background: palette.bgGradient,
+          "::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at 20% 18%, rgba(255,255,255,0.085), transparent 60%), radial-gradient(circle at 78% 75%, rgba(255,255,255,0.06), transparent 65%)",
+            pointerEvents: "none",
+          },
+        }}
+      >
+        {statsCard()}
+        {filterCard()}
+        {downloadExcel()}
+        {isLoading ? (
+          <Box
+            sx={{
+              width: "100%",
+              minHeight: "60vh",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            {getButtons()}
-          </ButtonGroup>
-        </>
-      )}
-    </Box>
+            <Skeleton variant="rounded" width={"90%"} height={"100%"} />
+          </Box>
+        ) : (
+          <>
+            {setTableCard()}
+            <ButtonGroup
+              size="small"
+              aria-label="pagination-button-group"
+              sx={{ p: 2, gap: 1 }}
+            >
+              {getButtons()}
+            </ButtonGroup>
+          </>
+        )}
+      </Box>
     </MainLayout>
   );
 }

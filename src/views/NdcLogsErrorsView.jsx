@@ -3,17 +3,17 @@ import {
     Box,
     CircularProgress,
     Divider,
-    MenuItem,
-    Select,
     TableContainer,
     Table,
     TableBody,
     TableRow,
     TableCell,
-    Typography
+    Typography,
+    Paper,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { NdcLayout } from "./Layout";
+import { palette } from "../theme/palette";
 import { useEffect, useState } from "react";
 import { fetchLogsErrores } from "../api/logisticaAPI";
 import { extractDateOnly } from "../helpers/main";
@@ -45,10 +45,9 @@ function NDCLogsError() {
     const tableDataError = () => (
         //crea una tabla con los datos de pendientes sin consumo
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <Box sx={{ display: "flex", justifyContent: "center", p: 1, backgroundColor: "#142a3d" }}>
+            <Box sx={{ display: "flex", justifyContent: "center", p: 1, background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`, borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
                 <Typography
                     sx={{
-                        backgroundColor: "#142a3d",
                         color: "white",
                         padding: 1,
                         fontStyle: "italic",
@@ -61,7 +60,7 @@ function NDCLogsError() {
 
             </Box>
             <TableContainer>
-                <Table>
+                <Table stickyHeader>
                     <TableRow>
                         {[
                             "FECHA",
@@ -73,9 +72,11 @@ function NDCLogsError() {
                                 key={header}
                                 align="center"
                                 sx={{
-                                    fontWeight: "bold",
-                                    backgroundColor: "#142a3d",
+                                    fontWeight: 600,
+                                    backgroundColor: palette.primary,
                                     color: "white",
+                                    letterSpacing: 0.4,
+                                    borderBottom: `2px solid ${palette.primaryDark}`,
                                 }}
                             >
                                 <Typography>{header}</Typography>
@@ -84,7 +85,7 @@ function NDCLogsError() {
                     </TableRow>
                     <TableBody>
                         {data.map((item, index) => (
-                            <TableRow key={index}>
+                            <TableRow key={index} sx={{ transition: 'background-color .25s', backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'transparent', '&:hover': { backgroundColor: palette.accentSoft } }}>
                                 <TableCell align="center" sx={{ fontSize: "12px" }} >{item.fecha_registro ? extractDateOnly(item.fecha_registro) : 'N/A'}</TableCell>
                                 <TableCell sx={{ fontWeight: "bold", fontSize: "12px" }} align="center">{item.session_id}</TableCell>
                                 <TableCell sx={{ fontWeight: "bold", fontSize: "12px" }} align="center">{item.orden}</TableCell>
@@ -119,22 +120,31 @@ function NDCLogsError() {
                     justifyContent: "center",
                     alignItems: "center",
                     flexDirection: "column",
-                    minHeight: "90vh",
-                    paddingY: "20px",
-                    backgroundColor: "#f5f5f5",
+                    minHeight: "100vh",
+                    py: 8,
+                    px: 1,
+                    background: palette.bgGradient,
+                    position: 'relative',
+                    '::before': {
+                        content: '""',
+                        position: 'absolute',
+                        inset: 0,
+                        background: "radial-gradient(circle at 20% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 65%)",
+                        pointerEvents: 'none'
+                    }
                 }}
             >
                 {open && (
                     <Alert
                         onClose={handleClose}
                         severity={alertType}
-                        sx={{ width: "90%", marginBottom: 2 }}
+                        sx={{ width: "90%", mb: 3, boxShadow: 4, borderRadius: 3, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}` }}
                     >
                         {message}
                     </Alert>
                 )}
                 {!isSubmitting ? (
-                    <Box sx={{ width: "90%", padding: 2, backgroundColor: "white", borderRadius: 2, border: "2px solid #dfdeda" }}>
+                    <Paper elevation={10} sx={{ width: "90%", p: 3, background: palette.cardBg, borderRadius: 3, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)', boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)" }}>
                         <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
                             Logs de Ordenes con Error
                         </Typography>
@@ -142,21 +152,11 @@ function NDCLogsError() {
                         {data && data.length > 0 ? (
                             tableDataError()
                         ) : null}
-                    </Box>
+                    </Paper>
                 ) : (
-                    <Box sx={{
-                        width: "90%",
-                        padding: 2,
-                        backgroundColor: "white",
-                        borderRadius: 2,
-                        border: "2px solid #dfdeda",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        minHeight: "200px"
-                    }}>
+                    <Paper elevation={8} sx={{ width: "90%", p: 2, background: palette.cardBg, borderRadius: 3, border: `1px solid ${palette.borderSubtle}`, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 200 }}>
                         <CircularProgress />
-                    </Box>
+                    </Paper>
                 )
                 }
             </Box>

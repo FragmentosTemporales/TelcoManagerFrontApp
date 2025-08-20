@@ -20,6 +20,8 @@ import {
   TableRow,
   TextField,
   Typography,
+  Divider,
+  Chip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -35,6 +37,7 @@ import {
 import extractDate from "../helpers/main";
 import ReversaCharts from "../components/reversaCharts";
 import { MainLayout } from "./Layout";
+import { palette } from "../theme/palette";
 
 function ReversaView() {
   const authState = useSelector((state) => state.auth);
@@ -54,7 +57,17 @@ function ReversaView() {
   const [showTableOk, setShowTableOk] = useState(false);
 
   const renderAlert = () => (
-    <Alert onClose={handleClose} severity={severity} sx={{ marginBottom: 3 }}>
+    <Alert
+      onClose={handleClose}
+      severity={severity}
+      sx={{
+        marginBottom: 3,
+        boxShadow: 4,
+        borderRadius: 3,
+        background: palette.cardBg,
+        border: `1px solid ${palette.borderSubtle}`,
+      }}
+    >
       {message}
     </Alert>
   );
@@ -158,9 +171,16 @@ function ReversaView() {
           <TableCell
             key={header}
             align="center"
-            sx={{ background:"#142a3d", color: "white", fontSize: "12px" }}
+            sx={{
+              background: palette.primary,
+              color: "white",
+              fontSize: "12px",
+              fontWeight: 600,
+              letterSpacing: 0.4,
+              borderBottom: `2px solid ${palette.primaryDark}`,
+            }}
           >
-            <Typography fontWeight="bold">{header}</Typography>
+            <Typography fontWeight="inherit">{header}</Typography>
           </TableCell>
         ))}
       </TableRow>
@@ -298,13 +318,21 @@ function ReversaView() {
         <Box sx={{ textAlign: "center", marginTop: 2 }}>
           <Button
             variant="contained"
-            sx={{ background: "#142a3d", width: "200px", borderRadius: "0px" }}
+            sx={{
+              background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+              width: "200px",
+              borderRadius: 2,
+              fontWeight: 600,
+              letterSpacing: 0.4,
+              textTransform: "none",
+              boxShadow: "0 6px 16px -4px rgba(10,27,43,0.55),0 2px 6px -2px rgba(10,27,43,0.35)",
+              '&:hover': { background: palette.primaryDark },
+              '&:disabled': { opacity: 0.6 },
+            }}
             onClick={handleSubmitUpdate}
             disabled={isSubmitting}
           >
-            <Typography>
-              {isSubmitting ? "Procesando..." : "Actualizar"}
-            </Typography>
+            {isSubmitting ? "Procesando..." : "Actualizar"}
           </Button>
         </Box>
       );
@@ -332,7 +360,15 @@ function ReversaView() {
     return (
         <TableContainer
           component={Paper}
-          sx={{ width: "100%", height: "100%", overflow: "auto" }}
+          elevation={8}
+          sx={{
+            width: "100%",
+            height: "100%",
+            overflow: "auto",
+            background: palette.cardBg,
+            border: `1px solid ${palette.borderSubtle}`,
+            backdropFilter: "blur(4px)",
+          }}
         >
           <Table stickyHeader>
             {renderTableHeaders()}
@@ -359,7 +395,15 @@ function ReversaView() {
       );
     }
     return (
-      <Card sx={{ borderRadius: "10px" }}>
+      <Card
+        sx={{
+          borderRadius: 3,
+          background: palette.cardBg,
+          border: `1px solid ${palette.borderSubtle}`,
+          backdropFilter: "blur(4px)",
+          boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
+        }}
+      >
         <CardHeader
           title={
             <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
@@ -376,7 +420,7 @@ function ReversaView() {
             </Button>
           }
           sx={{
-            background: "#142a3d",
+            background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
             color: "white",
             textAlign: "end",
           }}
@@ -384,7 +428,13 @@ function ReversaView() {
         {showTableOk && (
           <TableContainer
             component={Paper}
-            sx={{ width: "100%", height: "100%", overflow: "auto" }}
+            sx={{
+              width: "100%",
+              height: "100%",
+              overflow: "auto",
+              background: palette.cardBg,
+              border: `1px solid ${palette.borderSubtle}`,
+            }}
           >
             <Table stickyHeader>
               {renderTableHeaders()}
@@ -403,10 +453,12 @@ function ReversaView() {
         display: "flex",
         justifyContent: "center",
         width: "100%",
-        backgroundColor: "#fff",
-        borderRadius: 2,
-        border: "2px solid #dfdeda",
+        background: palette.cardBg,
+        borderRadius: 3,
+        border: `1px solid ${palette.borderSubtle}`,
         pb: 2,
+        backdropFilter: "blur(4px)",
+        boxShadow: "0 6px 18px -6px rgba(0,0,0,0.28), 0 4px 8px -2px rgba(0,0,0,0.18)",
       }}
     >
       <FormControl>
@@ -434,13 +486,22 @@ function ReversaView() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
         width: "100%",
         paddingY: "70px",
-        mt: 2,
-        backgroundColor: "#f5f5f5",
+        mt: 0,
+        background: palette.bgGradient,
         minHeight: "95vh",
+        position: "relative",
+        '::before': {
+          content: '""',
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(circle at 20% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 65%)",
+          pointerEvents: "none",
+        },
       }}
     >
       {open && renderAlert()}
@@ -457,17 +518,19 @@ function ReversaView() {
       <Box
         sx={{
           width: { lg: "80%", md: "90%", xs: "100%" },
-          backgroundColor: "#fff",
-          borderRadius: 2,
-          border: "2px solid #dfdeda",
+          background: palette.cardBg,
+          borderRadius: 3,
+          border: `1px solid ${palette.borderSubtle}`,
           pt: 4,
           pb: 4,
+          backdropFilter: "blur(6px)",
+          boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
         }}
       >
         <Typography
           variant="h5"
           fontWeight="bold"
-          sx={{ textAlign: "center", mb: 4 }}
+          sx={{ textAlign: "center", mb: 4, color: palette.primary, letterSpacing: 0.4 }}
         >
           CONSULTA DE REVERSAS
         </Typography>
@@ -531,12 +594,20 @@ function ReversaView() {
             <Button
               type="submit"
               variant="contained"
-              sx={{ background: "#142a3d", width: "200px", mt: 2 }}
               disabled={isSubmitting}
+              sx={{
+                background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+                width: "200px",
+                mt: 2,
+                fontWeight: 600,
+                letterSpacing: 0.4,
+                textTransform: "none",
+                boxShadow: "0 6px 16px -4px rgba(10,27,43,0.55),0 2px 6px -2px rgba(10,27,43,0.35)",
+                '&:hover': { background: palette.primaryDark },
+                '&:disabled': { opacity: 0.6 },
+              }}
             >
-              <Typography>
-                {isSubmitting ? "Procesando..." : "Consultar"}
-              </Typography>
+              {isSubmitting ? "Procesando..." : "Consultar"}
             </Button>
           </Box>
         </form>

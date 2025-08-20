@@ -19,6 +19,7 @@ import {
   getMigracionFiltrada
 } from "../api/despachoAPI";
 import { MigracionLayout } from "./Layout";
+import { palette } from "../theme/palette";
 import { onClear } from "../slices/migracionSlice";
 
 export default function CreateMigracionesProactivas() {
@@ -270,13 +271,23 @@ const setEstadoOpciones = () => {
 
   return (
     <MigracionLayout showNavbar={true} id_vivienda={id_vivienda}>
+  <Box>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: "#f5f5f5",
-          minHeight: "110vh",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          minHeight: '110vh',
+          background: palette.bgGradient,
+          position: 'relative',
+          overflow: 'hidden',
+          '::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 18% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.06), transparent 65%)',
+            pointerEvents: 'none'
+          }
         }}
       >
 
@@ -285,66 +296,51 @@ const setEstadoOpciones = () => {
             onClose={handleClose}
             severity={alertType}
             sx={{
-              width: { lg: "80%", md: "80%", sm: "80%", xs: "90%" },
-              marginBottom: 2,
-              marginTop: 2,
+              width: { lg: '80%', md: '80%', sm: '80%', xs: '90%' },
+              mb: 2,
+              mt: 2,
+              background: palette.cardBg,
+              backdropFilter: 'blur(6px)',
+              border: `1px solid ${palette.borderSubtle}`,
+              borderRadius: 3,
+              boxShadow: 4
             }}
           >
             {message}
           </Alert>
         )}
-
-        <Box
+  <Box
           sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: {
-              lg: "row",
-              md: "column",
-              sm: "column",
-              xs: "column",
-            },
+            width: '98%',
+            height: '100%',
+            background: palette.cardBg,
+            mb: 2,
+            border: `1px solid ${palette.borderSubtle}`,
+            borderRadius: 3,
+            display: 'flex',
+            flexDirection: { lg: 'row', md: 'column', sm: 'column', xs: 'column' },
+            boxShadow: '0 8px 26px -8px rgba(0,0,0,0.42)',
+            backdropFilter: 'blur(6px)',
+            overflow: 'hidden'
           }}
         >
-
-          <Box
-            sx={{
-              width: { lg: "100%", md: "100%", sm: "100%", xs: "100%" },
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box
-              sx={{
-                width: "98%",
-                height: "100%",
-                backgroundColor: "#fff",
-                marginBottom: 2,
-                border: "2px solid #dfdeda",
-                borderRadius: 2,
-                display: "flex",
-                flexDirection: {lg: "row", md: "column", sm: "column", xs: "column"},
-              }}
-            >
               <Box
                 sx={{
-                  width: {lg: "50%", md: "100%", sm: "100%", xs: "100%"},
-                  height: "100%",
-                  backgroundColor: "#fff",
-                  borderRadius: 2,
+                  width: { lg: '50%', md: '100%', sm: '100%', xs: '100%' },
+                  height: '100%',
+                  background: 'transparent'
                 }}
               >
                 <Typography
                   variant="h6"
                   sx={{
-                    padding: 2,
-                    color: "#142a3d",
-                    textAlign: "center",
-                    fontWeight: "bold",
+                    p: 2,
+                    color: '#fff',
+                    textAlign: 'center',
+                    fontWeight: 600,
+                    background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 55%, ${palette.accent} 125%)`,
+                    letterSpacing: .5,
+                    textShadow: '0 2px 4px rgba(0,0,0,0.35)'
                   }}
                 >
                   {" "}
@@ -382,42 +378,51 @@ const setEstadoOpciones = () => {
                     ))}
                   </Select>
                   <Button
-                    variant="contained"
+                    variant='contained'
                     disabled={isSubmitting}
                     onClick={handleSubmit}
                     sx={{
-                      width: { lg: "30%", md: "30%", sm: "100%", xs: "100%" },
+                      width: { lg: '30%', md: '30%', sm: '100%', xs: '100%' },
                       borderRadius: 2,
-                      backgroundColor: "#142a3d",
-                      marginBottom: 2,
+                      background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 80%)`,
+                      boxShadow: '0 6px 18px -4px rgba(0,0,0,0.45)',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      '&:before': {
+                        content: '""',
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'radial-gradient(circle at 25% 20%, rgba(255,255,255,0.35), transparent 55%)',
+                        mixBlendMode: 'overlay',
+                        opacity: .55,
+                        transition: 'opacity .4s'
+                      },
+                      '&:hover': { boxShadow: '0 12px 26px -6px rgba(0,0,0,0.55)', '&:before': { opacity: .85 } }
                     }}
                   >
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        color: "#fff",
-                      }}
-                    >
-                      {isSubmitting ? "Cargando..." : "Cargar Cliente"}
+                    <Typography variant='body1' sx={{ color: '#fff', fontWeight: 500 }}>
+                      {isSubmitting ? 'Cargando...' : 'Cargar Cliente'}
                     </Typography>
                   </Button>
                 </Box>
               </Box>
               <Box
                 sx={{
-                  width: {lg: "50%", md: "100%", sm: "100%", xs: "100%"},
-                  height: "100%",
-                  backgroundColor: "#fff",
-                  borderRadius: 2,
+                  width: { lg: '50%', md: '100%', sm: '100%', xs: '100%' },
+                  height: '100%',
+                  background: 'transparent'
                 }}
               >
                 <Typography
                   variant="h6"
                   sx={{
-                    padding: 2,
-                    color: "#142a3d",
-                    textAlign: "center",
-                    fontWeight: "bold",
+                    p: 2,
+                    color: '#fff',
+                    textAlign: 'center',
+                    fontWeight: 600,
+                    background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 55%, ${palette.accent} 125%)`,
+                    letterSpacing: .5,
+                    textShadow: '0 2px 4px rgba(0,0,0,0.35)'
                   }}
                 >
                   {" "}
@@ -447,23 +452,30 @@ const setEstadoOpciones = () => {
                     sx={{marginBottom: 2,}}
                   />
                   <Button
-                    variant="contained"
+                    variant='contained'
                     disabled={isSubmitting}
                     onClick={handleFilter}
                     sx={{
-                      width: { lg: "30%", md: "30%", sm: "100%", xs: "100%" },
+                      width: { lg: '30%', md: '30%', sm: '100%', xs: '100%' },
                       borderRadius: 2,
-                      backgroundColor: "#142a3d",
-                      marginBottom: 2,
+                      background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 80%)`,
+                      boxShadow: '0 6px 18px -4px rgba(0,0,0,0.45)',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      '&:before': {
+                        content: '""',
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'radial-gradient(circle at 25% 20%, rgba(255,255,255,0.35), transparent 55%)',
+                        mixBlendMode: 'overlay',
+                        opacity: .55,
+                        transition: 'opacity .4s'
+                      },
+                      '&:hover': { boxShadow: '0 12px 26px -6px rgba(0,0,0,0.55)', '&:before': { opacity: .85 } }
                     }}
                   >
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        color: "#fff",
-                      }}
-                    >
-                      {isSubmitting ? "Cargando..." : "Buscar"}
+                    <Typography variant='body1' sx={{ color: '#fff', fontWeight: 500 }}>
+                      {isSubmitting ? 'Cargando...' : 'Buscar'}
                     </Typography>
                   </Button>
                 </Box>
@@ -473,21 +485,27 @@ const setEstadoOpciones = () => {
             {migracion && (
               <Box
                 sx={{
-                  width: "98%",
-                  height: "100%",
-                  backgroundColor: "#fff",
-                  border: "2px solid #dfdeda",
-                  borderRadius: 2,
-                  marginBottom: 2,
+                  width: '98%',
+                  height: '100%',
+                  background: palette.cardBg,
+                  border: `1px solid ${palette.borderSubtle}`,
+                  borderRadius: 3,
+                  mb: 2,
+                  boxShadow: '0 8px 26px -8px rgba(0,0,0,0.42)',
+                  backdropFilter: 'blur(6px)',
+                  overflow: 'hidden'
                 }}
               >
                 <Typography
                   variant="h6"
                   sx={{
-                    padding: 2,
-                    textAlign: "left",
-                    color: "#142a3d",
-                    fontWeight: "bold",
+                    p: 2,
+                    textAlign: 'left',
+                    color: '#fff',
+                    fontWeight: 600,
+                    background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 55%, ${palette.accent} 125%)`,
+                    letterSpacing: .5,
+                    textShadow: '0 2px 4px rgba(0,0,0,0.35)'
                   }}
                 >
                   {" "}
@@ -504,24 +522,24 @@ const setEstadoOpciones = () => {
                     alignItems: "flex-start",
                   }}
                 >
-                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    Cliente
-                  </Typography>
-                  <Typography variant="body1">
-                    {migracion.Cliente ? migracion.Cliente : "No disponible"}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    paddingLeft: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    Rut
-                  </Typography>
+                    <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                      Cliente
+                    </Typography>
+                    <Typography variant="body1">
+                      {migracion.Cliente ? migracion.Cliente : "No disponible"}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      paddingLeft: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                      Rut
+                    </Typography>
                   <Typography variant="body1">
                     {migracion.rut_cliente
                       ? migracion.rut_cliente
@@ -942,22 +960,34 @@ const setEstadoOpciones = () => {
                     }}
                   >
                     <Button
-                      variant="contained"
-                      type="submit"
+                      variant='contained'
+                      type='submit'
                       sx={{
-                        width: "40%",
+                        width: '40%',
                         borderRadius: 2,
-                        backgroundColor: "#142a3d",
+                        background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 80%)`,
+                        boxShadow: '0 8px 22px -6px rgba(0,0,0,0.45)',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        '&:before': {
+                          content: '""',
+                          position: 'absolute',
+                          inset: 0,
+                          background: 'radial-gradient(circle at 25% 20%, rgba(255,255,255,0.35), transparent 55%)',
+                          mixBlendMode: 'overlay',
+                          opacity: .55,
+                          transition: 'opacity .4s'
+                        },
+                        '&:hover': { boxShadow: '0 12px 30px -8px rgba(0,0,0,0.55)', '&:before': { opacity: .85 } }
                       }}
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? "Creando..." : "Crear"}
+                      {isSubmitting ? 'Creando...' : 'Crear'}
                     </Button>
                   </Box>
                 </form>
               </Box>
             )}
-          </Box>
         </Box>
       </Box>
     </MigracionLayout>

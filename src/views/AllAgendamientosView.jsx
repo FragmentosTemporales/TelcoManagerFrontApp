@@ -16,6 +16,8 @@ import {
   TableRow,
   TextField,
   Typography,
+  LinearProgress,
+  Chip,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -30,6 +32,7 @@ import {
 import { useSelector } from "react-redux";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
+import palette from "../theme/palette";
 
 function AllAgendamientoViewer() {
   const authState = useSelector((state) => state.auth);
@@ -44,6 +47,43 @@ function AllAgendamientoViewer() {
   const handlePage = (newPage) => setPage(newPage);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Theming helpers (consistent with AgendamientoView)
+  const gradient = palette.bgGradient;
+  const glass = {
+    position: "relative",
+    background: `linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.88) 60%, rgba(255,255,255,0.80) 100%)`,
+    backdropFilter: "blur(14px)",
+    border: `1px solid ${palette.borderSubtle}`,
+    borderRadius: 3,
+    boxShadow: "0 8px 28px -4px rgba(0,0,0,0.25)",
+    overflow: "hidden",
+    "::before": {
+      content: '""',
+      position: "absolute",
+      inset: 0,
+      background:
+        "linear-gradient(120deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%)",
+      pointerEvents: "none",
+      mixBlendMode: "overlay",
+    },
+  };
+  const headCell = {
+    background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`,
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 13,
+    letterSpacing: ".4px",
+    whiteSpace: "nowrap",
+  };
+  const primaryBtn = {
+    background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`,
+    color: "#fff",
+    fontWeight: "bold",
+    borderRadius: 2,
+    boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
+    "&:hover": { background: palette.primaryDark },
+  };
+
   const getExcel = async () => {
     setIsSubmitting(true);
     try {
@@ -55,31 +95,14 @@ function AllAgendamientoViewer() {
   };
 
   const downloadExcel = () => (
-    <Box
-      sx={{
-        width: "90%",
-        mt: 2,
-        display: "flex",
-        justifyContent: "start",
-      }}
+    <Button
+      variant="contained"
+      onClick={getExcel}
+      disabled={isSubmitting}
+      sx={{ ...primaryBtn, minWidth: 200 }}
     >
-      <Button
-        variant="contained"
-        onClick={getExcel}
-        color="error"
-        disabled={isSubmitting}
-        sx={{
-          width: 200,
-          height: 40,
-          fontWeight: "bold",
-          display: "flex",
-          justifyContent: "space-around",
-          borderRadius: 2,
-        }}
-      >
-        {isSubmitting ? "Cargando..." : "Descargar Excel"}
-      </Button>
-    </Box>
+      {isSubmitting ? "Cargando..." : "Descargar Excel"}
+    </Button>
   );
 
   const [form, setForm] = useState({
@@ -135,116 +158,85 @@ function AllAgendamientoViewer() {
   };
 
   const setTable = () => (
-    <>
-      <TableContainer>
-        <Table
-          sx={{ width: "100%", display: "column", justifyContent: "center" }}
-        >
-          {setTableHead()}
-          {setTableBody()}
-        </Table>
-      </TableContainer>
-    </>
+    <TableContainer
+      sx={{
+        maxHeight: 500,
+        "::-webkit-scrollbar": { width: 6 },
+        "::-webkit-scrollbar-thumb": {
+          background: palette.primaryDark,
+          borderRadius: 3,
+        },
+      }}
+    >
+      <Table
+        stickyHeader
+        size="small"
+        sx={{ tableLayout: "fixed", borderCollapse: "separate" }}
+      >
+        {setTableHead()}
+        {setTableBody()}
+      </Table>
+    </TableContainer>
   );
 
   const setTableHead = () => (
-    <>
-      <TableHead>
-        <TableRow>
-          {[
-            "FECHA CREACION",
-            "ORDEN",
-            "ESTADO",
-            "FECHA AGENDAMIENTO",
-            "AGENDADO POR",
-          ].map((header) => (
-            <TableCell
-              key={header}
-              align="center"
-              sx={{
-                background: "#142a3d",
-                fontWeight: "bold",
-                width: "20%",
-                color: "white",
-              }}
-            >
-              {header}
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-    </>
+    <TableHead>
+      <TableRow>
+        {[
+          "FECHA CREACION",
+          "ORDEN",
+          "ESTADO",
+          "FECHA AGENDAMIENTO",
+          "AGENDADO POR",
+        ].map((h) => (
+          <TableCell key={h} align="center" sx={headCell}>
+            {h}
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
   );
 
   const setTableBody = () => (
-    <>
-      <TableBody
-        sx={{
-          display: "column",
-          justifyContent: "center",
-        }}
-      >
-        {data && data.length > 0 ? (
-          data.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "14px", width: "20%" }} // Equal width
-              >
-                <Typography variant="secondary">
-                  {row.fechaRegistro
-                    ? extractDate(row.fechaRegistro)
-                    : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell
-                align="center"
-                sx={{ fontSize: "14px", width: "20%" }} // Equal width
-              >
-                <Typography variant="secondary">
-                  {row.orden ? row.orden : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell
-                align="center"
-                sx={{ fontSize: "14px", width: "20%" }} // Equal width
-              >
-                <Typography variant="secondary">
-                  {row.estado_interno ? row.estado_interno : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell
-                align="center"
-                sx={{ fontSize: "14px", width: "20%" }} // Equal width
-              >
-                <Typography variant="secondary">
-                  {row.nueva_cita
-                    ? extractDate(row.nueva_cita)
-                    : "Sin Información"}
-                </Typography>
-              </TableCell>
-              <TableCell
-                align="center"
-                sx={{ fontSize: "14px", width: "20%" }} // Equal width
-              >
-                <Typography variant="secondary">
-                  {row.usuario ? row.usuario.nombre : "Sin Información"}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan={5} align="center" sx={{ width: "100%" }}>
-              No hay datos disponibles
+    <TableBody>
+      {data && data.length > 0 ? (
+        data.map((row, index) => (
+          <TableRow
+            key={index}
+            sx={{
+              backgroundColor:
+                index % 2 === 0
+                  ? "rgba(255,255,255,0.55)"
+                  : "rgba(240,245,250,0.5)",
+            }}
+          >
+            <TableCell align="center" sx={{ fontSize: 12 }}>
+              {row.fechaRegistro
+                ? extractDate(row.fechaRegistro)
+                : "Sin Información"}
+            </TableCell>
+            <TableCell align="center" sx={{ fontSize: 12 }}>
+              {row.orden || "Sin Información"}
+            </TableCell>
+            <TableCell align="center" sx={{ fontSize: 12 }}>
+              {row.estado_interno || "Sin Información"}
+            </TableCell>
+            <TableCell align="center" sx={{ fontSize: 12 }}>
+              {row.nueva_cita ? extractDate(row.nueva_cita) : "Sin Información"}
+            </TableCell>
+            <TableCell align="center" sx={{ fontSize: 12 }}>
+              {row.usuario ? row.usuario.nombre : "Sin Información"}
             </TableCell>
           </TableRow>
-        )}
-      </TableBody>
-    </>
+        ))
+      ) : (
+        <TableRow>
+          <TableCell colSpan={5} align="center" sx={{ width: "100%" }}>
+            No hay datos disponibles
+          </TableCell>
+        </TableRow>
+      )}
+    </TableBody>
   );
 
   const getButtons = () => (
@@ -254,11 +246,11 @@ function AllAgendamientoViewer() {
         variant="contained"
         onClick={() => handlePage(page - 1)}
         disabled={page === 1}
-        sx={{ background: "#142a3d" }}
+        sx={primaryBtn}
       >
         <ArrowBackIosIcon />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
+      <Button key="current" variant="contained" sx={primaryBtn}>
         {page}
       </Button>
       <Button
@@ -266,7 +258,7 @@ function AllAgendamientoViewer() {
         variant="contained"
         onClick={() => handlePage(page + 1)}
         disabled={page === pages}
-        sx={{ background: "#142a3d" }}
+        sx={primaryBtn}
       >
         <ArrowForwardIosIcon />
       </Button>
@@ -283,184 +275,171 @@ function AllAgendamientoViewer() {
   return (
     <Box
       sx={{
+        py: 6,
+        px: { xs: 1.5, sm: 3 },
+        minHeight: "90vh",
+        width: "100%",
+        background: gradient,
+        position: "relative",
+        "::before": {
+          content: '""',
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(circle at 18% 22%, rgba(255,255,255,0.10), transparent 60%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.08), transparent 65%)",
+          pointerEvents: "none",
+        },
+        overflowX: "hidden",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        minHeight: "90vh",
-        overflow: "auto",
-        paddingY: 2,
-        background: "#f5f5f5",
       }}
     >
       {open && (
         <Alert
           severity={alertType}
           onClose={handleClose}
-          sx={{ marginBottom: 3 }}
+          sx={{ mb: 3, borderRadius: 2, boxShadow: 3 }}
         >
           {message}
         </Alert>
       )}
+      <Box sx={{ width: "100%", maxWidth: 1350, mx: "auto" }}>
+        {/* Top action buttons */}
+        <Box
+          sx={{
+            mb: 3,
+            display: "flex",
+            gap: 2,
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+          }}
+        >
+          <Link to="/agendamientos">
+            <Button
+              variant="contained"
+              sx={{
+                borderRadius: 2,
+                fontWeight: "bold",
+                borderColor: palette.primary,
+                color: palette.primary,
+                minWidth: 200,
+              }}
+            >
+              Volver
+            </Button>
+          </Link>
+          {downloadExcel()}
+        </Box>
 
-      <Box
-        sx={{
-          width: { lg: "90%", md: "100%", xs: "100%" },
-          overflow: "hidden",
-          mt: 3,
-        }}
-      >
-        <Link to="/agendamientos">
-          <Button
-            variant="contained"
+        <Card sx={{ ...glass }}>
+          <CardHeader
+            titleTypographyProps={{ fontSize: 18, fontWeight: "bold" }}
+            title="Filtros de Agendamientos"
             sx={{
-              background: "#142a3d",
-              borderRadius: 2,
-              marginBottom: 2,
-              width: "200px",
-              fontWeight: "bold",
-            }}
-          >
-            Volver
-          </Button>
-        </Link>
-      </Box>
-
-      <Box
-        sx={{
-          width: "90%",
-          mt: 2,
-          background: "#fff",
-              borderRadius: 2,
-              border: "2px solid #dfdeda",
-          pt: 2,
-          pb: 2,
-        }}
-      >
-        <form onSubmit={SubmitForm}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-evenly",
-              flexWrap: "wrap",
-              gap: 2,
-            }}
-          >
-            <Box
-              sx={{
-                mb: 2,
-                width: "35%",
-              }}
-            >
-              <InputLabel id="fechaInicio-label">Fecha de Inicio</InputLabel>
-              <TextField
-                required
-                size="small"
-                id="fechaInicio"
-                type="datetime-local"
-                name="fechaInicio"
-                variant="standard"
-                value={form.fechaInicio}
-                onChange={handleChange}
-                sx={{ minWidth: "100%" }}
-              />
-            </Box>
-            <Box
-              sx={{
-                mb: 2,
-                width: "35%",
-              }}
-            >
-              <InputLabel id="fechaFin-label">Fecha de Fin</InputLabel>
-              <TextField
-                required
-                id="fechaFin"
-                size="small"
-                type="datetime-local"
-                name="fechaFin"
-                variant="standard"
-                value={form.fechaFin}
-                onChange={handleChange}
-                sx={{ minWidth: "100%" }}
-              />
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-evenly",
-              flexWrap: "wrap",
-              gap: 2,
-            }}
-          >
-            <Box
-              sx={{
-                mb: 2,
-                width: "20%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Button
-                variant="contained"
-                type="submit"
-                disabled={isSubmitting}
-                sx={{
-                  background: "#142a3d",
-                  height: 30,
-                  width: "100%",
-                  borderRadius: 2,
-                }}
-              >
-                {isSubmitting ? "Cargando..." : "Buscar"}
-              </Button>
-            </Box>
-            <Box
-              sx={{
-                mb: 2,
-                width: "20%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Button
-                variant="outlined"
-                onClick={clearFilter}
-                sx={{ height: 30, width: "100%", borderRadius: 2 }}
-              >
-                Limpiar Filtro
-              </Button>
-            </Box>
-          </Box>
-        </form>
-      </Box>
-
-      {downloadExcel()}
-      <Box sx={{ width: "90%", mt: 2, background: "#fff", borderRadius: 2, border: "2px solid #dfdeda" }}>
-        {isLoading ? (
-          <Skeleton
-            variant="rectangular"
-            animation="wave"
-            sx={{
-              width: "100%",
-              height: "200px",
-              borderRadius: "10px",
+              background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`,
+              color: "#fff",
+              py: 1.2,
             }}
           />
-        ) : (
-          setTable()
-        )}
-      </Box>
+          <CardContent sx={{ pt: 3 }}>
+            <form onSubmit={SubmitForm}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 3,
+                  alignItems: "center",
+                }}
+              >
+                <Box sx={{ width: "50%", minWidth: 260 }}>
+                  <InputLabel>Fecha de Inicio</InputLabel>
+                  <TextField
+                    required
+                    size="small"
+                    id="fechaInicio"
+                    type="datetime-local"
+                    name="fechaInicio"
+                    variant="standard"
+                    value={form.fechaInicio}
+                    onChange={handleChange}
+                    sx={{ width: "100%" }}
+                  />
+                </Box>
+                <Box sx={{ width: "50%", minWidth: 260 }}>
+                  <InputLabel>Fecha de Fin</InputLabel>
+                  <TextField
+                    required
+                    size="small"
+                    id="fechaFin"
+                    type="datetime-local"
+                    name="fechaFin"
+                    variant="standard"
+                    value={form.fechaFin}
+                    onChange={handleChange}
+                    sx={{ width: "100%" }}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
+                    width: "50%",
+                    minWidth: 260,
+                  }}
+                >
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={isSubmitting}
+                    sx={{ ...primaryBtn, width: "100%" }}
+                  >
+                    {isSubmitting ? "Cargando..." : "Buscar"}
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    disabled={isSubmitting}
+                    onClick={clearFilter}
+                    sx={{ borderRadius: 2, fontWeight: "bold" }}
+                  >
+                    Limpiar Filtro
+                  </Button>
+                </Box>
+              </Box>
+            </form>
+          </CardContent>
+        </Card>
 
-      <ButtonGroup
-        size="small"
-        aria-label="pagination-button-group"
-        sx={{ p: 2 }}
-      >
-        {getButtons()}
-      </ButtonGroup>
+        <Card sx={{ mt: 3, ...glass }}>
+          <CardHeader
+            titleTypographyProps={{ fontSize: 18, fontWeight: "bold" }}
+            title="Listado de Agendamientos"
+            subheader={data ? `${data.length} registros` : "Sin datos"}
+            subheaderTypographyProps={{
+              sx: { color: "rgba(255,255,255,0.92)", fontSize: 12 },
+            }}
+            sx={{
+              background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`,
+              color: "#fff",
+              py: 1.2,
+            }}
+          />
+          <CardContent sx={{ pt: 2 }}>
+            {isLoading && <LinearProgress sx={{ mb: 2 }} />}
+            {!isLoading && setTable()}
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <ButtonGroup
+                size="small"
+                aria-label="pagination-button-group"
+                sx={{ mt: 2 }}
+              >
+                {getButtons()}
+              </ButtonGroup>
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
     </Box>
   );
 }

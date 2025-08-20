@@ -14,6 +14,7 @@ import {
   import { useDispatch, useSelector } from "react-redux";
   import { useParams, useNavigate } from "react-router-dom";
   import { createFormOperaciones } from "../api/formsAPI";
+  import { palette } from "../theme/palette";
   import { onLoad, onLoading, setMessage } from "../slices/formSlice";
   
   function FormOperaciones() {
@@ -77,43 +78,14 @@ import {
   
   
     return (
-      <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        py: 3,
-        height: "90vh",
-        background: "#f5f5f5",
-      }}
-    >
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', minHeight: '100vh', py: 6, background: palette.bgGradient, position: 'relative', '::before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(150deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 65%)', pointerEvents: 'none' } }}>
         {open && (
           <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
             {message}
           </Alert>
         )}
-        <Card
-        sx={{
-          borderRadius: 2,
-          width: "50%",
-          overflow: "auto",
-          border: "2px solid #dfdeda",
-        }}
-      >
-          <CardHeader
-          title={
-            <Typography fontWeight="bold" sx={{ fontFamily: "initial" }}>
-              FORMULARIO OPERACIONES
-            </Typography>
-          }
-          avatar={<FeedIcon/>}
-          sx={{
-            background: "#142a3d",
-            color: "white",
-            textAlign: "end",
-          }}
-        />
+        <Card sx={{ width: '55%', maxWidth: 880, borderRadius: 4, overflow: 'hidden', background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(6px)', boxShadow: '0 18px 42px -16px rgba(0,0,0,0.55), 0 8px 16px -6px rgba(0,0,0,0.35)' }}>
+          <CardHeader title={<Typography fontWeight={700} letterSpacing={.5}>FORMULARIO OPERACIONES</Typography>} avatar={<FeedIcon/>} sx={{ background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`, color: 'white' }} />
   
           <CardContent
             sx={{
@@ -150,12 +122,7 @@ import {
               </Box>
   
               <Box sx={{ textAlign: "center" }}>
-              <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{ background: "#142a3d", fontWeight: "bold", width: "200px" }}
-                  disabled={isSubmitting}  // Deshabilitar el botón cuando isSubmitting es true
-                >
+              <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primary} 85%)`, fontWeight: 600, width: 220, borderRadius: 3, letterSpacing: .6, boxShadow: '0 6px 18px -6px rgba(0,0,0,0.55)', '&:hover': { background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primaryDark} 90%)` } }}>
                   {isSubmitting ? "Procesando..." : "Crear"}
                 </Button>
               </Box>

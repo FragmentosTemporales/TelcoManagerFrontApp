@@ -1,312 +1,122 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Skeleton,
-  Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams, Link } from "react-router-dom";
-import {
-  getInfoProyecto
-} from "../api/onnetAPI";
+// CLEAN REWRITE
+import React, { useEffect, useState } from 'react';
+import { Alert, Box, Button, Card, CardHeader, CardContent, LinearProgress, Skeleton } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { useParams, Link } from 'react-router-dom';
+import palette from '../theme/palette';
+import { getInfoProyecto } from '../api/onnetAPI';
 
 function ProyectoConsolidadoView() {
   const { id } = useParams();
-  const authState = useSelector((state) => state.auth);
-  const { token } = authState;
+  const { token } = useSelector((s) => s.auth);
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const orderedFields = [
-    "Proyecto",
-    "Nombre",
-    "Region",
-    "Agencia",
-    "Comuna",
-    "Direccion",
-    "Central FTTx",
-    "Target RTS",
-    "Semana Proyectada RTS",
-    "Semana Liberada",
-    "Prioridad Planificación",
-    "Semana Para Construir",
-    "Semana Aprobación Construcción",
-    "Estado Proyecto",
-    "Estado ONFC",
-    "Estado ONFI",
-    "Estado Recursos",
-    "Estado de Validacion Construccion",
-    "Estado Calidad",
-    "Estado Cruzada Logica",
-    "Estado Cruzada Fisica",
-    "Estado Permiso Privado",
-    "Estado Visita",
-    "Estado O&M",
-    "Tipo",
-    "Q Total CTO",
-    "Semana Actual",
-    "Rechazos Calidad",
-    "diasBandeja",
-    "uip",
-    "fixed_uip",
-    "Avance Empalmes",
-    "Avance Lineas",
-    "Informable SGS",
-    "Proyectos Construidos",
-    "Despliegue",
-    "Origen",
-    "NumeroVisitas",
-    "Gestor Permiso",
-    "Carta Entregada",
-    "Motivo Avance Permiso Privado",
-    "Carta Permiso Privado Firmada",
-    "Fecha Carta Permiso Privado Firmada",
-    "Fecha validacion Construccion",
-    "Semana Validación Construcción",
-    "Requiere Permisos",
-    "Fecha Liberado a Ventas",
-    "Orden Ingenieria",
-    "Orden Construccion",
-    "Fecha Permiso Obtenido",
-    "Empresa Adjudicada",
-    "Prioridad",
+    'Proyecto','Nombre','Region','Agencia','Comuna','Direccion','Central FTTx','Target RTS','Semana Proyectada RTS','Semana Liberada','Prioridad Planificación','Semana Para Construir','Semana Aprobación Construcción','Estado Proyecto','Estado ONFC','Estado ONFI','Estado Recursos','Estado de Validacion Construccion','Estado Calidad','Estado Cruzada Logica','Estado Cruzada Fisica','Estado Permiso Privado','Estado Visita','Estado O&M','Tipo','Q Total CTO','Semana Actual','Rechazos Calidad','diasBandeja','uip','fixed_uip','Avance Empalmes','Avance Lineas','Informable SGS','Proyectos Construidos','Despliegue','Origen','NumeroVisitas','Gestor Permiso','Carta Entregada','Motivo Avance Permiso Privado','Carta Permiso Privado Firmada','Fecha Carta Permiso Privado Firmada','Fecha validacion Construccion','Semana Validación Construcción','Requiere Permisos','Fecha Liberado a Ventas','Orden Ingenieria','Orden Construccion','Fecha Permiso Obtenido','Empresa Adjudicada','Prioridad'
   ];
+
+  const formatFecha = (k, v) => {
+    if (k?.startsWith('Fecha') && v) {
+      const d = new Date(v);
+      if (!isNaN(d)) return d.toLocaleDateString();
+    }
+    return v;
+  };
 
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const response = await getInfoProyecto(token, id);
-      setData(response[0]);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+      const resp = await getInfoProyecto(token, id);
+      setData(resp[0]);
+    } catch (e) {
+      setMessage('Error al cargar el proyecto');
       setOpen(true);
-      setMessage("Failed to fetch data.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => { fetchData(); }, [id]);
+  useEffect(() => { window.scrollTo(0,0); }, []);
 
-
-  const formatFecha = (key, value) => {
-    if (key && key.startsWith("Fecha") && value) {
-      // Try to parse and format as date, fallback to string
-      const date = new Date(value);
-      if (!isNaN(date)) {
-        return date.toLocaleDateString();
-      }
+  const gradient = palette.bgGradient;
+  const glass = {
+    position: 'relative',
+    background: 'linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.88) 60%, rgba(255,255,255,0.80) 100%)',
+    backdropFilter: 'blur(14px)',
+    border: `1px solid ${palette.borderSubtle}`,
+    borderRadius: 3,
+    boxShadow: '0 8px 28px -4px rgba(0,0,0,0.25)',
+    overflow: 'hidden',
+    '::before': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      background: 'linear-gradient(120deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%)',
+      pointerEvents: 'none',
+      mixBlendMode: 'overlay'
     }
-    return value;
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        background: "#f5f5f5",
-        alignItems: "center",
-        py: 2,
-        minHeight: "90vh",
-      }}
-    >
+    <Box sx={{ py:6, px:{xs:2,sm:3}, minHeight:'90vh', width:'100%', background:gradient, position:'relative', display:'flex', flexDirection:'column', alignItems:'center', '::before':{content:'""', position:'absolute', inset:0, background:'radial-gradient(circle at 18% 22%, rgba(255,255,255,0.10), transparent 60%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.08), transparent 65%)', pointerEvents:'none'} }}>
       {open && (
-        <Alert onClose={handleClose} severity="info" sx={{ marginBottom: 3 }}>
+        <Alert severity="info" onClose={() => setOpen(false)} sx={{ mb:3, borderRadius:2, boxShadow:3 }}>
           {message}
         </Alert>
       )}
+      <Box sx={{ width:'100%', maxWidth:1350, mx:'auto', mb:3 }}>
+        <Link to="/proyectos-onnet">
+          <Button variant="contained" sx={{ borderRadius:2, fontWeight:'bold', borderColor:palette.primary, color:palette.primary, minWidth:200 }}>Volver</Button>
+        </Link>
+      </Box>
       {isLoading ? (
-        <Box
-          sx={{
-            width: "90%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Skeleton
-            variant="rounded"
-            width={"100%"}
-            height={"70%"}
-            sx={{ p: 3, m: 3 }}
-          />
-        </Box>
-      ) : (
-        <>
-          <Box
-            sx={{
-              width: "90%",
-              overflow: "hidden",
-              mt: 3,
-              mx: "auto",
-            }}
-          >
-            <Link to="/proyectos-onnet">
-              <Button
-                variant="contained"
-                sx={{
-                  background: "#142a3d",
-                  borderRadius: 2,
-                  width: "200px",
-                }}
-              >
-                <Typography>VOLVER</Typography>
-              </Button>
-            </Link>
-          </Box>
-          {data && (
-            <Box sx={{ width: "90%", my: 4, backgroundColor: "#fff", borderRadius: 2, border: "2px solid #dfdeda" }}>
-              <Box
-                component="table"
-                sx={{ width: "100%", borderCollapse: "collapse" }}
-              >
-                <Box component="thead">
-                  <Box component="tr">
-                    <Box
-                      component="th"
-                      sx={{
-                        textAlign: "left",
-                        borderBottom: 1,
-                        p: 1,
-                        bgcolor: "#142a3d",
-                        fontWeight: "bold",
-                        color: "#fff",
-                      }}
-                    >
-                      Ítem
-                    </Box>
-                    <Box
-                      component="th"
-                      sx={{
-                        textAlign: "left",
-                        borderBottom: 1,
-                        p: 1,
-                        bgcolor: "#142a3d",
-                        fontWeight: "bold",
-                        color: "#fff",
-                      }}
-                    >
-                      Valor
-                    </Box>
-                    <Box
-                      component="th"
-                      sx={{
-                        textAlign: "left",
-                        borderBottom: 1,
-                        p: 1,
-                        bgcolor: "#142a3d",
-                        fontWeight: "bold",
-                        color: "#fff",
-                      }}
-                    >
-                      Ítem
-                    </Box>
-                    <Box
-                      component="th"
-                      sx={{
-                        textAlign: "left",
-                        borderBottom: 1,
-                        p: 1,
-                        bgcolor: "#142a3d",
-                        fontWeight: "bold",
-                        color: "#fff",
-                      }}
-                    >
-                      Valor
-                    </Box>
-                  </Box>
-                </Box>
-                <Box component="tbody">
-                  {(() => {
-                    // 3. Use the ordered fields and map to data
-                    const entries = orderedFields
-                      .map((key) => [key, data[key]])
-                      .filter(([key, _]) => key in data);
-                    const rows = [];
-                    for (let i = 0; i < entries.length; i += 2) {
-                      const [key1, value1] = entries[i];
-                      const pair2 = entries[i + 1];
-                      const key2 = pair2 ? pair2[0] : "";
-                      const value2 = pair2 ? pair2[1] : "";
-                      rows.push(
-                        <Box component="tr" key={key1}>
-                          <Box
-                            component="td"
-                            sx={{
-                              p: 1,
-                              borderBottom: 1,
-                              borderColor: "#eee",
-                              bgcolor: "#f5f5f5",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {key1}
-                          </Box>
-                          <Box
-                            component="td"
-                            sx={{
-                              p: 1,
-                              borderBottom: 1,
-                              borderColor: "#eee",
-                            }}
-                          >
-                            {value1 === null || value1 === "" ? (
-                              <em>Sin información</em>
-                            ) : (
-                              formatFecha(key1, value1).toString()
-                            )}
-                          </Box>
-                          <Box
-                            component="td"
-                            sx={{
-                              p: 1,
-                              borderBottom: 1,
-                              borderColor: "#eee",
-                              bgcolor: "#f5f5f5",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {key2}
-                          </Box>
-                          <Box
-                            component="td"
-                            sx={{
-                              p: 1,
-                              borderBottom: 1,
-                              borderColor: "#eee",
-                            }}
-                          >
-                            {key2 === "" ? (
-                              ""
-                            ) : value2 === null || value2 === "" ? (
-                              <em>Sin información</em>
-                            ) : (
-                              formatFecha(key2, value2).toString()
-                            )}
-                          </Box>
-                        </Box>
-                      );
-                    }
-                    return rows;
-                  })()}
+        <Card sx={{ ...glass, width:'100%', maxWidth:1350 }}>
+          <CardHeader titleTypographyProps={{ fontSize:18, fontWeight:'bold' }} title="Cargando Proyecto" sx={{ background:`linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`, color:'#fff', py:1.2 }} />
+          <CardContent>
+            <LinearProgress />
+            <Skeleton variant="rectangular" animation="wave" sx={{ mt:3, width:'100%', height:260, borderRadius:2 }} />
+          </CardContent>
+        </Card>
+      ) : data && (
+        <Card sx={{ ...glass, width:'100%', maxWidth:1350 }}>
+          <CardHeader titleTypographyProps={{ fontSize:18, fontWeight:'bold' }} title={`Proyecto: ${data.Proyecto || data.Nombre || 'Detalle'}`} subheader={data.Nombre || ''} subheaderTypographyProps={{ sx:{ color:'rgba(255,255,255,0.9)', fontSize:12 } }} sx={{ background:`linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`, color:'#fff', py:1.2 }} />
+          <CardContent>
+            <Box component="table" sx={{ width:'100%', borderCollapse:'collapse' }}>
+              <Box component="thead">
+                <Box component="tr">
+                  {['Ítem','Valor','Ítem','Valor'].map(h => (
+                    <Box component="th" key={h} sx={{ textAlign:'left', borderBottom:1, p:1, bgcolor:palette.primaryDark, color:'#fff', fontWeight:'bold', fontSize:13 }}>{h}</Box>
+                  ))}
                 </Box>
               </Box>
+              <Box component="tbody">
+                {(() => {
+                  const entries = orderedFields.map(k => [k, data[k]]).filter(([k,_]) => k in data);
+                  const rows = [];
+                  for (let i=0;i<entries.length;i+=2){
+                    const [k1,v1] = entries[i];
+                    const pair2 = entries[i+1];
+                    const k2 = pair2?pair2[0]:'';
+                    const v2 = pair2?pair2[1]:'';
+                    rows.push(
+                      <Box component="tr" key={k1}>
+                        <Box component="td" sx={{ p:1, borderBottom:1, borderColor:'#eee', bgcolor:'rgba(255,255,255,0.55)', fontWeight:'bold', width:'18%' }}>{k1}</Box>
+                        <Box component="td" sx={{ p:1, borderBottom:1, borderColor:'#eee', width:'32%', fontSize:13 }}>{v1 === null || v1 === '' ? <em>Sin información</em> : formatFecha(k1, v1)}</Box>
+                        <Box component="td" sx={{ p:1, borderBottom:1, borderColor:'#eee', bgcolor:'rgba(255,255,255,0.55)', fontWeight:'bold', width:'18%' }}>{k2}</Box>
+                        <Box component="td" sx={{ p:1, borderBottom:1, borderColor:'#eee', width:'32%', fontSize:13 }}>{k2 === '' ? '' : (v2 === null || v2 === '' ? <em>Sin información</em> : formatFecha(k2, v2))}</Box>
+                      </Box>
+                    );
+                  }
+                  return rows;
+                })()}
+              </Box>
             </Box>
-          )}
-        </>
+          </CardContent>
+        </Card>
       )}
     </Box>
   );

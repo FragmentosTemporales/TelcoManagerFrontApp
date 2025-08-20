@@ -1,17 +1,4 @@
-import {
-  Alert,
-  Box,
-  Button,
-  ButtonGroup,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Link } from "react-router-dom";
@@ -20,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSolicitudesByUser } from "../api/solicitudAPI";
 import { setMessage } from "../slices/solicitudSlice";
 import { MainLayout } from "./Layout";
+import palette from "../theme/palette";
 
 function AmonesatacionesViewer() {
   const authState = useSelector((state) => state.auth);
@@ -30,7 +18,7 @@ function AmonesatacionesViewer() {
   const [data, setData] = useState([]);
   const [pages, setPages] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showStatistics, setShowStatistics] = useState(false);
+  // removed unused showStatistics state
 
   const handleClose = () => setOpen(false);
 
@@ -50,28 +38,26 @@ function AmonesatacionesViewer() {
 
   const handlePage = (newPage) => setPage(newPage);
 
+  const subtleBtn = {
+    border: `1px solid ${palette.borderSubtle}`,
+    color: palette.primary,
+    fontWeight: 600,
+    textTransform: 'none',
+    background: 'rgba(255,255,255,0.6)',
+    backdropFilter: 'blur(6px)',
+    boxShadow: '0 3px 10px rgba(0,0,0,0.15)',
+    '&:hover': { borderColor: palette.accent, background: 'rgba(255,255,255,0.85)' },
+    '&:disabled': { opacity: .45 }
+  };
+
   const getButtons = () => (
     <>
-      <Button
-        key="prev"
-        variant="contained"
-        onClick={() => handlePage(page - 1)}
-        disabled={page === 1}
-        sx={{ background: "#142a3d" }}
-      >
-        <ArrowBackIosIcon />
+      <Button key="prev" onClick={() => handlePage(page - 1)} disabled={page === 1} sx={subtleBtn}>
+        <ArrowBackIosIcon fontSize="small" />
       </Button>
-      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
-        {page}
-      </Button>
-      <Button
-        key="next"
-        variant="contained"
-        onClick={() => handlePage(page + 1)}
-        disabled={page === pages}
-        sx={{ background: "#142a3d" }}
-      >
-        <ArrowForwardIosIcon />
+      <Button key="current" disabled sx={{ ...subtleBtn, fontWeight: 700 }}>{page}</Button>
+      <Button key="next" onClick={() => handlePage(page + 1)} disabled={page === pages} sx={subtleBtn}>
+        <ArrowForwardIosIcon fontSize="small" />
       </Button>
     </>
   );
@@ -79,24 +65,9 @@ function AmonesatacionesViewer() {
   const setTableHead = () => (
     <TableHead>
       <TableRow>
-        {[
-          "N° FOLIO",
-          "MOTIVO",
-          "FORMULARIO",
-          "SOLICITANTE",
-          "AMONESTADO",
-          "ESTADO",
-        ].map((header) => (
-          <TableCell
-            key={header}
-            align="center"
-            sx={{
-              fontWeight: "bold",
-              backgroundColor: "#142a3d",
-              color: "white",
-            }}
-          >
-            <Typography>{header}</Typography>
+        {["N° FOLIO", "MOTIVO", "FORMULARIO", "SOLICITANTE", "AMONESTADO", "ESTADO"].map(header => (
+          <TableCell key={header} align="center" sx={{ background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 80%)`, color: '#fff', py: 1.5 }}>
+            <Typography sx={{ fontWeight: 700, letterSpacing: .4, fontSize: 13 }}>{header}</Typography>
           </TableCell>
         ))}
       </TableRow>
@@ -112,11 +83,7 @@ function AmonesatacionesViewer() {
               key={index}
               component={Link}
               to={`/solicitud/${row.solicitudID}`}
-              sx={{
-                textDecoration: "none",
-                cursor: "pointer",
-                "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
-              }}
+              sx={{ textDecoration: 'none', cursor: 'pointer', backgroundColor: '#ffffffcc', backdropFilter: 'blur(4px)', transition: 'background-color .25s', '&:hover': { backgroundColor: '#ffffff' } }}
             >
               <TableCell align="center" sx={{ fontSize: "12px" }}>
                 {row.Folio ? row.Folio : "Sin Folio"}
@@ -152,17 +119,7 @@ function AmonesatacionesViewer() {
   );
 
   const setTableCard = () => (
-    <TableContainer
-      sx={{
-        width: "90%",
-        height: "100%",
-        overflow: "auto",
-        marginTop: 2,
-        borderRadius: 2,
-        border: "2px solid #dfdeda",
-        backgroundColor: "white",
-      }}
-    >
+    <TableContainer sx={{ width: '90%', height: '100%', overflow: 'auto', mt: 2, borderRadius: 3, border: `1px solid ${palette.borderSubtle}`, background: palette.cardBg, backdropFilter: 'blur(8px)', boxShadow: '0 6px 24px rgba(0,0,0,0.15)' }}>
       <Table stickyHeader>
         {setTableHead()}
         {setTableBody()}
@@ -170,6 +127,9 @@ function AmonesatacionesViewer() {
     </TableContainer>
   );
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -177,60 +137,20 @@ function AmonesatacionesViewer() {
 
   return (
     <MainLayout showNavbar={true}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-          width: "100%",
-          overflow: "auto",
-          paddingY: "70px",
-          backgroundColor: "#f5f5f5",
-          minHeight: "90vh",
-        }}
-      >
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', minHeight: '90vh', width: '100%', overflow: 'auto', py: 8, background: palette.bgGradient, position: 'relative', '::before': { content: '""', position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 18%, rgba(255,255,255,0.085), transparent 60%), radial-gradient(circle at 78% 75%, rgba(255,255,255,0.06), transparent 65%)', pointerEvents: 'none' } }}>
         {open && (
-          <Alert
-            onClose={handleClose}
-            severity="info"
-            sx={{ marginTop: "2%", width: "80%" }}
-          >
-            <Typography fontFamily="initial" fontWeight="bold">
-              Mensaje
-            </Typography>
+          <Alert onClose={handleClose} severity="info" sx={{ mb: 3, width: '80%', backdropFilter: 'blur(6px)', background: `${palette.cardBg}aa`, border: `1px solid ${palette.borderSubtle}` }}>
+            <Typography fontWeight={600}>Mensaje</Typography>
           </Alert>
         )}
-
         {isSubmitting ? (
-          <Box
-            sx={{
-              width: "90%",
-              overflow: "hidden",
-              backgroundColor: "#f5f5f5",
-              boxShadow: 5,
-              borderRadius: "10px",
-              mt: 2,
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Skeleton
-              variant="rounded"
-              width={"100%"}
-              height={"800px"}
-              sx={{ p: 3, m: 3 }}
-            />
+          <Box sx={{ width: '90%', mt: 2, border: `1px solid ${palette.borderSubtle}`, background: palette.cardBg, backdropFilter: 'blur(10px)', borderRadius: 4, boxShadow: '0 8px 32px rgba(0,0,0,0.25)', display: 'flex', justifyContent: 'center' }}>
+            <Skeleton variant="rounded" width={'100%'} height={500} sx={{ m: 3 }} />
           </Box>
         ) : (
           <>
             {setTableCard()}
-            <ButtonGroup
-              size="small"
-              aria-label="pagination-button-group"
-              sx={{ p: 2 }}
-            >
+            <ButtonGroup size="small" aria-label="pagination-button-group" sx={{ p: 2, gap: 1 }}>
               {getButtons()}
             </ButtonGroup>
           </>

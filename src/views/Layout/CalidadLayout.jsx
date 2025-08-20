@@ -10,6 +10,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "../../components/navbar";
+import { palette } from "../../theme/palette";
 
 function CalidadLayout({ children, showNavbar = true }) {
   const [selected, setSelected] = useState(1);
@@ -24,7 +25,22 @@ function CalidadLayout({ children, showNavbar = true }) {
   return (
     <>
       {showNavbar && <Navbar />}
-      <Box sx={{ background: "#142a3d", height: "60px", marginTop: "60px" }}>
+      <Box
+        sx={{
+          background: palette.bgGradient,
+          height: "60px",
+          marginTop: "60px",
+          position: 'relative',
+          '::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background:
+              "radial-gradient(circle at 15% 35%, rgba(255,255,255,0.10), transparent 60%), radial-gradient(circle at 85% 65%, rgba(255,255,255,0.08), transparent 65%)",
+            pointerEvents: 'none'
+          }
+        }}
+      >
         <Toolbar
           sx={{
             display: "flex",
@@ -47,24 +63,37 @@ function CalidadLayout({ children, showNavbar = true }) {
               sx={{
                 width: "100%",
                 height: "40px",
-                borderRadius: 5,
-                border: selected === 1 ? "2px solid #dfdeda" : "none",
-                background: selected === 1 ? "#ff9800" : "#2d5e89",
+                borderRadius: 3,
+                border: selected === 1 ? `2px solid ${palette.accent}` : `1px solid ${palette.primaryDark}`,
+                background: selected === 1
+                  ? `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 90%)`
+                  : `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 90%)`,
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                transition:
-                  "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-                "&:hover": {
-                  transform: "translateY(-5px)",
-                  boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+                position: 'relative',
+                overflow: 'hidden',
+                transition: "all .35s",
+                '&:before': {
+                  content: '""',
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(120deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 70%)',
+                  opacity: 0,
+                  transition: 'opacity .4s'
                 },
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: '0 10px 24px -6px rgba(0,0,0,0.45)',
+                  '&:before': { opacity: .9 }
+                },
+                '&:active': { transform: 'translateY(-2px)' }
               }}
             >
               <Typography
                 variant="subtitle1"
                 fontFamily="monospace"
-                sx={{ color: "white", textAlign: "center" }}
+                sx={{ color: '#fff', textAlign: "center", fontWeight: 600, letterSpacing: 0.5 }}
               >
                 REGISTRO REPARACIONES
               </Typography>
@@ -85,24 +114,37 @@ function CalidadLayout({ children, showNavbar = true }) {
               sx={{
                 width: "100%",
                 height: "40px",
-                borderRadius: 5,
-                border: selected === 2 ? "2px solid #dfdeda" : "none",
-                background: selected === 2 ? "#ff9800" : "#2d5e89",
+                borderRadius: 3,
+                border: selected === 2 ? `2px solid ${palette.accent}` : `1px solid ${palette.primaryDark}`,
+                background: selected === 2
+                  ? `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 90%)`
+                  : `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 90%)`,
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                transition:
-                  "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-                "&:hover": {
-                  transform: "translateY(-5px)",
-                  boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+                position: 'relative',
+                overflow: 'hidden',
+                transition: "all .35s",
+                '&:before': {
+                  content: '""',
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(120deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 70%)',
+                  opacity: 0,
+                  transition: 'opacity .4s'
                 },
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: '0 10px 24px -6px rgba(0,0,0,0.45)',
+                  '&:before': { opacity: .9 }
+                },
+                '&:active': { transform: 'translateY(-2px)' }
               }}
             >
               <Typography
                 variant="subtitle1"
                 fontFamily="monospace"
-                sx={{ color: "white", textAlign: "center" }}
+                sx={{ color: '#fff', textAlign: "center", fontWeight: 600, letterSpacing: 0.5 }}
               >
                 REGISTRO INCIDENCIAS
               </Typography>

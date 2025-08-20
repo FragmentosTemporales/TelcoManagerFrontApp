@@ -1,14 +1,8 @@
-import {
-  Box,
-  Button,
-  CardContent,
-  Paper,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { downloadFile } from "../api/downloadApi";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { palette } from "../theme/palette";
 
 function CalidadViewer({ data }) {
   const [filePath, setFilePath] = useState("");
@@ -33,29 +27,24 @@ function CalidadViewer({ data }) {
 
   return (
     <>
-      <Box sx={{ width: "100%", textAlign: "start" }}>
+  <Box sx={{ width: "100%", textAlign: "start" }}>
         {data && data["N° Petición"] != "Sin información" ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1.2, mb: .5, borderRadius: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, boxShadow: '0 4px 10px -4px rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}>
             <Typography
               sx={{
                 width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
+        color: palette.primary,
+        pl: 1,
+        fontWeight: 600,
               }}
             >
               N° Petición:
             </Typography>
             <Typography
               sx={{
-                color: "text.secondary",
+        color: palette.textMuted,
                 width: "75%",
+        fontWeight: 500,
               }}
             >
               {`${data["N° Petición"]}`}
@@ -64,27 +53,22 @@ function CalidadViewer({ data }) {
         ) : null}
 
         {data && data["Fecha Auditoria"] != "Sin información" ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1.2, mb: .5, borderRadius: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, boxShadow: '0 4px 10px -4px rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}>
             <Typography
               sx={{
                 width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
+                color: palette.primary,
+                pl: 1,
+                fontWeight: 600,
               }}
             >
               Fecha Auditoria:
             </Typography>
             <Typography
               sx={{
-                color: "text.secondary",
+                color: palette.textMuted,
                 width: "75%",
+                fontWeight: 500,
               }}
             >
               {`${data["Fecha Auditoria"]}`}
@@ -93,27 +77,22 @@ function CalidadViewer({ data }) {
         ) : null}
 
         {data && data["Fecha Evento"] != "Sin información" ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1.2, mb: .5, borderRadius: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, boxShadow: '0 4px 10px -4px rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}>
             <Typography
               sx={{
                 width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
+                color: palette.primary,
+                pl: 1,
+                fontWeight: 600,
               }}
             >
               Fecha Evento:
             </Typography>
             <Typography
               sx={{
-                color: "text.secondary",
+                color: palette.textMuted,
                 width: "75%",
+                fontWeight: 500,
               }}
             >
               {`${data["Fecha Evento"]}`}
@@ -122,27 +101,22 @@ function CalidadViewer({ data }) {
         ) : null}
 
         {data && data["Dirección"] != "Sin información" ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1.2, mb: .5, borderRadius: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, boxShadow: '0 4px 10px -4px rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}>
             <Typography
               sx={{
                 width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
+                color: palette.primary,
+                pl: 1,
+                fontWeight: 600,
               }}
             >
               Dirección:
             </Typography>
             <Typography
               sx={{
-                color: "text.secondary",
+                color: palette.textMuted,
                 width: "75%",
+                fontWeight: 500,
               }}
             >
               {`${data["Dirección"]}`}
@@ -151,27 +125,22 @@ function CalidadViewer({ data }) {
         ) : null}
 
         {data && data["Declaración"] != "Sin información" ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1.2, mb: .5, borderRadius: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, boxShadow: '0 4px 10px -4px rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}>
             <Typography
               sx={{
                 width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
+                color: palette.primary,
+                pl: 1,
+                fontWeight: 600,
               }}
             >
               Declaración:
             </Typography>
             <Typography
               sx={{
-                color: "text.secondary",
+                color: palette.textMuted,
                 width: "75%",
+                fontWeight: 500,
               }}
             >
               {`${data["Declaración"]}`}
@@ -180,19 +149,13 @@ function CalidadViewer({ data }) {
         ) : null}
 
         {data && data["Archivo"] !== "None" ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 1,
-              borderBottom: "1px solid #e0e0e0",
-            }}
-          >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1.2, mb: .5, borderRadius: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, boxShadow: '0 4px 10px -4px rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}>
             <Typography
               sx={{
                 width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-                color: "text.primary",
-                paddingLeft: 1,
+                color: palette.primary,
+                pl: 1,
+                fontWeight: 600,
               }}
             >
               Archivo:
@@ -206,12 +169,17 @@ function CalidadViewer({ data }) {
             >
               <Button
                 onClick={downloader}
-                variant="outlined"
+                variant="contained"
                 size="small"
                 sx={{
-                  textDecoration: "none",
-                  color: "#1976d2",
-                  fontWeight: "bold",
+                  background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 75%)`,
+                  color: '#fff',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  px: 2.5,
+                  borderRadius: 2,
+                  boxShadow: '0 6px 16px -4px rgba(0,0,0,0.45)',
+                  '&:hover': { background: palette.primaryDark }
                 }}
               >
                 Descargar

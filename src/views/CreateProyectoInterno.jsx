@@ -148,29 +148,34 @@ function CreateProyectoInterno() {
                         variant="contained"
                         component={Link}
                         to="/modulo:proyecto-interno"
-                        sx={{
-                            background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 75%)`,
+                        sx={{ 
+                            width: "200px",
+                            background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
                             color: '#fff',
-                            borderRadius: 2,
-                            width: '200px', // mantener ancho
                             fontWeight: 600,
-                            letterSpacing: .6,
-                            textTransform: 'none',
-                            boxShadow: '0 8px 22px -6px rgba(0,0,0,0.45)',
+                            letterSpacing: '.5px',
+                            borderRadius: 2,
                             position: 'relative',
                             overflow: 'hidden',
+                            textShadow: '0 1px 2px rgba(0,0,0,0.35)',
+                            boxShadow: '0 6px 18px -4px rgba(0,0,0,0.45), 0 2px 6px -1px rgba(0,0,0,0.35)',
+                            transition: 'all .35s',
                             '&:before': {
                                 content: '""',
                                 position: 'absolute',
                                 inset: 0,
-                                background: 'radial-gradient(circle at 25% 20%, rgba(255,255,255,0.35), transparent 55%)',
-                                opacity: .55,
+                                background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
                                 mixBlendMode: 'overlay',
-                                transition: 'opacity .4s'
+                                pointerEvents: 'none'
                             },
-                            '&:hover': { boxShadow: '0 12px 30px -8px rgba(0,0,0,0.55)', transform: 'translateY(-3px)', '&:before': { opacity: .85 } },
-                            '&:active': { transform: 'translateY(-1px)' }
-                        }}
+                            '&:hover': {
+                                transform: 'translateY(-3px)',
+                                boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                                background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+                            },
+                            '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+                            '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+                        }} 
                     >
                         VOLVER
                     </Button>

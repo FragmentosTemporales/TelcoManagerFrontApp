@@ -32,6 +32,7 @@ import OperacionesViewer from "../components/operacionesFormViewer";
 import LogisticaViewer from "../components/logisticaFormViewer";
 import FlotaViewer from "../components/flotaFormViewer";
 import { downloadFile } from "../api/downloadApi";
+import { palette } from "../theme/palette";
 
 function Solicitud() {
   const { solicitud_id } = useParams();
@@ -79,11 +80,13 @@ function Solicitud() {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "600px",
-            bgcolor: "background.paper",
-            boxShadow: 24,
+            width: 600,
+            background: palette.cardBg,
+            border: `1px solid ${palette.borderSubtle}`,
+            boxShadow: '0 18px 42px -16px rgba(0,0,0,0.55), 0 8px 16px -6px rgba(0,0,0,0.35)',
             p: 4,
-            borderRadius: 2,
+            borderRadius: 3,
+            backdropFilter: 'blur(6px)'
           }}
         >
           <Box sx={{ textAlign: "center", pb: 2 }}>
@@ -103,7 +106,7 @@ function Solicitud() {
               onClick={gestionarSolicitud}
               color="error"
               disabled={isSubmitting}
-              sx={{ borderRadius: 2 }}
+              sx={{ borderRadius: 2, background: `linear-gradient(135deg, ${palette.danger} 0%, ${palette.primaryDark} 100%)`, '&:hover': { background: palette.primaryDark } }}
             >
               {isSubmitting ? "Procesando..." : "Aceptar"}
             </Button>
@@ -563,19 +566,13 @@ function Solicitud() {
   );
 
   const btnRechazar = () => (
-    <>
-      <Button
-        variant="contained"
-        color="error"
-        onClick={() => {
-          setEstadoID(9);
-          setOpenModalRechazar(true);
-        }}
-        sx={{ borderRadius: 2 }}
-      >
-        {isSubmitting ? "Procesando..." : "Anular Amonestación"}
-      </Button>
-    </>
+    <Button
+      variant="contained"
+      onClick={() => { setEstadoID(9); setOpenModalRechazar(true); }}
+      sx={{ borderRadius: 2, background: `linear-gradient(135deg, ${palette.danger} 0%, ${palette.primary} 100%)`, fontWeight: 600, letterSpacing: .3, boxShadow: '0 4px 12px -4px rgba(0,0,0,0.45)', '&:hover': { background: palette.primaryDark } }}
+    >
+      {isSubmitting ? "Procesando..." : "Anular Amonestación"}
+    </Button>
   );
 
   const btnRequiereLegal = () => (
@@ -724,153 +721,59 @@ function Solicitud() {
 
   // BTN GROUP
 
+  const cardBaseSx = {
+    width: '80%',
+    overflow: 'hidden',
+    background: palette.cardBg,
+    border: `1px solid ${palette.borderSubtle}`,
+    boxShadow: '0 10px 28px -10px rgba(0,0,0,0.38), 0 6px 12px -4px rgba(0,0,0,0.22)',
+    borderRadius: 3,
+    mt: 3,
+    mx: 'auto',
+    backdropFilter: 'blur(4px)'
+  };
+  const headerSx = {
+    background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+    color: 'white',
+    textAlign: 'start'
+  };
+  const actionsContentSx = { display: 'flex', justifyContent: 'space-evenly', flexWrap: 'wrap', gap: 2 };
+
   const componenteAnulacion = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: 2,
-        mt: 3,
-        mx: "auto",
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
-        {btnRechazar()}
-      </CardContent>
+    <Card sx={cardBaseSx}>
+      <CardHeader title={<Typography fontWeight={600}>ACCIONES</Typography>} sx={headerSx} />
+      <CardContent sx={actionsContentSx}>{btnRechazar()}</CardContent>
     </Card>
   );
 
   const componenteRequiereLegal = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: 2,
-        mt: 3,
-        mx: "auto",
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+    <Card sx={cardBaseSx}>
+      <CardHeader title={<Typography fontWeight={600}>ACCIONES</Typography>} sx={headerSx} />
+      <CardContent sx={actionsContentSx}>
         {btnRequiereLegal()}
-
         {btnFirmaEmpleador()}
       </CardContent>
     </Card>
   );
 
   const componenteDesvinculado = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: 2,
-        mt: 3,
-        mx: "auto",
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
-        {btnDesvinculado()}
-      </CardContent>
+    <Card sx={cardBaseSx}>
+      <CardHeader title={<Typography fontWeight={600}>ACCIONES</Typography>} sx={headerSx} />
+      <CardContent sx={actionsContentSx}>{btnDesvinculado()}</CardContent>
     </Card>
   );
 
   const componenteRequiereEmpleador = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: 2,
-        mt: 3,
-        mx: "auto",
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
-        {btnFirmaEmpleador()}
-      </CardContent>
+    <Card sx={cardBaseSx}>
+      <CardHeader title={<Typography fontWeight={600}>ACCIONES</Typography>} sx={headerSx} />
+      <CardContent sx={actionsContentSx}>{btnFirmaEmpleador()}</CardContent>
     </Card>
   );
 
   const componenteOperativo = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: 2,
-        mt: 3,
-        mx: "auto",
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+    <Card sx={cardBaseSx}>
+      <CardHeader title={<Typography fontWeight={600}>ACCIONES</Typography>} sx={headerSx} />
+      <CardContent sx={actionsContentSx}>
         {btnFirmaTrabajador()}
         {btnLicenciaMedica()}
         {btnVacaciones()}
@@ -879,30 +782,9 @@ function Solicitud() {
   );
 
   const componenteLicencia = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: 2,
-        mt: 3,
-        mx: "auto",
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+    <Card sx={cardBaseSx}>
+      <CardHeader title={<Typography fontWeight={600}>ACCIONES</Typography>} sx={headerSx} />
+      <CardContent sx={actionsContentSx}>
         {btnFirmaTrabajador()}
         {btnVacaciones()}
       </CardContent>
@@ -910,30 +792,9 @@ function Solicitud() {
   );
 
   const componenteVacaciones = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: 2,
-        mt: 3,
-        mx: "auto",
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+    <Card sx={cardBaseSx}>
+      <CardHeader title={<Typography fontWeight={600}>ACCIONES</Typography>} sx={headerSx} />
+      <CardContent sx={actionsContentSx}>
         {btnFirmaTrabajador()}
         {btnLicenciaMedica()}
       </CardContent>
@@ -941,60 +802,16 @@ function Solicitud() {
   );
 
   const componenteNoFirmada = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: 2,
-        mt: 3,
-        mx: "auto",
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
-        {btnEnviadaCorreo()}
-      </CardContent>
+    <Card sx={cardBaseSx}>
+      <CardHeader title={<Typography fontWeight={600}>ACCIONES</Typography>} sx={headerSx} />
+      <CardContent sx={actionsContentSx}>{btnEnviadaCorreo()}</CardContent>
     </Card>
   );
 
   const componenteFirmada = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: 2,
-        mt: 3,
-        mx: "auto",
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
+    <Card sx={cardBaseSx}>
+      <CardHeader title={<Typography fontWeight={600}>ACCIONES</Typography>} sx={headerSx} />
+      <CardContent sx={actionsContentSx}>
         {btnFirmada()}
         {btnNoFirmada()}
       </CardContent>
@@ -1002,32 +819,9 @@ function Solicitud() {
   );
 
   const componenteFinalizada = () => (
-    <Card
-      sx={{
-        width: "80%",
-        overflow: "hidden",
-        backgroundColor: "#f5f5f5",
-        boxShadow: 5,
-        borderRadius: 2,
-        mt: 3,
-        mx: "auto",
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography>
-            ACCIONES
-          </Typography>
-        }
-        sx={{
-          background: "#142a3d",
-          color: "white",
-          textAlign: "start",
-        }}
-      />
-      <CardContent sx={{ display: "flex", justifyContent: "space-evenly" }}>
-        {btnFinalizar()}
-      </CardContent>
+    <Card sx={cardBaseSx}>
+      <CardHeader title={<Typography fontWeight={600}>ACCIONES</Typography>} sx={headerSx} />
+      <CardContent sx={actionsContentSx}>{btnFinalizar()}</CardContent>
     </Card>
   );
 
@@ -1111,15 +905,7 @@ function Solicitud() {
   // COMPONENTES GENERALES DESDE AQUI
 
   const setTableEstado = () => (
-    <Box
-      sx={{
-        width: "80%",
-        marginTop: 2,
-        backgroundColor: "white",
-        border: "2px solid #dfdeda",
-        borderRadius: 2,
-      }}
-    >
+  <Box sx={{ width: '80%', mt: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, borderRadius: 3, overflow: 'hidden', backdropFilter: 'blur(4px)', boxShadow: '0 6px 20px -8px rgba(0,0,0,0.3)' }}>
       <TableContainer>
         <Table stickyHeader>
           <TableHead>
@@ -1147,16 +933,16 @@ function Solicitud() {
           <TableBody>
             {dataGestiones && dataGestiones.length > 0 ? (
               dataGestiones.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell align="center">
+                <TableRow key={index} sx={{ backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'transparent', '&:hover': { backgroundColor: palette.accentSoft } }}>
+                  <TableCell align="center" sx={{ fontSize: 12 }}>
                     <Typography>{extractDate(row.fecha)}</Typography>
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" sx={{ fontSize: 12 }}>
                     <Typography>
                       {row.estado ? row.estado : "Sin gestiones"}
                     </Typography>
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" sx={{ fontSize: 12 }}>
                     <Typography>{row.responsable}</Typography>
                   </TableCell>
                 </TableRow>
@@ -1200,15 +986,7 @@ function Solicitud() {
   };
 
   const setDetallesView = () => (
-    <Box
-      sx={{
-        width: "80%",
-        marginTop: 2,
-        backgroundColor: "white",
-        border: "2px solid #dfdeda",
-        borderRadius: 2,
-      }}
-    >
+  <Box sx={{ width: '80%', mt: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, borderRadius: 3, backdropFilter: 'blur(4px)', boxShadow: '0 6px 20px -8px rgba(0,0,0,0.3)' }}>
       {dataForm !== false && dataForm !== null ? (
         setFormViewer()
       ) : (
@@ -1226,29 +1004,11 @@ function Solicitud() {
           >
             Sin información
           </Typography>
-          <Button
-            variant="contained"
-            sx={{
-              background: "#142a3d",
-              width: "300px",
-              borderRadius: 2,
-            }}
-            onClick={() => {
-              downloadInforme();
-            }}
-          >
+          <Button variant="contained" sx={{ background: `linear-gradient(135deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`, width: 300, borderRadius: 2, fontWeight: 600, letterSpacing: .3, '&:hover': { background: palette.primaryDark } }} onClick={() => { downloadInforme(); }}>
             Descarga Plantilla Informe
           </Button>
           <Link to={`/${data.area}/${data.logID}`}>
-            <Button
-              variant="contained"
-              sx={{
-                background: "#142a3d",
-                width: "300px",
-                borderRadius: 2,
-                my: 1,
-              }}
-            >
+            <Button variant="contained" sx={{ background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primaryDark} 100%)`, width: 300, borderRadius: 2, my: 1, fontWeight: 600, letterSpacing: .3, '&:hover': { background: palette.primaryDark } }}>
               Crear Formulario
             </Button>
           </Link>
@@ -1258,15 +1018,7 @@ function Solicitud() {
   );
 
   const setSolicitudView = () => (
-    <Box
-      sx={{
-        width: "80%",
-        marginTop: 2,
-        backgroundColor: "white",
-        borderRadius: 2,
-        border: "2px solid #dfdeda",
-      }}
-    >
+  <Box sx={{ width: '80%', mt: 2, background: palette.cardBg, borderRadius: 3, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)', boxShadow: '0 6px 20px -8px rgba(0,0,0,0.3)' }}>
       {[
         { label: "Fecha Solicitud :", value: extractDate(data.fechaSolicitud) },
         { label: "Folio :", value: data.folio },
@@ -1278,19 +1030,11 @@ function Solicitud() {
         { label: "Amonestado :", value: data.amonestado },
         { label: "Rut Amonestado :", value: data.rutAmonestado },
       ].map((item, index) => (
-        <Box
-          key={index}
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            border: "1px solid #e0e0e0",
-            padding: 1,
-          }}
-        >
+    <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: index !== 8 ? `1px solid ${palette.borderSubtle}` : 'none', px: 1, py: .8, backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent' }}>
           <Typography
             sx={{
               width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-              color: "text.primary",
+      color: palette.primary,
               paddingLeft: 1,
             }}
           >
@@ -1298,7 +1042,7 @@ function Solicitud() {
           </Typography>
           <Typography
             sx={{
-              color: "text.secondary",
+      color: palette.textMuted,
               width: "75%",
             }}
           >
@@ -1318,13 +1062,22 @@ function Solicitud() {
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "auto",
-        backgroundColor: "#f5f5f5",
-        py: 2
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        overflow: 'auto',
+        minHeight: '100vh',
+        background: palette.bgGradient,
+        position: 'relative',
+        py: 6,
+        '::before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(circle at 20% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 65%)',
+          pointerEvents: 'none'
+        }
       }}
     >
       {/* COMPONENTE MODAL PARA APROBAR AMONESTACION */}
@@ -1392,21 +1145,30 @@ function Solicitud() {
       ) : (
         <>
           {/* BOTON "IR A SOLICITUDES" */}
-          <Box
-            sx={{
-              width: "80%",
-              overflow: "hidden",
-              mx: "auto",
-            }}
-          >
+          <Box sx={{ width: '80%', overflow: 'hidden', mx: 'auto' }}>
             <Link to="/modulo:solicitudes">
               <Button
                 variant="contained"
-                sx={{ background: "#142a3d", borderRadius: 2, width: "200px" }}
+                sx={{
+                  background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primary} 85%)`,
+                  borderRadius: 2.5,
+                  width: 200,
+                  fontWeight: 600,
+                  letterSpacing: .5,
+                  color: 'white',
+                  border: `1px solid ${palette.accentSoft}`,
+                  boxShadow: '0 4px 14px -6px rgba(0,0,0,0.55)',
+                  textTransform: 'uppercase',
+                  transition: 'background .25s ease, box-shadow .25s ease, transform .25s ease',
+                  '&:hover': {
+                    background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primaryDark} 90%)`,
+                    boxShadow: '0 6px 18px -8px rgba(0,0,0,0.65)'
+                  },
+                  '&:active': { transform: 'translateY(1px)', boxShadow: '0 3px 10px -5px rgba(0,0,0,0.55)' },
+                  '&:focus-visible': { outline: `2px solid ${palette.accent}`, outlineOffset: 3 }
+                }}
               >
-                <Typography sx={{ color: "white" }}>
-                  Volver
-                </Typography>
+                Volver
               </Button>
             </Link>
           </Box>
@@ -1422,85 +1184,53 @@ function Solicitud() {
           {setTableEstado()}
 
           {/* BOX PARA ANULAR AMONESTACIONES */}
-          <Box sx={{ width: "100%", mx: "auto" }}>
-            {(user_id == 4) &
-              (dataGestiones[0].estado != "ANULADA" &&
-                dataGestiones[0].estado != "FINALIZADA")
-              ? componenteAnulacion()
-              : null}
+          <Box sx={{ width: '100%', mx: 'auto' }}>
+            {(user_id == 4) && (dataGestiones[0].estado != 'ANULADA' && dataGestiones[0].estado != 'FINALIZADA') ? componenteAnulacion() : null}
           </Box>
 
           {/* BOX PARA EVALUACION LEGAL */}
-          <Box sx={{ width: "100%", mx: "auto" }}>
-            {(area && area.areaID === 5) &
-              (dataGestiones[0].estado == "ENVIADA A RRHH")
-              ? componenteRequiereLegal()
-              : null}
+          <Box sx={{ width: '100%', mx: 'auto' }}>
+            {(area && area.areaID === 5) && (dataGestiones[0].estado == 'ENVIADA A RRHH') ? componenteRequiereLegal() : null}
           </Box>
 
           {/* BOX PARA EVALUACION LEGAL */}
-          <Box sx={{ width: "100%", mx: "auto" }}>
-            {(area && area.areaID === 5) &
-              (dataGestiones[0].estado == "EVALUACION LEGAL")
-              ? componenteRequiereEmpleador()
-              : null}
+          <Box sx={{ width: '100%', mx: 'auto' }}>
+            {(area && area.areaID === 5) && (dataGestiones[0].estado == 'EVALUACION LEGAL') ? componenteRequiereEmpleador() : null}
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
-          <Box sx={{ width: "100%", mx: "auto" }}>
-            {(area && area.areaID === 5) &
-              (dataGestiones[0].estado == "PENDIENTE FIRMA EMPLEADOR")
-              ? componenteOperativo()
-              : null}
+          <Box sx={{ width: '100%', mx: 'auto' }}>
+            {(area && area.areaID === 5) && (dataGestiones[0].estado == 'PENDIENTE FIRMA EMPLEADOR') ? componenteOperativo() : null}
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
-          <Box sx={{ width: "100%", mx: "auto" }}>
-            {(area && area.areaID === 5) &
-              (dataGestiones[0].estado == "LICENCIA MEDICA")
-              ? componenteLicencia()
-              : null}
+          <Box sx={{ width: '100%', mx: 'auto' }}>
+            {(area && area.areaID === 5) && (dataGestiones[0].estado == 'LICENCIA MEDICA') ? componenteLicencia() : null}
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE TRABAJADOR */}
-          <Box sx={{ width: "100%", mx: "auto" }}>
-            {(area && area.areaID === 5) &
-              (dataGestiones[0].estado == "VACACIONES")
-              ? componenteVacaciones()
-              : null}
+          <Box sx={{ width: '100%', mx: 'auto' }}>
+            {(area && area.areaID === 5) && (dataGestiones[0].estado == 'VACACIONES') ? componenteVacaciones() : null}
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE FIRMA */}
-          <Box sx={{ width: "100%", mx: "auto" }}>
-            {(user_id == validate) &
-              (dataGestiones[0].estado == "PENDIENTE FIRMA TRABAJADOR")
-              ? componenteFirmada()
-              : null}
+          <Box sx={{ width: '100%', mx: 'auto' }}>
+            {(user_id == validate) && (dataGestiones[0].estado == 'PENDIENTE FIRMA TRABAJADOR') ? componenteFirmada() : null}
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO DE NO FIRMADA */}
-          <Box sx={{ width: "100%", mx: "auto" }}>
-            {(area && area.areaID === 5) &
-              (dataGestiones[0].estado == "NO FIRMADA")
-              ? componenteNoFirmada()
-              : null}
+          <Box sx={{ width: '100%', mx: 'auto' }}>
+            {(area && area.areaID === 5) && (dataGestiones[0].estado == 'NO FIRMADA') ? componenteNoFirmada() : null}
           </Box>
 
           {/* BOX PARA TRABAJADOR DESVINCULADO */}
-          <Box sx={{ width: "100%", mx: "auto" }}>
-            {area &&
-              (area.areaID === 5) &
-              (dataGestiones[0].estado != "TRABAJADOR DESVINCULADO")
-              ? componenteDesvinculado()
-              : null}
+          <Box sx={{ width: '100%', mx: 'auto' }}>
+            {area && (area.areaID === 5) && (dataGestiones[0].estado != 'TRABAJADOR DESVINCULADO') ? componenteDesvinculado() : null}
           </Box>
 
           {/* BOX PARA DEFINIR ESTADO FINALIZADA */}
-          <Box sx={{ width: "100%", mx: "auto" }}>
-            {(area && area.areaID === 5) &
-              (dataGestiones[0].estado == "FIRMADA" || dataGestiones[0].estado == "ENVIADA POR CORREO")
-              ? componenteFinalizada()
-              : null}
+          <Box sx={{ width: '100%', mx: 'auto' }}>
+            {(area && area.areaID === 5) && (dataGestiones[0].estado == 'FIRMADA' || dataGestiones[0].estado == 'ENVIADA POR CORREO') ? componenteFinalizada() : null}
           </Box>
         </>
       )}

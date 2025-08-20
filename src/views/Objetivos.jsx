@@ -1,11 +1,9 @@
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   Divider,
   FormControl,
+  LinearProgress,
   MenuItem,
   Modal,
   InputLabel,
@@ -17,13 +15,13 @@ import {
   TableContainer,
   TableHead,
   TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { getObjetivos, updateObjetivo } from "../api/dataAPI";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { MainLayout } from "./Layout";
+import palette from "../theme/palette";
 
 function ObjetivosView() {
   const authState = useSelector((state) => state.auth);
@@ -36,6 +34,35 @@ function ObjetivosView() {
   const [value, setValue] = useState(undefined);
   const [openModal, setOpenModal] = useState(false);
   const [habilitado, setHabilitado] = useState(false);
+  const [error, setError] = useState(null);
+
+  // UI style helpers
+  const panelPaperSx = {
+    width: "100%",
+    mt: 2,
+    p: 2,
+    borderRadius: 2,
+    border: `1px solid ${palette.borderSubtle}`,
+    background: "rgba(255,255,255,0.92)",
+    backdropFilter: "blur(8px)",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
+    position: "relative"
+  };
+  const headerCellSx = {
+    background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`,
+    fontWeight: "bold",
+    color: "#fff",
+    letterSpacing: ".5px",
+    fontSize: 13,
+    borderRight: `1px solid ${palette.primaryDark}`,
+    '&:last-of-type': { borderRight: 'none' }
+  };
+  const bodyCellSx = { fontSize: 14, py: 1.2 };
+  const editableRowSx = {
+    cursor: "pointer",
+    transition: "background .25s, transform .25s",
+    '&:hover': { backgroundColor: "rgba(45,155,211,0.08)", transform: 'translateY(-2px)' }
+  };
 
   const mesOptions = [
     {
@@ -78,14 +105,17 @@ function ObjetivosView() {
   ];
 
   const fetchData = async () => {
+    if (!token || !gerencia || !mes) return;
     try {
-      setOrigenes([]);
+      setError(null);
       setIsSubmitting(true);
       const res = await getObjetivos(token, gerencia, mes);
-      setData(res);
+      setData(res || []);
+    } catch (err) {
+      console.log(err);
+      setError("Error al obtener datos. Intente nuevamente.");
+    } finally {
       setIsSubmitting(false);
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -95,16 +125,19 @@ function ObjetivosView() {
   };
 
   const ActualizarObjetivo = async () => {
+    if (!id) return;
+    const numericValue = parseInt(value, 10);
+    if (isNaN(numericValue) || numericValue < 0) return;
     try {
       setIsSubmitting(true);
-      await updateObjetivo(token, id, { value: value });
-      const res = await getObjetivos(token, gerencia, mes);
-
+      await updateObjetivo(token, id, { value: numericValue });
+      await fetchData();
       setOpenModal(false);
-      setData(res);
-      setIsSubmitting(false);
       setValue(undefined);
-    } catch (error) {
+    } catch (err) {
+      console.log(err);
+      setError("Error al actualizar el objetivo.");
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -114,7 +147,10 @@ function ObjetivosView() {
   };
 
   const setFilter = () => (
-    <Box sx={{ width: "100%", marginTop: 2, backgroundColor: "white", padding: 2, borderRadius: 2, border: "2px solid #dfdeda" }}>
+    <Box sx={panelPaperSx}>
+      {isSubmitting && (
+        <LinearProgress sx={{ position: 'absolute', left: 0, right: 0, top: 0, borderTopLeftRadius: 8, borderTopRightRadius: 8 }} />
+      )}
       <form onSubmit={handleSubmit}>
         <Box
           sx={{
@@ -122,6 +158,8 @@ function ObjetivosView() {
             justifyContent: "space-around",
             alignItems: "center",
             padding: 3,
+            flexWrap: 'wrap',
+            gap: 2
           }}
         >
           <FormControl sx={{ minWidth: "350px" }}>
@@ -174,11 +212,13 @@ function ObjetivosView() {
             variant="contained"
             sx={{
               fontWeight: "bold",
-              background: "#142a3d",
+              background: `linear-gradient(90deg, ${palette.primaryDark} 0%, ${palette.primary} 60%)`,
               minWidth: "200px",
               height: "40px",
+              boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
+              '&:hover': { background: `linear-gradient(90deg, ${palette.primaryDark} 0%, ${palette.primaryDark} 100%)` }
             }}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !gerencia || !mes}
           >
             {isSubmitting ? "Procesando..." : "Buscar"}
           </Button>
@@ -188,9 +228,9 @@ function ObjetivosView() {
   );
 
   const setTable = () => (
-    <Box sx={{ width: "100%", marginTop: 2, boxShadow: 2, backgroundColor: "white", padding: 2, borderRadius: 2, border: "2px solid #dfdeda" }}>
-      <TableContainer>
-        <Table>
+    <Box sx={panelPaperSx}>
+      <TableContainer sx={{ maxHeight: 560 }}>
+        <Table stickyHeader size="small">
           {setTableHead()}
           {setTableBody()}
         </Table>
@@ -213,7 +253,7 @@ function ObjetivosView() {
             <TableCell
               key={header}
               align="center"
-              sx={{ background: "#142a3d", fontWeight: "bold", color: "white" }}
+              sx={headerCellSx}
             >
               {header}
             </TableCell>
@@ -237,40 +277,41 @@ function ObjetivosView() {
               key={index}
               onClick={row.editable ? () => {
                 setID(row.id);
+                setValue(row.facilidades ?? 0);
                 setOpenModal(true);
               } : undefined}
               sx={{
                 textDecoration: "none",
-                cursor: "pointer",
-                "&:hover": { backgroundColor: "#f5f5f5" }, // Cambio de color al pasar el mouse
+                backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.6)' : 'rgba(240,245,250,0.6)',
+                ...(row.editable ? editableRowSx : {}),
               }}
             >
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
+              <TableCell align="center" sx={bodyCellSx}>
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.gerencia ? row.gerencia : "Sin Información"}
                 </Typography>
               </TableCell>
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
+              <TableCell align="center" sx={bodyCellSx}>
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.sector ? row.sector : "Sin Información"}
                 </Typography>
               </TableCell>
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
+              <TableCell align="center" sx={bodyCellSx}>
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.origen ? row.origen : "Sin Información"}
                 </Typography>
               </TableCell>
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
+              <TableCell align="center" sx={bodyCellSx}>
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.fuente ? row.fuente : "Sin Información"}
                 </Typography>
               </TableCell>
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
+              <TableCell align="center" sx={bodyCellSx}>
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.tipo ? row.tipo : "Sin Información"}
                 </Typography>
               </TableCell>
-              <TableCell align="center" sx={{ fontSize: "16px" }}>
+              <TableCell align="center" sx={bodyCellSx}>
                 <Typography fontFamily={"initial"} variant="secondary">
                   {row.facilidades ? row.facilidades : 0}
                 </Typography>
@@ -298,11 +339,13 @@ function ObjetivosView() {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            height: "200px",
-            width: "600px",
-            bgcolor: "background.paper",
-            boxShadow: 24,
+            width: { xs: '90%', sm: '500px' },
+            bgcolor: 'rgba(255,255,255,0.95)',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.3)',
             p: 4,
+            borderRadius: 3,
+            border: `1px solid ${palette.borderSubtle}`
           }}
         >
           <Typography
@@ -320,18 +363,32 @@ function ObjetivosView() {
               fullWidth
               required
               id="value"
-              type="integer"
+              type="number"
               name="value"
               value={value || ""}
               variant="outlined"
-              onChange={(e) => setValue(e.target.value)}
+              inputProps={{ min: 0 }}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === "" || /^\d+$/.test(v)) setValue(v);
+              }}
             />
           </Box>
           <Button
             variant="contained"
             onClick={ActualizarObjetivo}
-            sx={{ backgroundColor: "#142a3d" }}
-            disabled={isSubmitting}
+            sx={{
+              background: `linear-gradient(90deg, ${palette.primaryDark} 0%, ${palette.primary} 70%)`,
+              fontWeight: 'bold',
+              boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
+              '&:hover': { background: palette.primaryDark }
+            }}
+            disabled={
+              isSubmitting ||
+              value === undefined ||
+              value === "" ||
+              isNaN(parseInt(value, 10))
+            }
           >
             {isSubmitting ? "Procesando..." : "Actualizar"}
           </Button>
@@ -341,40 +398,36 @@ function ObjetivosView() {
   );
 
   useEffect(() => {
-    if (data && Object.keys(data).length > 0) {
-      const updatedOrigenes = Object.values(data).reduce(
-        (acc, value) => {
-          const existingIndex = acc.findIndex((o) => o.origen === value.origen);
-          if (existingIndex !== -1) {
-            acc[existingIndex].total += value.facilidades;
-          } else {
-            acc.push({ origen: value.origen, total: value.facilidades });
-          }
-          return acc;
-        },
-        [...origenes]
-      ); // Copia del estado actual
-
-      setOrigenes(updatedOrigenes);
+    if (Array.isArray(data) && data.length > 0) {
+      const map = data.reduce((acc, item) => {
+        const key = item.origen || "Sin Información";
+        const val = Number(item.facilidades) || 0;
+        acc[key] = (acc[key] || 0) + val;
+        return acc;
+      }, {});
+      const arr = Object.entries(map).map(([origen, total]) => ({ origen, total }));
+      arr.sort((a, b) => b.total - a.total);
+      setOrigenes(arr);
+    } else {
+      setOrigenes([]);
     }
   }, [data]);
 
+  // Auto fetch when both filters selected (after user validation logic sets them)
   useEffect(() => {
-    if (origenes && origenes.length > 0) {
-      console.log(origenes);
-    }
-  }, [origenes]);
+    if (gerencia && mes) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gerencia, mes]);
 
   // VALIDACION PARA USUARIO
-
   useEffect(() => {
-    if (user_id && user_id == 13) {
+    if (user_id === 13) {
       setGerencia("Metropolitana");
       setHabilitado(true);
-    } else if (user_id && user_id == 14) {
+    } else if (user_id === 14) {
       setGerencia("Biobío");
       setHabilitado(true);
-    } else null;
+    }
   }, [user_id]);
 
   useEffect(() => {
@@ -385,66 +438,68 @@ function ObjetivosView() {
     <MainLayout showNavbar={true}>
       <Box
         sx={{
-          paddingY: "70px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: "#f5f5f5",
-          minHeight: "90vh",
+          py: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          minHeight: '90vh',
+          px: { xs: 2, md: 4 },
+          background: palette.bgGradient,
+          position: 'relative',
+          '::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 18% 22%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.06), transparent 65%)',
+            pointerEvents: 'none'
+          }
         }}
       >
+        {error && (
+          <Box sx={{ mt: 2, color: 'error.main', fontWeight: 'bold' }}>{error}</Box>
+        )}
         {openModal && setModal()}
         {origenes && origenes.length > 0 ? (
           <Box
             sx={{
-              width: "50%",
-              display: "flex",
-              justifyContent: "center",
-              marginTop: 2,
-              marginBottom: 2,
+              width: { xs: '100%', md: '55%' },
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 2,
+              mb: 2,
               borderRadius: 2,
-              border: "2px solid #dfdeda",
-              backgroundColor: "white",
+              border: `1px solid ${palette.borderSubtle}`,
+              background: 'rgba(255,255,255,0.92)',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.18)'
             }}
           >
             <TableContainer>
-              <Table>
+              <Table size="small">
                 <TableHead>
                   <TableRow>
                     {["ORIGEN", "TOTAL"].map((header) => (
-                      <TableCell
-                        key={header}
-                        align="left"
-                        sx={{ background: "#142a3d", fontWeight: "bold", color: "white" }}
-                      >
+                      <TableCell key={header} align="left" sx={headerCellSx}>
                         {header}
                       </TableCell>
                     ))}
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {origenes && origenes.length > 0 ? (
-                    origenes.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell align="left" sx={{ fontSize: "16px" }}>
-                          <Typography fontFamily={"initial"} variant="secondary">
-                            {row.origen ? row.origen : "Sin Información"}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="left" sx={{ fontSize: "16px" }}>
-                          <Typography fontFamily={"initial"} variant="secondary">
-                            {row.total ? row.total : 0}
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={7} align="center">
-                        No hay datos disponibles
+                  {origenes.map((row, index) => (
+                    <TableRow key={index} sx={{ backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.6)' : 'rgba(240,245,250,0.6)' }}>
+                      <TableCell align="left" sx={bodyCellSx}>
+                        <Typography fontFamily={'initial'} variant="secondary">
+                          {row.origen ? row.origen : 'Sin Información'}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="left" sx={bodyCellSx}>
+                        <Typography fontFamily={'initial'} variant="secondary">
+                          {row.total ? row.total : 0}
+                        </Typography>
                       </TableCell>
                     </TableRow>
-                  )}
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -452,11 +507,11 @@ function ObjetivosView() {
         ) : null}
         <Box
           sx={{
-            width: "90%",
-            borderRadius: "10",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
+            width: '90%',
+            borderRadius: '10',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
           }}
         >
           {setFilter()}

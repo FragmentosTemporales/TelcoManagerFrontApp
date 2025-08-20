@@ -16,6 +16,7 @@ import {
   MenuItem,
   TableContainer
 } from "@mui/material";
+import { palette } from "../theme/palette";
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -55,6 +56,10 @@ function TicketeraView() {
     prioridad: 1,
     userID: "",
   });
+
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
 
   const setTituloData = () => {
     if (form.ticketcategoriaID && form.ticketcategoriaID != "") {
@@ -247,34 +252,10 @@ function TicketeraView() {
   };
 
   const createCard = () => (
-    <Box
-      sx={{
-        mb: 2,
-        width: "90%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "white",
-        borderRadius: 2,
-        border: "2px solid #dfdeda",
-      }}
-    >
-      <Typography
-        variant="h5"
-        sx={{
-          mb: 2,
-          mt: 2,
-          width: "90%",
-          textAlign: "start",
-          fontWeight: "bold",
-          color: "#142a3d",
-        }}
-      >
-        CREAR TICKET
-      </Typography>
-      <Divider sx={{ width: "90%", mb: 2 }} />
-      <form onSubmit={handleSubmit} style={{ width: "90%" }}>
+    <Box sx={{ mb: 3, width: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center', background: palette.cardBg, borderRadius: 4, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(6px)', boxShadow: '0 12px 32px -14px rgba(0,0,0,0.55), 0 6px 14px -6px rgba(0,0,0,0.35)' }}>
+      <Typography variant="h5" sx={{ mb: 1.5, mt: 2, width: '90%', textAlign: 'start', fontWeight: 700, letterSpacing: .6, background: `linear-gradient(120deg, ${palette.primary} 0%, ${palette.primaryDark} 70%)`, WebkitBackgroundClip: 'text', color: 'transparent' }}>CREAR TICKET</Typography>
+      <Divider sx={{ width: '90%', mb: 2 }} />
+      <form onSubmit={handleSubmit} style={{ width: '90%' }}>
         <Box sx={{ mb: 1, width: "100%" }}>
           <InputLabel id="categoria-label">CATEGORÍA</InputLabel>
           <Select
@@ -288,7 +269,7 @@ function TicketeraView() {
             onChange={(e) =>
               setForm({ ...form, ticketcategoriaID: e.target.value })
             }
-            sx={{ mb: 2, mt: 1, width: "50%", backgroundColor: "white" }}
+            sx={{ mb: 2, mt: 1, width: '50%', backgroundColor: 'white', borderRadius: 1 }}
           >
             {categorias.map((categoria) => (
               <MenuItem key={categoria.value} value={categoria.value}>
@@ -308,7 +289,7 @@ function TicketeraView() {
             name="titulo"
             value={form.titulo || ""}
             onChange={(e) => setForm({ ...form, titulo: e.target.value })}
-            sx={{ mb: 2, mt: 1, width: "50%", backgroundColor: "white" }}
+            sx={{ mb: 2, mt: 1, width: '50%', backgroundColor: 'white', borderRadius: 1 }}
             disabled={!form.ticketcategoriaID || titleOptions.length === 0}
           >
             {titleOptions.map((option) => (
@@ -325,7 +306,7 @@ function TicketeraView() {
             fullWidth
             variant="standard"
             size="large"
-            sx={{ mb: 2, width: "50%", backgroundColor: "white" }}
+            sx={{ mb: 2, width: '50%', backgroundColor: 'white', borderRadius: 1 }}
             onChange={handleFileChange}
             inputProps={{ accept: ".jpg,.jpeg,.png,image/jpeg,image/png" }}
           />
@@ -357,63 +338,24 @@ function TicketeraView() {
             minRows={4}
             maxRows={4}
             sx={{
-              width: "100%",
-              backgroundColor: "white",
+        width: '100%',
+        backgroundColor: 'white',
+        borderRadius: 1
             }}
           />
-        </Box>
-        <Box
-          sx={{ mb: 2, width: "100%", display: "flex", justifyContent: "end" }}
-        >
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={isSubmitting}
-            sx={{
-              width: "200px",
-              borderRadius: 2,
-              height: "40px",
-              ml: 2,
-              backgroundColor: "#142a3d",
-              color: "white",
-            }}
-          >
-            <Typography fontWeight="bold">
-              {isSubmitting ? "Subiendo..." : "Enviar"}
-            </Typography>
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => {
-              setCrear(false);
-              clearForm();
-            }}
-            sx={{
-              width: "200px",
-              borderRadius: 2,
-              height: "40px",
-              ml: 2,
-            }}
-          >
-            <Typography fontWeight="bold">DESCARTAR</Typography>
-          </Button>
+          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ width: 220, borderRadius: 3, height: 44, background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primary} 85%)`, color: 'white', fontWeight: 600, letterSpacing: .5, boxShadow: '0 6px 18px -6px rgba(0,0,0,0.55)', '&:hover': { background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primaryDark} 90%)` } }}>
+              {isSubmitting ? 'Subiendo...' : 'Enviar'}
+            </Button>
+            <Button variant="outlined" onClick={() => { setCrear(false); clearForm(); }} sx={{ width: 200, borderRadius: 3, height: 44, ml: 2, fontWeight: 600, letterSpacing: .5, color: palette.primary, borderColor: palette.primary, '&:hover': { borderColor: palette.primaryDark, backgroundColor: palette.accentSoft } }}>DESCARTAR</Button>
+          </Box>
         </Box>
       </form>
     </Box>
   );
 
   const tableView = () => (
-    <Box
-      sx={{
-        mb: 2,
-        width: "90%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "90vh",
-      }}
-    >
+    <Box sx={{ mb: 2, width: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '90vh' }}>
       <Box
         sx={{
           mb: 2,
@@ -422,24 +364,12 @@ function TicketeraView() {
           justifyContent: "start",
         }}
       >
-        <Button
-          onClick={() => setCrear(true)}
-          variant="contained"
-          color="error"
-          sx={{
-            width: "200px",
-            borderRadius: 2,
-            mt: 2,
-            boxShadow: 2,
-          }}
-        >
-          <Typography fontWeight="bold">CREAR TICKET</Typography>
-        </Button>
+  <Button onClick={() => setCrear(true)} variant="contained" sx={{ width: 240, borderRadius: 3, mt: 2, background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primary} 85%)`, fontWeight: 700, letterSpacing: .6, boxShadow: '0 6px 18px -6px rgba(0,0,0,0.55)', '&:hover': { background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primaryDark} 90%)` } }}>CREAR TICKET</Button>
       </Box>
 
       <Box sx={{ width: "100%", mb: 2 }}>
-        <TableContainer sx={{ boxShadow: 2, backgroundColor: "white", borderRadius: 2 }}>
-          <Table stickyHeader>
+        <TableContainer sx={{ boxShadow: '0 10px 28px -10px rgba(0,0,0,0.38)', backgroundColor: palette.cardBg, borderRadius: 4, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)' }}>
+          <Table stickyHeader sx={{ '& .MuiTableRow-root:hover': { backgroundColor: palette.accentSoft } }}>
             <TableHead>
               <TableRow>
                 {[
@@ -452,17 +382,8 @@ function TicketeraView() {
                   "ESTADO",
                   "ULTIMO CAMBIO",
                 ].map((header) => (
-                  <TableCell
-                    key={header}
-                    align="center"
-                    sx={{ backgroundColor: "#142a3d" }}
-                  >
-                    <Typography
-                      fontWeight={"bold"}
-                      sx={{ fontSize: "12px", color: "white" }}
-                    >
-                      {header}
-                    </Typography>
+                  <TableCell key={header} align="center" sx={{ backgroundColor: palette.primary }}>
+                    <Typography fontWeight={700} sx={{ fontSize: 12, color: 'white', letterSpacing: .5 }}>{header}</Typography>
                   </TableCell>
                 ))}
               </TableRow>
@@ -470,16 +391,7 @@ function TicketeraView() {
             <TableBody>
               {data && data.length > 0 ? (
                 data.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    component={Link}
-                    to={`/ticketviewer/${row.logID}`}
-                    sx={{
-                      textDecoration: "none",
-                      cursor: "pointer",
-                      "&:hover": { backgroundColor: "#f5f5f5" },
-                    }}
-                  >
+                  <TableRow key={index} component={Link} to={`/ticketviewer/${row.logID}`} sx={{ textDecoration: 'none', cursor: 'pointer', backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'transparent', '&:hover': { backgroundColor: palette.accentSoft } }}>
                     <TableCell align="center" sx={{ fontSize: "12px" }}>
                       {row.ticket_id ? row.ticket_id : "Sin Información"}
                     </TableCell>
@@ -537,27 +449,9 @@ function TicketeraView() {
 
   const getButtons = () => (
     <>
-      <Button
-        key="prev"
-        variant="contained"
-        onClick={() => handlePage(page - 1)}
-        disabled={page === 1}
-        sx={{ background: "#142a3d" }}
-      >
-        <ArrowBackIosIcon />
-      </Button>
-      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
-        {page}
-      </Button>
-      <Button
-        key="next"
-        variant="contained"
-        onClick={() => handlePage(page + 1)}
-        disabled={page === pages}
-        sx={{ background: "#142a3d" }}
-      >
-        <ArrowForwardIosIcon />
-      </Button>
+      <Button key="prev" variant="contained" onClick={() => handlePage(page - 1)} disabled={page === 1} sx={{ background: `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 100%)`, mr: 1, '&:hover': { background: palette.primary } }}><ArrowBackIosIcon /></Button>
+      <Button key="current" variant="contained" disabled sx={{ background: palette.accent, color: 'white', fontWeight: 600, mr: 1 }}>{page}</Button>
+      <Button key="next" variant="contained" onClick={() => handlePage(page + 1)} disabled={page === pages} sx={{ background: `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 100%)`, '&:hover': { background: palette.primary } }}><ArrowForwardIosIcon /></Button>
     </>
   );
 
@@ -598,17 +492,7 @@ function TicketeraView() {
 
   return (
     <MainLayout showNavbar={true}>
-    <Box
-      sx={{
-        paddingTop: "60px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#f5f5f5",
-        minHeight: "90vh",
-      }}
-    >
+  <Box sx={{ pt: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', background: palette.bgGradient, position: 'relative', '::before': { content: '""', position: 'absolute', inset: 0, background: 'radial-gradient(circle at 18% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 82% 70%, rgba(255,255,255,0.06), transparent 65%)', pointerEvents: 'none' }, pb: 6 }}>
       {open && (
         <Alert
           onClose={handleClose}
@@ -619,9 +503,8 @@ function TicketeraView() {
         </Alert>
       )}
 
-      {!crear && tableView()}
-
-      {crear && createCard()}
+  {!crear && tableView()}
+  {crear && createCard()}
     </Box>
     </MainLayout>
   );

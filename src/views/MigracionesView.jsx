@@ -12,6 +12,8 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Divider,
+  Chip,
 } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -24,6 +26,7 @@ import {
 } from "../api/despachoAPI";
 import extractDate, { extractDateOnly } from "../helpers/main";
 import { MainLayout } from "./Layout";
+import { palette } from "../theme/palette";
 
 function MigracionesViewer() {
   const authState = useSelector((state) => state.auth);
@@ -74,31 +77,31 @@ function MigracionesViewer() {
 
   const handlePage = (newPage) => setPage(newPage);
 
-  const getButtons = () => (
-    <>
-      <Button
-        key="prev"
-        variant="contained"
-        onClick={() => handlePage(page - 1)}
-        disabled={page === 1}
-        sx={{ background: "#142a3d" }}
-      >
-        <ArrowBackIosIcon />
-      </Button>
-      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
-        {page}
-      </Button>
-      <Button
-        key="next"
-        variant="contained"
-        onClick={() => handlePage(page + 1)}
-        disabled={page === pages}
-        sx={{ background: "#142a3d" }}
-      >
-        <ArrowForwardIosIcon />
-      </Button>
-    </>
-  );
+    const getButtons = () => (
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Button
+                key="prev"
+                variant="contained"
+                onClick={() => handlePage(page - 1)}
+                disabled={page === 1}
+                sx={{ background: "#142a3d" }}
+            >
+                <ArrowBackIosIcon />
+            </Button>
+            <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
+                {page}
+            </Button>
+            <Button
+                key="next"
+                variant="contained"
+                onClick={() => handlePage(page + 1)}
+                disabled={page === pages}
+                sx={{ background: "#142a3d" }}
+            >
+                <ArrowForwardIosIcon />
+            </Button>
+        </Box>
+    );
 
   const setTableHead = () => (
     <TableHead>
@@ -115,9 +118,11 @@ function MigracionesViewer() {
             key={header}
             align="center"
             sx={{
-              fontWeight: "bold",
-              backgroundColor: "#142a3d",
+              fontWeight: 600,
+              backgroundColor: palette.primary,
               color: "white",
+              borderBottom: `2px solid ${palette.primaryDark}`,
+              letterSpacing: 0.4,
             }}
           >
             <Typography>{header}</Typography>
@@ -134,8 +139,10 @@ function MigracionesViewer() {
           <TableRow
             key={index}
             sx={{
-              "&:last-child td, &:last-child th": { border: 0 },
-              "&:hover": { backgroundColor: "#f5f5f5" },
+              '&:last-child td, &:last-child th': { border: 0 },
+              transition: "background-color .25s",
+              backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'transparent',
+              '&:hover': { backgroundColor: palette.accentSoft },
             }}
           >
             <TableCell align="center" sx={{ fontSize: "12px" }}>
@@ -175,12 +182,18 @@ function MigracionesViewer() {
   const setTableCard = () => (
     <TableContainer
       component={Paper}
+      elevation={10}
       sx={{
         width: "90%",
         height: "100%",
         overflow: "auto",
-        marginTop: 2,
-        borderRadius: 2,
+        marginTop: 3,
+        borderRadius: 3,
+        background: palette.cardBg,
+        border: `1px solid ${palette.borderSubtle}`,
+        backdropFilter: "blur(4px)",
+        boxShadow:
+          "0 10px 28px -10px rgba(0,0,0,0.38), 0 6px 12px -4px rgba(0,0,0,0.24)",
       }}
     >
       <Box
@@ -188,16 +201,18 @@ function MigracionesViewer() {
           display: "flex",
           justifyContent: "space-between",
           p: 1,
-          backgroundColor: "#142a3d",
+          background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
         }}
       >
         <Typography
           sx={{
-            backgroundColor: "#142a3d",
             color: "white",
             padding: 1,
             fontStyle: "italic",
             fontSize: "12px",
+            fontWeight: 500,
           }}
           align="left"
         >
@@ -205,11 +220,11 @@ function MigracionesViewer() {
         </Typography>
         <Typography
           sx={{
-            backgroundColor: "#142a3d",
             color: "white",
             padding: 1,
             fontStyle: "italic",
             fontSize: "12px",
+            fontWeight: 500,
           }}
           align="right"
         >
@@ -227,11 +242,16 @@ function MigracionesViewer() {
     <Box
       sx={{
         width: "90%",
-        backgroundColor: "#fff",
-        borderRadius: 2,
-        border: "2px solid #dfdeda",
+        background: palette.cardBg,
+        borderRadius: 3,
+        border: `1px solid ${palette.borderSubtle}`,
+        backdropFilter: "blur(4px)",
+        m: 2,
+        boxShadow:
+          "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
       }}
     >
+
       <LineChart
         grid={{ vertical: true, horizontal: true }}
         xAxis={[
@@ -244,11 +264,11 @@ function MigracionesViewer() {
           {
             data: statsData.map((item) => parseInt(item.q)),
             label: "Cantidad de Migraciones",
-            color: "#142a3d",
+            color: palette.primary,
           },
         ]}
         height={250}
-        margin={{ left: 60, right: 60, top: 60, bottom: 60 }}
+        margin={{ left: 50, right: 40, top: 40, bottom: 50 }}
       />
     </Box>
   );
@@ -260,14 +280,23 @@ function MigracionesViewer() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          minHeight: "90vh",
+          justifyContent: "flex-start",
+          minHeight: "100vh",
           height: "100%",
           width: "100%",
           overflow: "auto",
-          paddingTop: "70px",
-          paddingBottom: "50px",
-          backgroundColor: "#f5f5f5",
+          pt: { xs: 9, md: 10 },
+          pb: 8,
+          background: palette.bgGradient,
+          position: "relative",
+          '::before': {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at 20% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 65%)",
+            pointerEvents: "none",
+          },
         }}
       >
         {open && (
@@ -276,7 +305,10 @@ function MigracionesViewer() {
             severity="info"
             sx={{
               width: "88%",
-              boxShadow: 2,
+              boxShadow: 4,
+              borderRadius: 3,
+              background: palette.cardBg,
+              border: `1px solid ${palette.borderSubtle}`,
             }}
           >
             {message}
@@ -305,8 +337,18 @@ function MigracionesViewer() {
                 disabled={isSubmitting}
                 onClick={getExcel}
                 variant="contained"
-                color="error"
-                sx={{ mt: 2, width: "250px" }}
+                sx={{
+                  mt: 2,
+                  width: "250px",
+                  background: `linear-gradient(145deg, ${palette.accent} 0%, ${palette.primary} 100%)`,
+                  fontWeight: 600,
+                  letterSpacing: 0.4,
+                  boxShadow:
+                    "0 6px 16px -4px rgba(10,27,43,0.55), 0 2px 6px -2px rgba(10,27,43,0.35)",
+                  textTransform: "none",
+                  '&:hover': { background: palette.primaryDark },
+                  '&:disabled': { opacity: 0.6 },
+                }}
               >
                 {isSubmitting ? "Descargando..." : "Descargar"}
               </Button>
@@ -315,7 +357,7 @@ function MigracionesViewer() {
             <ButtonGroup
               size="small"
               aria-label="pagination-button-group"
-              sx={{ p: 2 }}
+              sx={{ p: 2, '& .MuiButton-root': { borderColor: palette.primaryDark } }}
             >
               {getButtons()}
             </ButtonGroup>
