@@ -166,6 +166,7 @@ export const fetchSessionsFamiliaMateriales = async (token, sessionId) => {
   }
 };
 
+
 export const updateOrdenSinConsumo = async (token, payload) => {
   try {
     const data = { data: payload };
@@ -187,3 +188,17 @@ export const updateOrdenSinConsumo = async (token, payload) => {
   }
 };
 
+
+export const createOrdenValidada = async (payload, token) => {
+  try {
+    const url = `${baseUrl}/ndc-bot/ndc-create-orden-validada`;
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.error;
+  }
+};

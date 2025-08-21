@@ -79,31 +79,31 @@ function MigracionesViewer() {
 
   const handlePage = (newPage) => setPage(newPage);
 
-    const getButtons = () => (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <Button
-                key="prev"
-                variant="contained"
-                onClick={() => handlePage(page - 1)}
-                disabled={page === 1}
-                sx={{ background: "#142a3d" }}
-            >
-                <ArrowBackIosIcon />
-            </Button>
-            <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
-                {page}
-            </Button>
-            <Button
-                key="next"
-                variant="contained"
-                onClick={() => handlePage(page + 1)}
-                disabled={page === pages}
-                sx={{ background: "#142a3d" }}
-            >
-                <ArrowForwardIosIcon />
-            </Button>
-        </Box>
-    );
+  const getButtons = () => (
+    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <Button
+        key="prev"
+        variant="contained"
+        onClick={() => handlePage(page - 1)}
+        disabled={page === 1}
+        sx={{ background: "#142a3d" }}
+      >
+        <ArrowBackIosIcon />
+      </Button>
+      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
+        {page}
+      </Button>
+      <Button
+        key="next"
+        variant="contained"
+        onClick={() => handlePage(page + 1)}
+        disabled={page === pages}
+        sx={{ background: "#142a3d" }}
+      >
+        <ArrowForwardIosIcon />
+      </Button>
+    </Box>
+  );
 
   const setTableHead = () => (
     <TableHead>
@@ -189,7 +189,7 @@ function MigracionesViewer() {
         width: "90%",
         height: "100%",
         overflow: "auto",
-        marginTop: 3,
+        marginTop: 2,
         borderRadius: 3,
         background: palette.cardBg,
         border: `1px solid ${palette.borderSubtle}`,
@@ -346,16 +346,25 @@ function MigracionesViewer() {
                 onClick={getExcel}
                 variant="contained"
                 sx={{
-                  mt: 2,
-                  width: "250px",
-                  background: `linear-gradient(145deg, ${palette.accent} 0%, ${palette.primary} 100%)`,
-                  fontWeight: 600,
-                  letterSpacing: 0.4,
-                  boxShadow:
-                    "0 6px 16px -4px rgba(10,27,43,0.55), 0 2px 6px -2px rgba(10,27,43,0.35)",
-                  textTransform: "none",
-                  '&:hover': { background: palette.primaryDark },
-                  '&:disabled': { opacity: 0.6 },
+                  width: "200px",
+                  background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+                  color: '#fff',
+                  transition: 'all .35s',
+                  '&:before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+                    mixBlendMode: 'overlay',
+                    pointerEvents: 'none'
+                  },
+                  '&:hover': {
+                    transform: 'translateY(-3px)',
+                    boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                    background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+                  },
+                  '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+                  '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
                 }}
               >
                 {isSubmitting ? "Descargando..." : "Descargar"}

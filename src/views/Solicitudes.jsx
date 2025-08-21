@@ -158,7 +158,7 @@ function Solicitudes() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
   const filterCard = () => (
     <Paper
       elevation={10}
@@ -273,17 +273,25 @@ function Solicitudes() {
         <Button
           variant="contained"
           sx={{
-            width: 220,
-            height: 44,
-            fontWeight: 600,
-            display: "flex",
-            justifyContent: "space-around",
-            borderRadius: 2,
-            letterSpacing: 0.4,
-            background: `linear-gradient(135deg, ${palette.accent} 0%, ${palette.primary} 100%)`,
-            boxShadow:
-              "0 6px 16px -4px rgba(10,27,43,0.55), 0 2px 6px -2px rgba(10,27,43,0.35)",
-            "&:hover": { background: palette.primaryDark },
+            width: "200px",
+            background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+            color: '#fff',
+            transition: 'all .35s',
+            '&:before': {
+              content: '""',
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+              mixBlendMode: 'overlay',
+              pointerEvents: 'none'
+            },
+            '&:hover': {
+              transform: 'translateY(-3px)',
+              boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+              background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+            },
+            '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+            '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
           }}
         >
           <AddCircleOutlineIcon /> Crear Nueva
@@ -294,19 +302,26 @@ function Solicitudes() {
         disabled={isSubmitting}
         onClick={getExcel}
         sx={{
-          width: 220,
-          height: 44,
-          fontWeight: 600,
-          letterSpacing: 0.4,
-          display: "flex",
-          justifyContent: "space-around",
-          borderRadius: 2,
-          background: `linear-gradient(145deg, ${palette.accent} 0%, ${palette.primaryDark} 100%)`,
-          boxShadow:
-            "0 6px 16px -4px rgba(10,27,43,0.55), 0 2px 6px -2px rgba(10,27,43,0.35)",
-          "&:hover": { background: palette.primaryDark },
-          "&:disabled": { opacity: 0.6 },
-        }}
+                            width: "200px",
+                            background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+                            color: '#fff',
+                            transition: 'all .35s',
+                            '&:before': {
+                                content: '""',
+                                position: 'absolute',
+                                inset: 0,
+                                background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+                                mixBlendMode: 'overlay',
+                                pointerEvents: 'none'
+                            },
+                            '&:hover': {
+                                transform: 'translateY(-3px)',
+                                boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                                background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+                            },
+                            '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+                            '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+                        }}
       >
         <InsertDriveFileIcon /> {isSubmitting ? "Descargando..." : "Descargar"}
       </Button>
@@ -443,7 +458,7 @@ function Solicitudes() {
       <Box
         sx={{
           display: "flex",
-            flexDirection: "column",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
           minHeight: "100vh",

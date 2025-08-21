@@ -323,15 +323,26 @@ function TicketViewer() {
           <Button
             variant="contained"
             sx={{
-              width: 200,
+              width: "200px",
               mb: 2,
-              background: `linear-gradient(135deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
-              borderRadius: 2.5,
-              fontWeight: 600,
-              letterSpacing: .6,
-              boxShadow: '0 6px 16px -4px rgba(0,0,0,0.45)',
-              textShadow: '0 1px 2px rgba(0,0,0,0.25)',
-              '&:hover': { background: `linear-gradient(135deg, ${palette.primaryDark} 0%, ${palette.primary} 100%)` }
+              background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+              color: '#fff',
+              transition: 'all .35s',
+              '&:before': {
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+                mixBlendMode: 'overlay',
+                pointerEvents: 'none'
+              },
+              '&:hover': {
+                transform: 'translateY(-3px)',
+                boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+              },
+              '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+              '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
             }}
           >
             VOLVER
@@ -458,8 +469,8 @@ function TicketViewer() {
                   background: palette.accentSoft,
                   px: 1,
                   borderRadius: 1,
-                  boxShadow: 'inset 0 0 0 1px '+palette.borderSubtle,
-                  '&:before, &:after': { borderBottomColor: palette.primaryDark+' !important' },
+                  boxShadow: 'inset 0 0 0 1px ' + palette.borderSubtle,
+                  '&:before, &:after': { borderBottomColor: palette.primaryDark + ' !important' },
                   '&:hover': { background: '#f0faff' }
                 }}
               >
@@ -484,7 +495,7 @@ function TicketViewer() {
                   background: 'rgba(255,255,255,0.6)',
                   px: 1,
                   borderRadius: 1,
-                  boxShadow: 'inset 0 0 0 1px '+palette.borderSubtle,
+                  boxShadow: 'inset 0 0 0 1px ' + palette.borderSubtle,
                   '& .MuiInputBase-root': { fontSize: '0.85rem' }
                 }}
                 multiline

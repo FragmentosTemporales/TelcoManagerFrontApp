@@ -53,7 +53,6 @@ function NDCSessionLogs() {
         setIsSubmitting(true);
         try {
             const response = await fetchLogsSessions(token);
-            console.log("Response from API:", response);
             setData(response.data);
             setTotal(response.total);
         } catch (error) {

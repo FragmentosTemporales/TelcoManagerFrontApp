@@ -58,9 +58,9 @@ function TicketeraView() {
     userID: "",
   });
 
-    useEffect(() => {
-      window.scrollTo(0, 0);
-    }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const setTituloData = () => {
     if (form.ticketcategoriaID && form.ticketcategoriaID != "") {
@@ -339,9 +339,9 @@ function TicketeraView() {
             minRows={4}
             maxRows={4}
             sx={{
-        width: '100%',
-        backgroundColor: 'white',
-        borderRadius: 1
+              width: '100%',
+              backgroundColor: 'white',
+              borderRadius: 1
             }}
           />
           <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
@@ -365,7 +365,27 @@ function TicketeraView() {
           justifyContent: "start",
         }}
       >
-  <Button onClick={() => setCrear(true)} variant="contained" sx={{ width: 240, borderRadius: 3, mt: 2, background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primary} 85%)`, fontWeight: 700, letterSpacing: .6, boxShadow: '0 6px 18px -6px rgba(0,0,0,0.55)', '&:hover': { background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primaryDark} 90%)` } }}>CREAR TICKET</Button>
+        <Button onClick={() => setCrear(true)} variant="contained" sx={{
+          width: "200px",
+          background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+          color: '#fff',
+          transition: 'all .35s',
+          '&:before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+            mixBlendMode: 'overlay',
+            pointerEvents: 'none'
+          },
+          '&:hover': {
+            transform: 'translateY(-3px)',
+            boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+            background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+          },
+          '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+          '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+        }}>CREAR TICKET</Button>
       </Box>
 
       <Box sx={{ width: "100%", mb: 2 }}>
@@ -493,26 +513,26 @@ function TicketeraView() {
 
   return (
     <MainLayout showNavbar={true}>
-  <Box sx={{ pt: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', background: palette.bgGradient, position: 'relative', '::before': { content: '""', position: 'absolute', inset: 0, background: 'radial-gradient(circle at 18% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 82% 70%, rgba(255,255,255,0.06), transparent 65%)', pointerEvents: 'none' }, pb: 6 }}>
-      {open && (
-        <Alert
-          onClose={handleClose}
-          severity={alertType}
-          sx={{ width: "93%", marginBottom: 2 }}
-        >
-          {message}
-        </Alert>
-      )}
+      <Box sx={{ pt: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', background: palette.bgGradient, position: 'relative', '::before': { content: '""', position: 'absolute', inset: 0, background: 'radial-gradient(circle at 18% 25%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 82% 70%, rgba(255,255,255,0.06), transparent 65%)', pointerEvents: 'none' }, pb: 6 }}>
+        {open && (
+          <Alert
+            onClose={handleClose}
+            severity={alertType}
+            sx={{ width: "93%", marginBottom: 2 }}
+          >
+            {message}
+          </Alert>
+        )}
 
-      <ModuleHeader
-        title="Ticketera"
-        subtitle="Creación y seguimiento de tickets de soporte"
-        divider
-      />
+        <ModuleHeader
+          title="Ticketera"
+          subtitle="Creación y seguimiento de tickets de soporte"
+          divider
+        />
 
-  {!crear && tableView()}
-  {crear && createCard()}
-    </Box>
+        {!crear && tableView()}
+        {crear && createCard()}
+      </Box>
     </MainLayout>
   );
 }
