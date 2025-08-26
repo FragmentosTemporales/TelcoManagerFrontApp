@@ -44,6 +44,7 @@ import CreateReparacionView from "./views/CreateReparacion";
 import ReparacionesView from "./views/ReparacionesView";
 import InventarioView from "./views/InventarioView";
 import CreateTareaInterna from "./views/CreateTarea";
+import LatestLogsView from "./views/LatestLogsView";
 
 function App() {
   return (
@@ -79,6 +80,8 @@ function App() {
           <Route path="/ticketviewer/:logID" element={<TicketViewer />} />
           <Route path="/modulo:create-migracion-proactiva" element={<CreateMigracionesProactivas />} />
           <Route path="/modulo:migraciones-proactivas" element={<MigracionesViewer />} />
+
+          <Route path="/modulo:ultimos-logs" element={<LatestLogsView />} />
 
           <Route path="/modulo:proyecto-interno" element={<ProyectoInternoView />} />
           <Route path="/modulo:crear-proyecto-interno/:proyecto_id?" element={<CreateProyectoInterno />} />

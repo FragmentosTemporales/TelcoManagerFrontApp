@@ -27,7 +27,7 @@ import ModuleHeader from "../components/ModuleHeader";
 
 export default function InventarioView() {
     const authState = useSelector((state) => state.auth);
-    const { token, estacion } = authState;
+    const { token, estacion, user_id } = authState;
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [openModal, setOpenModal] = useState(false);
@@ -45,7 +45,8 @@ export default function InventarioView() {
 
     const [filterForm, setFilterForm] = useState({
         patente: null,
-        numDoc: null
+        numDoc: null,
+        nombre: null
     });
 
     const [dataFiltered, setDataFiltered] = useState([]);
@@ -67,12 +68,24 @@ export default function InventarioView() {
         fetchStats();
     };
 
+    useEffect(() => {
+        if (!estacion) return;
+
+        // Ejecuta inicialmente y luego cada 10 segundos mientras exista `estacion`.
+        
+        fetchStats();
+        const intervalId = setInterval(() => {
+            fetchStats();
+        }, 15000); // 15 segundos
+
+        return () => clearInterval(intervalId);
+    }, [estacion, token]);
+
     const fetchStats = async () => {
         setLoadingStats(true);
         try {
             const res = await getTecnicosStats(token);
             setStatsUsers(res);
-            console.log(res);
         } catch (error) {
             console.error(error);
         }
@@ -97,41 +110,84 @@ export default function InventarioView() {
     };
 
     const functionToFilterData = () => {
+        // Normalizamos y protegemos contra valores null/undefined antes de usar includes
+        const searchPatente = (filterForm.patente || '').trim().toLowerCase();
+        const searchNumDoc = (filterForm.numDoc || '').trim().toLowerCase();
+        const searchNombre = (filterForm.nombre || '').trim().toLowerCase();
+
         const filtered = data.filter(item => {
-            return (
-                (!filterForm.patente || item.patente.includes(filterForm.patente)) &&
-                (!filterForm.numDoc || item.numDoc.includes(filterForm.numDoc))
-            );
+            const patente = (item?.patente || '').toString().toLowerCase();
+            const numDoc = (item?.numDoc || '').toString().toLowerCase();
+            const nombre = (item?.nombre || '').toString().toLowerCase();
+
+            const matchPatente = !searchPatente || patente.includes(searchPatente);
+            const matchNumDoc = !searchNumDoc || numDoc.includes(searchNumDoc);
+            const matchNombre = !searchNombre || nombre.includes(searchNombre);
+            return matchPatente && matchNumDoc && matchNombre;
         });
         setDataFiltered(filtered);
     };
 
     const chartSetting = {
-            yAxis: [
-                {
-                    scaleType: 'band',
-                    dataKey: 'nombre',
-                },
-            ],
-            xAxis: [
-                {
-                    label: 'Total',
-                },
-            ],
-            margin: { left: 180, right: 50 },
-            height: 400,
+        yAxis: [
+            {
+                scaleType: 'band',
+                dataKey: 'nombre',
+            },
+        ],
+        xAxis: [
+            {
+                label: 'Total',
+            },
+        ],
+        margin: { left: 180, right: 50 },
+        height: 400,
+    };
+
+    const avanceStats = () => {
+        if (!statsUsers || statsUsers.length === 0) return null;
+        const total = statsUsers.reduce((acc, curr) => acc + (curr.total || 0), 0);
+        const okItem = statsUsers.find(item => (item.nombre || '').toString().toLowerCase() === 'ok');
+        const porcentajeOK = total > 0 ? (((okItem?.total || 0) / total) * 100).toFixed(2) : '0.00';
+        const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28DFF', '#FF6F91', '#6FFFB0', '#FFB347'];
+
+        return (
+            <Box sx={{
+                width: { lg: "90%", md: "90%", xs: "95%" },
+                background: palette.cardBg,
+                border: `1px solid ${palette.borderSubtle}`,
+                borderRadius: 2,
+                py: 2,
+                my: 2,
+                textAlign: 'center'
+            }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>Porcentaje de técnicos en OK: {porcentajeOK}%</Typography>
+                <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center', flexWrap: 'wrap', mt: 2 }}>
+                    {statsUsers.map((item, idx) => {
+                        const pct = total > 0 ? (((item.total || 0) / total) * 100).toFixed(2) : '0.00';
+                        return (
+                            <Chip
+                                key={item.id ?? idx}
+                                label={`${item.nombre}: ${item.total} (${pct}%)`}
+                                sx={{ background: COLORS[idx % COLORS.length], color: '#fff', fontWeight: 600 }}
+                            />
+                        );
+                    })}
+                </Box>
+            </Box>
+        );
     };
 
     const statsCard = () => (
         <Box
             sx={{
-                width: { lg: "70%", md: "90%", xs: "95%" },
+                width: { lg: "90%", md: "90%", xs: "95%" },
                 overflow: "hidden",
                 position: 'relative',
                 background: palette.cardBg,
                 textAlign: "center",
                 my: 2,
-                py:2,
+                py: 2,
                 border: `1px solid ${palette.borderSubtle}`,
                 borderRadius: 2,
                 display: "flex",
@@ -148,12 +204,7 @@ export default function InventarioView() {
                 }
             }}
         >
-            {loadingStats ? (
-                <Box sx={{ p: 2 }}>
-                    <CircularProgress />
-                </Box>
-            ) : (
-                <BarChart
+            <BarChart
                     dataset={statsUsers}
                     grid={{ vertical: true, horizontal: true }}
                     series={[{
@@ -184,83 +235,100 @@ export default function InventarioView() {
                         }
                     }}
                     {...chartSetting}
-                />)}
+                />
         </Box>
     );
 
-    const filterCard = () => (
-        <Box
-            sx={{
-                width: { lg: "70%", md: "90%", xs: "95%" },
-                overflow: "hidden",
-                position: 'relative',
-                background: palette.cardBg,
-                textAlign: "center",
-                my: 2,
-                pb: 3,
-                border: `1px solid ${palette.borderSubtle}`,
-                borderRadius: 2,
-                display: "flex",
-                justifyContent: "space-evenly",
-                alignItems: "center",
-                flexDirection: "column",
-                boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                '&:before': {
-                    content: '""',
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 65%)',
-                    pointerEvents: 'none'
-                }
-            }}
-        >
-            <Typography variant="h6" sx={{
-                fontWeight: 600,
-                width: "100%",
-                py: 2,
-                color: palette.primary,
-                letterSpacing: .5
-            }}>
-                FILTRAR POR</Typography>
-            <Divider sx={{ width: '100%', mb: 1, borderColor: palette.borderSubtle }} />
-            <Box sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                alignItems: "center",
-                width: "100%",
-                marginY: 2
-            }}>
-                <TextField
-                    label="Número de Documento"
-                    variant="standard"
-                    value={filterForm.numDoc || ""}
-                    onChange={(e) => setFilterForm({ ...filterForm, numDoc: e.target.value })}
-                    sx={{ width: "30%" }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-                <TextField
-                    label="Patente"
-                    variant="standard"
-                    value={filterForm.patente || ""}
-                    onChange={(e) => setFilterForm({ ...filterForm, patente: e.target.value })}
-                    sx={{ width: "30%" }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-            </Box>
-        </Box>
-    )
+    const filterCard = () => {
+        if (user_id === 1) return null;
+
+        return (
+            <Box
+                sx={{
+                    width: { lg: "70%", md: "90%", xs: "95%" },
+                    overflow: "hidden",
+                    position: 'relative',
+                    background: palette.cardBg,
+                    textAlign: "center",
+                    my: 2,
+                    pb: 3,
+                    border: `1px solid ${palette.borderSubtle}`,
+                    borderRadius: 2,
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                    '&:before': {
+                        content: '""',
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 65%)',
+                        pointerEvents: 'none'
+                    }
+                }}
+            >
+                <Typography variant="h6" sx={{
+                    fontWeight: 600,
+                    width: "100%",
+                    py: 2,
+                    color: palette.primary,
+                    letterSpacing: .5
+                }}>
+                    FILTRAR POR</Typography>
+                <Divider sx={{ width: '100%', mb: 1, borderColor: palette.borderSubtle }} />
+                <Box sx={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    width: "100%",
+                    marginY: 2
+                }}>
+                    <TextField
+                        label="Nombre"
+                        variant="standard"
+                        value={filterForm.nombre || ""}
+                        onChange={(e) => setFilterForm({ ...filterForm, nombre: e.target.value })}
+                        sx={{ width: "30%" }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <TextField
+                        label="Número de Documento"
+                        variant="standard"
+                        value={filterForm.numDoc || ""}
+                        onChange={(e) => setFilterForm({ ...filterForm, numDoc: e.target.value })}
+                        sx={{ width: "30%" }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <TextField
+                        label="Patente"
+                        variant="standard"
+                        value={filterForm.patente || ""}
+                        onChange={(e) => setFilterForm({ ...filterForm, patente: e.target.value })}
+                        sx={{ width: "30%" }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </Box>
+            </Box>)
+    }
 
     const handleCloseModal = () => {
         setOpenModal(false);
@@ -269,6 +337,55 @@ export default function InventarioView() {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const botonActualizar = () => {
+        if (user_id == 1) return null;
+        return (
+            <Box
+                sx={{
+                    width: { lg: "70%", md: "90%", xs: "95%" },
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: 2,
+                }}
+            >
+                <Button
+                    variant="contained"
+                    sx={{
+                        width: "200px",
+                        background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+                        color: '#fff',
+                        fontWeight: 600,
+                        letterSpacing: '.5px',
+                        borderRadius: 2,
+                        position: 'relative',
+                        overflow: 'hidden',
+                        textShadow: '0 1px 2px rgba(0,0,0,0.35)',
+                        boxShadow: '0 6px 18px -4px rgba(0,0,0,0.45), 0 2px 6px -1px rgba(0,0,0,0.35)',
+                        transition: 'all .35s',
+                        '&:before': {
+                            content: '""',
+                            position: 'absolute',
+                            inset: 0,
+                            background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+                            mixBlendMode: 'overlay',
+                            pointerEvents: 'none'
+                        },
+                        '&:hover': {
+                            transform: 'translateY(-3px)',
+                            boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                            background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+                        },
+                        '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+                        '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+                    }}
+                    onClick={() => fetchTecnicos()}
+                >
+                    Actualizar
+                </Button>
+            </Box>
+        )
+    }
 
     const modalRender = () => (
         <Modal
@@ -313,105 +430,158 @@ export default function InventarioView() {
         </Modal>
     )
 
-    const tecnicosTable = () => (
-        <Box sx={{ overflowX: "auto", width: "95%", marginY: 4, borderRadius: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.05)', border: `1px solid ${palette.borderSubtle}`, background: palette.cardBg, position: 'relative', '&:before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 65%)', pointerEvents: 'none', borderRadius: 'inherit' } }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table" stickyHeader>
-                <TableHead>
-                    <TableRow>
-                        {[
-                            "NOMBRE",
-                            "RUT",
-                            "PATENTE",
-                            "ESTACION",
-                        ].map((header) => (
-                            <TableCell
-                                key={header}
-                                align="left"
-                                sx={{
-                                    fontWeight: 600,
-                                    background: palette.bgGradient,
-                                    color: 'white',
-                                    borderBottom: 'none',
-                                }}
-                            >
-                                <Typography>{header}</Typography>
-                            </TableCell>
-                        ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {dataFiltered && dataFiltered.length > 0 ? (
-                        dataFiltered.map((row, index) => (
-                            <TableRow
-                                key={index}
-                                onClick={() => {
-                                    setFormSiguiente({
-                                        numDoc: row.numDoc,
-                                        estacion: estacion
-                                    }); setOpenModal(true);
-                                }
-                                }
-                                sx={{
-                                    textDecoration: "none",
-                                    cursor: "pointer",
-                                    transition: 'background .2s',
-                                    '&:nth-of-type(even)': { backgroundColor: '#fafbfd' },
-                                    '&:hover': { backgroundColor: palette.accentSoft },
-                                }}
-                            >
-                                <TableCell align="left" width={"30%"}>{row.nombre ? row.nombre : "N/A"}</TableCell>
-                                <TableCell align="left" width={"20%"}>{row.numDoc ? row.numDoc : "N/A"}</TableCell>
-                                <TableCell align="left" width={"30%"}>{row.patente ? row.patente : "N/A"}</TableCell>
-                                <TableCell align="left" width={"20%"}>{row.estacion ? row.estacion : "N/A"}</TableCell>
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={4} align="center">
-                                <Typography>No hay datos disponibles</Typography>
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </Box>
-    )
+    const tecnicosTable = () => {
+        if (user_id == 1) return null;
 
-    useEffect(() => {
-        if (estacion) {
-            fetchTecnicos();
+        if (loading) {
+            return (
+                <Box
+                    sx={{
+                        position: 'relative',
+                        background: palette.cardBg,
+                        height: "30vh",
+                        width: { lg: "70%", md: "90%", xs: "95%" },
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column",
+                        border: `1px solid ${palette.borderSubtle}`,
+                        borderRadius: 2,
+                        boxShadow: '0 4px 14px rgba(0,0,0,0.06)',
+                        '&:before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%)', pointerEvents: 'none', borderRadius: 'inherit' }
+                    }}
+                >
+                    <Typography variant="h6" sx={{ mb: 4, color: '#fff', fontWeight: 600, textShadow: '0 2px 4px rgba(0,0,0,0.4)' }}>
+                        Cargando los recursos...
+                    </Typography>
+                    <CircularProgress />
+                </Box>
+            );
         }
-    }, [estacion]);
 
-    useEffect(() => {
-        functionToFilterData();
-    }, [filterForm.patente, filterForm.numDoc]);
-
-    return (
-        <MainLayout>
+        return (
             <Box
                 sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "column",
-                    minHeight: "90vh",
-                    paddingY: "70px",
                     position: 'relative',
-                    background: palette.bgGradient,
-                    '::before': {
-                        content: '""',
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'radial-gradient(circle at 15% 20%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 85% 75%, rgba(255,255,255,0.06), transparent 65%)',
-                        pointerEvents: 'none'
-                    }
+                    background: palette.cardBg,
+                    width: { lg: "70%", md: "90%", xs: "95%" },
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    height: "100%",
+                    borderRadius: 2,
+                    border: `1px solid ${palette.borderSubtle}`,
+                    boxShadow: '0 4px 14px rgba(0,0,0,0.06)',
+                    '&:before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 65%)', pointerEvents: 'none', borderRadius: 'inherit' }
                 }}
             >
-                <ModuleHeader
-                    title="Gestión Inventario"
-                    subtitle="Gestiona lista de asistentes a inventario."
-                />
+                <Box sx={{ overflowX: "auto", width: "95%", marginY: 4, borderRadius: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.05)', border: `1px solid ${palette.borderSubtle}`, background: palette.cardBg, position: 'relative', '&:before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 65%)', pointerEvents: 'none', borderRadius: 'inherit' } }}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table" stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                {[
+                                    "NOMBRE",
+                                    "RUT",
+                                    "PATENTE",
+                                    "ESTACION",
+                                ].map((header) => (
+                                    <TableCell
+                                        key={header}
+                                        align="left"
+                                        sx={{
+                                            fontWeight: 600,
+                                            background: palette.bgGradient,
+                                            color: 'white',
+                                            borderBottom: 'none',
+                                        }}
+                                    >
+                                        <Typography>{header}</Typography>
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {dataFiltered && dataFiltered.length > 0 ? (
+                                dataFiltered.map((row, index) => (
+                                    <TableRow
+                                        key={index}
+                                        onClick={() => {
+                                            setFormSiguiente({
+                                                numDoc: row.numDoc,
+                                                estacion: estacion
+                                            });
+                                            setOpenModal(true);
+                                        }
+                                        }
+                                        sx={{
+                                            textDecoration: "none",
+                                            cursor: "pointer",
+                                            transition: 'background .2s',
+                                            '&:nth-of-type(even)': { backgroundColor: '#fafbfd' },
+                                            '&:hover': { backgroundColor: palette.accentSoft },
+                                        }}
+                                    >
+                                        <TableCell align="left" width={"30%"}>{row.nombre ? row.nombre : "N/A"}</TableCell>
+                                        <TableCell align="left" width={"20%"}>{row.numDoc ? row.numDoc : "N/A"}</TableCell>
+                                        <TableCell align="left" width={"30%"}>{row.patente ? row.patente : "N/A"}</TableCell>
+                                        <TableCell align="left" width={"20%"}>{row.estacion ? row.estacion : "N/A"}</TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={4} align="center">
+                                        <Typography>No hay datos disponibles</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </Box>
+            </Box>
+        );
+    };
+
+useEffect(() => {
+    if (estacion) {
+        fetchTecnicos();
+    }
+}, [estacion]);
+
+useEffect(() => {
+    if (estacion) {
+        fetchTecnicos();
+    }
+}, [estacion]);
+
+useEffect(() => {
+    functionToFilterData();
+}, [filterForm.patente, filterForm.numDoc, filterForm.nombre]);
+
+return (
+    <MainLayout>
+        <Box
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                minHeight: "80vh",
+                paddingY: "70px",
+                position: 'relative',
+                background: palette.bgGradient,
+                '::before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'radial-gradient(circle at 15% 20%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(circle at 85% 75%, rgba(255,255,255,0.06), transparent 65%)',
+                    pointerEvents: 'none'
+                }
+            }}
+        >
+            <ModuleHeader
+                title="Gestión Inventario"
+                subtitle="Gestiona lista de asistentes a inventario."
+            />
             {open && (
                 <Alert
                     onClose={handleClose}
@@ -424,95 +594,15 @@ export default function InventarioView() {
                     {mensaje}
                 </Alert>
             )}
-                {statsCard()}
-                <Box
-                    sx={{
-                        width: { lg: "70%", md: "90%", xs: "95%" },
-                        display: "flex",
-                        flexDirection: "column",
-                        borderRadius: 2,
-                    }}
-                >
-                    <Button 
-                        variant="contained" 
-                        sx={{ 
-                            width: "200px",
-                            background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
-                            color: '#fff',
-                            fontWeight: 600,
-                            letterSpacing: '.5px',
-                            borderRadius: 2,
-                            position: 'relative',
-                            overflow: 'hidden',
-                            textShadow: '0 1px 2px rgba(0,0,0,0.35)',
-                            boxShadow: '0 6px 18px -4px rgba(0,0,0,0.45), 0 2px 6px -1px rgba(0,0,0,0.35)',
-                            transition: 'all .35s',
-                            '&:before': {
-                                content: '""',
-                                position: 'absolute',
-                                inset: 0,
-                                background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
-                                mixBlendMode: 'overlay',
-                                pointerEvents: 'none'
-                            },
-                            '&:hover': {
-                                transform: 'translateY(-3px)',
-                                boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
-                                background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
-                            },
-                            '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
-                            '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
-                        }} 
-                        onClick={() => fetchTecnicos()}
-                    >
-                        Actualizar
-                    </Button>
-                </Box>
-                {modalRender()}
-                {filterCard()}
+            {botonActualizar()}
+            {statsCard()}
+            {statsUsers.length > 0 && avanceStats()}
 
-                {loading ? (
-                    <Box
-                        sx={{
-                            position: 'relative',
-                            background: palette.cardBg,
-                            height: "30vh",
-                            width: { lg: "70%", md: "90%", xs: "95%" },
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "column",
-                            border: `1px solid ${palette.borderSubtle}`,
-                            borderRadius: 2,
-                            boxShadow: '0 4px 14px rgba(0,0,0,0.06)',
-                            '&:before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%)', pointerEvents: 'none', borderRadius: 'inherit' }
-                        }}
-                    >
-                        <Typography variant="h6" sx={{ mb: 4, color: '#fff', fontWeight: 600, textShadow: '0 2px 4px rgba(0,0,0,0.4)' }}>
-                            Cargando los recursos...
-                        </Typography>
-                        <CircularProgress />
-                    </Box>
-                ) : (
-                    <Box
-                        sx={{
-                            position: 'relative',
-                            background: palette.cardBg,
-                            width: { lg: "70%", md: "90%", xs: "95%" },
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            height: "100%",
-                            borderRadius: 2,
-                            border: `1px solid ${palette.borderSubtle}`,
-                            boxShadow: '0 4px 14px rgba(0,0,0,0.06)',
-                            '&:before': { content: '""', position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 65%)', pointerEvents: 'none', borderRadius: 'inherit' }
-                        }}
-                    >
-                        {tecnicosTable()}
-                    </Box>
-                )}
-            </Box>
-        </MainLayout>
-    );
+            {modalRender()}
+            {filterCard()}
+            {tecnicosTable()}
+
+        </Box>
+    </MainLayout>
+);
 }

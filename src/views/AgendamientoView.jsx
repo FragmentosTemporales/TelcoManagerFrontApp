@@ -163,9 +163,12 @@ function AgendamientoViewer() {
     "&:hover": { background: palette.primaryDark },
   };
 
-  // (Removed custom outlined select styling per user request)
+  const isFechaRequired = useMemo(() => {
+    return ["Adelanta", "Mantiene Agenda", "Reagenda"].includes(
+      formBacklog?.estado_interno || ""
+    );
+  }, [formBacklog?.estado_interno]);
 
-  // Reusable component for Region + Zone selection
   const RegionZoneSelector = () => (
     <Card sx={{ ...glass, width: "100%" }}>
       <CardHeader
@@ -178,14 +181,14 @@ function AgendamientoViewer() {
           py: 1.5,
         }}
       />
-      <CardContent sx={{ pt: 3, display:'flex', flexDirection:'column', gap:2 }}>
-        <Box sx={{ display:'flex', flexDirection:'column', width:'50%', minWidth:260, gap:1, alignSelf:'center' }}>
+      <CardContent sx={{ pt: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%', minWidth: 260, gap: 1, alignSelf: 'center' }}>
           <Button
             onClick={() => handleRegionSelect('metropolitana')}
             variant={selectedRegion === 'metropolitana' ? 'contained' : 'outlined'}
             sx={{
-              ...((selectedRegion === 'metropolitana') ? primaryBtn : { borderColor: palette.primary, color: palette.primary, fontWeight:'bold' }),
-              width:'100%'
+              ...((selectedRegion === 'metropolitana') ? primaryBtn : { borderColor: palette.primary, color: palette.primary, fontWeight: 'bold' }),
+              width: '100%'
             }}
           >
             Metropolitana
@@ -194,8 +197,8 @@ function AgendamientoViewer() {
             onClick={() => handleRegionSelect('centro')}
             variant={selectedRegion === 'centro' ? 'contained' : 'outlined'}
             sx={{
-              ...((selectedRegion === 'centro') ? primaryBtn : { borderColor: palette.primary, color: palette.primary, fontWeight:'bold' }),
-              width:'100%'
+              ...((selectedRegion === 'centro') ? primaryBtn : { borderColor: palette.primary, color: palette.primary, fontWeight: 'bold' }),
+              width: '100%'
             }}
           >
             Centro
@@ -221,7 +224,7 @@ function AgendamientoViewer() {
             </Select>
           </FormControl>
         )}
-  <Box sx={{ textAlign: 'center', width: '50%', alignSelf:'center' }}>
+        <Box sx={{ textAlign: 'center', width: '50%', alignSelf: 'center' }}>
           <Button
             variant="contained"
             onClick={fetchBacklog}
@@ -238,12 +241,21 @@ function AgendamientoViewer() {
   const SubmitBacklockForm = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const sanitizedOrden = formBacklog.orden.replace(/\s+/g, "").toUpperCase();
+  const sanitizedOrden = (formBacklog.orden || "").replace(/\s+/g, "").toUpperCase();
 
     // Validate that 'orden' starts with '1-'
     if (!sanitizedOrden.startsWith("1-")) {
       setAlertType("error");
       setMessage("El campo 'ORDEN DE TRABAJO' debe comenzar con '1-'.");
+      setOpen(true);
+      setIsSubmitting(false);
+      return;
+    }
+
+    // If fecha is required for the selected estado_interno, ensure it's present
+    if (isFechaRequired && !formBacklog.nueva_cita) {
+      setAlertType("error");
+      setMessage("La Fecha de Cita es obligatoria para el estado seleccionado.");
       setOpen(true);
       setIsSubmitting(false);
       return;
@@ -487,112 +499,113 @@ function AgendamientoViewer() {
               sx={{ background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`, color: '#fff', py: 1.2, textAlign: 'center' }}
             />
             <CardContent>
-            <form onSubmit={SubmitBacklockForm}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, alignItems:'center' }}>
-                <Box sx={{ width: '50%', minWidth: 260 }}>
-                  <InputLabel>Orden de Trabajo</InputLabel>
-                  <TextField
-                    required
-                    size="small"
-                    id="orden"
-                    type="text"
-                    name="orden"
-                    variant="standard"
-                    value={formBacklog.orden}
-                    onChange={handleChangeBacklog}
-                    onBlur={() =>
-                      setFormBacklog((p) => ({
-                        ...p,
-                        orden: p.orden.replace(/\s+/g, "").toUpperCase(),
-                      }))
-                    }
-                    sx={{ width: '100%' }}
-                    helperText={formBacklog.orden && !formBacklog.orden.startsWith('1-') ? 'Debe comenzar con 1-' : ' '}
-                  />
-                </Box>
-                <Box sx={{ width: '50%', minWidth: 260 }}>
-                  <InputLabel>Fecha Cita</InputLabel>
-                  <TextField
-                    id="nueva_cita"
-                    type="datetime-local"
-                    name="nueva_cita"
-                    size="small"
-                    variant="standard"
-                    value={formBacklog.nueva_cita}
-                    onChange={handleChangeBacklog}
-                    sx={{ width: '100%' }}
-                  />
-                </Box>
-                <Box sx={{ width: '50%', minWidth: 260 }}>
-                  <FormControl variant="standard" sx={{ width: '100%' }}>
-                    <InputLabel>Estado</InputLabel>
-                    <Select
+              <form onSubmit={SubmitBacklockForm}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, alignItems: 'center' }}>
+                  <Box sx={{ width: '50%', minWidth: 260 }}>
+                    <InputLabel>Orden de Trabajo</InputLabel>
+                    <TextField
                       required
                       size="small"
-                      id="estado-interno-select"
-                      value={formBacklog.estado_interno || ''}
-                      onChange={(event) =>
-                        setFormBacklog((prevForm) => ({
-                          ...prevForm,
-                          estado_interno: event.target.value,
+                      id="orden"
+                      type="text"
+                      name="orden"
+                      variant="standard"
+                      value={formBacklog.orden}
+                      onChange={handleChangeBacklog}
+                      onBlur={() =>
+                        setFormBacklog((p) => ({
+                          ...p,
+                          orden: p.orden.replace(/\s+/g, "").toUpperCase(),
                         }))
                       }
-                    >
-                      <MenuItem value="Sin Contacto">Sin Contacto</MenuItem>
-                      <MenuItem value="Adelanta">Adelanta</MenuItem>
-                      <MenuItem value="Confirma Visita">Confirma Visita</MenuItem>
-                      <MenuItem value="Mantiene Agenda">Mantiene Agenda</MenuItem>
-                      <MenuItem value="Desiste">Desiste</MenuItem>
-                      <MenuItem value="Orden con Problemas">Orden con Problemas</MenuItem>
-                      <MenuItem value="Reagenda">Reagenda</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-                <Box sx={{ width: '50%', minWidth: 260 }}>
-                  <FormControl variant="standard" sx={{ width: '100%' }}>
-                    <InputLabel>Clasificación</InputLabel>
-                    <Select
-                      disabled
+                      sx={{ width: '100%' }}
+                      helperText={formBacklog.orden && !formBacklog.orden.startsWith('1-') ? 'Debe comenzar con 1-' : ' '}
+                    />
+                  </Box>
+                  <Box sx={{ width: '50%', minWidth: 260 }}>
+                    <InputLabel>Fecha Cita</InputLabel>
+                    <TextField
+                      required={isFechaRequired}
+                      id="nueva_cita"
+                      type="datetime-local"
+                      name="nueva_cita"
                       size="small"
-                      id="sub-clasificacion-select"
-                      value={formBacklog.sub_clasificacion || ''}
-                      onChange={(event) =>
-                        setFormBacklog((prevForm) => ({
-                          ...prevForm,
-                          sub_clasificacion: event.target.value,
-                        }))
-                      }
-                    ></Select>
-                  </FormControl>
+                      variant="standard"
+                      value={formBacklog.nueva_cita}
+                      onChange={handleChangeBacklog}
+                      sx={{ width: '100%' }}
+                    />
+                  </Box>
+                  <Box sx={{ width: '50%', minWidth: 260 }}>
+                    <FormControl variant="standard" sx={{ width: '100%' }}>
+                      <InputLabel>Estado</InputLabel>
+                      <Select
+                        required
+                        size="small"
+                        id="estado-interno-select"
+                        value={formBacklog.estado_interno || ''}
+                        onChange={(event) =>
+                          setFormBacklog((prevForm) => ({
+                            ...prevForm,
+                            estado_interno: event.target.value,
+                          }))
+                        }
+                      >
+                        <MenuItem value="Sin Contacto">Sin Contacto</MenuItem>
+                        <MenuItem value="Adelanta">Adelanta</MenuItem>
+                        <MenuItem value="Confirma Visita">Confirma Visita</MenuItem>
+                        <MenuItem value="Mantiene Agenda">Mantiene Agenda</MenuItem>
+                        <MenuItem value="Desiste">Desiste</MenuItem>
+                        <MenuItem value="Orden con Problemas">Orden con Problemas</MenuItem>
+                        <MenuItem value="Reagenda">Reagenda</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  <Box sx={{ width: '50%', minWidth: 260 }}>
+                    <FormControl variant="standard" sx={{ width: '100%' }}>
+                      <InputLabel>Clasificación</InputLabel>
+                      <Select
+                        disabled
+                        size="small"
+                        id="sub-clasificacion-select"
+                        value={formBacklog.sub_clasificacion || ''}
+                        onChange={(event) =>
+                          setFormBacklog((prevForm) => ({
+                            ...prevForm,
+                            sub_clasificacion: event.target.value,
+                          }))
+                        }
+                      ></Select>
+                    </FormControl>
+                  </Box>
+                  <Box sx={{ width: '50%', minWidth: 260 }}>
+                    <InputLabel>Comentarios</InputLabel>
+                    <TextField
+                      id="comentario"
+                      type="text"
+                      name="comentario"
+                      size="small"
+                      multiline
+                      maxRows={6}
+                      minRows={4}
+                      variant="standard"
+                      value={formBacklog.comentario}
+                      onChange={handleChangeBacklog}
+                      sx={{ width: '100%' }}
+                    />
+                  </Box>
                 </Box>
-                <Box sx={{ width: '50%', minWidth: 260 }}>
-                  <InputLabel>Comentarios</InputLabel>
-                  <TextField
-                    id="comentario"
-                    type="text"
-                    name="comentario"
-                    size="small"
-                    multiline
-                    maxRows={6}
-                    minRows={4}
-                    variant="standard"
-                    value={formBacklog.comentario}
-                    onChange={handleChangeBacklog}
-                    sx={{ width: '100%' }}
-                  />
-                </Box>
-              </Box>
-              <Box sx={{ textAlign: 'center', mt: 4, display: 'flex', flexDirection: 'column', gap: 2, width: '50%', minWidth: 260, mx:'auto' }}>
-                <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ ...primaryBtn, width: '100%', minWidth: 200 }}>
-                  {isSubmitting ? 'Cargando...' : 'Crear'}
-                </Button>
-                {dataBacklog && (
-                  <Button variant="outlined" color="primary" disabled={isSubmitting} onClick={() => setDataBacklog(undefined)} sx={{ borderRadius: 2, fontWeight: 'bold', width: '100%', minWidth: 160 }}>
-                    Limpiar
+                <Box sx={{ textAlign: 'center', mt: 4, display: 'flex', flexDirection: 'column', gap: 2, width: '50%', minWidth: 260, mx: 'auto' }}>
+                  <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ ...primaryBtn, width: '100%', minWidth: 200 }}>
+                    {isSubmitting ? 'Cargando...' : 'Crear'}
                   </Button>
-                )}
-              </Box>
-            </form>
+                  {dataBacklog && (
+                    <Button variant="outlined" color="primary" disabled={isSubmitting} onClick={() => setDataBacklog(undefined)} sx={{ borderRadius: 2, fontWeight: 'bold', width: '100%', minWidth: 160 }}>
+                      Limpiar
+                    </Button>
+                  )}
+                </Box>
+              </form>
             </CardContent>
           </Card>
 

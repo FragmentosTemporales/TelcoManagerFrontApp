@@ -22,11 +22,12 @@ function Home() {
       moduloID: 26,
     },
     {
-      head: "Gestión Inventario",
-      title: "Gestiona lista de asistentes a inventario",
-      link: "/modulo:inventario",
-      moduloID: 28,
+      head: "Registros DomApp",
+      title: "Visualiza, filtra y monitorea los últimos registros de las automatizaciones en DomApp.",
+      link: "/modulo:ultimos-logs",
+      moduloID: 26,
     },
+
     {
       head: "Gestion de Proyectos",
       title: "Gestiona tus proyectos y tareas",
@@ -153,7 +154,13 @@ function Home() {
       title: "Visualiza estadísticas de consultas Log Query para Telcomanager",
       link: "/modulo:log-query/log-query-stats",
       moduloID: 26,
-    }
+    },
+    {
+      head: "Gestión Inventario",
+      title: "Gestiona lista de asistentes a inventario",
+      link: "/modulo:inventario",
+      moduloID: 28,
+    },
   ];
 
   const accesos = secciones.filter((seccion) =>
