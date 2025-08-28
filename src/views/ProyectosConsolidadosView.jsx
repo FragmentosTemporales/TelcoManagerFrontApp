@@ -37,7 +37,6 @@ import { palette } from "../theme/palette";
 
 function ProyectosOnNetView() {
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(1);
   const [alertType, setAlertType] = useState("info");
@@ -130,7 +129,7 @@ function ProyectosOnNetView() {
       formData.append("file", formAgendas.file);
     }
     try {
-      const response = await sendPlantillaAgendaProyecto(formData, token);
+  const response = await sendPlantillaAgendaProyecto(formData);
       console.log(response);
       setAlertType("success");
       setMessage("Archivo cargado correctamente.");
@@ -172,7 +171,7 @@ function ProyectosOnNetView() {
     setIsLoading(true);
     setIsSubmitting(true);
     try {
-      const response = await getProyectosFiltrados(token, toFilter, page);
+      const response = await getProyectosFiltrados(toFilter, page);
       setPages(response.pages);
       setData(response.data);
     } catch (error) {
@@ -188,7 +187,7 @@ function ProyectosOnNetView() {
     setIsLoading(true);
     setIsSubmitting(true);
     try {
-      const response = await getQMacroEstado(token);
+      const response = await getQMacroEstado();
       setDataMacro(response);
     } catch (error) {
       setAlertType("error");
@@ -203,7 +202,7 @@ function ProyectosOnNetView() {
     setIsLoading(true);
     setIsSubmitting(true);
     try {
-      const response = await getQProyectosConResponsable(token);
+      const response = await getQProyectosConResponsable();
       setDataProyectoCon(response);
     } catch (error) {
       setAlertType("error");
@@ -218,7 +217,7 @@ function ProyectosOnNetView() {
     setIsLoading(true);
     setIsSubmitting(true);
     try {
-      const response = await getQProyectosSinResponsable(token);
+      const response = await getQProyectosSinResponsable();
       setDataProyectoSin(response);
     } catch (error) {
       setAlertType("error");
@@ -233,7 +232,7 @@ function ProyectosOnNetView() {
     setIsLoading(true);
     setIsSubmitting(true);
     try {
-      const response = await getOptionToFilter(token);
+      const response = await getOptionToFilter();
       // Mapear los resultados al formato requerido
       const mapped = Array.isArray(response)
         ? response.map((opt) => ({
@@ -300,7 +299,6 @@ function ProyectosOnNetView() {
       setToFilter({ bandeja: "", categoria: "" });
       setPage(1); // Reset to the first page
       await getProyectosFiltrados(
-        token,
         { bandeja: "", categoria: "" },
         1
       ).then((res) => {

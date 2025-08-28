@@ -31,7 +31,6 @@ import ModuleHeader from "../components/ModuleHeader";
 
 function MigracionesViewer() {
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
@@ -47,7 +46,7 @@ function MigracionesViewer() {
 
   const fetchData = async () => {
     try {
-      const response = await getDataMigracionesProactivas(token, page);
+  const response = await getDataMigracionesProactivas(page);
       setData(response.data);
       setPages(response.pages);
       setTotal(response.total);
@@ -69,7 +68,7 @@ function MigracionesViewer() {
   const getExcel = async () => {
     setIsSubmitting(true);
     try {
-      await getMigracionesExcel(token);
+  await getMigracionesExcel();
     } catch (error) {
       console.log(error);
     } finally {

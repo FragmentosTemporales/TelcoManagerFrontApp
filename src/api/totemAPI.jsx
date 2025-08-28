@@ -1,109 +1,64 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-
-export const getNumeros = async (token) => {
-    try {
-      const url = `${baseUrl}/get-numeros`;
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response.data.error;
-    }
-};
-
-export const getUserInfo = async (token) => {
+export const getNumeros = async () => {
   try {
-    const url = `${baseUrl}/get-user-info`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-numeros');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getSiguiente = async (token, EstacionID, moduloID) => {
+export const getUserInfo = async () => {
   try {
-    const url = `${baseUrl}/atender-siguiente/${EstacionID}&${moduloID}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-user-info');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const saltarNumero = async (token, EstacionID, moduloID) => {
+export const getSiguiente = async (EstacionID, moduloID) => {
   try {
-    const url = `${baseUrl}/saltar-numero/${EstacionID}&${moduloID}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/atender-siguiente/${EstacionID}&${moduloID}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const darSalida = async (token, Rut) => {
+export const saltarNumero = async (EstacionID, moduloID) => {
   try {
-    const url = `${baseUrl}/dar-salida/${Rut}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/saltar-numero/${EstacionID}&${moduloID}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const cancelarAtencion = async (token, Rut) => {
+export const darSalida = async (Rut) => {
   try {
-    const url = `${baseUrl}/cancelar-numero/${Rut}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/dar-salida/${Rut}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const enAtencion = async (token, EstacionID, moduloID) => {
+export const cancelarAtencion = async (Rut) => {
   try {
-    const url = `${baseUrl}/get-atencion/${EstacionID}&&${moduloID}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/cancelar-numero/${Rut}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const enAtencion = async (EstacionID, moduloID) => {
+  try {
+    const response = await client.get(`/get-atencion/${EstacionID}&&${moduloID}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
   }
 };

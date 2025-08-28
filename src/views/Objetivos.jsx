@@ -25,7 +25,7 @@ import palette from "../theme/palette";
 
 function ObjetivosView() {
   const authState = useSelector((state) => state.auth);
-  const { token, user_id } = authState;
+  const { user_id } = authState;
   const [gerencia, setGerencia] = useState(null);
   const [mes, setMes] = useState(null);
   const [data, setData] = useState([]);
@@ -105,11 +105,11 @@ function ObjetivosView() {
   ];
 
   const fetchData = async () => {
-    if (!token || !gerencia || !mes) return;
+  if (!gerencia || !mes) return;
     try {
       setError(null);
       setIsSubmitting(true);
-      const res = await getObjetivos(token, gerencia, mes);
+  const res = await getObjetivos(gerencia, mes);
       setData(res || []);
     } catch (err) {
       console.log(err);
@@ -130,7 +130,7 @@ function ObjetivosView() {
     if (isNaN(numericValue) || numericValue < 0) return;
     try {
       setIsSubmitting(true);
-      await updateObjetivo(token, id, { value: numericValue });
+  await updateObjetivo(id, { value: numericValue });
       await fetchData();
       setOpenModal(false);
       setValue(undefined);

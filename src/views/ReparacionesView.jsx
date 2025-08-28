@@ -26,7 +26,7 @@ import ModuleHeader from "../components/ModuleHeader";
 function ReparacionesView() {
     const authState = useSelector((state) => state.auth);
     const { logID } = useParams();
-    const { token, area } = authState;
+    const { area } = authState;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [alertType, setAlertType] = useState(undefined);
@@ -112,7 +112,7 @@ function ReparacionesView() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await getReparaciones(token, page);
+            const response = await getReparaciones(page);
             setData(response.data);
             setPages(response.pages);
             console.log("Reparaciones data:", response.data);

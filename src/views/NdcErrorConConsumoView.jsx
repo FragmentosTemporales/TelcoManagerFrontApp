@@ -25,7 +25,7 @@ import { extractDateOnly } from "../helpers/main";
 
 function NDCErrorConConsumo() {
     const authState = useSelector((state) => state.auth);
-    const { token, user_id } = authState;
+    const { user_id } = authState;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,7 +45,7 @@ function NDCErrorConConsumo() {
     const handleUpdateSubmit = async () => {
         setIsSubmitting(true);
         try {
-            const res = await createOrdenValidada(updateForm, token);
+            const res = await createOrdenValidada(updateForm);
             console.log(res);
             setMessage("Orden validada correctamente");
             setUpdateForm({
@@ -73,7 +73,7 @@ function NDCErrorConConsumo() {
     const fetchData = async () => {
         setIsSubmitting(true);
         try {
-            const response = await fetchErroresConConsumo(token);
+            const response = await fetchErroresConConsumo();
             setData(response.pendientes);
             setTotal(response.total);
         } catch (error) {

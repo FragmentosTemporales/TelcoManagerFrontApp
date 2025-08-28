@@ -1,33 +1,19 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-
-export const createRegistroReparacion = async (payload, token) => {
+export const createRegistroReparacion = async (payload) => {
   try {
-    const url = `${baseUrl}/create-reparacion`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/create-reparacion', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getReparaciones = async (token, page) => {
+export const getReparaciones = async (page) => {
   try {
-    const url = `${baseUrl}/get-reparaciones/${page}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-reparaciones/${page}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

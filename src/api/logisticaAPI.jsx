@@ -1,187 +1,109 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-export const fetchReversas = async (token) => {
+export const fetchReversas = async () => {
   try {
-    const url = `${baseUrl}/get-reversa`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-reversa');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getReversas = async (token, rut) => {
+export const getReversas = async (rut) => {
   try {
-    const url = `${baseUrl}/reversa-serie/${rut}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/reversa-serie/${rut}`);
     return response;
   } catch (error) {
     throw error.message;
   }
 };
 
-export const updateReversas = async (token, dataform) => {
+export const updateReversas = async (dataform) => {
   try {
     const data = { data: dataform };
-
-    const url = `${baseUrl}/reversa_serie_pendiente`;
-
-    const response = await axios.put(url, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.put('/reversa_serie_pendiente', data);
     return response.data;
   } catch (error) {
     console.error(
-      "Error response:",
+      'Error response:',
       error.response ? error.response.data : error.message
     );
     throw error.message;
   }
 };
 
-export const getReversaData = async (token) => {
+export const getReversaData = async () => {
   try {
-    const url = `${baseUrl}/get-data-reversas`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-data-reversas');
     return response.data;
   } catch (error) {
     throw error.message;
   }
 };
 
-export const fetchPendientesSinConsumo = async (token, tipo) => {
+export const fetchPendientesSinConsumo = async (tipo) => {
   try {
-    const url = `${baseUrl}/ndc-bot/get-pendientes-sin-consumo/${tipo}`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/ndc-bot/get-pendientes-sin-consumo/${tipo}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const fetchPendientesStats = async (token) => {
+export const fetchPendientesStats = async () => {
   try {
-    const url = `${baseUrl}/ndc-bot/get-pendientes-stats`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/ndc-bot/get-pendientes-stats');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const fetchErroresConConsumo = async (token) => {
+export const fetchErroresConConsumo = async () => {
   try {
-    const url = `${baseUrl}/ndc-bot/errores_con_consumo`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/ndc-bot/errores_con_consumo');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const fetchLogsErrores = async (token) => {
+export const fetchLogsErrores = async () => {
   try {
-    const url = `${baseUrl}/ndc-bot/ndc-logs-error`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/ndc-bot/ndc-logs-error');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const fetchLogsSessions = async (token) => {
+export const fetchLogsSessions = async () => {
   try {
-    const url = `${baseUrl}/ndc-bot/ndc-sessions-info-stats`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/ndc-bot/ndc-sessions-info-stats');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const fetchSessionsFamiliaMateriales = async (token, sessionId) => {
+export const fetchSessionsFamiliaMateriales = async (sessionId) => {
   try {
-    const url = `${baseUrl}/ndc-bot/ndc-sessions-info-grupo-material/${sessionId}`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/ndc-bot/ndc-sessions-info-grupo-material/${sessionId}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
 
-export const updateOrdenSinConsumo = async (token, payload) => {
+export const updateOrdenSinConsumo = async (payload) => {
   try {
     const data = { data: payload };
-    const url = `${baseUrl}/ndc-bot/update-pendientes-sin-consumo`;
-
-    const response = await axios.put(url, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.put('/ndc-bot/update-pendientes-sin-consumo', data);
     return response.data;
   } catch (error) {
     console.error(
-      "Error response:",
+      'Error response:',
       error.response ? error.response.data : error.message
     );
     throw error.message;
@@ -189,16 +111,11 @@ export const updateOrdenSinConsumo = async (token, payload) => {
 };
 
 
-export const createOrdenValidada = async (payload, token) => {
+export const createOrdenValidada = async (payload) => {
   try {
-    const url = `${baseUrl}/ndc-bot/ndc-create-orden-validada`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await client.post('/ndc-bot/ndc-create-orden-validada', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

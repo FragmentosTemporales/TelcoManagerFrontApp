@@ -20,7 +20,7 @@ function CreateReparacionView() {
   }, []);
 
   const authState = useSelector((state) => state.auth);
-  const { token, user_id } = authState;
+  const { user_id } = authState;
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -94,7 +94,7 @@ function CreateReparacionView() {
 
 
     try {
-      const response = await createRegistroReparacion(formData, token);
+  const response = await createRegistroReparacion(formData);
       setAlertSeverity("success");
       setMessage("Formulario creado exitosamente.");
     } catch (error) {

@@ -1,95 +1,55 @@
-import axios from "axios";
-
-const baseUrl = import.meta.env.VITE_BASE_URL;
+import client from './axiosClient';
 
 export const onLogin = async (payload) => {
   try {
-    const url = `${baseUrl}/login`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post('/login', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const createUser = async (payload, token) => {
+export const createUser = async (payload) => {
   try {
-    const url = `${baseUrl}/create-user`;
-    console.log(payload)
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post('/create-user', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getUsers = async (token) => {
+export const getUsers = async () => {
   try {
-    const url = `${baseUrl}/get-users`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-users');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getUsersEmpresa = async (token, empresaID) => {
+export const getUsersEmpresa = async (empresaID) => {
   try {
-    const url = `${baseUrl}/get-trabajadores/${empresaID}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-trabajadores/${empresaID}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const updatePass = async (payload, token) => {
+export const updatePass = async (payload) => {
   try {
-    const url = `${baseUrl}/update-password`;
-    const response = await axios.put(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    console.log(response)
+    const response = await client.put('/update-password', payload);
     return response;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 }
 
-export const getEmpresas = async (token) => {
+export const getEmpresas = async () => {
   try {
-    const url = `${baseUrl}/get-empresas`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-empresas');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

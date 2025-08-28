@@ -20,7 +20,6 @@ import { onLoad, onLoading, setMessage } from "../slices/formSlice";
 function FormFlota() {
   const {logID} = useParams()
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const formState = useSelector((state) => state.form);
   const { message } = formState;
   const dispatch = useDispatch();
@@ -76,7 +75,7 @@ function FormFlota() {
     }
   
     try {
-      const response = await createFormFlota(formData, token);
+  const response = await createFormFlota(formData);
       dispatch(onLoad(response));
       setOpen(true);
       navigate("/modulo:solicitudes");

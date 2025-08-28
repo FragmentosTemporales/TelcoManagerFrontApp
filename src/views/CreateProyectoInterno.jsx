@@ -18,7 +18,7 @@ import { MainLayout } from "./Layout";
 function CreateProyectoInterno() {
     const authState = useSelector((state) => state.auth);
     const { proyecto_id } = useParams();
-    const { token, user_id, area } = authState;
+    const { user_id, area } = authState;
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const [message, setMessage] = useState("");
@@ -40,7 +40,7 @@ function CreateProyectoInterno() {
     const fetchProyecto = async () => {
         setIsSubmitting(true);
         try {
-            const proyecto = await getProyectobyID(token, proyecto_id);
+            const proyecto = await getProyectobyID(proyecto_id);
             const data = proyecto.data;
             setFormData({
                 nombre: data.nombre,
@@ -85,7 +85,7 @@ function CreateProyectoInterno() {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            const response = await crearProyectoInterno(formData, token);
+            const response = await crearProyectoInterno(formData);
             setMessage("Proyecto creado exitosamente.");
             setAlertType("success");
             setOpen(true);
@@ -104,7 +104,7 @@ function CreateProyectoInterno() {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            const response = await UpdateProyectoInterno(proyecto_id, formData, token);
+            const response = await UpdateProyectoInterno(proyecto_id, formData);
             setMessage("Proyecto actualizado exitosamente.");
             setAlertType("success");
             setOpen(true);

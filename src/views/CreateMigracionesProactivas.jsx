@@ -25,7 +25,7 @@ import ModuleHeader from "../components/ModuleHeader";
 
 export default function CreateMigracionesProactivas() {
   const authState = useSelector((state) => state.auth);
-  const { token, user_id } = authState;
+  const { user_id } = authState;
   const migracionState = useSelector((state) => state.migraciones);
   const { id_selected } = migracionState;
   const [open, setOpen] = useState(false);
@@ -57,7 +57,7 @@ export default function CreateMigracionesProactivas() {
   const fetchComunas = async () => {
     setIsSubmitting(true);
     try {
-      const response = await getDataMigracionesComunas(token);
+  const response = await getDataMigracionesComunas();
       setDataComuna(response);
     } catch (error) {
       console.log(error);
@@ -69,7 +69,7 @@ export default function CreateMigracionesProactivas() {
   const handleSubmitPendiente = async (id) => {
     setIsSubmitting(true);
     try {
-      const response = await getMigracionUnica(id, token);
+  const response = await getMigracionUnica(id);
       setMigracion(response);
     } catch (error) {
       setAlertType("error");
@@ -174,7 +174,7 @@ const setEstadoOpciones = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await getClienteMigracion(comuna, token);
+  const response = await getClienteMigracion(comuna);
       setMigracion(response);
     } catch (error) {
       setAlertType("error");
@@ -189,7 +189,7 @@ const setEstadoOpciones = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await getMigracionFiltrada(token, filterID);
+  const response = await getMigracionFiltrada(filterID);
       setMigracion(response[0]);
     } catch (error) {
       setAlertType("error");
@@ -218,7 +218,7 @@ const setEstadoOpciones = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await createMigracion(form, token);
+  const response = await createMigracion(form);
       setAlertType("success");
       setMessage("Migración creada exitosamente.");
       setOpen(true);

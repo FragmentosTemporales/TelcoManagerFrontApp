@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import CreateArea from "./views/CreateArea";
 import Home from "./views/Home";
@@ -48,7 +48,7 @@ import LatestLogsView from "./views/LatestLogsView";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<Home />} />
@@ -95,7 +95,7 @@ function App() {
           <Route path="/modulo:ndc/logs-errors" element={<NDCLogsError />} />
           <Route path="/modulo:ndc/session-logs" element={<NDCSessionLogs />} />
 
-          <Route path="/modulo:log-query/log-query-stats" element={<LogQueryStats />} />
+          <Route path="/modulo:log-query" element={<LogQueryStats />} />
           <Route path="/modulo:inventario" element={<InventarioView />} />
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />
@@ -103,7 +103,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<ErrorHandler/>} />
       </Routes>
-    </BrowserRouter>
+  </HashRouter>
   );
 }
 

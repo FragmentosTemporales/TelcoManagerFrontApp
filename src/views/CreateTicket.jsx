@@ -34,7 +34,7 @@ import ModuleHeader from "../components/ModuleHeader";
 
 function TicketeraView() {
   const authState = useSelector((state) => state.auth);
-  const { token, user_id } = authState;
+  const { user_id } = authState;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [crear, setCrear] = useState(false);
@@ -123,7 +123,6 @@ function TicketeraView() {
           break;
 
         default:
-          console.log("ticketcategoriaID no reconocida");
           break;
       }
     } else {
@@ -172,7 +171,7 @@ function TicketeraView() {
 
   const fetchTickets = async () => {
     try {
-      const tickets = await getUserTicket(page, token);
+      const tickets = await getUserTicket(page);
       setData(tickets.data);
       setPages(tickets.pages);
     } catch (error) {
@@ -209,7 +208,8 @@ function TicketeraView() {
     formData.append("userID", form.userID);
 
     try {
-      var response = await createTicket(formData, token);
+
+      var response = await createTicket(formData);
       setAlertType("success");
       setMessage(response.message || "Ticket creado exitosamente");
       setLogID(response.logID);
@@ -239,7 +239,7 @@ function TicketeraView() {
 
   const fetchCategorias = async () => {
     try {
-      const categorias = await getCategoriasTicket(token);
+      const categorias = await getCategoriasTicket();
       const categoriasTransformadas = categorias.map((cat) => ({
         value: cat.id,
         label: cat.descripcion,
@@ -478,7 +478,7 @@ function TicketeraView() {
 
   const sendTicketInfoToUser = async () => {
     try {
-      await sendTicketInfo(logID, token);
+      await sendTicketInfo(logID);
       setLogID(null);
     } catch (error) {
       console.log(error);

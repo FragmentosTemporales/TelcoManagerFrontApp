@@ -10,14 +10,13 @@ import palette from "../theme/palette";
 function AstViewer() {
   const { formID } = useParams();
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
   const [worker, setWorker] = useState(null);
 
   const fetchData = async () => {
     try {
-      const res = await getAst(token, formID);
+      const res = await getAst(formID);
       setData(res);
       setWorker(res.usuario);
       setIsLoading(false);

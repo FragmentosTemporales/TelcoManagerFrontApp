@@ -38,7 +38,6 @@ import ModuleHeader from "../components/ModuleHeader";
 
 function FormAstList() {
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [data, setData] = useState(undefined);
   const [dataUsers, setDataUsers] = useState(undefined);
   const [dataStatsCC, setDataStatsCC] = useState(undefined);
@@ -73,7 +72,7 @@ function FormAstList() {
     try {
       setIsSubmitting(true);
       setIsLoading(true);
-      const res = await getAstList(token, page, form);
+  const res = await getAstList(page, form);
       setData(res.data);
       setPages(res.pages);
     } catch (error) {
@@ -102,7 +101,7 @@ function FormAstList() {
       setForm({ fecha: "", numDoc: "" });
       setSelectedUser(null); // Limpiar Autocomplete
       setPage(1); // Reset to the first page
-      await getAstList(token, 1, { fecha: "", numDoc: "" }).then((res) => {
+  await getAstList(1, { fecha: "", numDoc: "" }).then((res) => {
         setData(res.data);
         setPages(res.pages);
       });
@@ -116,7 +115,7 @@ function FormAstList() {
 
   const fetchDataAstByCC = async () => {
     try {
-      const res = await getDataCCStats(token, centroCosto);
+  const res = await getDataCCStats(centroCosto);
       setDataStatsCCFiltered(res);
     } catch (error) {
       console.log(error);
@@ -125,7 +124,7 @@ function FormAstList() {
 
   const fetchDataUsers = async () => {
     try {
-      const res = await getAstUsers(token);
+  const res = await getAstUsers();
       setDataUsers(res);
     } catch (error) {
       console.log(error);
@@ -155,7 +154,7 @@ function FormAstList() {
 
   const fetchNotAstCC = async () => {
     try {
-      const res = await getNotAstCC(token);
+  const res = await getNotAstCC();
       setDataStatsCC(res);
     } catch (error) {
       console.log(error);
@@ -169,7 +168,7 @@ function FormAstList() {
   const getExcel = async () => {
     setIsSubmitting(true);
     try {
-      await getAstHistoricoExcel(token);
+  await getAstHistoricoExcel();
     } catch (error) {
       console.log(error);
     } finally {

@@ -19,8 +19,7 @@ import {
   
   function FormCalidad() {
     const {logID} = useParams()
-    const authState = useSelector((state) => state.auth);
-    const { token } = authState;
+  const authState = useSelector((state) => state.auth);
     const formState = useSelector((state) => state.form);
     const { message } = formState;
     const navigate = useNavigate();
@@ -74,7 +73,7 @@ import {
       }
     
       try {
-        const response = await createFormCalidad(formData, token);
+  const response = await createFormCalidad(formData);
         dispatch(onLoad(response));
         setOpen(true);
         navigate("/modulo:solicitudes");

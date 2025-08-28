@@ -1,120 +1,74 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-export const createAST = async (payload, token) => {
+export const createAST = async (payload) => {
   try {
-    const url = `${baseUrl}/create-formast`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post('/create-formast', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-
-export const getAstList = async (token, page, payload) => {
+export const getAstList = async (page, payload) => {
   try {
-    const url = `${baseUrl}/get-ast-list/${page}`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post(`/get-ast-list/${page}`, payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getAst  = async (token, ID) => {
+export const getAst = async (ID) => {
   try {
-    const url = `${baseUrl}/get-ast/${ID}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-ast/${ID}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getAstUsers  = async (token) => {
+export const getAstUsers = async () => {
   try {
-    const url = `${baseUrl}/get-ast-users`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-ast-users');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getNotAstCC  = async (token) => {
+export const getNotAstCC = async () => {
   try {
-    const url = `${baseUrl}/get-ast-data-centro-costo`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-ast-data-centro-costo');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getDataCCStats = async (token, payload) => {
+export const getDataCCStats = async (payload) => {
   try {
-    const url = `${baseUrl}/get-filter-data-by-centro-costo`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post('/get-filter-data-by-centro-costo', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getAstHistoricoExcel = async (token) => {
+export const getAstHistoricoExcel = async () => {
   try {
-    const url = `${baseUrl}/get-all-ast-form-excel`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      responseType: "blob", // Set the response type to "blob" to handle binary data
-    });
+    const response = await client.get('/get-all-ast-form-excel', { responseType: 'blob' });
 
-    // Create a download link for the Excel file
     const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = urlBlob;
-    link.setAttribute("download", "historicoAst.xlsx"); // Set the file name
+    link.setAttribute('download', 'historicoAst.xlsx');
     document.body.appendChild(link);
     link.click();
     link.remove();
 
-    return "Archivo descargado exitosamente."; // Optional success message
+    return 'Archivo descargado exitosamente.';
   } catch (error) {
-    throw error.response?.data?.error || "Error al descargar el archivo.";
+    throw error.response?.data?.error || 'Error al descargar el archivo.';
   }
 };
+// Removed duplicated axios-based implementations; the file uses the centralized client above.

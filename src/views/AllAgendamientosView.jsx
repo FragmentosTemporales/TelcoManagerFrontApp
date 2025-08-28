@@ -36,7 +36,6 @@ import palette from "../theme/palette";
 
 function AllAgendamientoViewer() {
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [alertType, setAlertType] = useState(undefined);
@@ -87,7 +86,7 @@ function AllAgendamientoViewer() {
   const getExcel = async () => {
     setIsSubmitting(true);
     try {
-      await getDespachosSemenalExcel(token);
+      await getDespachosSemenalExcel();
     } catch (error) {
       console.log(error);
     }
@@ -113,7 +112,7 @@ function AllAgendamientoViewer() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const response = await getAllAgendamientos(token, page);
+      const response = await getAllAgendamientos(page);
       setData(response.data);
       setPages(response.pages);
     } catch (error) {
@@ -130,11 +129,9 @@ function AllAgendamientoViewer() {
 
     try {
       const response = await filterAgendamiento(
-        token,
         form.fechaInicio,
         form.fechaFin
       );
-      console.log(response);
       setData(response);
       setPages(1);
     } catch (error) {

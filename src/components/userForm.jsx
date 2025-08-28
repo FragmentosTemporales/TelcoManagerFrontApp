@@ -55,7 +55,7 @@ function UserForm() {
     const payload = form;
 
     try {
-      const res = await createUser(payload, token);
+  const res = await createUser(payload);
       setMessage(res.message);
       setOpen(true);
       setForm({

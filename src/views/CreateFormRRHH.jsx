@@ -19,8 +19,7 @@ import {
   
   function FormRRHH() {
     const {logID} = useParams()
-    const authState = useSelector((state) => state.auth);
-    const { token } = authState;
+  const authState = useSelector((state) => state.auth);
     const formState = useSelector((state) => state.form);
     const { message } = formState;
     const dispatch = useDispatch();
@@ -67,7 +66,7 @@ import {
       }
     
       try {
-        const response = await createFormRRHH(formData, token);
+  const response = await createFormRRHH(formData);
         dispatch(onLoad(response));
         setOpen(true);
         navigate("/modulo:solicitudes");

@@ -1,17 +1,10 @@
-import axios from "axios";
-
-const baseUrl = import.meta.env.VITE_BASE_URL;
+import client from './axiosClient';
 
 export const getLatestLogs = async () => {
   try {
-    const url = `${baseUrl}/latest-logs`;
-    const response = await axios.get(url, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/latest-logs');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

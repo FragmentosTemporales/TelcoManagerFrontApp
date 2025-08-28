@@ -1,87 +1,55 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-export const createFormFlota = async (payload, token) => {
+export const createFormFlota = async (payload) => {
   try {
-    const url = `${baseUrl}/create-formflota`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/create-formflota', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const createFormPrevencion = async (payload, token) => {
+export const createFormPrevencion = async (payload) => {
   try {
-    const url = `${baseUrl}/create-formprevencion`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/create-formprevencion', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const createFormCalidad = async (payload, token) => {
+export const createFormCalidad = async (payload) => {
   try {
-    const url = `${baseUrl}/create-formcalidad`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/create-formcalidad', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const createFormRRHH = async (payload, token) => {
+export const createFormRRHH = async (payload) => {
   try {
-    const url = `${baseUrl}/create-formrrhh`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/create-formrrhh', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const createFormOperaciones = async (payload, token) => {
+export const createFormOperaciones = async (payload) => {
   try {
-    const url = `${baseUrl}/create-formoperaciones`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/create-formoperaciones', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const createFormLogistica = async (payload, token) => {
+export const createFormLogistica = async (payload) => {
   try {
-    const url = `${baseUrl}/create-formlogistica`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/create-formlogistica', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

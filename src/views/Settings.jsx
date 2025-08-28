@@ -22,7 +22,6 @@ import { palette } from "../theme/palette";
 function Settings() {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [open, setOpen] = useState(false);
@@ -87,7 +86,7 @@ function Settings() {
 
     try {
       const payload = { clave: form.clave, new_clave: form.new_clave };
-      await updatePass(payload, token);
+  await updatePass(payload);
       setMessage("Contraseña actualizada con éxito.");
       setSeverity("success");
       setOpen(true);

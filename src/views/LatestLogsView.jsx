@@ -61,7 +61,6 @@ export default function LatestLogsView() {
         try {
             const response = await getLatestLogs();
             setData(response);
-            console.log("CARGADO")
         } catch (error) {
             console.error("Error fetching data:", error);
         }

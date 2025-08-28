@@ -28,7 +28,6 @@ import ModuleHeader from "../components/ModuleHeader";
 
 function GestorTicketera() {
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -224,7 +223,7 @@ function GestorTicketera() {
   const fetchTicketStats = async () => {
     setIsSubmitting(true);
     try {
-      const stats = await getStatsTicket(token);
+      const stats = await getStatsTicket();
       const filterData = stats.filter(
         (item) => item.estado !== "FINALIZADO" && item.estado !== "NO APLICA"
       );
@@ -266,7 +265,7 @@ function GestorTicketera() {
   const fetchTickets = async () => {
     setIsSubmitting(true);
     try {
-      const tickets = await getTicketera(form, token);
+  const tickets = await getTicketera(form);
       setData(tickets);
     } catch (error) {
       setMessage(error.message || "Error al obtener los tickets");
@@ -415,7 +414,7 @@ function GestorTicketera() {
   const fetchTicketsWithEstado = async (estado) => {
     setIsSubmitting(true);
     try {
-      const tickets = await getTicketera({ estado }, token);
+  const tickets = await getTicketera({ estado });
       setData(tickets);
     } catch (error) {
       setMessage(error.message || "Error al obtener los tickets");

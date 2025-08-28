@@ -15,14 +15,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { onLogin } from "../api/authAPI";
-import { onLoad, onLoading, setMessage } from "../slices/authSlice";
+import { onLoad, onLoading, setMessage, setLogout } from "../slices/authSlice";
 import { MainLayout } from "./Layout";
 import { palette } from "../theme/palette";
 
 function Login() {
   const { message } = useSelector((state) => state.auth);
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,6 +36,19 @@ function Login() {
       setRememberMe(true);
     }
   }, []);
+
+  // If a token is already stored and not expired, navigate to home.
+  // If token exists but is expired, clear auth state to avoid stale login.
+  useEffect(() => {
+    const token = authState?.token;
+    const expiresAt = authState?.token_expires_at ? Number(authState.token_expires_at) : null;
+    if (token && expiresAt && expiresAt > Date.now() + 1000) {
+      navigate("/");
+    } else if (token && expiresAt && expiresAt <= Date.now()) {
+      dispatch(setLogout());
+    }
+    // Only re-run when token or its expiry changes
+  }, [authState?.token, authState?.token_expires_at, dispatch, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,11 +91,7 @@ function Login() {
     </Alert>
   );
 
-  useEffect(() => {
-    if (token && token != null) {
-      navigate("/");
-    }
-  }, [token]);
+  // Navigation after login handled by login flow; no direct token watch required here
 
   return (
     <MainLayout showNavbar={false}>

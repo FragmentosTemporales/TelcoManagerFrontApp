@@ -1,54 +1,33 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-export const downloadFile = async (payload, token) => {
+export const downloadFile = async (payload) => {
   try {
-    const url = `${baseUrl}/download`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      responseType: "blob", // Especifica que la respuesta será un blob
-    });
+    const response = await client.post('/download', payload, { responseType: 'blob' });
 
-    const contentType = response.headers["content-type"];
-    const fileName = response.headers["content-disposition"]?.split("filename=")[1] || "archivo";
+    const fileName = response.headers['content-disposition']?.split('filename=')[1] || 'archivo';
 
-    // Crea un enlace para descargar
     const urlBlob = URL.createObjectURL(response.data);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = urlBlob;
-    a.download = fileName; // Nombre del archivo
+    a.download = fileName;
     document.body.appendChild(a);
     a.click();
     a.remove();
-    URL.revokeObjectURL(urlBlob); // Libera la URL
+    URL.revokeObjectURL(urlBlob);
 
   } catch (error) {
-    console.error("Error al descargar el archivo:", error.message);
-    throw error; // Lanza el error para que pueda ser manejado por quien llame a la función
+    console.error('Error al descargar el archivo:', error.message);
+    throw error;
   }
 };
 
-export const fetchFileUrl = async (payload, token) => {
+export const fetchFileUrl = async (payload) => {
   try {
-    const url = `${baseUrl}/view-image`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      responseType: "blob",
-    });
-
-    // Crea un objeto URL temporal
+    const response = await client.post('/view-image', payload, { responseType: 'blob' });
     const fileUrl = URL.createObjectURL(response.data);
     return fileUrl;
-
   } catch (error) {
-    console.error("Error al obtener el archivo:", error.message);
+    console.error('Error al obtener el archivo:', error.message);
     throw error;
   }
 };

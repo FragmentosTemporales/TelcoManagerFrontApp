@@ -1,63 +1,37 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-export const getLogQueryTimeTotal = async (token) => {
+export const getLogQueryTimeTotal = async () => {
   try {
-    const url = `${baseUrl}/get-log-query-time-total`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-log-query-time-total');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getLogQueryTimeTotalByEndpoint = async (token, endpoint) => {
+export const getLogQueryTimeTotalByEndpoint = async (endpoint) => {
   try {
-    const url = `${baseUrl}/get-log-query-time-total-by-endpoint/${endpoint}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-log-query-time-total-by-endpoint/${endpoint}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getTopLogQuery = async (token) => {
+export const getTopLogQuery = async () => {
   try {
-    const url = `${baseUrl}/get-top-log-query`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-top-log-query');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getLogQuerySemanal = async (token) => {
+export const getLogQuerySemanal = async () => {
   try {
-    const url = `${baseUrl}/get-log-query-semanal`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-log-query-semanal');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

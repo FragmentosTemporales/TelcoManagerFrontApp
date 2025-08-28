@@ -1,123 +1,73 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-
-export const getQMacroEstado = async (token) => {
+export const getQMacroEstado = async () => {
   try {
-    const url = `${baseUrl}/get-q-macro-estado`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-q-macro-estado');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getQProyectosConResponsable = async (token) => {
+export const getQProyectosConResponsable = async () => {
   try {
-    const url = `${baseUrl}/get-q-estado-con-responsable`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-q-estado-con-responsable');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getQProyectosSinResponsable = async (token) => {
+export const getQProyectosSinResponsable = async () => {
   try {
-    const url = `${baseUrl}/get-q-estado-sin-responsable`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-q-estado-sin-responsable');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getInfoProyecto = async (token, proyecto) => {
+export const getInfoProyecto = async (proyecto) => {
   try {
-    const url = `${baseUrl}/get-info-proyecto/${proyecto}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-info-proyecto/${proyecto}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getProyectosFiltrados = async (token, payload, page) => {
+export const getProyectosFiltrados = async (payload, page) => {
   try {
-    const url = `${baseUrl}/get-proyectos-filtrados/${page}`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post(`/get-proyectos-filtrados/${page}`, payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getOptionToFilter = async (token) => {
+export const getOptionToFilter = async () => {
   try {
-    const url = `${baseUrl}/get-option-filters`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-option-filters');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const sendPlantillaConstruccion = async (payload, token) => {
+export const sendPlantillaConstruccion = async (payload) => {
   try {
-    const url = `${baseUrl}/load-construccion-geral`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/load-construccion-geral', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const sendPlantillaAgendaProyecto = async (payload, token) => {
-  console.log(payload);
+export const sendPlantillaAgendaProyecto = async (payload) => {
   try {
-    const url = `${baseUrl}/load-agenda-visitas-geral`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/load-agenda-visitas-geral', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

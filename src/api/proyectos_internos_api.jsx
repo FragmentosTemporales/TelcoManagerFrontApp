@@ -1,133 +1,84 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-const prefixUrl = `${baseUrl}/proyecto-interno`;
+const prefix = '/proyecto-interno';
 
-export const getProyectosByArea = async (token, areaID, page) => {
+export const getProyectosByArea = async (areaID, page) => {
   try {
-    const url = `${prefixUrl}/get-proyectos-by-area/${page}&${areaID}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`${prefix}/get-proyectos-by-area/${page}&${areaID}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getUsuariosByArea = async (token, areaID) => {
+export const getUsuariosByArea = async (areaID) => {
   try {
-    const url = `${prefixUrl}/get-usuarios-by-area/${areaID}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`${prefix}/get-usuarios-by-area/${areaID}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getProyectobyID = async (token, proyectoID) => {
+export const getProyectobyID = async (proyectoID) => {
   try {
-    const url = `${prefixUrl}/get-proyecto-by-id/${proyectoID}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`${prefix}/get-proyecto-by-id/${proyectoID}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const crearEstadoTarea = async (payload, token) => {
+export const crearEstadoTarea = async (payload) => {
   try {
-    const url = `${baseUrl}/proyecto-interno/create-estado-tarea`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await client.post('/proyecto-interno/create-estado-tarea', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const crearProyectoInterno = async (payload, token) => {
+export const crearProyectoInterno = async (payload) => {
   try {
-    const url = `${prefixUrl}/create-proyecto`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await client.post(`${prefix}/create-proyecto`, payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const crearTareaProyectoInterno = async (payload, token) => {
+export const crearTareaProyectoInterno = async (payload) => {
   try {
-    const url = `${prefixUrl}/create-tarea`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await client.post(`${prefix}/create-tarea`, payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const UpdateProyectoInterno = async (proyectoID, payload, token ) => {
+export const UpdateProyectoInterno = async (proyectoID, payload) => {
   try {
-    const url = `${prefixUrl}/update-proyecto-interno/${proyectoID}`;
-    const response = await axios.put(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await client.put(`${prefix}/update-proyecto-interno/${proyectoID}`, payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const UpdateTarea = async (tareaID, payload, token ) => {
+export const UpdateTarea = async (tareaID, payload) => {
   try {
-    const url = `${prefixUrl}/update-tarea/${tareaID}`;
-    const response = await axios.put(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await client.put(`${prefix}/update-tarea/${tareaID}`, payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const DeleteProyectoInterno = async (token, proyectoID) => {
+export const DeleteProyectoInterno = async (proyectoID) => {
   try {
-    const url = `${prefixUrl}/update-proyecto-interno/${proyectoID}`;
-    const response = await axios.delete(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await client.delete(`${prefix}/update-proyecto-interno/${proyectoID}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

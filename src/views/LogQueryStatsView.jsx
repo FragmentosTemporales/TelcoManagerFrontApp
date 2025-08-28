@@ -33,7 +33,6 @@ import ModuleHeader from "../components/ModuleHeader";
 
 function LogQueryStats() {
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [logsDataTime, setLogsDataTime] = useState([]);
   const [logsDataSemanal, setLogsDataSemanal] = useState([]);
   const [logsDataTop, setLogsDataTop] = useState([]);
@@ -68,7 +67,7 @@ function LogQueryStats() {
   const fetchQueryLogsTime = async () => {
     setIsSubmittingTime(true);
     try {
-      const data = await getLogQueryTimeTotal(token);
+  const data = await getLogQueryTimeTotal();
       setLogsDataTime(data);
     } catch (error) {
       console.error("Error fetching log query time data:", error);
@@ -79,10 +78,9 @@ function LogQueryStats() {
   const fetchLogQuerySemanal = async () => {
     setIsSubmittingSemanal(true);
     try {
-      const res = await getLogQuerySemanal(token);
+  const res = await getLogQuerySemanal();
       setLogsDataSemanal(res.data);
       setDataMethod(res.data_method);
-      console.log("Data Method:", res.data_method);
     } catch (error) {
       console.error("Error fetching log query semanal data:", error);
     }
@@ -92,7 +90,7 @@ function LogQueryStats() {
   const fetchLogQueryTimeByEndpoint = async (endpoint) => {
     setIsSubmittingEndpoint(true);
     try {
-      const data = await getLogQueryTimeTotalByEndpoint(token, endpoint);
+  const data = await getLogQueryTimeTotalByEndpoint(endpoint);
       setLogDataEndpoint(data);
     } catch (error) {
       console.error("Error fetching log query time by endpoint data:", error);
@@ -103,7 +101,7 @@ function LogQueryStats() {
   const fetchTopLogQuery = async () => {
     setIsSubmittingTop(true);
     try {
-      const data = await getTopLogQuery(token);
+  const data = await getTopLogQuery();
       setLogsDataTop(data);
       if (data[0]) {
         setSelectedEndpoint(data[0].endpoint);

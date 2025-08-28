@@ -7,8 +7,7 @@ import { useEffect, useState } from "react";
 import palette from "../theme/palette";
 
 function ReversaCharts() {
-  const authState = useSelector((state) => state.auth);
-  const { token } = authState;
+  // authState token is handled centrally by the API client; no local token needed
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [chartData, setChartData] = useState({
@@ -32,7 +31,7 @@ function ReversaCharts() {
   const fetchChartData = async () => {
     setIsLoading(true);
     try {
-      const response = await getReversaData(token);
+  const response = await getReversaData();
       const processedData = response.map((item) => ({
         ...item,
         fecha: extractDate(item.fecha), // Process Fecha with extractDate

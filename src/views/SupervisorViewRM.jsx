@@ -30,7 +30,6 @@ import palette from '../theme/palette';
 
 function SupervisorViewRM() {
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [data, setData] = useState([]);
   const [userData, setUserData] = useState(null);
   const [trabajador, setTrabajador] = useState(undefined);
@@ -55,7 +54,7 @@ function SupervisorViewRM() {
 
   const fetchUserInfo = async () => {
     try {
-      const res = await getUserInfo(token);
+      const res = await getUserInfo();
       setUserData(res[0]);
     } catch (error) {
       console.error("Error fetching user info:", error);
@@ -73,8 +72,8 @@ function SupervisorViewRM() {
 
   const handleSubmitSalida = async () => {
     try {
-      setIsSubmittingModal(true);
-      await darSalida(token, trabajador.Rut);
+  setIsSubmittingModal(true);
+  await darSalida(trabajador.Rut);
     } catch (error) {
       console.log(error);
     } finally {
@@ -88,8 +87,8 @@ function SupervisorViewRM() {
 
   const handleSubmitCancelar = async () => {
     try {
-      setIsSubmittingModal(true);
-      await cancelarAtencion(token, trabajador.Rut);
+  setIsSubmittingModal(true);
+  await cancelarAtencion(trabajador.Rut);
     } catch (error) {
       console.log(error);
     } finally {
@@ -155,7 +154,7 @@ function SupervisorViewRM() {
   useEffect(() => {
     fetchUserInfo();
     window.scrollTo(0, 0);
-  }, [token]);
+  }, []);
 
   // Once userData (CENTRO) is available, fetch queue data and start polling
   useEffect(() => {

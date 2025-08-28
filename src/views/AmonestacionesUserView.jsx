@@ -10,8 +10,8 @@ import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
 
 function AmonesatacionesViewer() {
+  // auth state kept for potential future use (user, estacion, etc.)
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -25,7 +25,7 @@ function AmonesatacionesViewer() {
   const fetchData = async () => {
     try {
       setIsSubmitting(true);
-      const res = await getSolicitudesByUser(token, page);
+  const res = await getSolicitudesByUser(page);
       setData(res.data);
       setPages(res.pages);
       setIsSubmitting(false);

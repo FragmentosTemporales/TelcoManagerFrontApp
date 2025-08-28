@@ -25,7 +25,6 @@ import { extractDateOnly } from "../helpers/main";
 
 function NDCSinConsumoUpdate() {
     const authState = useSelector((state) => state.auth);
-    const { token } = authState;
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
     const [open, setOpen] = useState(false);
@@ -47,7 +46,7 @@ function NDCSinConsumoUpdate() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetchPendientesStats(token);
+                        const response = await fetchPendientesStats();
                 setStatsEstado(response.estado);
                 setStatsTipo(response.tipo);
             } catch (error) {
@@ -56,7 +55,7 @@ function NDCSinConsumoUpdate() {
         };
 
         fetchData();
-    }, [token]);
+    }, []);
 
     const estadoOptions = [{
         value: 'Pendiente',
@@ -147,7 +146,7 @@ function NDCSinConsumoUpdate() {
 
         try {
             const payload = { id: id, estado: newEstado };
-            await updateOrdenSinConsumo(token, payload);
+            await updateOrdenSinConsumo(payload);
 
             setMessage("Actualizado correctamente");
             setAlertType("success");
@@ -261,7 +260,7 @@ function NDCSinConsumoUpdate() {
     const fetchData = async () => {
         setIsSubmitting(true);
         try {
-            const result = await fetchPendientesSinConsumo(token, tipo);
+            const result = await fetchPendientesSinConsumo(tipo);
             setData(result.pendientes);
             setTotal(result.total);
         } catch (error) {

@@ -1,56 +1,31 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-const prefixUrl = `${baseUrl}/inventario`;
+const prefix = '/inventario';
 
-
-export const getTecnicos = async (payload, token) => {
+export const getTecnicos = async (payload) => {
   try {
-
-    const url = `${prefixUrl}/get-usuarios`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post(`${prefix}/get-usuarios`, payload);
     return response;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-
-export const getTecnicosStats = async (token) => {
+export const getTecnicosStats = async () => {
   try {
-
-    const url = `${prefixUrl}/get-usuarios-stats`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`${prefix}/get-usuarios-stats`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-
-export const avanzarTecnico = async (payload, token) => {
+export const avanzarTecnico = async (payload) => {
   try {
-
-    const url = `${prefixUrl}/avanzar-usuarios`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post(`${prefix}/avanzar-usuarios`, payload);
     return response;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 

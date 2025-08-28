@@ -20,7 +20,6 @@ import { fetchLogsSessions, fetchSessionsFamiliaMateriales } from "../api/logist
 
 function NDCSessionLogs() {
     const authState = useSelector((state) => state.auth);
-    const { token } = authState;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,7 +51,7 @@ function NDCSessionLogs() {
     const fetchData = async () => {
         setIsSubmitting(true);
         try {
-            const response = await fetchLogsSessions(token);
+            const response = await fetchLogsSessions();
             setData(response.data);
             setTotal(response.total);
         } catch (error) {
@@ -67,8 +66,7 @@ function NDCSessionLogs() {
 
     const fetchFamiliaData = async (sessionId) => {
         try {
-            const response = await fetchSessionsFamiliaMateriales(token, sessionId);
-            console.log("Response from API:", response);
+            const response = await fetchSessionsFamiliaMateriales(sessionId);
             setFamiliaData(response.data);
         } catch (error) {
             console.error("Error fetching familia data:", error);

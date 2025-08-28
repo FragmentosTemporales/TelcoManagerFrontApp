@@ -27,7 +27,7 @@ import ModuleHeader from "../components/ModuleHeader";
 
 function ProyectoInternoView() {
   const authState = useSelector((state) => state.auth);
-  const { token, area, user_id } = authState;
+  const { area, user_id } = authState;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,7 +63,7 @@ function ProyectoInternoView() {
   const fetchData = async () => {
     setIsSubmitting(true);
     try {
-      const response = await getProyectosByArea(token, area.areaID, page);
+      const response = await getProyectosByArea(area.areaID, page);
       setData(response.data);
       setPages(response.pages);
       setTotal(response.total);
@@ -92,7 +92,7 @@ function ProyectoInternoView() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await UpdateTarea(tarea.id, payload, token);
+      await UpdateTarea(tarea.id, payload);
       setMessage("Estado de tarea actualizado correctamente");
       setAlertType("success");
       fetchData(); // Refresh data after updating estado
@@ -116,31 +116,31 @@ function ProyectoInternoView() {
     fetchData();
   };
 
-    const getButtons = () => (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <Button
-                key="prev"
-                variant="contained"
-                onClick={() => handlePage(page - 1)}
-                disabled={page === 1}
-                sx={{ background: "#142a3d" }}
-            >
-                <ArrowBackIosIcon />
-            </Button>
-            <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
-                {page}
-            </Button>
-            <Button
-                key="next"
-                variant="contained"
-                onClick={() => handlePage(page + 1)}
-                disabled={page === pages}
-                sx={{ background: "#142a3d" }}
-            >
-                <ArrowForwardIosIcon />
-            </Button>
-        </Box>
-    );
+  const getButtons = () => (
+    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <Button
+        key="prev"
+        variant="contained"
+        onClick={() => handlePage(page - 1)}
+        disabled={page === 1}
+        sx={{ background: "#142a3d" }}
+      >
+        <ArrowBackIosIcon />
+      </Button>
+      <Button key="current" variant="contained" sx={{ background: "#142a3d" }}>
+        {page}
+      </Button>
+      <Button
+        key="next"
+        variant="contained"
+        onClick={() => handlePage(page + 1)}
+        disabled={page === pages}
+        sx={{ background: "#142a3d" }}
+      >
+        <ArrowForwardIosIcon />
+      </Button>
+    </Box>
+  );
 
   const modalRender = () => (
     <Modal
@@ -215,6 +215,7 @@ function ProyectoInternoView() {
     area && area.areaID && fetchData();
   }, [area]);
 
+
   return (
     <MainLayout>
       <Box
@@ -266,34 +267,34 @@ function ProyectoInternoView() {
             variant="contained"
             component={Link}
             to="/modulo:crear-proyecto-interno"
-            sx={{ 
-                            width: "200px",
-                            background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
-                            color: '#fff',
-                            fontWeight: 600,
-                            letterSpacing: '.5px',
-                            borderRadius: 2,
-                            position: 'relative',
-                            overflow: 'hidden',
-                            textShadow: '0 1px 2px rgba(0,0,0,0.35)',
-                            boxShadow: '0 6px 18px -4px rgba(0,0,0,0.45), 0 2px 6px -1px rgba(0,0,0,0.35)',
-                            transition: 'all .35s',
-                            '&:before': {
-                                content: '""',
-                                position: 'absolute',
-                                inset: 0,
-                                background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
-                                mixBlendMode: 'overlay',
-                                pointerEvents: 'none'
-                            },
-                            '&:hover': {
-                                transform: 'translateY(-3px)',
-                                boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
-                                background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
-                            },
-                            '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
-                            '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
-                        }} 
+            sx={{
+              width: "200px",
+              background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+              color: '#fff',
+              fontWeight: 600,
+              letterSpacing: '.5px',
+              borderRadius: 2,
+              position: 'relative',
+              overflow: 'hidden',
+              textShadow: '0 1px 2px rgba(0,0,0,0.35)',
+              boxShadow: '0 6px 18px -4px rgba(0,0,0,0.45), 0 2px 6px -1px rgba(0,0,0,0.35)',
+              transition: 'all .35s',
+              '&:before': {
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+                mixBlendMode: 'overlay',
+                pointerEvents: 'none'
+              },
+              '&:hover': {
+                transform: 'translateY(-3px)',
+                boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+              },
+              '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+              '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+            }}
           >
             Crear Nuevo
           </Button>
@@ -389,7 +390,7 @@ function ProyectoInternoView() {
                           if (window.confirm('¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.')) {
                             setIsSubmitting(true);
                             try {
-                              const response = await DeleteProyectoInterno(token, proyecto.id);
+                              const response = await DeleteProyectoInterno(proyecto.id);
                               console.log('Proyecto eliminado:', response);
                               setMessage('Proyecto eliminado correctamente');
                               setAlertType('success');
@@ -443,24 +444,24 @@ function ProyectoInternoView() {
                       <Typography variant='body1' sx={{ fontWeight: 600, mb: 0.5, color: palette.primary }}>
                         {tarea.titulo ? tarea.titulo : 'Sin Titulo'}
                       </Typography>
-                {/* Estado como chip visual */}
-                <Typography
-                  variant='body2'
-                  sx={{ fontWeight: 600, mt: 0.5, color: palette.primaryDark, display: 'inline-flex', alignItems: 'center', gap: 1 }}
-                >
-                  {tarea.estado && (
-                    <Chip
-                      label={tarea.estado}
-                      size='small'
-                      sx={{
-                        fontWeight: 600,
-                        letterSpacing: .4,
-                        bgcolor: tarea.estado === 'FINALIZADA' ? palette.accent : (tarea.estado === 'CANCELADA' ? palette.danger : palette.primary),
-                        color: '#fff'
-                      }}
-                    />
-                  )}
-                </Typography>
+                      {/* Estado como chip visual */}
+                      <Typography
+                        variant='body2'
+                        sx={{ fontWeight: 600, mt: 0.5, color: palette.primaryDark, display: 'inline-flex', alignItems: 'center', gap: 1 }}
+                      >
+                        {tarea.estado && (
+                          <Chip
+                            label={tarea.estado}
+                            size='small'
+                            sx={{
+                              fontWeight: 600,
+                              letterSpacing: .4,
+                              bgcolor: tarea.estado === 'FINALIZADA' ? palette.accent : (tarea.estado === 'CANCELADA' ? palette.danger : palette.primary),
+                              color: '#fff'
+                            }}
+                          />
+                        )}
+                      </Typography>
                       <Typography variant='body2' sx={{ mt: 0.5, fontStyle: 'italic', color: palette.textMuted }}>
                         {tarea.usuario && tarea.usuario.nombre ? tarea.usuario.nombre : 'Sin Estado'}
                       </Typography>
@@ -492,9 +493,9 @@ function ProyectoInternoView() {
             )}
           </Box>
         ))}
-          <Fade in timeout={400}>
-            <Box sx={{ mt: 1 }}>{getButtons()}</Box>
-          </Fade>
+        <Fade in timeout={400}>
+          <Box sx={{ mt: 1 }}>{getButtons()}</Box>
+        </Fade>
       </Box>
     </MainLayout>
   );

@@ -42,7 +42,6 @@ import ModuleHeader from "../components/ModuleHeader";
 
 function ReversaView() {
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [rut, setRut] = useState("");
   const [serie, setSerie] = useState("");
   const [open, setOpen] = useState(false);
@@ -79,7 +78,7 @@ function ReversaView() {
 
   const fetchTecnicos = async () => {
     try {
-      const response = await fetchReversas(token);
+      const response = await fetchReversas();
       const transformedOptions = response.map((item) => ({
         value: item.value,
         label: item.label,
@@ -108,7 +107,7 @@ function ReversaView() {
     setLoading(true);
     const payload = rut;
     try {
-      const response = await getReversas(token, payload);
+  const response = await getReversas(payload);
 
       setData(response.data.filter((item) => item.entregado !== 1));
       setReversa(response.data.filter((item) => item.entregado !== 0));
@@ -144,7 +143,7 @@ function ReversaView() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await updateReversas(token, formattedData);
+  const res = await updateReversas(formattedData);
       setIsSubmitting(false);
       setSeverity("success");
       setMessage("Información actualizada correctamente");

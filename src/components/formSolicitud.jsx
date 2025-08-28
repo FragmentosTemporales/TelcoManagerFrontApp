@@ -226,7 +226,7 @@ function FormSolicitud() {
       submotivoID: form.submotivoID,
     };
     try {
-      const response = await createSolicitud(payload, token);
+  const response = await createSolicitud(payload);
       dispatch(onLoad(response));
       setOpen(true);
       setForm({

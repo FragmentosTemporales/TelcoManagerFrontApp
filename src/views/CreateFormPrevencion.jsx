@@ -20,7 +20,6 @@ import { palette } from "../theme/palette";
 function FormPrevencion() {
   const { logID } = useParams();
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const formState = useSelector((state) => state.form);
   const { message } = formState;
   const dispatch = useDispatch();
@@ -77,7 +76,7 @@ function FormPrevencion() {
     }
 
     try {
-      const response = await createFormPrevencion(formData, token);
+  const response = await createFormPrevencion(formData);
       dispatch(onLoad(response));
       setOpen(true);
       navigate("/modulo:solicitudes");

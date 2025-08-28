@@ -13,7 +13,7 @@ function FlotaViewer({ data }) {
   const downloader = async () => {
     try {
       const payload = { file_path: filePath };
-      await downloadFile(payload, token);
+  await downloadFile(payload);
       console.log("Archivo descargado exitosamente");
     } catch (error) {
       console.error("Error descargando el archivo:", error);

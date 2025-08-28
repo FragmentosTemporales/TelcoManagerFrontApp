@@ -37,7 +37,7 @@ import { palette } from "../theme/palette";
 function Solicitud() {
   const { solicitud_id } = useParams();
   const authState = useSelector((state) => state.auth);
-  const { token, user_id, area } = authState;
+  const { user_id, area } = authState;
   const filePath = "/home/ubuntu/telcomanager/app/data/Formato.docx";
 
   const [data, setData] = useState(null);
@@ -836,7 +836,7 @@ function Solicitud() {
 
     try {
       // Crear solicitud de gestión
-      const response = await createSG(formAnulacion, token);
+  const response = await createSG(formAnulacion);
 
       setAlertInfo("success");
 
@@ -878,7 +878,7 @@ function Solicitud() {
 
   const fetchData = async () => {
     try {
-      const res = await getUniqueSolicitud(token, solicitud_id);
+  const res = await getUniqueSolicitud(solicitud_id);
       setData(res);
       setValidate(res.userID);
       setDataGestiones(res.gestiones);
@@ -895,7 +895,7 @@ function Solicitud() {
   const downloadInforme = async () => {
     try {
       const payload = { file_path: filePath };
-      await downloadFile(payload, token);
+  await downloadFile(payload);
       console.log("Archivo descargado exitosamente");
     } catch (error) {
       console.log(error);

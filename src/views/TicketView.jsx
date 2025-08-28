@@ -26,7 +26,7 @@ import palette from "../theme/palette";
 function TicketViewer() {
   const authState = useSelector((state) => state.auth);
   const { logID } = useParams();
-  const { token, area } = authState;
+  const { area } = authState;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,7 +51,7 @@ function TicketViewer() {
   const fetchFile = async (filePath) => {
     try {
       setLoading(true);
-      const res = await fetchFileUrl({ file_path: filePath }, token);
+  const res = await fetchFileUrl({ file_path: filePath });
       setRespaldo(res);
     } catch (error) {
       console.error("Error al obtener la URL del archivo:", error);
@@ -235,7 +235,7 @@ function TicketViewer() {
   const handleUpdate = async () => {
     setIsSubmitting(true);
     try {
-      const response = await updateTicketEstado(formUpdate, token);
+  const response = await updateTicketEstado(formUpdate);
       setAlertType("success");
       {
         formUpdate.estado == 3 ? triggerConfetti() : null;
@@ -255,7 +255,7 @@ function TicketViewer() {
   const fetchTicket = async () => {
     setIsSubmitting(true);
     try {
-      const ticket = await getTicketInfo(logID, token);
+  const ticket = await getTicketInfo(logID);
       setData(ticket);
     } catch (error) {
       setMessage(error.message || "Error al obtener los tickets");

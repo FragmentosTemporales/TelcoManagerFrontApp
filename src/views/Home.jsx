@@ -152,7 +152,7 @@ function Home() {
     {
       head: "Monitoreo Telcomanager",
       title: "Visualiza estadísticas de consultas Log Query para Telcomanager",
-      link: "/modulo:log-query/log-query-stats",
+      link: "/modulo:log-query",
       moduloID: 26,
     },
     {

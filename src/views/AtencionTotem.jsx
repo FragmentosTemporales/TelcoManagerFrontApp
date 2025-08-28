@@ -8,7 +8,7 @@ import { MainLayout } from './Layout';
 import palette from '../theme/palette';
 
 function AtencionTotem() {
-  const { token } = useSelector((s) => s.auth);
+  const { /* token */ } = useSelector((s) => s.auth);
   const [estaciones, setEstaciones] = useState([]);
   const [selectedEstacion, setSelectedEstacion] = useState();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,22 +23,25 @@ function AtencionTotem() {
   const headCell = { background: gradient, color: '#fff', fontWeight: 'bold', fontSize: 13, letterSpacing: '.4px' };
   const primaryBtn = { background: gradient, color: '#fff', fontWeight: 'bold', borderRadius: 2, boxShadow: '0 4px 14px rgba(0,0,0,0.25)', '&:hover': { background: palette.primaryDark } };
 
-  useEffect(() => { (async () => { try { const res = await getUserInfo(token); setEstaciones(res); } catch (e) { console.log(e); } })(); }, [token]);
+  useEffect(() => { (async () => { try { const res = await getUserInfo(); setEstaciones(res); } catch (e) { console.log(e); } })(); }, []);
 
   const fetchData = async () => { if (!selectedEstacion) return; try { setIsSubmitting(true); const res = await getNumeros(); setFila(res.filter(r => r.Estacion_ID === selectedEstacion.EstacionID)); } catch (e) { console.log(e); } finally { setIsSubmitting(false); } };
   useEffect(() => { fetchData(); }, [selectedEstacion]);
 
-  useEffect(() => { setEspera(fila.filter(f => f.Estado === 'En espera')); (async () => { if (!selectedEstacion) return; try { const res = await enAtencion(token, selectedEstacion.EstacionID, selectedEstacion.Modulo); setAtencion(res[0]); } catch (e) { console.log(e); } })(); }, [fila, selectedEstacion, token]);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
+
+  useEffect(() => { setEspera(fila.filter(f => f.Estado === 'En espera')); (async () => { if (!selectedEstacion) return; try { const res = await enAtencion(selectedEstacion.EstacionID, selectedEstacion.Modulo); setAtencion(res[0]); } catch (e) { console.log(e); } })(); }, [fila, selectedEstacion]);
 
   useEffect(() => { if (!selectedEstacion) return; const id = setInterval(() => { if (!atencion && espera.length === 0) fetchData(); }, 5000); return () => clearInterval(id); }, [selectedEstacion, atencion, espera]);
 
-  const loadReversas = async () => { if (!atencion) return; setIsSubmitting(true); try { const res = await getReversas(token, atencion.Rut); setData(res.data.filter(i => i.entregado !== 1)); setFormattedData(res.data.map(i => ({ id: i.id, print: i.print ?? 1, entrega: i.entregado ?? 1, fuente: i.fuente ?? 1 }))); } catch (e) { console.log(e); } finally { setIsSubmitting(false); } };
+  const loadReversas = async () => { if (!atencion) return; setIsSubmitting(true); try { const res = await getReversas(atencion.Rut); setData(res.data.filter(i => i.entregado !== 1)); setFormattedData(res.data.map(i => ({ id: i.id, print: i.print ?? 1, entrega: i.entregado ?? 1, fuente: i.fuente ?? 1 }))); } catch (e) { console.log(e); } finally { setIsSubmitting(false); } };
   useEffect(() => { loadReversas(); }, [atencion]);
 
   const toggleCheckbox = (id, key) => setFormattedData(fd => fd.map(r => r.id === id ? { ...r, [key]: r[key] === 1 ? 0 : 1 } : r));
-  const updateReversasSubmit = async () => { setIsSubmitting(true); try { await updateReversas(token, formattedData); } catch (e) { console.log(e); } finally { setIsSubmitting(false); fetchData(); } };
-  const atenderSiguiente = async () => { if (!selectedEstacion) return; setIsSubmitting(true); try { await getSiguiente(token, selectedEstacion.EstacionID, selectedEstacion.Modulo); } catch (e) { console.log(e); } finally { setIsSubmitting(false); fetchData(); } };
-  const SaltarNumero = async () => { if (!selectedEstacion) return; setIsSubmitting(true); try { await saltarNumero(token, selectedEstacion.EstacionID, selectedEstacion.Modulo); } catch (e) { console.log(e); } finally { setIsSubmitting(false); fetchData(); } };
+  const updateReversasSubmit = async () => { setIsSubmitting(true); try { await updateReversas(formattedData); } catch (e) { console.log(e); } finally { setIsSubmitting(false); fetchData(); } };
+  const atenderSiguiente = async () => { if (!selectedEstacion) return; setIsSubmitting(true); try { await getSiguiente(selectedEstacion.EstacionID, selectedEstacion.Modulo); } catch (e) { console.log(e); } finally { setIsSubmitting(false); fetchData(); } };
+  const SaltarNumero = async () => { if (!selectedEstacion) return; setIsSubmitting(true); try { await saltarNumero(selectedEstacion.EstacionID, selectedEstacion.Modulo); } catch (e) { console.log(e); } finally { setIsSubmitting(false); fetchData(); } };
 
   const reversasTable = (selectedEstacion && atencion && data.length > 0) ? (
     <Box sx={{ mt: 4, width: '100%' }}>

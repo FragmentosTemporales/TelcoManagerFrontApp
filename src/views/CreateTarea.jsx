@@ -23,7 +23,7 @@ import { palette } from "../theme/palette";
 export default function CreateTareaInterna() {
     const authState = useSelector((state) => state.auth);
     const { proyecto_id } = useParams();
-    const { token, user_id, area } = authState;
+    const { user_id, area } = authState;
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const [message, setMessage] = useState("");
@@ -45,7 +45,7 @@ export default function CreateTareaInterna() {
 
     const fetchUsuarios = async () => {
         try {
-            const response = await getUsuariosByArea(token, area.areaID);
+            const response = await getUsuariosByArea(area.areaID);
             setUsuarios(response);
             console.log("Usuarios fetched:", response);
         } catch (error) {
@@ -70,7 +70,7 @@ export default function CreateTareaInterna() {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            const response = await crearTareaProyectoInterno(formDataTarea, token);
+            const response = await crearTareaProyectoInterno(formDataTarea);
             setMessage("Tarea creada exitosamente.");
             setAlertType("success");
             setOpen(true);

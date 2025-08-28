@@ -1,36 +1,19 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-export const getObjetivos = async (token, gerencia, mes) => {
+export const getObjetivos = async (gerencia, mes) => {
   try {
-    const url = `${baseUrl}/get-objetivos/${gerencia}/${mes}`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-objetivos/${gerencia}/${mes}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const updateObjetivo = async (token, objetivoID, payload) => {
+export const updateObjetivo = async (objetivoID, payload) => {
   try {
-    const id = objetivoID;
-    const data = payload
-    const url = `${baseUrl}/update-objetivo/${id}`;
-    const response = await axios.put(url, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.put(`/update-objetivo/${objetivoID}`, payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

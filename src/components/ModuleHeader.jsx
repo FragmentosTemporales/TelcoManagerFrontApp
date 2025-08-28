@@ -1,15 +1,6 @@
 import { Box, Typography, Divider } from '@mui/material';
-import palette from '../theme/palette';
 
-/**
- * Encabezado estándar para módulos iniciados desde Home.
- * Props:
- *  - title: string (obligatorio)
- *  - subtitle: string (opcional)
- *  - maxWidth: ancho máximo del bloque interior (por defecto 840)
- *  - align: 'center' | 'left' (por defecto center)
- *  - divider: boolean (muestra Divider, por defecto true)
- */
+
 export function ModuleHeader({ title, subtitle, maxWidth = 840, align = 'center', divider = true }) {
   const isCenter = align === 'center';
   return (

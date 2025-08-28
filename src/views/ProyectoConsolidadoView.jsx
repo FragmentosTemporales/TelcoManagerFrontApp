@@ -8,7 +8,7 @@ import { getInfoProyecto } from '../api/onnetAPI';
 
 function ProyectoConsolidadoView() {
   const { id } = useParams();
-  const { token } = useSelector((s) => s.auth);
+  const authState = useSelector((s) => s.auth);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +29,7 @@ function ProyectoConsolidadoView() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const resp = await getInfoProyecto(token, id);
+      const resp = await getInfoProyecto(id);
       setData(resp[0]);
     } catch (e) {
       setMessage('Error al cargar el proyecto');

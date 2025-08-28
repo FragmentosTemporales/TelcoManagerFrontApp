@@ -20,7 +20,6 @@ import { extractDateOnly } from "../helpers/main";
 
 function NDCLogsError() {
     const authState = useSelector((state) => state.auth);
-    const { token } = authState;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,8 +30,7 @@ function NDCLogsError() {
     const fetchData = async () => {
         setIsSubmitting(true);
         try {
-            const response = await fetchLogsErrores(token);
-            console.log("Response from API:", response);
+            const response = await fetchLogsErrores();
             setData(response.errors);
             setTotal(response.total);
         } catch (error) {
@@ -106,10 +104,6 @@ function NDCLogsError() {
         window.scrollTo(0, 0);
         fetchData();
     }, []);
-
-    useEffect(() => {
-        console.log(data)
-    }, [data]);
 
 
     return (

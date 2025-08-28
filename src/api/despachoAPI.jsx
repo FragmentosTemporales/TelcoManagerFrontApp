@@ -1,298 +1,184 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-export const createAgendamiento = async (payload, token) => {
+export const createAgendamiento = async (payload) => {
   try {
-    const url = `${baseUrl}/create-agendamiento`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post('/create-agendamiento', payload);
     return response.data;
   } catch (error) {
-    console.log(error)
-    throw error.response.data.error;
+    console.log(error);
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getAgendamientos = async (token, page) => {
+export const getAgendamientos = async (page) => {
   try {
-    const url = `${baseUrl}/get-agendamientos/${page}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-agendamientos/${page}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getAllAgendamientos = async (token, page) => {
+export const getAllAgendamientos = async (page) => {
   try {
-    const url = `${baseUrl}/get-all-agendamientos/${page}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-all-agendamientos/${page}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getDataAgendamientos = async (token, fecha) => {
+export const getDataAgendamientos = async (fecha) => {
   try {
-    const url = `${baseUrl}/get-data-agendamientos/${fecha}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-data-agendamientos/${fecha}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getDataFuturaAgendamientos = async (token) => {
+export const getDataFuturaAgendamientos = async () => {
   try {
-    const url = `${baseUrl}/get-data-futura-agendamiento`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-data-futura-agendamiento');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getDataHistoricaAgendamientos = async (token) => {
+export const getDataHistoricaAgendamientos = async () => {
   try {
-    const url = `${baseUrl}/get-data-historica-agendamiento`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-data-historica-agendamiento');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const filterAgendamiento = async (token, fechaInicio, fechaFin) => {
+export const filterAgendamiento = async (fechaInicio, fechaFin) => {
   try {
-    const url = `${baseUrl}/agendamientos-filtered/${fechaInicio}&${fechaFin}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/agendamientos-filtered/${fechaInicio}&${fechaFin}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getDespachosSemenalExcel = async (token) => {
+export const getDespachosSemenalExcel = async () => {
   try {
-    const url = `${baseUrl}/get-despachos-semanales-excel`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      responseType: "blob", // Set the response type to "blob" to handle binary data
-    });
+    const response = await client.get('/get-despachos-semanales-excel', { responseType: 'blob' });
 
-    // Create a download link for the Excel file
     const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = urlBlob;
-    link.setAttribute("download", "despachos.xlsx"); // Set the file name
+    link.setAttribute('download', 'despachos.xlsx');
     document.body.appendChild(link);
     link.click();
     link.remove();
 
-    return "Archivo descargado exitosamente."; // Optional success message
+    return 'Archivo descargado exitosamente.';
   } catch (error) {
-    throw error.response?.data?.error || "Error al descargar el archivo.";
+    throw error.response?.data?.error || 'Error al descargar el archivo.';
   }
 };
 
-export const createMigracion = async (payload, token) => {
+export const createMigracion = async (payload) => {
   try {
-    const url = `${baseUrl}/despacho/create-migracion-proactiva`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post('/despacho/create-migracion-proactiva', payload);
     return response.data;
   } catch (error) {
-    console.log(error)
-    throw error.response.data.error;
+    console.log(error);
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getDataMigracionesProactivas = async (token, page) => {
+export const getDataMigracionesProactivas = async (page) => {
   try {
-    const url = `${baseUrl}/despacho/get-migraciones-proactivas/${page}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/despacho/get-migraciones-proactivas/${page}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getDataMigracionesPendientes = async (token) => {
+export const getDataMigracionesPendientes = async () => {
   try {
-    const url = `${baseUrl}/despacho/get-migraciones-pendientes`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/despacho/get-migraciones-pendientes');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getDataMigracionesComunas = async (token) => {
+export const getDataMigracionesComunas = async () => {
   try {
-    const url = `${baseUrl}/despacho/get-migraciones-comunas`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/despacho/get-migraciones-comunas');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getMigracionUnica = async (id, token) => {
+export const getMigracionUnica = async (id) => {
   try {
-    const url = `${baseUrl}/despacho/get-migracion/${id}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/despacho/get-migracion/${id}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getMigracionGestiones = async (id, token) => {
+export const getMigracionGestiones = async (id) => {
   try {
-    const url = `${baseUrl}/despacho/get-migracion-gestion/${id}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/despacho/get-migracion-gestion/${id}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getQMigracionesPendientesdeVista = async (token) => {
+export const getQMigracionesPendientesdeVista = async () => {
   try {
-    const url = `${baseUrl}/despacho/get-q-migraciones-pendientes`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/despacho/get-q-migraciones-pendientes');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getMigracionFiltrada = async (token, id_vivienda) => {
+export const getMigracionFiltrada = async (id_vivienda) => {
   try {
-    const url = `${baseUrl}/despacho/get-migracion-filtrada/${id_vivienda}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/despacho/get-migracion-filtrada/${id_vivienda}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getClienteMigracion = async (payload, token) => {
+export const getClienteMigracion = async (payload) => {
   try {
-    const url = `${baseUrl}/despacho/get-migracion-proactiva`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post('/despacho/get-migracion-proactiva', payload);
     return response.data;
   } catch (error) {
-    console.log(error)
-    throw error.response.data.error;
+    console.log(error);
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getMigracionesExcel = async (token) => {
+export const getMigracionesExcel = async () => {
   try {
-    const url = `${baseUrl}/despacho/get-migraciones-historicas-excel`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      responseType: "blob", // Set the response type to "blob" to handle binary data
-    });
+    const response = await client.get('/despacho/get-migraciones-historicas-excel', { responseType: 'blob' });
 
-    // Create a download link for the Excel file
     const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = urlBlob;
-    link.setAttribute("download", "migraciones.xlsx"); // Set the file name
+    link.setAttribute('download', 'migraciones.xlsx');
     document.body.appendChild(link);
     link.click();
     link.remove();
 
-    return "Archivo descargado exitosamente."; // Optional success message
+    return 'Archivo descargado exitosamente.';
   } catch (error) {
-    throw error.response?.data?.error || "Error al descargar el archivo.";
+    throw error.response?.data?.error || 'Error al descargar el archivo.';
   }
 };

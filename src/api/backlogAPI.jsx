@@ -1,75 +1,46 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-export const getAllBacklog = async (token, page, payload) => {
+export const getAllBacklog = async (page, payload) => {
   try {
-    const url = `${baseUrl}/get-backlog-list/${page}`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post(`/get-backlog-list/${page}`, payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getBacklog = async (payload, token) => {
+export const getBacklog = async (payload) => {
   try {
-    const url = `${baseUrl}/get-backlog`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/get-backlog', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const createBacklogEstado = async (payload, token) => {
+export const createBacklogEstado = async (payload) => {
   try {
-    const url = `${baseUrl}/create-backlog-estado`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-    });
+    const response = await client.post('/create-backlog-estado', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getBacklogEstado = async (token, orden) => {
+export const getBacklogEstado = async (orden) => {
   try {
-    const url = `${baseUrl}/get-backlog-estado/${orden}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-backlog-estado/${orden}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getOrdenInfo = async (token, orden) => {
+export const getOrdenInfo = async (orden) => {
   try {
-    const url = `${baseUrl}/get-orden/${orden}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-orden/${orden}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

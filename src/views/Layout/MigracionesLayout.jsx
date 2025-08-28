@@ -15,7 +15,6 @@ import palette from "../../theme/palette";
 function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
 
     const authState = useSelector((state) => state.auth);
-    const { token } = authState;
 
     const migracionState = useSelector((state) => state.migraciones);
     const { id_selected } = migracionState;
@@ -40,7 +39,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
 
     const fetchPendientesVista = async () => {
         try {
-            const response = await getQMigracionesPendientesdeVista(token);
+            const response = await getQMigracionesPendientesdeVista();
             setQMigracionesPendientesVista(response);
         } catch (error) {
             console.log(error);
@@ -50,7 +49,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
     const fetchGestiones = async () => {
         setDataGestiones([]);
         try {
-            const response = await getMigracionGestiones(id_vivienda, token);
+            const response = await getMigracionGestiones(id_vivienda);
             setDataGestiones(response);
         } catch (error) {
             console.log(error);
@@ -59,7 +58,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
 
     const fetchPendientes = async () => {
         try {
-            const response = await getDataMigracionesPendientes(token);
+            const response = await getDataMigracionesPendientes();
             setDataPendiente(response.data);
         } catch (error) {
             console.log(error);
@@ -78,7 +77,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
         if (id_vivienda) {
             fetchGestiones();
         }
-    }, [id_vivienda, token]);
+    }, [id_vivienda]);
 
     const sideWidth = 300; // px
 

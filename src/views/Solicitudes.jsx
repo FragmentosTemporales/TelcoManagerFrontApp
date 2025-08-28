@@ -38,7 +38,7 @@ import ModuleHeader from "../components/ModuleHeader";
 function Solicitudes() {
   const authState = useSelector((state) => state.auth);
   const solicitudState = useSelector((state) => state.solicitud);
-  const { token } = authState;
+  const {  } = authState;
   const { message, data, is_loading, is_load, pages, total } = solicitudState;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -54,7 +54,7 @@ function Solicitudes() {
     try {
       dispatch(onLoading());
       setIsSubmitting(true);
-      const res = await getSolicitudesFiltradas(token, toFilter, page);
+  const res = await getSolicitudesFiltradas(toFilter, page);
       dispatch(onLoad(res));
       setIsSubmitting(false);
     } catch (error) {
@@ -77,7 +77,7 @@ function Solicitudes() {
     try {
       setToFilter({ folio: "", estado: "" });
       setPage(1); // Reset to the first page
-      await getSolicitudesFiltradas(token, { folio: "", estado: "" }, 1).then(
+  await getSolicitudesFiltradas({ folio: "", estado: "" }, 1).then(
         (res) => {
           dispatch(onLoad(res));
         }
@@ -99,7 +99,7 @@ function Solicitudes() {
   const getExcel = async () => {
     setIsSubmitting(true);
     try {
-      await getSolicitudesExcel(token);
+  await getSolicitudesExcel();
     } catch (error) {
       console.log(error);
     }

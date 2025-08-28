@@ -1,217 +1,128 @@
-import axios from "axios";
+import client from './axiosClient';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-export const createSolicitud = async (payload, token) => {
+export const createSolicitud = async (payload) => {
   try {
-    const url = `${baseUrl}/create-solicitud`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post('/create-solicitud', payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getSolicitudes = async (token, page) => {
+export const getSolicitudes = async (page) => {
   try {
-    const pagina = page
-    const url = `${baseUrl}/get-solicitudes/${pagina}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-solicitudes/${page}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getSolicitudesByUser = async (token, page) => {
+export const getSolicitudesByUser = async (page) => {
   try {
-    const url = `${baseUrl}/get-solicitudes-by-user/${page}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-solicitudes-by-user/${page}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getSolicitudePendientes = async (token) => {
+export const getSolicitudePendientes = async () => {
   try {
-    const url = `${baseUrl}/get-solicitudes-pendientes`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-solicitudes-pendientes');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getSolicitudeStats = async (token) => {
+export const getSolicitudeStats = async () => {
   try {
-    const url = `${baseUrl}/get-stats-solicitudes`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-stats-solicitudes');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getSolicitudeStatsByUser = async (token) => {
+export const getSolicitudeStatsByUser = async () => {
   try {
-    const url = `${baseUrl}/get-stats-solicitudes-by-user`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get('/get-stats-solicitudes-by-user');
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getSolicitudesExcel = async (token) => {
+export const getSolicitudesExcel = async () => {
   try {
-    const url = `${baseUrl}/get-all-solicitudes-excel`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      responseType: "blob", // Set the response type to "blob" to handle binary data
-    });
+    const response = await client.get('/get-all-solicitudes-excel', { responseType: 'blob' });
 
     // Create a download link for the Excel file
     const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = urlBlob;
-    link.setAttribute("download", "solicitudes.xlsx"); // Set the file name
+    link.setAttribute('download', 'solicitudes.xlsx');
     document.body.appendChild(link);
     link.click();
     link.remove();
 
-    return "Archivo descargado exitosamente."; // Optional success message
+    return 'Archivo descargado exitosamente.';
   } catch (error) {
-    throw error.response?.data?.error || "Error al descargar el archivo.";
+    throw error.response?.data?.error || 'Error al descargar el archivo.';
   }
 };
 
-export const getSolicitudesFiltradas = async (token, payload, page) => {
+export const getSolicitudesFiltradas = async (payload, page) => {
   try {
-    const url = `${baseUrl}/get-filtered-solicitudes/${page}`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post(`/get-filtered-solicitudes/${page}`, payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getFilteredSolicitudes = async (token, estadoID, page) => {
+export const getFilteredSolicitudes = async (estadoID, page) => {
   try {
-    const pagina = page
-    const estado = estadoID
-    const url = `${baseUrl}/get-solicitudes/${estado}&${pagina}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-solicitudes/${estadoID}&${page}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const getUniqueSolicitud = async (token, solicitud_id) => {
+export const getUniqueSolicitud = async (solicitud_id) => {
   try {
-    const id = solicitud_id;
-    const url = `${baseUrl}/get-solicitud/${id}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.get(`/get-solicitud/${solicitud_id}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const updateSolicitud = async (token, solicitud_id, payload) => {
+export const updateSolicitud = async (solicitud_id, payload) => {
   try {
-    const id = solicitud_id;
-    const data = payload
-    const url = `${baseUrl}/update-solicitud/${id}`;
-    const response = await axios.put(url, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.put(`/update-solicitud/${solicitud_id}`, payload);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const deleteSolicitud = async (token, solicitud_id) => {
+export const deleteSolicitud = async (solicitud_id) => {
   try {
-    const id = solicitud_id;
-    const url = `${baseUrl}/update-solicitud/${id}`;
-    const response = await axios.delete(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.delete(`/update-solicitud/${solicitud_id}`);
     return response.data;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };
 
-export const createFolio = async (payload, token) => {
+export const createFolio = async (payload) => {
   try {
-
-    const url = `${baseUrl}/create-folio`;
-    const response = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await client.post('/create-folio', payload);
     return response;
   } catch (error) {
-    throw error.response.data.error;
+    throw error.response?.data?.error || error.message;
   }
 };

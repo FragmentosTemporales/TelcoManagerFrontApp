@@ -36,7 +36,7 @@ import ModuleHeader from "../components/ModuleHeader";
 
 function AgendamientoViewer() {
   const authState = useSelector((state) => state.auth);
-  const { token, user_id } = authState;
+  const { user_id } = authState;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [alertType, setAlertType] = useState(undefined);
@@ -271,7 +271,7 @@ function AgendamientoViewer() {
     };
 
     try {
-      const response = await createBacklogEstado(payload, token);
+  const response = await createBacklogEstado(payload);
       setAlertType("success");
       setMessage(response.message);
       setOpen(true);
@@ -296,7 +296,7 @@ function AgendamientoViewer() {
   const fetchBacklog = async () => {
     setIsLoadingBacklog(true);
     try {
-      const response = await getBacklog(formGetBacklog, token);
+  const response = await getBacklog(formGetBacklog);
       setDataBacklog(response);
     } catch (error) {
       setAlertType("error");
@@ -309,7 +309,7 @@ function AgendamientoViewer() {
   const fetchBacklogEstado = async (orden) => {
     setIsLoadingBacklogEstado(true);
     try {
-      const response = await getBacklogEstado(token, orden);
+      const response = await getBacklogEstado(orden);
       setDataBacklogEstado(response);
     } catch (error) {
       setAlertType("error");

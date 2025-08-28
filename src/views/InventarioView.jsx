@@ -27,7 +27,9 @@ import ModuleHeader from "../components/ModuleHeader";
 
 export default function InventarioView() {
     const authState = useSelector((state) => state.auth);
-    const { token, estacion, user_id } = authState;
+    const { estacion, user_id } = authState;
+    // Normalize user_id to a number to avoid strict equality issues when user_id is a string
+    const normalizedUserId = Number(user_id);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [openModal, setOpenModal] = useState(false);
@@ -55,10 +57,14 @@ export default function InventarioView() {
         window.scrollTo(0, 0);
     }, []);
 
+    useEffect(()=>{
+        console.log("USER ID : ", user_id)
+    },[])
+
     const fetchTecnicos = async () => {
         setLoading(true);
         try {
-            const res = await getTecnicos({ "estacion": estacion }, token);
+            const res = await getTecnicos({ "estacion": estacion });
             setData(res.data);
             setDataFiltered(res.data);
         } catch (error) {
@@ -79,12 +85,12 @@ export default function InventarioView() {
         }, 15000); // 15 segundos
 
         return () => clearInterval(intervalId);
-    }, [estacion, token]);
+    }, [estacion]);
 
     const fetchStats = async () => {
         setLoadingStats(true);
         try {
-            const res = await getTecnicosStats(token);
+            const res = await getTecnicosStats();
             setStatsUsers(res);
         } catch (error) {
             console.error(error);
@@ -95,7 +101,7 @@ export default function InventarioView() {
     const generarAvance = async () => {
         setIsSubmitting(true);
         try {
-            const res = await avanzarTecnico(formSiguiente, token);
+            const res = await avanzarTecnico(formSiguiente);
             setAlertSeverity("success");
             setMensaje(res.data.message);
             fetchTecnicos();
@@ -240,7 +246,7 @@ export default function InventarioView() {
     );
 
     const filterCard = () => {
-        if (user_id === 1) return null;
+        if (normalizedUserId === 1) return null;
 
         return (
             <Box
@@ -339,7 +345,7 @@ export default function InventarioView() {
     };
 
     const botonActualizar = () => {
-        if (user_id == 1) return null;
+        if (normalizedUserId === 1) return null;
         return (
             <Box
                 sx={{
@@ -431,7 +437,7 @@ export default function InventarioView() {
     )
 
     const tecnicosTable = () => {
-        if (user_id == 1) return null;
+    if (normalizedUserId === 1) return null;
 
         if (loading) {
             return (

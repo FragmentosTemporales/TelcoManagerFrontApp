@@ -18,7 +18,6 @@ import palette from "../theme/palette";
 
 function LoadConstruccion() {
   const authState = useSelector((state) => state.auth);
-  const { token } = authState;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);
@@ -46,7 +45,7 @@ function LoadConstruccion() {
       formData.append("file", form.file);
     }
     try {
-      const response = await sendPlantillaConstruccion(formData, token);
+  const response = await sendPlantillaConstruccion(formData);
       setAlertType("success");
       setMessage(response.message);
       setOpen(true);
