@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { getNumeros } from "../api/totemAPI";
 import { playAlertSound } from "../helpers/sounds";
 import palette from "../theme/palette";
-import React from "react";
 
 function BodegaViewer() {
   const [dataBodega, setDataBodega] = useState([]);

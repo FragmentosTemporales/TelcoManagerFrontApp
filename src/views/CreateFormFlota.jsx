@@ -10,7 +10,7 @@ import {
   Typography
 } from "@mui/material";
 import FeedIcon from '@mui/icons-material/Feed';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { createFormFlota } from "../api/formsAPI";
@@ -19,7 +19,6 @@ import { onLoad, onLoading, setMessage } from "../slices/formSlice";
 
 function FormFlota() {
   const {logID} = useParams()
-  const authState = useSelector((state) => state.auth);
   const formState = useSelector((state) => state.form);
   const { message } = formState;
   const dispatch = useDispatch();

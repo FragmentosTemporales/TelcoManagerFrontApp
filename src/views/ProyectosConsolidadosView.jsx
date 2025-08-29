@@ -22,7 +22,6 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {
   getProyectosFiltrados,
@@ -36,7 +35,6 @@ import { MainLayout } from "./Layout";
 import { palette } from "../theme/palette";
 
 function ProyectosOnNetView() {
-  const authState = useSelector((state) => state.auth);
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(1);
   const [alertType, setAlertType] = useState("info");

@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import { PieChart } from '@mui/x-charts/PieChart';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { useSelector } from "react-redux";
 import { NdcLayout } from "./Layout";
 import { palette } from "../theme/palette";
 import { useEffect, useState } from "react";
@@ -24,7 +23,6 @@ import { fetchPendientesSinConsumo, updateOrdenSinConsumo, fetchPendientesStats 
 import { extractDateOnly } from "../helpers/main";
 
 function NDCSinConsumoUpdate() {
-    const authState = useSelector((state) => state.auth);
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
     const [open, setOpen] = useState(false);

@@ -24,12 +24,10 @@ import {
   cancelarAtencion,
   getUserInfo,
 } from "../api/totemAPI";
-import { useSelector } from "react-redux";
 import { MainLayout } from "./Layout";
 import palette from '../theme/palette';
 
 function SupervisorViewRM() {
-  const authState = useSelector((state) => state.auth);
   const [data, setData] = useState([]);
   const [userData, setUserData] = useState(null);
   const [trabajador, setTrabajador] = useState(undefined);

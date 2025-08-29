@@ -19,7 +19,6 @@ import { palette } from "../theme/palette";
 
 function FormPrevencion() {
   const { logID } = useParams();
-  const authState = useSelector((state) => state.auth);
   const formState = useSelector((state) => state.form);
   const { message } = formState;
   const dispatch = useDispatch();

@@ -10,7 +10,7 @@ import {
   Fade,
   Stack,
 } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import LockIcon from "@mui/icons-material/Lock";
 import { useState } from "react";
 import { updatePass } from "../api/authAPI";
@@ -21,7 +21,6 @@ import { palette } from "../theme/palette";
 
 function Settings() {
   const dispatch = useDispatch();
-  const authState = useSelector((state) => state.auth);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [open, setOpen] = useState(false);

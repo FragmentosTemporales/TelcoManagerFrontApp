@@ -28,7 +28,6 @@ import ModuleHeader from "../components/ModuleHeader";
 export default function InventarioView() {
     const authState = useSelector((state) => state.auth);
     const { estacion, user_id } = authState;
-    // Normalize user_id to a number to avoid strict equality issues when user_id is a string
     const normalizedUserId = Number(user_id);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
@@ -56,10 +55,6 @@ export default function InventarioView() {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
-    useEffect(()=>{
-        console.log("USER ID : ", user_id)
-    },[])
 
     const fetchTecnicos = async () => {
         setLoading(true);

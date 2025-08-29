@@ -21,6 +21,32 @@ function Home() {
       link: "/modulo:gestion-ticketera",
       moduloID: 26,
     },
+
+    {
+      head: "Carga Cubicado Onnet",
+      title: "Carga los cubículos de Onnet",
+      link: "/modulo:carga-consumo/cubicado_onnet",
+      moduloID: 4,
+    },
+    {
+      head: "Carga Cubicado Telefonica",
+      title: "Carga los cubículos de Telefonica",
+      link: "/modulo:carga-consumo/cubicado_telefonica",
+      moduloID: 4,
+    },
+    {
+      head: "Carga Ejecutado Onnet",
+      title: "Carga los ejecutados de Onnet",
+      link: "/modulo:carga-consumo/ejecutado_onnet",
+      moduloID: 4,
+    },
+    {
+      head: "Carga Ejecutado Telefonica",
+      title: "Carga los ejecutados de Telefonica",
+      link: "/modulo:carga-consumo/ejecutado_telefonica",
+      moduloID: 4,
+    },
+
     {
       head: "Registros DomApp",
       title: "Visualiza, filtra y monitorea los últimos registros de las automatizaciones en DomApp.",
@@ -50,13 +76,13 @@ function Home() {
       head: "Creación de Reparaciones",
       title: "Carga las pruebas de las reparaciones realizadas",
       link: "/modulo:registro-reparacion",
-      moduloID: 26,
+      moduloID: 4,
     },
     {
       head: "Registro de Reparaciones",
       title: "Visualiza las reparaciones realizadas",
       link: "/modulo:reparaciones",
-      moduloID: 26,
+      moduloID: 4,
     },
     {
       head: "NDC_Bot Manager",
@@ -69,12 +95,6 @@ function Home() {
       title: "Listado de Solicitudes de Amonestación",
       link: "/modulo:solicitudes",
       moduloID: 3,
-    },
-    {
-      head: "Área de Creación",
-      title: "Espacio para crear nuevos usuarios",
-      link: "/createzone",
-      moduloID: 4,
     },
     {
       head: "Gestión Formularios AST",
@@ -168,6 +188,8 @@ function Home() {
       (permiso) => permiso.moduloID === seccion.moduloID && permiso.access
     )
   );
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

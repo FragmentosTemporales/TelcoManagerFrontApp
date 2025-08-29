@@ -14,19 +14,13 @@ import {
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getReparaciones } from "../api/calidadAPI";
-import { useParams, Link } from "react-router-dom";
-import { fetchFileUrl } from "../api/downloadApi";
 import { CalidadLayout } from "./Layout";
 import { palette } from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 
 function ReparacionesView() {
-    const authState = useSelector((state) => state.auth);
-    const { logID } = useParams();
-    const { area } = authState;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [alertType, setAlertType] = useState(undefined);

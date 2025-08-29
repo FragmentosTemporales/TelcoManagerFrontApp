@@ -7,17 +7,14 @@ import {
   CardContent,
   InputLabel,
   TextField,
-  Typography,
   LinearProgress,
 } from "@mui/material";
-import { useSelector } from "react-redux";
 import { useState } from "react";
 import { sendPlantillaConstruccion } from "../api/onnetAPI";
 import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
 
 function LoadConstruccion() {
-  const authState = useSelector((state) => state.auth);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);

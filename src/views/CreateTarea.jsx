@@ -2,11 +2,6 @@ import {
     Alert,
     Box,
     Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Divider,
-    InputLabel,
     MenuItem,
     Select,
     TextField,
@@ -23,7 +18,7 @@ import { palette } from "../theme/palette";
 export default function CreateTareaInterna() {
     const authState = useSelector((state) => state.auth);
     const { proyecto_id } = useParams();
-    const { user_id, area } = authState;
+    const { area } = authState;
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const [message, setMessage] = useState("");

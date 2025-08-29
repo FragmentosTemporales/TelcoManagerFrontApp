@@ -29,13 +29,11 @@ import {
   filterAgendamiento,
   getDespachosSemenalExcel,
 } from "../api/despachoAPI";
-import { useSelector } from "react-redux";
 import extractDate from "../helpers/main";
 import { Link } from "react-router-dom";
 import palette from "../theme/palette";
 
 function AllAgendamientoViewer() {
-  const authState = useSelector((state) => state.auth);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [alertType, setAlertType] = useState(undefined);

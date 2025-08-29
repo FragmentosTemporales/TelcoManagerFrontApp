@@ -1,14 +1,12 @@
 // CLEAN REWRITE
 import React, { useEffect, useState } from 'react';
 import { Alert, Box, Button, Card, CardHeader, CardContent, LinearProgress, Skeleton } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import palette from '../theme/palette';
 import { getInfoProyecto } from '../api/onnetAPI';
 
 function ProyectoConsolidadoView() {
   const { id } = useParams();
-  const authState = useSelector((s) => s.auth);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);

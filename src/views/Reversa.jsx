@@ -27,7 +27,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 import Checkbox from "@mui/material/Checkbox";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {
   getReversas,
@@ -41,7 +40,6 @@ import { palette } from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 
 function ReversaView() {
-  const authState = useSelector((state) => state.auth);
   const [rut, setRut] = useState("");
   const [serie, setSerie] = useState("");
   const [open, setOpen] = useState(false);

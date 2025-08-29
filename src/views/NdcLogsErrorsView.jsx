@@ -11,7 +11,6 @@ import {
     Typography,
     Paper,
 } from "@mui/material";
-import { useSelector } from "react-redux";
 import { NdcLayout } from "./Layout";
 import { palette } from "../theme/palette";
 import { useEffect, useState } from "react";
@@ -19,7 +18,6 @@ import { fetchLogsErrores } from "../api/logisticaAPI";
 import { extractDateOnly } from "../helpers/main";
 
 function NDCLogsError() {
-    const authState = useSelector((state) => state.auth);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [isSubmitting, setIsSubmitting] = useState(false);

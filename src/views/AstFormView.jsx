@@ -2,14 +2,12 @@ import { Box, Button, Skeleton, Typography } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAst } from "../api/prevencionAPI";
-import { useSelector } from "react-redux";
 import extractDate from "../helpers/main";
 import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
 
 function AstViewer() {
   const { formID } = useParams();
-  const authState = useSelector((state) => state.auth);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
   const [worker, setWorker] = useState(null);

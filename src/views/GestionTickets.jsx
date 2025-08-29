@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { Gauge } from "@mui/x-charts/Gauge";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getTicketera, getStatsTicket } from "../api/ticketeraAPI";
 import { Link } from "react-router-dom";
@@ -27,7 +26,6 @@ import palette from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 
 function GestorTicketera() {
-  const authState = useSelector((state) => state.auth);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);

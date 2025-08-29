@@ -5,18 +5,14 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
-  InputLabel,
   Modal,
   Skeleton,
   Table,
   TableContainer,
-  Paper,
   TableBody,
   TableHead,
   TableRow,
   TableCell,
-  TextField,
   Typography,
 } from "@mui/material";
 import { useParams, Link } from "react-router-dom";

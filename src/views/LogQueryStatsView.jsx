@@ -23,7 +23,6 @@ import {
   getLogQueryTimeTotalByEndpoint,
   getLogQuerySemanal,
 } from "../api/query_logs_api";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { MainLayout } from "./Layout";
 import { extractDateOnly } from "../helpers/main";
@@ -32,7 +31,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ModuleHeader from "../components/ModuleHeader";
 
 function LogQueryStats() {
-  const authState = useSelector((state) => state.auth);
   const [logsDataTime, setLogsDataTime] = useState([]);
   const [logsDataSemanal, setLogsDataSemanal] = useState([]);
   const [logsDataTop, setLogsDataTop] = useState([]);

@@ -198,7 +198,6 @@ function ProyectoInternoView() {
     </Modal>
   )
 
-
   const getSelectValue = (tarea) => {
     // First check if there's a local state for this task
     if (localEstados[tarea.id]) {
@@ -214,6 +213,10 @@ function ProyectoInternoView() {
   useEffect(() => {
     area && area.areaID && fetchData();
   }, [area]);
+
+  useEffect(()=>{
+    window.scrollTo(0,0);
+  },[])
 
 
   return (

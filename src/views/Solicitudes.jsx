@@ -15,8 +15,6 @@ import {
   TableRow,
   Typography,
   TextField,
-  Divider,
-  Chip,
 } from "@mui/material";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -36,9 +34,7 @@ import { palette } from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 
 function Solicitudes() {
-  const authState = useSelector((state) => state.auth);
   const solicitudState = useSelector((state) => state.solicitud);
-  const {  } = authState;
   const { message, data, is_loading, is_load, pages, total } = solicitudState;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -54,7 +50,7 @@ function Solicitudes() {
     try {
       dispatch(onLoading());
       setIsSubmitting(true);
-  const res = await getSolicitudesFiltradas(toFilter, page);
+      const res = await getSolicitudesFiltradas(toFilter, page);
       dispatch(onLoad(res));
       setIsSubmitting(false);
     } catch (error) {
@@ -77,7 +73,7 @@ function Solicitudes() {
     try {
       setToFilter({ folio: "", estado: "" });
       setPage(1); // Reset to the first page
-  await getSolicitudesFiltradas({ folio: "", estado: "" }, 1).then(
+      await getSolicitudesFiltradas({ folio: "", estado: "" }, 1).then(
         (res) => {
           dispatch(onLoad(res));
         }
@@ -99,7 +95,7 @@ function Solicitudes() {
   const getExcel = async () => {
     setIsSubmitting(true);
     try {
-  await getSolicitudesExcel();
+      await getSolicitudesExcel();
     } catch (error) {
       console.log(error);
     }
@@ -302,26 +298,26 @@ function Solicitudes() {
         disabled={isSubmitting}
         onClick={getExcel}
         sx={{
-                            width: "200px",
-                            background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
-                            color: '#fff',
-                            transition: 'all .35s',
-                            '&:before': {
-                                content: '""',
-                                position: 'absolute',
-                                inset: 0,
-                                background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
-                                mixBlendMode: 'overlay',
-                                pointerEvents: 'none'
-                            },
-                            '&:hover': {
-                                transform: 'translateY(-3px)',
-                                boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
-                                background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
-                            },
-                            '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
-                            '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
-                        }}
+          width: "200px",
+          background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+          color: '#fff',
+          transition: 'all .35s',
+          '&:before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+            mixBlendMode: 'overlay',
+            pointerEvents: 'none'
+          },
+          '&:hover': {
+            transform: 'translateY(-3px)',
+            boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+            background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+          },
+          '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+          '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+        }}
       >
         <InsertDriveFileIcon /> {isSubmitting ? "Descargando..." : "Descargar"}
       </Button>

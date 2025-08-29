@@ -19,11 +19,9 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import BarChartIcon from "@mui/icons-material/BarChart";
-// import SearchIcon from "@mui/icons-material/Search"; // no longer used
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import {
   getAstList,
   getNotAstCC,
@@ -37,7 +35,6 @@ import palette from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 
 function FormAstList() {
-  const authState = useSelector((state) => state.auth);
   const [data, setData] = useState(undefined);
   const [dataUsers, setDataUsers] = useState(undefined);
   const [dataStatsCC, setDataStatsCC] = useState(undefined);

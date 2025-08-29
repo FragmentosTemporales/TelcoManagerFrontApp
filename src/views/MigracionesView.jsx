@@ -19,7 +19,6 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import {
   getDataMigracionesProactivas,
   getMigracionesExcel,
@@ -30,7 +29,6 @@ import { palette } from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 
 function MigracionesViewer() {
-  const authState = useSelector((state) => state.auth);
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);

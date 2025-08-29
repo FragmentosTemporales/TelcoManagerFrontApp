@@ -3,15 +3,13 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getSolicitudesByUser } from "../api/solicitudAPI";
 import { setMessage } from "../slices/solicitudSlice";
 import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
 
 function AmonesatacionesViewer() {
-  // auth state kept for potential future use (user, estacion, etc.)
-  const authState = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);

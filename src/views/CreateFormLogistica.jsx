@@ -18,8 +18,7 @@ import {
   import { onLoad, onLoading, setMessage } from "../slices/formSlice";
   
   function FormLogistica() {
-    const {logID} = useParams()
-  const authState = useSelector((state) => state.auth);
+    const {logID} = useParams();
     const formState = useSelector((state) => state.form);
     const { message } = formState;
     const dispatch = useDispatch();

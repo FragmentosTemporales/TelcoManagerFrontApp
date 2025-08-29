@@ -12,7 +12,6 @@ import FormRRHH from "./views/CreateFormRRHH";
 import FormOperaciones from "./views/CreateFormOperaciones";
 import FormLogistica from "./views/CreateFormLogistica";
 import ReversaView from "./views/Reversa";
-import CreateZone from "./views/CreateZone";
 import ObjetivosView from "./views/Objetivos";
 import FormAstList from "./views/AstListView";
 import AstViewer from "./views/AstFormView";
@@ -45,6 +44,7 @@ import ReparacionesView from "./views/ReparacionesView";
 import InventarioView from "./views/InventarioView";
 import CreateTareaInterna from "./views/CreateTarea";
 import LatestLogsView from "./views/LatestLogsView";
+import LoadPlantillaOnnet from "./views/LoadPlantillaOnnet";
 
 function App() {
   return (
@@ -63,7 +63,6 @@ function App() {
           <Route path="/OPERACIONES/:logID" element={<FormOperaciones />} />
           <Route path="/LOGISTICA/:logID" element={<FormLogistica />} />
           <Route path="/modulo:reversa" element={<ReversaView />} />
-          <Route path="/createzone" element={<CreateZone />} />
           <Route path="/objetivos" element={<ObjetivosView />} />
           <Route path="/form-ast-list" element={<FormAstList />} />
           <Route path="/formulario-ast/:formID" element={<AstViewer />} />
@@ -97,6 +96,9 @@ function App() {
 
           <Route path="/modulo:log-query" element={<LogQueryStats />} />
           <Route path="/modulo:inventario" element={<InventarioView />} />
+
+          <Route path="/modulo:carga-consumo/:plantilla_tipo" element={<LoadPlantillaOnnet />} />
+
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />
         <Route path="/bodegaQuinta" element={<BodegaQuintaViewer />} />

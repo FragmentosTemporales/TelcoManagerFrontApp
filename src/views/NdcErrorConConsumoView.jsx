@@ -46,7 +46,6 @@ function NDCErrorConConsumo() {
         setIsSubmitting(true);
         try {
             const res = await createOrdenValidada(updateForm);
-            console.log(res);
             setMessage("Orden validada correctamente");
             setUpdateForm({
                 orden: "",

@@ -71,3 +71,12 @@ export const sendPlantillaAgendaProyecto = async (payload) => {
     throw error.response?.data?.error || error.message;
   }
 };
+
+export const loadConsumosOnnet = async (payload, plantilla) => {
+  try {
+    const response = await client.post(`/load-plantilla/${plantilla}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
