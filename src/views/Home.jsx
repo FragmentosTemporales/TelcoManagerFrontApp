@@ -23,27 +23,9 @@ function Home() {
     },
 
     {
-      head: "Carga Cubicado Onnet",
-      title: "Carga los cubículos de Onnet",
-      link: "/modulo:carga-consumo/cubicado_onnet",
-      moduloID: 4,
-    },
-    {
-      head: "Carga Cubicado Telefonica",
-      title: "Carga los cubículos de Telefonica",
-      link: "/modulo:carga-consumo/cubicado_telefonica",
-      moduloID: 4,
-    },
-    {
-      head: "Carga Ejecutado Onnet",
-      title: "Carga los ejecutados de Onnet",
-      link: "/modulo:carga-consumo/ejecutado_onnet",
-      moduloID: 4,
-    },
-    {
-      head: "Carga Ejecutado Telefonica",
-      title: "Carga los ejecutados de Telefonica",
-      link: "/modulo:carga-consumo/ejecutado_telefonica",
+      head: "Mis Proyectos Asignados",
+      title: "Revisa la lista de proyectos asignados a tu empresa",
+      link: "/modulo:proyectos-asignados",
       moduloID: 4,
     },
 
@@ -175,12 +157,12 @@ function Home() {
       link: "/modulo:log-query",
       moduloID: 26,
     },
-    {
-      head: "Gestión Inventario",
-      title: "Gestiona lista de asistentes a inventario",
-      link: "/modulo:inventario",
-      moduloID: 28,
-    },
+    // {
+    //   head: "Gestión Inventario",
+    //   title: "Gestiona lista de asistentes a inventario",
+    //   link: "/modulo:inventario",
+    //   moduloID: 28,
+    // },
   ];
 
   const accesos = secciones.filter((seccion) =>

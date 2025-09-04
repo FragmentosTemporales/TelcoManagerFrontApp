@@ -18,7 +18,7 @@ import {
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getUniqueSolicitud, createFolio } from "../api/solicitudAPI";
+import { getUniqueSolicitud } from "../api/solicitudAPI";
 import extractDate from "../helpers/main";
 import { createSG } from "../api/sgAPI";
 import RrhhViewer from "../components/rrhhFormViewer";

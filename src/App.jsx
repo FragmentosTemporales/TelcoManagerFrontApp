@@ -44,7 +44,8 @@ import ReparacionesView from "./views/ReparacionesView";
 import InventarioView from "./views/InventarioView";
 import CreateTareaInterna from "./views/CreateTarea";
 import LatestLogsView from "./views/LatestLogsView";
-import LoadPlantillaOnnet from "./views/LoadPlantillaOnnet";
+import ProyectosAsignados from "./views/ProyectosAsignados";
+import ProyectoFiltrado from "./views/ProyectoFiltrado";
 
 function App() {
   return (
@@ -97,7 +98,8 @@ function App() {
           <Route path="/modulo:log-query" element={<LogQueryStats />} />
           <Route path="/modulo:inventario" element={<InventarioView />} />
 
-          <Route path="/modulo:carga-consumo/:plantilla_tipo" element={<LoadPlantillaOnnet />} />
+          <Route path="/modulo:proyectos-asignados" element={<ProyectosAsignados />} />
+          <Route path="/modulo:proyecto-filtrado/:contrato/:proyecto_id" element={<ProyectoFiltrado />} />
 
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />

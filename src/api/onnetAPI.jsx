@@ -1,5 +1,6 @@
 import client from './axiosClient';
 
+
 export const getQMacroEstado = async () => {
   try {
     const response = await client.get('/get-q-macro-estado');
@@ -75,6 +76,33 @@ export const sendPlantillaAgendaProyecto = async (payload) => {
 export const loadConsumosOnnet = async (payload, plantilla) => {
   try {
     const response = await client.post(`/load-plantilla/${plantilla}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getProyectosByEmpresa = async () => {
+  try {
+    const response = await client.get(`/get-proyectos-asignados-por-empresa`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getProyectobyID = async (proyecto_id) => {
+  try {
+    const response = await client.get(`/get-proyecto-filtrado-onnet-cubicado/${proyecto_id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const updateValidacionEstado = async (payload) => {
+  try {
+    const response = await client.put('/update-cubicado-estado', payload);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;
