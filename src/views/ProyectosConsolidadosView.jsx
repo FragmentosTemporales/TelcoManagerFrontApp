@@ -25,11 +25,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   getProyectosFiltrados,
-  getOptionToFilter,
-  sendPlantillaAgendaProyecto,
-  getQMacroEstado,
-  getQProyectosConResponsable,
-  getQProyectosSinResponsable,
+  getOptionToFilter
 } from "../api/onnetAPI";
 import { MainLayout } from "./Layout";
 import { palette } from "../theme/palette";
@@ -41,27 +37,15 @@ function ProyectosOnNetView() {
   const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [dataMacro, setDataMacro] = useState([]);
-  const [dataProyectoSin, setDataProyectoSin] = useState([]);
-  const [dataProyectoCon, setDataProyectoCon] = useState([]);
   const [toFilter, setToFilter] = useState({
     proyecto: "",
     bandeja: "",
-    categoria: "",
     agencia: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [optionsToFilter, setOptionsToFilter] = useState([]);
-
-  const categorias = [
-    { value: "Menor a 5 días", label: "Menor a 5 días" },
-    { value: "Entre 5 y 10 días", label: "Entre 5 y 10 días" },
-    { value: "Entre 10 y 15 días", label: "Entre 10 y 15 días" },
-    { value: "Entre 15 y 30 días", label: "Entre 15 y 30 días" },
-    { value: "Mayor a 30 días", label: "Mayor a 30 días" },
-  ];
 
   const agencias = [
     "CURICO",
@@ -98,73 +82,6 @@ function ProyectosOnNetView() {
     "TALCA",
   ];
 
-  const [formAgendas, setFormAgendas] = useState({
-    file: null,
-  });
-
-  const [formVisitas, setFormVisitas] = useState({
-    file: null,
-  });
-
-  const extractDate = (gmtString) => {
-    const date = new Date(gmtString);
-
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const day = String(date.getUTCDate()).padStart(2, "0");
-
-    const formattedDate = `${day}-${month}-${year}`;
-    return formattedDate;
-  };
-
-  const handleSubmitAgendas = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const formData = new FormData();
-
-    if (formAgendas.file) {
-      formData.append("file", formAgendas.file);
-    }
-    try {
-  const response = await sendPlantillaAgendaProyecto(formData);
-      console.log(response);
-      setAlertType("success");
-      setMessage("Archivo cargado correctamente.");
-      setOpen(true);
-    } catch (error) {
-      // Manejo de error específico si el archivo está abierto por otro proceso
-      let errorMsg = error?.message || error;
-      if (
-        typeof errorMsg === "string" &&
-        (errorMsg.includes("used by another process") ||
-          errorMsg.includes("no se puede obtener acceso al archivo") ||
-          errorMsg.includes("Failed to load"))
-      ) {
-        errorMsg =
-          "No se pudo cargar el archivo porque está abierto en otra aplicación. Por favor, cierre el archivo e intente nuevamente.";
-      }
-      setMessage(errorMsg);
-      setAlertType("error");
-      setOpen(true);
-    } finally {
-      setIsSubmitting(false);
-      setFormVisitas({ file: null }); // Limpiar el formulario después de enviar
-    }
-  };
-
-  const handleFileChangeAgendas = (e) => {
-    setFormAgendas({
-      file: e.target.files[0],
-    });
-  };
-
-  const handleFileChangeVisitas = (e) => {
-    setFormVisitas({
-      file: e.target.files[0],
-    });
-  };
-
   const fetchData = async () => {
     setIsLoading(true);
     setIsSubmitting(true);
@@ -181,50 +98,6 @@ function ProyectosOnNetView() {
     setIsSubmitting(false);
   };
 
-  const fetchDataMacro = async () => {
-    setIsLoading(true);
-    setIsSubmitting(true);
-    try {
-      const response = await getQMacroEstado();
-      setDataMacro(response);
-    } catch (error) {
-      setAlertType("error");
-      setMessage(error);
-      setOpen(true);
-    }
-    setIsLoading(false);
-    setIsSubmitting(false);
-  };
-
-  const fetchDataProyectosCon = async () => {
-    setIsLoading(true);
-    setIsSubmitting(true);
-    try {
-      const response = await getQProyectosConResponsable();
-      setDataProyectoCon(response);
-    } catch (error) {
-      setAlertType("error");
-      setMessage(error);
-      setOpen(true);
-    }
-    setIsLoading(false);
-    setIsSubmitting(false);
-  };
-
-  const fetchDataProyectosSin = async () => {
-    setIsLoading(true);
-    setIsSubmitting(true);
-    try {
-      const response = await getQProyectosSinResponsable();
-      setDataProyectoSin(response);
-    } catch (error) {
-      setAlertType("error");
-      setMessage(error);
-      setOpen(true);
-    }
-    setIsLoading(false);
-    setIsSubmitting(false);
-  };
 
   const fetchDataOptions = async () => {
     setIsLoading(true);
@@ -309,94 +182,6 @@ function ProyectosOnNetView() {
     }
   };
 
-  const loaderCard = () => (
-    <Box
-      sx={{
-        minHeight: "100px",
-        display: "flex",
-        flexDirection: { lg: "row", md: "column", xs: "column" },
-        gap: 2,
-        alignItems: "space-evenly",
-        width: "90%",
-        mb: 2,
-      }}
-    >
-      {[{
-        label: 'Agendas',
-        onChange: handleFileChangeAgendas,
-        onClick: handleSubmitAgendas,
-        disabled: isSubmitting,
-      }, {
-        label: 'Visitas',
-        onChange: handleFileChangeVisitas,
-        onClick: () => {},
-        disabled: true,
-      }].map((cfg, idx) => (
-        <Paper
-          key={cfg.label}
-          elevation={6}
-          sx={{
-            pt: 2,
-            pb: 2,
-            px: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 2,
-            width: { lg: "50%", md: "100%", xs: "100%" },
-            borderRadius: 3,
-            position: 'relative',
-            background: palette.cardBg,
-            border: `1px solid ${palette.borderSubtle}`,
-            backdropFilter: 'blur(4px)',
-            overflow: 'hidden',
-            '&:before': {
-              content: '""',
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%)',
-              pointerEvents: 'none'
-            }
-          }}
-        >
-          <Box sx={{ pb: 1, width: '100%' }}>
-            <InputLabel id={`${cfg.label}-label`} sx={{ fontWeight: 600, color: palette.primary }}>{cfg.label}</InputLabel>
-            <TextField
-              required
-              size="small"
-              fullWidth
-              id={`file-${idx}`}
-              type="file"
-              name="file"
-              variant="standard"
-              onChange={cfg.onChange}
-              InputProps={{ disableUnderline: false }}
-            />
-          </Box>
-          <Divider flexItem sx={{ width: '100%', borderColor: palette.borderSubtle }} />
-          <Box>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={cfg.disabled}
-              sx={{
-                bgcolor: palette.primary,
-                fontWeight: 600,
-                width: "200px",
-                borderRadius: 2,
-                letterSpacing: .5,
-                boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)',
-                '&:hover': { bgcolor: palette.primaryDark },
-              }}
-              onClick={cfg.onClick}
-            >
-              {isSubmitting && !cfg.disabled ? 'Procesando...' : 'Cargar'}
-            </Button>
-          </Box>
-        </Paper>
-      ))}
-    </Box>
-  );
 
   const handleClose = () => {
     setOpen(false);
@@ -420,9 +205,9 @@ function ProyectosOnNetView() {
         '&:before': {
           content: '""',
           position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%)',
-            pointerEvents: 'none'
+          inset: 0,
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%)',
+          pointerEvents: 'none'
         }
       }}
     >
@@ -448,7 +233,7 @@ function ProyectosOnNetView() {
             {[{
               label: 'Proyecto',
               value: toFilter.proyecto || '',
-              onChange: (val) => setToFilter((p)=>({...p, proyecto: val}))
+              onChange: (val) => setToFilter((p) => ({ ...p, proyecto: val }))
             }].map(cfg => (
               <FormControl key={cfg.label} sx={{ minWidth: 200 }}>
                 <TextField
@@ -456,7 +241,7 @@ function ProyectosOnNetView() {
                   variant="standard"
                   value={cfg.value}
                   size="small"
-                  onChange={(e)=>cfg.onChange(e.target.value)}
+                  onChange={(e) => cfg.onChange(e.target.value)}
                 />
               </FormControl>
             ))}
@@ -468,9 +253,9 @@ function ProyectosOnNetView() {
                 variant="standard"
                 value={toFilter.bandeja || ''}
                 size="small"
-                onChange={(event)=>setToFilter(p=>({...p, bandeja: event.target.value}))}
+                onChange={(event) => setToFilter(p => ({ ...p, bandeja: event.target.value }))}
               >
-                {optionsToFilter.map((option)=>(
+                {optionsToFilter.map((option) => (
                   <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                 ))}
               </Select>
@@ -483,25 +268,10 @@ function ProyectosOnNetView() {
                 variant="standard"
                 value={toFilter.agencia || ''}
                 size="small"
-                onChange={(e)=>setToFilter(p=>({...p, agencia: e.target.value}))}
+                onChange={(e) => setToFilter(p => ({ ...p, agencia: e.target.value }))}
               >
                 {agencias && agencias.map(option => (
                   <MenuItem key={option} value={option}>{option}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel id="categoria-label">Categoria</InputLabel>
-              <Select
-                labelId="categoria-label"
-                id="categoria-select"
-                variant="standard"
-                value={toFilter.categoria || ''}
-                size="small"
-                onChange={(e)=>setToFilter(p=>({...p, categoria: e.target.value}))}
-              >
-                {categorias.map(option => (
-                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -555,248 +325,6 @@ function ProyectosOnNetView() {
     </Paper>
   );
 
-  const setTableProyectosSin = () => (
-    <Box sx={{ width: "100%" }}>
-      <Typography
-        variant="h6"
-        sx={{ mb: 2, textAlign: "left", fontWeight: "bold" }}
-      >
-        Cantidad de proyectos sin responsable asignado
-      </Typography>
-      <TableContainer sx={{ boxShadow: 2, borderRadius: "0px" }}>
-        <Table>
-          {setTableHeadProyectosSin()}
-          {setTableBodyProyectosSin()}
-        </Table>
-      </TableContainer>
-    </Box>
-  );
-
-  const setTableHeadProyectosSin = () => (
-    <>
-      <TableHead>
-        <TableRow>
-          {["CANTIDAD", "ESTADO", "REGION"].map((header) => (
-            <TableCell
-              key={header}
-              align="center"
-              sx={{
-                background: palette.primary,
-                fontWeight: "bold",
-                color: "white",
-              }}
-            >
-              {header}
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-    </>
-  );
-
-  const setTableBodyProyectosSin = () => (
-    <>
-      <TableBody
-        sx={{
-          display: "column",
-          justifyContent: "center",
-          backgroundColor: "#fff",
-        }}
-      >
-        {dataProyectoSin && dataProyectoSin.length > 0 ? (
-          dataProyectoSin.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary" fontWeight="bold">
-                  {row.Q ? row.Q : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary">
-                  {row.macro_estado ? row.macro_estado : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary">
-                  {row.region ? row.region : "Sin Información"}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan={6} align="center" sx={{ width: "100%" }}>
-              No hay datos disponibles
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </>
-  );
-
-  const setTableProyectosCon = () => (
-    <Box sx={{ width: "100%", mb: 2 }}>
-      <Typography
-        variant="h6"
-        sx={{ mb: 2, textAlign: "left", fontWeight: "bold" }}
-      >
-        Cantidad de proyectos con responsable asignado
-      </Typography>
-      <TableContainer sx={{ boxShadow: 2, borderRadius: "0px" }}>
-        <Table>
-          {setTableHeadProyectosCon()}
-          {setTableBodyProyectosCon()}
-        </Table>
-      </TableContainer>
-    </Box>
-  );
-
-  const setTableHeadProyectosCon = () => (
-    <>
-      <TableHead>
-        <TableRow>
-          {["CANTIDAD", "ESTADO", "REGION"].map((header) => (
-            <TableCell
-              key={header}
-              align="center"
-              sx={{
-                background: palette.primary,
-                fontWeight: "bold",
-                color: "white",
-              }}
-            >
-              {header}
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-    </>
-  );
-
-  const setTableBodyProyectosCon = () => (
-    <>
-      <TableBody
-        sx={{
-          display: "column",
-          justifyContent: "center",
-          backgroundColor: "#fff",
-        }}
-      >
-        {dataProyectoCon && dataProyectoCon.length > 0 ? (
-          dataProyectoCon.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary" fontWeight="bold">
-                  {row.Q ? row.Q : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary">
-                  {row.macro_estado ? row.macro_estado : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary">
-                  {row.region ? row.region : "Sin Información"}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan={6} align="center" sx={{ width: "100%" }}>
-              No hay datos disponibles
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </>
-  );
-
-  const setTableMacro = () => (
-    <Box sx={{ width: "100%" }}>
-      <Typography
-        variant="h6"
-        sx={{ mb: 2, textAlign: "left", fontWeight: "bold" }}
-      >
-        Cantidades por estado y región
-      </Typography>
-      <TableContainer sx={{ boxShadow: 2, borderRadius: "0px" }}>
-        <Table>
-          {setTableHeadMacro()}
-          {setTableBodyMacro()}
-        </Table>
-      </TableContainer>
-    </Box>
-  );
-
-  const setTableHeadMacro = () => (
-    <>
-      <TableHead>
-        <TableRow>
-          {["CANTIDAD", "ESTADO", "REGION"].map((header) => (
-            <TableCell
-              key={header}
-              align="center"
-              sx={{
-                background: palette.primary,
-                fontWeight: "bold",
-                color: "white",
-              }}
-            >
-              {header}
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-    </>
-  );
-
-  const setTableBodyMacro = () => (
-    <>
-      <TableBody
-        sx={{
-          display: "column",
-          justifyContent: "center",
-          backgroundColor: "#fff",
-        }}
-      >
-        {dataMacro && dataMacro.length > 0 ? (
-          dataMacro.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary" fontWeight="bold">
-                  {row.Q ? row.Q : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary">
-                  {row.macro_estado ? row.macro_estado : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary">
-                  {row.region ? row.region : "Sin Información"}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan={6} align="center" sx={{ width: "100%" }}>
-              No hay datos disponibles
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </>
-  );
 
   const setTable = () => (
     <TableContainer>
@@ -819,9 +347,6 @@ function ProyectosOnNetView() {
             "CENTRAL FTTX",
             "AGENCIA",
             "DESPLIEGUE",
-            "(Q) DÍAS",
-            "RESPONSABLE",
-            "ASIGNACIÓN",
           ].map((header) => (
             <TableCell
               key={header}
@@ -855,7 +380,7 @@ function ProyectosOnNetView() {
             <TableRow
               key={index}
               component={Link}
-              to={`/consolidado/${row.proyecto}`}
+              to={`/modulo:proyecto-filtrado/${row.proyecto}`}
               sx={{
                 textDecoration: "none",
                 cursor: "pointer",
@@ -892,29 +417,11 @@ function ProyectosOnNetView() {
                   {row.despliegue ? row.despliegue : "Sin Información"}
                 </Typography>
               </TableCell>
-
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary">
-                  {row.duracion_dias ? row.duracion_dias : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary">
-                  {row.responsable ? row.responsable : "Sin Información"}
-                </Typography>
-              </TableCell>
-
-              <TableCell align="center" sx={{ fontSize: "12px" }}>
-                <Typography variant="secondary">
-                  {row.fecha_asignacion ? extractDate(row.fecha_asignacion) : "Sin Información"}
-                </Typography>
-              </TableCell>
             </TableRow>
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan={8} align="center" sx={{ width: "100%" }}>
+            <TableCell colSpan={5} align="center" sx={{ width: "100%" }}>
               No hay datos disponibles
             </TableCell>
           </TableRow>
@@ -929,9 +436,6 @@ function ProyectosOnNetView() {
 
   useEffect(() => {
     fetchDataOptions();
-    fetchDataMacro();
-    fetchDataProyectosCon();
-    fetchDataProyectosSin();
   }, []);
 
   useEffect(() => {
@@ -973,59 +477,6 @@ function ProyectosOnNetView() {
           </Alert>
         )}
 
-        {loaderCard()}
-
-        <Box
-          sx={{
-            width: { lg: "90%", md: "90%", xs: "100%" },
-            overflow: "hidden",
-            borderRadius: 3,
-            textAlign: "center",
-            mt: 2,
-            background: 'transparent',
-          }}
-        >
-          {isLoading ? (
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              sx={{
-                width: "100%",
-                height: "200px",
-                borderRadius: "0px",
-              }}
-            />
-          ) : (
-            <Paper
-              elevation={10}
-              sx={{
-                display: 'flex',
-                flexDirection: { lg: 'row', md: 'column', xs: 'column' },
-                alignItems: 'flex-start',
-                background: palette.cardBg,
-                border: `1px solid ${palette.borderSubtle}`,
-                backdropFilter: 'blur(6px)',
-                p: 2,
-                borderRadius: 3,
-                position: 'relative',
-                overflow: 'hidden',
-                '&:before': {
-                  content: '""',
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)',
-                  pointerEvents: 'none'
-                }
-              }}
-            >
-              <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', m: 1 }}>{setTableMacro()}</Box>
-              <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', m: 1 }}>
-                {setTableProyectosCon()}
-                {setTableProyectosSin()}
-              </Box>
-            </Paper>
-          )}
-        </Box>
 
         {filterCard()}
         <Box

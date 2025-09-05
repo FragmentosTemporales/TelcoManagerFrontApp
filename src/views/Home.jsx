@@ -21,14 +21,18 @@ function Home() {
       link: "/modulo:gestion-ticketera",
       moduloID: 26,
     },
-
     {
       head: "Mis Proyectos Asignados",
       title: "Revisa la lista de proyectos asignados a tu empresa",
       link: "/modulo:proyectos-asignados",
       moduloID: 4,
     },
-
+    {
+      head: "Lista de Proyectos Consolidados",
+      title: "Gestiona y visualiza Proyectos",
+      link: "/proyectos-onnet",
+      moduloID: 24,
+    },
     {
       head: "Registros DomApp",
       title: "Visualiza, filtra y monitorea los últimos registros de las automatizaciones en DomApp.",
@@ -139,12 +143,9 @@ function Home() {
       link: "/agendamientos",
       moduloID: 19,
     },
-    {
-      head: "Lista de Proyectos Consolidados",
-      title: "Gestiona y visualiza Proyectos",
-      link: "/proyectos-onnet",
-      moduloID: 24,
-    },
+
+
+
     {
       head: "Carga Planilla Construcción",
       title: "Espacio para cargar planilla de construcción",

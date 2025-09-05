@@ -99,7 +99,7 @@ function App() {
           <Route path="/modulo:inventario" element={<InventarioView />} />
 
           <Route path="/modulo:proyectos-asignados" element={<ProyectosAsignados />} />
-          <Route path="/modulo:proyecto-filtrado/:contrato/:proyecto_id" element={<ProyectoFiltrado />} />
+          <Route path="/modulo:proyecto-filtrado/:proyecto_id" element={<ProyectoFiltrado />} />
 
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />

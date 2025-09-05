@@ -19,14 +19,12 @@ import {
     DialogActions,
     Select,
     MenuItem,
-    Breadcrumbs,
     Table,
     TableContainer,
     TableBody,
     TableCell,
     TableHead,
     TableRow,
-    Link as MUILink,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { MainLayout } from "./Layout";
@@ -34,16 +32,15 @@ import palette from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 import { getProyectobyID } from "../api/onnetAPI";
 import { extractDateOnly } from "../helpers/main";
-import { useParams, Link as RouterLink } from "react-router-dom";
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
+import { useParams } from "react-router-dom";
 import { loadConsumosOnnet, updateValidacionEstado } from "../api/onnetAPI";
+import { getEmpresas } from "../api/authAPI";
 import { downloadFile } from "../api/downloadApi";
 import { useSelector } from "react-redux";
 
 
 export default function ProyectoFiltrado() {
-    const { proyecto_id, contrato } = useParams();
+    const { proyecto_id } = useParams();
     const authState = useSelector((state) => state.auth);
     const { user_id, area } = authState;
     const [isSubmitting, setIsSubmitting] = useState(true);
@@ -53,6 +50,8 @@ export default function ProyectoFiltrado() {
 
     const [infoProyecto, setInfoProyecto] = useState(undefined);
 
+    const [empresas, setEmpresas] = useState([]);
+
     const [dataCubicada, setDataCubicada] = useState([]);
     const [dataSubida, setDataSubida] = useState([]);
     const [infoSupervisor, setInfoSupervisor] = useState([]);
@@ -61,6 +60,12 @@ export default function ProyectoFiltrado() {
 
     const [form, setForm] = useState({
         file: null,
+        proyecto: proyecto_id || ""
+    });
+
+    const [formAsignar, setFormAsignar] = useState({
+        empresaID: "",
+        userID: "",
         proyecto: proyecto_id || ""
     });
 
@@ -84,15 +89,7 @@ export default function ProyectoFiltrado() {
         }
     };
 
-    const setPlantillaTipo = (plantilla) => {
-        if (contrato === 'onnet' && plantilla === 'ejecutado') return 'ejecutado_onnet'
-        if (contrato === 'onnet' && plantilla === 'cubicado') return 'cubicado_onnet'
-        if (contrato === 'telefonica' && plantilla === 'ejecutado') return 'ejecutado_telefonica'
-        if (contrato === 'telefonica' && plantilla === 'cubicado') return 'cubicado_telefonica'
-
-    }
-
-    const handleSubmit = async (plantilla_tipo) => {
+    const handleSubmit = async () => {
         setIsSubmitting(true);
 
         const formData = new FormData();
@@ -102,10 +99,7 @@ export default function ProyectoFiltrado() {
         formData.append("proyecto", form.proyecto);
         try {
 
-            const response = await loadConsumosOnnet(
-                formData,
-                setPlantillaTipo(plantilla_tipo)
-            );
+            const response = await loadConsumosOnnet(formData);
             clearForm();
             setAlertType("success");
             setMessage(response.message);
@@ -136,11 +130,22 @@ export default function ProyectoFiltrado() {
         setOpen(false);
     };
 
+    const fetchEmpresas = async () => {
+        try {
+            const res = await getEmpresas();
+            console.log("Empresas cargadas: ", res);
+            setEmpresas(res || []);
+        } catch (error) {
+            setMessage("Error al cargar las empresas");
+            setAlertType("error");
+            setOpen(true);
+        }
+    };
+
     const fetchProyecto = async () => {
         setIsSubmitting(true);
         try {
             const res = await getProyectobyID(proyecto_id);
-            console.log(res);
             setInfoProyecto(res.info || []);
             setDataCubicada(res.data || []);
             setDataSubida(res.cubicados || []);
@@ -154,10 +159,10 @@ export default function ProyectoFiltrado() {
     };
 
     const onSubmitUpdateEstado = async () => {
-    // Mostrar mensaje informativo antes de ejecutar la actualización
-    setMessage("Si procede, los valores aprobados serán cargados directamente en QuickBase. Ejecutando actualización...");
-    setAlertType("info");
-    setOpen(true);
+        // Mostrar mensaje informativo antes de ejecutar la actualización
+        setMessage("Si procede, los valores aprobados serán cargados directamente en QuickBase. Ejecutando actualización...");
+        setAlertType("info");
+        setOpen(true);
 
         if (!formToUpdate || formToUpdate.length === 0) {
             setMessage("No hay datos para actualizar");
@@ -179,7 +184,7 @@ export default function ProyectoFiltrado() {
                 setOpen(true);
                 return;
             }
-
+            console.log("Payload a enviar: ", payload);
             const res = await updateValidacionEstado(payload);
             setMessage(res.message || "Actualización exitosa");
             setAlertType("success");
@@ -251,8 +256,29 @@ export default function ProyectoFiltrado() {
         "&:hover": { background: palette.primaryDark },
     };
 
-    const validateDisabled = () => {
-        if (parseInt(user_id) === parseInt(infoSupervisor.userID) || (parseInt(area.areaID) === 8)) return false
+    const validateDisabled = (item) => {
+        const validateUserArea = () => {
+            if (
+                parseInt(user_id) === parseInt(infoSupervisor.userID) ||
+                parseInt(area.areaID) === 8
+            ) return false
+            else return true;
+        }
+
+        const validateEstado = () => {
+            if (item['validacion_estado'] !== 0 || item['estado_carga'] !== 0) return true
+            else return false;
+        }
+        if (validateUserArea() || validateEstado()) return true
+        else return false;
+    }
+
+    const validateDisabledButton = () => {
+        if
+            (
+            parseInt(user_id) === parseInt(infoSupervisor.userID) ||
+            (parseInt(area.areaID) === 8)
+        ) return false
         else return true;
     }
 
@@ -267,6 +293,40 @@ export default function ProyectoFiltrado() {
             });
             return updated;
         });
+    }
+
+    const asignarProyectoEmpresa = () => {
+
+        return (
+            <Box sx={{ ...glass, width: '90%', my: 4, display: 'flex', flexDirection: { lg: 'row', xs: 'column' }, py: 3, justifyContent: 'space-around', alignItems: 'center' }}>
+                <Box>
+                    <InputLabel id="file-label">Seleccionar Empresa</InputLabel>
+                    <Select
+                        value={formAsignar.empresaID}
+                        onChange={(e) => setFormAsignar({ ...formAsignar, empresaID: e.target.value })}
+                        size="small"
+                        variant="standard"
+                        label="Seleccionar Empresa"
+                        sx={{ minWidth: 200 }}
+                    >
+                        <MenuItem value="">Seleccionar Empresa</MenuItem>
+                        {empresas.map((empresa) => (
+                            <MenuItem key={empresa.id} value={empresa.empresaID}>
+                                {empresa.nombre}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ ml: 4, ...primaryBtn, width: 200 }}
+                        onClick={() => alert("#TODO: DEFINIR FUNCION PARA ASIGNAR PROYECTO A EMPRESA")}
+                    >
+                        Asignar
+                    </Button>
+                </Box>
+            </Box>
+        )
     }
 
     const infoProyectoCard = () => {
@@ -385,7 +445,7 @@ export default function ProyectoFiltrado() {
             <Box sx={{ ...glass, width: '90%', my: 4, display: 'flex', flexDirection: { lg: 'row', xs: 'column' }, py: 3, gap: 4, justifyContent: 'space-around', alignItems: 'center' }}>
                 <Box>
                     <form
-                        onSubmit={() => { handleSubmit('cubicado') }}
+                        onSubmit={() => { handleSubmit() }}
                         encType="multipart/form-data"
                         style={{ width: "100%" }}
                     >
@@ -454,7 +514,7 @@ export default function ProyectoFiltrado() {
                                                         onChange={(e) => updateFormToUpdateEstado(index, e.target.value)}
                                                         size="small"
                                                         variant="standard"
-                                                        disabled={validateDisabled()}
+                                                        disabled={validateDisabled(p)}
                                                         sx={{ minWidth: 120 }}
                                                     >
                                                         <MenuItem value={"0"}>Pendiente</MenuItem>
@@ -473,7 +533,7 @@ export default function ProyectoFiltrado() {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        <Button variant="contained" sx={{ ...primaryBtn, mt: 2, width: 200 }} disabled={validateDisabled()} onClick={handleOpenConfirm}>
+                        <Button variant="contained" sx={{ ...primaryBtn, mt: 2, width: 200 }} disabled={validateDisabledButton()} onClick={handleOpenConfirm}>
                             ACTUALIZAR
                         </Button>
                     </CardContent>
@@ -509,6 +569,7 @@ export default function ProyectoFiltrado() {
 
     useEffect(() => {
         fetchProyecto();
+        fetchEmpresas();
     }, []);
 
     useEffect(() => {
@@ -557,62 +618,12 @@ export default function ProyectoFiltrado() {
                         </Box>
                     </Box>
                 )}
-                <Box sx={{ width: '90%', mb: 4 }}>
-                    <Breadcrumbs
-                        aria-label="breadcrumb"
-                        separator={<ChevronRightIcon sx={{ fontSize: 18, color: palette.borderSubtle }} />}
-                        sx={{
-                            alignSelf: 'flex-start',
-                            background: palette.cardBg,
-                            border: `1px solid ${palette.borderSubtle}`,
-                            borderRadius: 2,
-                            p: 0.5,
-                            px: 1,
-                            boxShadow: '0 6px 18px rgba(12,18,24,0.06)',
-                        }}
-                    >
-                        <MUILink
-                            component={RouterLink}
-                            to="/modulo:proyectos-asignados"
-                            underline="none"
-                            sx={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: 1,
-                                color: palette.primary,
-                                fontWeight: 600,
-                                fontSize: 14,
-                                '&:hover': { color: palette.accent },
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    width: 26,
-                                    height: 26,
-                                    borderRadius: '6px',
-                                    bgcolor: palette.accentSoft,
-                                    color: palette.accent,
-                                    mr: 0.5,
-                                }}
-                            >
-                                <FolderOpenOutlinedIcon sx={{ fontSize: 16 }} />
-                            </Box>
-
-                            <Box component="span">Proyectos asignados</Box>
-                        </MUILink>
-
-                        <Typography sx={{ color: palette.textMuted, fontWeight: 700, fontSize: 14 }}>{`${contrato ? `${contrato} - ` : ''}${proyecto_id}`}</Typography>
-                    </Breadcrumbs>
-                </Box>
 
                 <ModuleHeader
                     title={proyecto_id}
-                    subtitle={contrato.toUpperCase()}
+                    subtitle="Gestión de cubicados Onnet"
                 />
-
+{asignarProyectoEmpresa()}
                 {infoProyectoCard()}
                 {infoCubicadoOnnet()}
 

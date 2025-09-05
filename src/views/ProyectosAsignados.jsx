@@ -127,7 +127,7 @@ export default function ProyectosAsignados() {
                         <Grid item xs={12} sm={6} md={4} lg={4} xl={4} key={index}>
                             <Paper
                                 component={Link}
-                                to={`/modulo:proyecto-filtrado/${proyecto.contrato}/${proyecto.proyecto}`}
+                                to={`/modulo:proyecto-filtrado/${proyecto.proyecto}`}
                                 elevation={10}
                                 sx={{
                                     textDecoration: "none",
