@@ -33,7 +33,7 @@ import ModuleHeader from "../components/ModuleHeader";
 import { getProyectobyID } from "../api/onnetAPI";
 import { extractDateOnly } from "../helpers/main";
 import { useParams } from "react-router-dom";
-import { loadConsumosOnnet, updateValidacionEstado } from "../api/onnetAPI";
+import { loadConsumosOnnet, updateValidacionEstado, loadOnnetAprobados } from "../api/onnetAPI";
 import { getEmpresas } from "../api/authAPI";
 import { downloadFile } from "../api/downloadApi";
 import { useSelector } from "react-redux";
@@ -133,7 +133,6 @@ export default function ProyectoFiltrado() {
     const fetchEmpresas = async () => {
         try {
             const res = await getEmpresas();
-            console.log("Empresas cargadas: ", res);
             setEmpresas(res || []);
         } catch (error) {
             setMessage("Error al cargar las empresas");
@@ -155,6 +154,14 @@ export default function ProyectoFiltrado() {
             setAlertType("error");
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const execLoadOnnetAprobados = async () => {
+        try {
+            await loadOnnetAprobados(proyecto_id);
+        } catch (error) {
+            console.log("Error al cargar los aprobados de Onnet: ", error);
         }
     };
 
@@ -184,18 +191,19 @@ export default function ProyectoFiltrado() {
                 setOpen(true);
                 return;
             }
-            console.log("Payload a enviar: ", payload);
+
             const res = await updateValidacionEstado(payload);
             setMessage(res.message || "Actualización exitosa");
             setAlertType("success");
             setOpen(true);
+            setIsSubmitting(false);
+            execLoadOnnetAprobados();
             fetchProyecto();
         } catch (error) {
             let errorMsg = error?.message || error;
             setMessage(errorMsg || "Error al actualizar");
             setAlertType("error");
             setOpen(true);
-        } finally {
             setIsSubmitting(false);
         }
     };
@@ -247,6 +255,7 @@ export default function ProyectoFiltrado() {
             mixBlendMode: "overlay",
         },
     };
+
     const primaryBtn = {
         background: `linear-gradient(120deg, ${palette.primaryDark} 0%, ${palette.primary} 85%)`,
         color: "#fff",
@@ -296,7 +305,7 @@ export default function ProyectoFiltrado() {
     }
 
     const asignarProyectoEmpresa = () => {
-
+        if (validateDisabledButton()) return null;
         return (
             <Box sx={{ ...glass, width: '90%', my: 4, display: 'flex', flexDirection: { lg: 'row', xs: 'column' }, py: 3, justifyContent: 'space-around', alignItems: 'center' }}>
                 <Box>
@@ -623,7 +632,7 @@ export default function ProyectoFiltrado() {
                     title={proyecto_id}
                     subtitle="Gestión de cubicados Onnet"
                 />
-{asignarProyectoEmpresa()}
+                {asignarProyectoEmpresa()}
                 {infoProyectoCard()}
                 {infoCubicadoOnnet()}
 

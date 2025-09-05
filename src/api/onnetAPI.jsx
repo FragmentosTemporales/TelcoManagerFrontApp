@@ -72,3 +72,12 @@ export const updateValidacionEstado = async (payload) => {
     throw error.response?.data?.error || error.message;
   }
 };
+
+export const loadOnnetAprobados = async (proyecto_id) => {
+  try {
+    const response = await client.get(`/load-info-onnet-quickbase/${proyecto_id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
