@@ -1,8 +1,8 @@
 const extractDate = (gmtString) => {
   const date = new Date(gmtString);
 
-  // Restar 4 horas al tiempo
-  date.setUTCHours(date.getUTCHours() - 4);
+  // Restar 3 horas al tiempo
+  date.setUTCHours(date.getUTCHours() - 3);
 
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");

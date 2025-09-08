@@ -21,12 +21,12 @@ function Home() {
       link: "/modulo:gestion-ticketera",
       moduloID: 26,
     },
-    {
-      head: "Mis Proyectos Asignados",
-      title: "Revisa la lista de proyectos asignados a tu empresa",
-      link: "/modulo:proyectos-asignados",
-      moduloID: 4,
-    },
+    // {
+    //   head: "Mis Proyectos Asignados",
+    //   title: "Revisa la lista de proyectos asignados a tu empresa",
+    //   link: "/modulo:proyectos-asignados",
+    //   moduloID: 4,
+    // },
     {
       head: "Lista de Proyectos Consolidados",
       title: "Gestiona y visualiza Proyectos",
@@ -58,18 +58,20 @@ function Home() {
       link: "/modulo:reversa",
       moduloID: 2,
     },
-    {
-      head: "Creación de Reparaciones",
-      title: "Carga las pruebas de las reparaciones realizadas",
-      link: "/modulo:registro-reparacion",
-      moduloID: 4,
-    },
-    {
-      head: "Registro de Reparaciones",
-      title: "Visualiza las reparaciones realizadas",
-      link: "/modulo:reparaciones",
-      moduloID: 4,
-    },
+
+    // {
+    //   head: "Creación de Reparaciones",
+    //   title: "Carga las pruebas de las reparaciones realizadas",
+    //   link: "/modulo:registro-reparacion",
+    //   moduloID: 4,
+    // },
+    // {
+    //   head: "Registro de Reparaciones",
+    //   title: "Visualiza las reparaciones realizadas",
+    //   link: "/modulo:reparaciones",
+    //   moduloID: 4,
+    // },
+
     {
       head: "NDC_Bot Manager",
       title: "Gestiona la automatización del NDC Bot",
@@ -143,9 +145,6 @@ function Home() {
       link: "/agendamientos",
       moduloID: 19,
     },
-
-
-
     {
       head: "Carga Planilla Construcción",
       title: "Espacio para cargar planilla de construcción",

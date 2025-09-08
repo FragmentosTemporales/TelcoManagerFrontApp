@@ -304,40 +304,6 @@ export default function ProyectoFiltrado() {
         });
     }
 
-    const asignarProyectoEmpresa = () => {
-        if (validateDisabledButton()) return null;
-        return (
-            <Box sx={{ ...glass, width: '90%', my: 4, display: 'flex', flexDirection: { lg: 'row', xs: 'column' }, py: 3, justifyContent: 'space-around', alignItems: 'center' }}>
-                <Box>
-                    <InputLabel id="file-label">Seleccionar Empresa</InputLabel>
-                    <Select
-                        value={formAsignar.empresaID}
-                        onChange={(e) => setFormAsignar({ ...formAsignar, empresaID: e.target.value })}
-                        size="small"
-                        variant="standard"
-                        label="Seleccionar Empresa"
-                        sx={{ minWidth: 200 }}
-                    >
-                        <MenuItem value="">Seleccionar Empresa</MenuItem>
-                        {empresas.map((empresa) => (
-                            <MenuItem key={empresa.id} value={empresa.empresaID}>
-                                {empresa.nombre}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ ml: 4, ...primaryBtn, width: 200 }}
-                        onClick={() => alert("#TODO: DEFINIR FUNCION PARA ASIGNAR PROYECTO A EMPRESA")}
-                    >
-                        Asignar
-                    </Button>
-                </Box>
-            </Box>
-        )
-    }
-
     const infoProyectoCard = () => {
         const info = infoProyecto || {};
 
@@ -632,7 +598,6 @@ export default function ProyectoFiltrado() {
                     title={proyecto_id}
                     subtitle="Gestión de cubicados Onnet"
                 />
-                {asignarProyectoEmpresa()}
                 {infoProyectoCard()}
                 {infoCubicadoOnnet()}
 

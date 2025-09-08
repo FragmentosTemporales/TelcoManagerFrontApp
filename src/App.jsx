@@ -25,7 +25,6 @@ import AllAgendamientoViewer from "./views/AllAgendamientosView";
 import AmonesatacionesViewer from "./views/AmonestacionesUserView";
 import ErrorHandler from "./utils/404NotFound";
 import ProyectosOnNetView from "./views/ProyectosConsolidadosView";
-import ProyectoConsolidadoView from "./views/ProyectoConsolidadoView";
 import LoadConstruccion from "./views/PlanillaConstruccion";
 import TicketeraView from "./views/CreateTicket";
 import GestorTicketera from "./views/GestionTickets";
@@ -44,7 +43,6 @@ import ReparacionesView from "./views/ReparacionesView";
 import InventarioView from "./views/InventarioView";
 import CreateTareaInterna from "./views/CreateTarea";
 import LatestLogsView from "./views/LatestLogsView";
-import ProyectosAsignados from "./views/ProyectosAsignados";
 import ProyectoFiltrado from "./views/ProyectoFiltrado";
 
 function App() {
@@ -72,8 +70,6 @@ function App() {
           <Route path="/supervisor" element={<SupervisorViewRM />} />
           <Route path="/agendamientos" element={<AgendamientoViewer />} />
           <Route path="/all_agendamientos" element={<AllAgendamientoViewer />} />
-          <Route path="/proyectos-onnet" element={<ProyectosOnNetView />} />
-          <Route path="/consolidado/:id" element={<ProyectoConsolidadoView />} />
           <Route path="/carga-construccion" element={<LoadConstruccion />} />
           <Route path="/modulo:ticketera" element={<TicketeraView />} />
           <Route path="/modulo:gestion-ticketera" element={<GestorTicketera />} />
@@ -98,7 +94,7 @@ function App() {
           <Route path="/modulo:log-query" element={<LogQueryStats />} />
           <Route path="/modulo:inventario" element={<InventarioView />} />
 
-          <Route path="/modulo:proyectos-asignados" element={<ProyectosAsignados />} />
+          <Route path="/proyectos-onnet" element={<ProyectosOnNetView />} />
           <Route path="/modulo:proyecto-filtrado/:proyecto_id" element={<ProyectoFiltrado />} />
 
         </Route>
