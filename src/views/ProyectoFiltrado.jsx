@@ -19,6 +19,7 @@ import {
     DialogActions,
     Select,
     MenuItem,
+    Autocomplete,
     Table,
     TableContainer,
     TableBody,
@@ -33,8 +34,14 @@ import ModuleHeader from "../components/ModuleHeader";
 import { getProyectobyID } from "../api/onnetAPI";
 import { extractDateOnly } from "../helpers/main";
 import { useParams } from "react-router-dom";
-import { loadConsumosOnnet, updateValidacionEstado, loadOnnetAprobados } from "../api/onnetAPI";
-import { getEmpresas } from "../api/authAPI";
+import { 
+    loadConsumosOnnet, 
+    updateValidacionEstado, 
+    loadOnnetAprobados, 
+    createCubicadoUnitario,
+    getRelateds,
+    updateCubicadoRecord
+} from "../api/onnetAPI";
 import { downloadFile } from "../api/downloadApi";
 import { useSelector } from "react-redux";
 
@@ -50,24 +57,32 @@ export default function ProyectoFiltrado() {
 
     const [infoProyecto, setInfoProyecto] = useState(undefined);
 
-    const [empresas, setEmpresas] = useState([]);
-
     const [dataCubicada, setDataCubicada] = useState([]);
     const [dataSubida, setDataSubida] = useState([]);
     const [infoSupervisor, setInfoSupervisor] = useState([]);
+    const [relatedMO, setRelatedMO] = useState([]);
+    const [relatedUO, setRelatedUO] = useState([]);
+
+    const [toUpdate, setToUpdate] = useState(undefined);
 
     const filePath = "/home/ubuntu/telcomanager/app/data/Plantilla.xlsx";
+
 
     const [form, setForm] = useState({
         file: null,
         proyecto: proyecto_id || ""
     });
 
-    const [formAsignar, setFormAsignar] = useState({
-        empresaID: "",
-        userID: "",
-        proyecto: proyecto_id || ""
+
+    const [formUnitario, setFormUnitario] = useState({
+        proyecto: proyecto_id || "",
+        userID: user_id || "",
+        cod_actividad: "",
+        cant_actividad_cubicada: "",
+        cod_material: "",
+        cant_material_cubicada: ""
     });
+
 
     const [formToUpdate, setFormToUpdate] = useState(undefined);
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -79,6 +94,23 @@ export default function ProyectoFiltrado() {
         });
     };
 
+    const handleUnitarioChange = (e) => {
+        const { name, value } = e.target;
+        setFormUnitario((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    // Handler to update the single record being edited (toUpdate)
+    const handleToUpdateChange = (e) => {
+        const { name, value } = e.target;
+        setToUpdate((prev) => ({
+            ...(prev || {}),
+            [name]: value,
+        }));
+    };
+
     const downloadInforme = async () => {
         try {
             const payload = { file_path: filePath };
@@ -86,6 +118,48 @@ export default function ProyectoFiltrado() {
             console.log("Archivo descargado exitosamente");
         } catch (error) {
             console.log(error);
+        }
+    };
+
+    const handleSubmitUnitario = async () => {
+        setIsSubmitting(true);
+
+        const formData = new FormData();
+
+        formData.append("proyecto", form.proyecto);
+        try {
+            console.log("Form Unitario: ", formUnitario);
+            const response = await createCubicadoUnitario(formUnitario);
+            setMessage(response.message || "Cubicado unitario creado exitosamente");
+            setAlertType("success");
+            setOpen(true);
+            setFormUnitario({
+                proyecto: proyecto_id || "",
+                userID: user_id || "",
+                cod_actividad: "",
+                cant_actividad_cubicada: "",
+                cod_material: "",
+                cant_material_cubicada: ""
+            });
+
+        } catch (error) {
+            // Manejo de error específico si el archivo está abierto por otro proceso
+            let errorMsg = error?.message || error;
+            if (
+                typeof errorMsg === "string" &&
+                (errorMsg.includes("used by another process") ||
+                    errorMsg.includes("no se puede obtener acceso al archivo") ||
+                    errorMsg.includes("Failed to load"))
+            ) {
+                errorMsg =
+                    "No se pudo cargar el archivo porque está abierto en otra aplicación. Por favor, cierre el archivo e intente nuevamente.";
+            }
+            setMessage(errorMsg);
+            setAlertType("error");
+            setOpen(true);
+        } finally {
+            setIsSubmitting(false);
+            fetchProyecto();
         }
     };
 
@@ -126,18 +200,40 @@ export default function ProyectoFiltrado() {
         }
     };
 
+    const handleSubmitUpdateRecord = async () => {
+        if (!toUpdate) {
+            setMessage("No hay registro seleccionado para actualizar");
+            setAlertType("error");
+            setOpen(true);
+            return;
+        }
+        setIsSubmitting(true);
+        try {
+            const response = await updateCubicadoRecord(toUpdate);
+            setMessage(response.message || "Registro enviado para su aprobación");
+            setAlertType("success");
+            setOpen(true);
+            setToUpdate(undefined);
+        } catch (error) {
+            setMessage(error.message || "Error al actualizar el registro");
+            setAlertType("error");
+            setOpen(true);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const handleClose = () => {
         setOpen(false);
     };
 
-    const fetchEmpresas = async () => {
+    const fetchRelateds = async () => {
         try {
-            const res = await getEmpresas();
-            setEmpresas(res || []);
+            const res = await getRelateds();
+            setRelatedMO(res.related_mo.sort((a, b) => a.related_mo_label.localeCompare(b.related_mo_label)) || []);
+            setRelatedUO(res.related_uo.sort((a, b) => a.related_uo_label.localeCompare(b.related_uo_label)) || []);
         } catch (error) {
-            setMessage("Error al cargar las empresas");
-            setAlertType("error");
-            setOpen(true);
+            console.log("Error fetching relateds: ", error);
         }
     };
 
@@ -367,8 +463,9 @@ export default function ProyectoFiltrado() {
                 <Card sx={{ ...glass, width: '100%' }}>
                     <CardHeader title="Informe Avance" sx={{ background: 'transparent', pb: 0 }} />
                     <CardContent sx={{ pt: 1 }}>
-                        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, overflow: 'hidden' }}>
-                            <Table size="small">
+                        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, overflow: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                            {/* Ensure table can overflow horizontally to show a lateral scrollbar on small viewports */}
+                            <Table size="small" sx={{ minWidth: 1100 }}>
                                 <TableHead sx={{ background: palette.cardBg }}>
                                     <TableRow>
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
@@ -387,7 +484,7 @@ export default function ProyectoFiltrado() {
                                 <TableBody>
                                     {dataCubicada && dataCubicada.length > 0 ? (
                                         dataCubicada.map((p, index) => (
-                                            <TableRow key={index} hover sx={{ '&:hover': { backgroundColor: palette.accentSoft } }}>
+                                            <TableRow key={index} hover sx={{ '&:hover': { backgroundColor: palette.accentSoft } }} onClick={() => { setToUpdate(p); }}>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['Related Mano de Obra'] ? p['Related Mano de Obra'] : 'Sin Información'}</TableCell>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['Mano de Obra - DESCRIPCION'] ?? 'Sin Información'}</TableCell>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['Mano de Obra - UM'] ?? 'Sin Información'}</TableCell>
@@ -454,6 +551,255 @@ export default function ProyectoFiltrado() {
         )
     }
 
+    const toUpdateEditCard = () => {
+        if (!toUpdate) { return null; }
+        return (
+            <Box sx={{ width: '90%', mb: 4 }}>
+                <Card sx={{ ...glass, width: '100%' }}>
+                    <CardHeader title={`Editar Record - #${toUpdate['Record ID#']}`} sx={{ background: 'transparent', pb: 0 }} />
+                    <CardContent sx={{ pt: 1 }}>
+                        <form
+                            onSubmit={(e) => { e.preventDefault(); handleSubmitUpdateRecord(); }}
+                            style={{ width: "100%" }}
+                        >
+                            <Grid container spacing={2} alignItems="center">
+
+                                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cod-actividad-label">Código Actividad</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="Related Mano de Obra"
+                                        name="Related Mano de Obra"
+                                        variant="standard"
+                                        value={toUpdate['Related Mano de Obra'] || ''}
+                                        disabled
+                                    />
+                                </Grid>
+
+                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cod-actividad-label">Cantidad Cubicada Actividad</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="MO-Cantidad Cubicada"
+                                        name="MO-Cantidad Cubicada"
+                                        variant="standard"
+                    value={toUpdate['MO-Cantidad Cubicada'] || ''}
+                    onChange={handleToUpdateChange}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cod-actividad-label">Cantidad Informada Actividad</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="MO-Cantidad Informada"
+                                        name="MO-Cantidad Informada"
+                                        variant="standard"
+                                        value={toUpdate['MO-Cantidad Informada'] || ''}
+                                        onChange={handleToUpdateChange}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cod-actividad-label">Cantidad Aprobada Actividad</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="MO-Cantidad Aprobada"
+                                        name="MO-Cantidad Aprobada"
+                                        variant="standard"
+                                        value={toUpdate['MO-Cantidad Aprobada'] || ''}
+                                        disabled
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cod-actividad-label">Código Material</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="Related Unidad de Obra"
+                                        name="Related Unidad de Obra"
+                                        variant="standard"
+                                        value={toUpdate['Related Unidad de Obra'] || ''}
+                                        disabled
+                                    />
+                                </Grid>
+
+                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cod-actividad-label">Cantidad Cubicada Material</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="UO-Cantidad Cubicada"
+                                        name="UO-Cantidad Cubicada"
+                                        variant="standard"
+                    value={toUpdate['UO-Cantidad Cubicada'] || 0}
+                    onChange={handleToUpdateChange}
+                                    />
+                                </Grid>
+
+                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cod-actividad-label">Cantidad Informada Material</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="UO-Cantidad Informada (As-Built)"
+                                        name="UO-Cantidad Informada (As-Built)"
+                                        variant="standard"
+                    value={toUpdate['UO-Cantidad Informada (As-Built)'] || 0}
+                    onChange={handleToUpdateChange}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cod-actividad-label">Cantidad Aprobada Material</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="UO-Cantidad Aprobada"
+                                        name="UO-Cantidad Aprobada"
+                                        variant="standard"
+                                        value={toUpdate['UO-Cantidad Aprobada'] || 0}
+                                        disabled
+                                    />
+                                </Grid>
+
+
+
+                                <Grid item xs={12}>
+                                    <Box sx={{ display: "flex", gap: 2, alignItems: 'center' }}>
+                                        <Button
+                                            type="submit"
+                                            size="small"
+                                            variant="contained"
+                                            sx={{ ...primaryBtn, mt: 2, width: 200 }}
+                                            disabled={isSubmitting}
+                                        >
+                                            {isSubmitting ? "Procesando..." : "Cargar"}
+                                        </Button>
+                                        {isSubmitting && <LinearProgress sx={{ flex: 1 }} />}
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </CardContent>
+                </Card>
+            </Box>
+        )
+    }
+
+    const cargaUnitario = () => {
+        if (relatedMO.length === 0 || relatedUO.length === 0) { return null; }
+        return (
+            <Box sx={{ width: '90%', mb: 4 }}>
+                <Card sx={{ ...glass, width: '100%' }}>
+                    <CardHeader title="Carga Unitario" sx={{ background: 'transparent', pb: 0 }} />
+                    <CardContent sx={{ pt: 1 }}>
+                        <form
+                            onSubmit={(e) => { e.preventDefault(); handleSubmitUnitario(); }}
+                            style={{ width: "100%" }}
+                        >
+                            <Grid container spacing={2} alignItems="center">
+
+                                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cod-actividad-label">Cod. Actividad</InputLabel>
+                                    <Autocomplete
+                                        fullWidth
+                                        size="small"
+                                        options={relatedMO}
+                                        getOptionLabel={(option) => option.related_mo_label || ''}
+                                        isOptionEqualToValue={(option, value) => option.related_mo_value === value}
+                                        onChange={(e, newValue) => {
+                                            const value = newValue ? newValue.related_mo_value : '';
+                                            handleUnitarioChange({ target: { name: 'cod_actividad', value } });
+                                        }}
+                                        value={
+                                            relatedMO.find((itm) => itm.related_mo_value === formUnitario.cod_actividad) || null
+                                        }
+                                        renderInput={(params) => (
+                                            <TextField {...params} variant="standard" required />
+                                        )}
+                                    />
+                                </Grid>
+
+
+                                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cant-actividad-label">Cantidad Actividad</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="cant_actividad_cubicada"
+                                        name="cant_actividad_cubicada"
+                                        type="Float"
+                                        inputProps={{ step: 'any' }}
+                                        variant="standard"
+                                        onChange={handleUnitarioChange}
+                                        value={formUnitario.cant_actividad_cubicada}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cod-material-label">Cod. Material</InputLabel>
+                                    <Autocomplete
+                                        fullWidth
+                                        size="small"
+                                        options={relatedUO}
+                                        getOptionLabel={(option) => option.related_uo_label || ''}
+                                        isOptionEqualToValue={(option, value) => option.related_uo_value === value}
+                                        onChange={(e, newValue) => {
+                                            const value = newValue ? newValue.related_uo_value : '';
+                                            handleUnitarioChange({ target: { name: 'cod_material', value } });
+                                        }}
+                                        value={
+                                            relatedUO.find((itm) => itm.related_uo_value === formUnitario.cod_material) || null
+                                        }
+                                        renderInput={(params) => (
+                                            <TextField {...params} variant="standard" required />
+                                        )}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={6}>
+                                    <InputLabel id="cant-material-label">Cantidad Material</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="cant_material_cubicada"
+                                        name="cant_material_cubicada"
+                                        type="number"
+                                        inputProps={{ step: 'any' }}
+                                        variant="standard"
+                                        onChange={handleUnitarioChange}
+                                        value={formUnitario.cant_material_cubicada}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <Box sx={{ display: "flex", gap: 2, alignItems: 'center' }}>
+                                        <Button
+                                            type="submit"
+                                            size="small"
+                                            variant="contained"
+                                            sx={{ ...primaryBtn, mt: 2, width: 200 }}
+                                            disabled={isSubmitting}
+                                        >
+                                            {isSubmitting ? "Procesando..." : "Cargar"}
+                                        </Button>
+                                        {isSubmitting && <LinearProgress sx={{ flex: 1 }} />}
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </CardContent>
+                </Card>
+            </Box>
+        )
+    }
+
     const cubicadosCargados = () => {
 
         return (
@@ -468,6 +814,7 @@ export default function ProyectoFiltrado() {
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Fecha Carga</TableCell>
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Material</TableCell>
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Estado</TableCell>
@@ -480,9 +827,10 @@ export default function ProyectoFiltrado() {
                                             <TableRow key={index} hover sx={{ '&:hover': { backgroundColor: palette.accentSoft } }}>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['fecha_registro'] ? extractDateOnly(p['fecha_registro']) : 'Sin Información'}</TableCell>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['cod_actividad'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['cant_actividad'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['cant_actividad_cubicada'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['cant_actividad_informada'] ?? 'Sin Información'}</TableCell>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['cod_material'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['cant_material'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['cant_material_cubicada'] ?? 'Sin Información'}</TableCell>
                                                 <TableCell sx={{ color: palette.textMuted }}>
                                                     <Select
                                                         value={p['validacion_estado'] ?? '0'}
@@ -512,6 +860,7 @@ export default function ProyectoFiltrado() {
                             ACTUALIZAR
                         </Button>
                     </CardContent>
+                    <Typography sx={{ fontSize: 12, color: palette.textMuted, p: 2 }}>* Solo el supervisor asignado o usuarios del área de planificación pueden actualizar los estados.</Typography>
                 </Card>
             </Box>
         )
@@ -544,7 +893,7 @@ export default function ProyectoFiltrado() {
 
     useEffect(() => {
         fetchProyecto();
-        fetchEmpresas();
+        fetchRelateds()
     }, []);
 
     useEffect(() => {
@@ -598,6 +947,7 @@ export default function ProyectoFiltrado() {
                     title={proyecto_id}
                     subtitle="Gestión de cubicados Onnet"
                 />
+                {toUpdateEditCard()}
                 {infoProyectoCard()}
                 {infoCubicadoOnnet()}
 
@@ -608,6 +958,7 @@ export default function ProyectoFiltrado() {
                 </Box>
 
                 {cargaArchivos()}
+                {cargaUnitario()}
                 {cubicadosCargados()}
             </Box>
         </MainLayout>

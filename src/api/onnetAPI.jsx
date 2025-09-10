@@ -81,3 +81,31 @@ export const loadOnnetAprobados = async (proyecto_id) => {
     throw error.response?.data?.error || error.message;
   }
 };
+
+export const createCubicadoUnitario = async (payload) => {
+  try {
+    const response = await client.post('/create-cubicado-onnet', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getRelateds = async () => {
+  try {
+    const response = await client.get(`/get-relateds`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+
+export const updateCubicadoRecord = async (payload) => {
+  try {
+    const response = await client.post('/create-registro-actualizacion-record', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
