@@ -34,6 +34,12 @@ function Home() {
       moduloID: 24,
     },
     {
+      head: "Lista de Proyectos Link VNO",
+      title: "Gestiona y visualiza Proyectos Correspondientes a Link VNO",
+      link: "/proyectos-link-vno",
+      moduloID: 24,
+    },
+    {
       head: "Registros DomApp",
       title: "Visualiza, filtra y monitorea los últimos registros de las automatizaciones en DomApp.",
       link: "/modulo:ultimos-logs",

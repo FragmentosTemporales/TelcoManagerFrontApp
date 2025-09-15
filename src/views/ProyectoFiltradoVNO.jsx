@@ -31,13 +31,13 @@ import { useEffect, useState } from "react";
 import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
-import { getProyectobyID } from "../api/onnetAPI";
+import { getProyectoVNObyID } from "../api/onnetAPI";
 import { extractDateOnly } from "../helpers/main";
 import { useParams } from "react-router-dom";
-import { 
-    loadConsumosOnnet, 
-    updateValidacionEstado, 
-    loadOnnetAprobados, 
+import {
+    loadConsumosOnnet,
+    updateValidacionEstado,
+    loadOnnetAprobados,
     createCubicadoUnitario,
     getRelateds,
     updateCubicadoRecord
@@ -46,7 +46,7 @@ import { downloadFile } from "../api/downloadApi";
 import { useSelector } from "react-redux";
 
 
-export default function ProyectoFiltrado() {
+export default function ProyectoFiltradoVNO() {
     const { proyecto_id } = useParams();
     const authState = useSelector((state) => state.auth);
     const { user_id, area } = authState;
@@ -59,7 +59,6 @@ export default function ProyectoFiltrado() {
 
     const [dataCubicada, setDataCubicada] = useState([]);
     const [dataSubida, setDataSubida] = useState([]);
-    const [infoSupervisor, setInfoSupervisor] = useState([]);
     const [relatedMO, setRelatedMO] = useState([]);
     const [relatedUO, setRelatedUO] = useState([]);
 
@@ -78,9 +77,13 @@ export default function ProyectoFiltrado() {
         proyecto: proyecto_id || "",
         userID: user_id || "",
         cod_actividad: "",
-        cant_actividad_cubicada: "",
+        mo_cubicada_habilitacion: "",
+        mo_cubicada_construccion: "",
+        mo_cubicada_interior: "",
         cod_material: "",
-        cant_material_cubicada: ""
+        uo_cubicada_habilitacion: "",
+        uo_cubicada_construccion: "",
+        uo_cubicada_interior: ""
     });
 
 
@@ -128,8 +131,18 @@ export default function ProyectoFiltrado() {
 
         formData.append("proyecto", form.proyecto);
         try {
-            console.log("Form Unitario: ", formUnitario);
-            const response = await createCubicadoUnitario(formUnitario);
+            // Convertir campos numéricos a Number|null
+            const payload = {
+                ...formUnitario,
+                mo_cubicada_habilitacion: formUnitario.mo_cubicada_habilitacion === '' ? null : Number(formUnitario.mo_cubicada_habilitacion),
+                mo_cubicada_construccion: formUnitario.mo_cubicada_construccion === '' ? null : Number(formUnitario.mo_cubicada_construccion),
+                mo_cubicada_interior: formUnitario.mo_cubicada_interior === '' ? null : Number(formUnitario.mo_cubicada_interior),
+                uo_cubicada_habilitacion: formUnitario.uo_cubicada_habilitacion === '' ? null : Number(formUnitario.uo_cubicada_habilitacion),
+                uo_cubicada_construccion: formUnitario.uo_cubicada_construccion === '' ? null : Number(formUnitario.uo_cubicada_construccion),
+                uo_cubicada_interior: formUnitario.uo_cubicada_interior === '' ? null : Number(formUnitario.uo_cubicada_interior),
+            };
+
+            const response = await createCubicadoUnitario(payload);
             setMessage(response.message || "Cubicado unitario creado exitosamente");
             setAlertType("success");
             setOpen(true);
@@ -137,9 +150,13 @@ export default function ProyectoFiltrado() {
                 proyecto: proyecto_id || "",
                 userID: user_id || "",
                 cod_actividad: "",
-                cant_actividad_cubicada: "",
+                mo_cubicada_habilitacion: "",
+                mo_cubicada_construccion: "",
+                mo_cubicada_interior: "",
                 cod_material: "",
-                cant_material_cubicada: ""
+                uo_cubicada_habilitacion: "",
+                uo_cubicada_construccion: "",
+                uo_cubicada_interior: ""
             });
 
         } catch (error) {
@@ -240,11 +257,10 @@ export default function ProyectoFiltrado() {
     const fetchProyecto = async () => {
         setIsSubmitting(true);
         try {
-            const res = await getProyectobyID(proyecto_id);
+            const res = await getProyectoVNObyID(proyecto_id);
             setInfoProyecto(res.info || []);
             setDataCubicada(res.data || []);
             setDataSubida(res.cubicados || []);
-            setInfoSupervisor(res.asignado || []);
         } catch (error) {
             setMessage("Error al cargar el proyecto");
             setAlertType("error");
@@ -364,7 +380,6 @@ export default function ProyectoFiltrado() {
     const validateDisabled = (item) => {
         const validateUserArea = () => {
             if (
-                parseInt(user_id) === parseInt(infoSupervisor.userID) ||
                 parseInt(area.areaID) === 8
             ) return false
             else return true;
@@ -381,7 +396,6 @@ export default function ProyectoFiltrado() {
     const validateDisabledButton = () => {
         if
             (
-            parseInt(user_id) === parseInt(infoSupervisor.userID) ||
             (parseInt(area.areaID) === 8)
         ) return false
         else return true;
@@ -463,39 +477,101 @@ export default function ProyectoFiltrado() {
                 <Card sx={{ ...glass, width: '100%' }}>
                     <CardHeader title="Informe Avance" sx={{ background: 'transparent', pb: 0 }} />
                     <CardContent sx={{ pt: 1 }}>
-                        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, overflow: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, maxHeight: 420, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
                             {/* Ensure table can overflow horizontally to show a lateral scrollbar on small viewports */}
-                            <Table size="small" sx={{ minWidth: 1100 }}>
+                            <Table size="small" sx={{ }}>
                                 <TableHead sx={{ background: palette.cardBg }}>
                                     <TableRow>
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Descripción</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>UM</TableCell>
+
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Interior</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Construcción</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Habilitación</TableCell>
+
+
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Interior</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Construcción</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Habilitación</TableCell>
+
+
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Interior</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Construcción</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Habilitación</TableCell>
+
+
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Material</TableCell>
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Descripción</TableCell>
+
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Interior</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Construcción</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Habilitación</TableCell>
+
+
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Interior</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Construcción</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Habilitación</TableCell>
+
+
                                         <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Interior</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Construcción</TableCell>
+                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Habilitación</TableCell>
+
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {dataCubicada && dataCubicada.length > 0 ? (
                                         dataCubicada.map((p, index) => (
-                                            <TableRow key={index} hover sx={{ '&:hover': { backgroundColor: palette.accentSoft } }} onClick={() => { setToUpdate(p); }}>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['Related Mano de Obra'] ? p['Related Mano de Obra'] : 'Sin Información'}</TableCell>
+                                            <TableRow key={index} hover sx={{ '&:hover': { backgroundColor: palette.accentSoft } }} onClick={() => { setToUpdate(p); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                                                <TableCell sx={{ color: palette.primary, fontWeight: "bold" }}>{p['Related Mano de Obra'] ? p['Related Mano de Obra'] : 'Sin Información'}</TableCell>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['Mano de Obra - DESCRIPCION'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['Mano de Obra - UM'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO-Cantidad Cubicada'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO-Cantidad Informada'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO-Cantidad Aprobada'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['Related Unidad de Obra'] ?? 'Sin Información'}</TableCell>
+
+
+                                                <TableCell sx={{ color: palette.primary, fontWeight: "bold" }}>{p['MO-Cantidad Cubicada'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO Aprobada - Interior'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO Aprobada - L3 (Construccion UMI)'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO Aprobada - Link T1/T2 (Habilitacion)'] ?? 'Sin Información'}</TableCell>
+
+
+                                                <TableCell sx={{ color: palette.primary, fontWeight: "bold" }}>{p['MO-Cantidad Informada'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO Informada - Interior'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO Informada - L3 (Construccion UMI)'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO Informada - Link T1/T2 (Habilitacion)'] ?? 'Sin Información'}</TableCell>
+
+
+                                                <TableCell sx={{ color: palette.primary, fontWeight: "bold" }}>{p['MO-Cantidad Aprobada'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO Aprobada - Interior'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO Aprobada - L3 (Construccion UMI)'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['MO Aprobada - Link T1/T2 (Habilitacion)'] ?? 'Sin Información'}</TableCell>
+
+
+                                                <TableCell sx={{ color: palette.primary, fontWeight: "bold" }}>{p['Related Unidad de Obra'] ?? 'Sin Información'}</TableCell>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['Unidad de Obra - DESCRIPCION'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO-Cantidad Cubicada'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO-Cantidad Informada (As-Built)'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO-Cantidad Aprobada'] ?? 'Sin Información'}</TableCell>
+
+
+                                                <TableCell sx={{ color: palette.primary, fontWeight: "bold" }}>{p['UO-Cantidad Cubicada'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO Cubicada - Interior'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO Cubicada - L3 (Construccion UMI)'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO Cubicada - Link T1/T2 (Habilitacion)'] ?? 'Sin Información'}</TableCell>
+
+
+                                                <TableCell sx={{ color: palette.primary, fontWeight: "bold" }}>{p['UO-Cantidad Informada (As-Built)'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO Informada - Interior'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO Informada - L3 (Construccion UMI)'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO Informada - Link T1/T2 (Habilitacion)'] ?? 'Sin Información'}</TableCell>
+
+
+                                                <TableCell sx={{ color: palette.primary, fontWeight: "bold" }}>{p['UO-Cantidad Aprobada'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO Aprobada - Interior'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO Aprobada - L3 (Construccion UMI)'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['UO Aprobada - Link T1/T2 (Habilitacion)'] ?? 'Sin Información'}</TableCell>
+
                                             </TableRow>
                                         ))
                                     ) : (
@@ -577,7 +653,7 @@ export default function ProyectoFiltrado() {
                                     />
                                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                                <Grid item xs={12} md={6}>
                                     <InputLabel id="cod-actividad-label">Cantidad Cubicada Actividad</InputLabel>
                                     <TextField
                                         fullWidth
@@ -585,8 +661,8 @@ export default function ProyectoFiltrado() {
                                         id="MO-Cantidad Cubicada"
                                         name="MO-Cantidad Cubicada"
                                         variant="standard"
-                    value={toUpdate['MO-Cantidad Cubicada'] || ''}
-                    onChange={handleToUpdateChange}
+                                        value={toUpdate['MO-Cantidad Cubicada'] || ''}
+                                        onChange={handleToUpdateChange}
                                     />
                                 </Grid>
 
@@ -629,7 +705,7 @@ export default function ProyectoFiltrado() {
                                     />
                                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                                <Grid item xs={12} md={6}>
                                     <InputLabel id="cod-actividad-label">Cantidad Cubicada Material</InputLabel>
                                     <TextField
                                         fullWidth
@@ -637,12 +713,12 @@ export default function ProyectoFiltrado() {
                                         id="UO-Cantidad Cubicada"
                                         name="UO-Cantidad Cubicada"
                                         variant="standard"
-                    value={toUpdate['UO-Cantidad Cubicada'] || 0}
-                    onChange={handleToUpdateChange}
+                                        value={toUpdate['UO-Cantidad Cubicada'] || 0}
+                                        onChange={handleToUpdateChange}
                                     />
                                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                                <Grid item xs={12} md={6}>
                                     <InputLabel id="cod-actividad-label">Cantidad Informada Material</InputLabel>
                                     <TextField
                                         fullWidth
@@ -650,8 +726,8 @@ export default function ProyectoFiltrado() {
                                         id="UO-Cantidad Informada (As-Built)"
                                         name="UO-Cantidad Informada (As-Built)"
                                         variant="standard"
-                    value={toUpdate['UO-Cantidad Informada (As-Built)'] || 0}
-                    onChange={handleToUpdateChange}
+                                        value={toUpdate['UO-Cantidad Informada (As-Built)'] || 0}
+                                        onChange={handleToUpdateChange}
                                     />
                                 </Grid>
 
@@ -712,7 +788,7 @@ export default function ProyectoFiltrado() {
                                         size="small"
                                         options={relatedMO}
                                         getOptionLabel={(option) => option.related_mo_label || ''}
-                                        isOptionEqualToValue={(option, value) => option.related_mo_value === value}
+                                        isOptionEqualToValue={(option, value) => option.related_mo_value === (value?.related_mo_value ?? value)}
                                         onChange={(e, newValue) => {
                                             const value = newValue ? newValue.related_mo_value : '';
                                             handleUnitarioChange({ target: { name: 'cod_actividad', value } });
@@ -727,18 +803,48 @@ export default function ProyectoFiltrado() {
                                 </Grid>
 
 
-                                <Grid item xs={12} md={6}>
-                                    <InputLabel id="cant-actividad-label">Cantidad Actividad</InputLabel>
+                                <Grid item xs={12} md={4}>
+                                    <InputLabel id="mo-habilitacion-label">MO Habilitación</InputLabel>
                                     <TextField
                                         fullWidth
                                         size="small"
-                                        id="cant_actividad_cubicada"
-                                        name="cant_actividad_cubicada"
-                                        type="Float"
+                                        id="mo_cubicada_habilitacion"
+                                        name="mo_cubicada_habilitacion"
+                                        type="number"
                                         inputProps={{ step: 'any' }}
                                         variant="standard"
                                         onChange={handleUnitarioChange}
-                                        value={formUnitario.cant_actividad_cubicada}
+                                        value={formUnitario.mo_cubicada_habilitacion}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={4}>
+                                    <InputLabel id="mo-construccion-label">MO Construcción</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="mo_cubicada_construccion"
+                                        name="mo_cubicada_construccion"
+                                        type="number"
+                                        inputProps={{ step: 'any' }}
+                                        variant="standard"
+                                        onChange={handleUnitarioChange}
+                                        value={formUnitario.mo_cubicada_construccion}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={4}>
+                                    <InputLabel id="mo-interior-label">MO Interior</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="mo_cubicada_interior"
+                                        name="mo_cubicada_interior"
+                                        type="number"
+                                        inputProps={{ step: 'any' }}
+                                        variant="standard"
+                                        onChange={handleUnitarioChange}
+                                        value={formUnitario.mo_cubicada_interior}
                                     />
                                 </Grid>
 
@@ -749,7 +855,7 @@ export default function ProyectoFiltrado() {
                                         size="small"
                                         options={relatedUO}
                                         getOptionLabel={(option) => option.related_uo_label || ''}
-                                        isOptionEqualToValue={(option, value) => option.related_uo_value === value}
+                                        isOptionEqualToValue={(option, value) => option.related_uo_value === (value?.related_uo_value ?? value)}
                                         onChange={(e, newValue) => {
                                             const value = newValue ? newValue.related_uo_value : '';
                                             handleUnitarioChange({ target: { name: 'cod_material', value } });
@@ -763,18 +869,48 @@ export default function ProyectoFiltrado() {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} md={6}>
-                                    <InputLabel id="cant-material-label">Cantidad Material</InputLabel>
+                                <Grid item xs={12} md={4}>
+                                    <InputLabel id="uo-habilitacion-label">UO Habilitación</InputLabel>
                                     <TextField
                                         fullWidth
                                         size="small"
-                                        id="cant_material_cubicada"
-                                        name="cant_material_cubicada"
+                                        id="uo_cubicada_habilitacion"
+                                        name="uo_cubicada_habilitacion"
                                         type="number"
                                         inputProps={{ step: 'any' }}
                                         variant="standard"
                                         onChange={handleUnitarioChange}
-                                        value={formUnitario.cant_material_cubicada}
+                                        value={formUnitario.uo_cubicada_habilitacion}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={4}>
+                                    <InputLabel id="uo-construccion-label">UO Construcción</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="uo_cubicada_construccion"
+                                        name="uo_cubicada_construccion"
+                                        type="number"
+                                        inputProps={{ step: 'any' }}
+                                        variant="standard"
+                                        onChange={handleUnitarioChange}
+                                        value={formUnitario.uo_cubicada_construccion}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={4}>
+                                    <InputLabel id="uo-interior-label">UO Interior</InputLabel>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        id="uo_cubicada_interior"
+                                        name="uo_cubicada_interior"
+                                        type="number"
+                                        inputProps={{ step: 'any' }}
+                                        variant="standard"
+                                        onChange={handleUnitarioChange}
+                                        value={formUnitario.uo_cubicada_interior}
                                     />
                                 </Grid>
 
@@ -807,7 +943,7 @@ export default function ProyectoFiltrado() {
                 <Card sx={{ ...glass, width: '100%' }}>
                     <CardHeader title="Elementos cargados" sx={{ background: 'transparent', pb: 0 }} />
                     <CardContent sx={{ pt: 1 }}>
-                        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, overflow: 'hidden' }}>
+                        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, maxHeight: 360, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
                             <Table size="small">
                                 <TableHead sx={{ background: palette.cardBg }}>
                                     <TableRow>

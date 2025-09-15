@@ -10,18 +10,18 @@ export const getInfoProyecto = async (proyecto) => {
   }
 };
 
-export const getProyectosFiltrados = async (payload, page) => {
+export const getProyectosFiltradosCubicados = async (payload, page) => {
   try {
-    const response = await client.post(`/get-proyectos-filtrados/${page}`, payload);
+    const response = await client.post(`/get-proyectos-filtrados-cubicados/${page}`, payload);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;
   }
 };
 
-export const getOptionToFilter = async () => {
+export const getProyectosFiltradosLinkVNO = async (payload, page) => {
   try {
-    const response = await client.get('/get-option-filters');
+    const response = await client.post(`/get-proyectos-filtrados-link-vno/${page}`, payload);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;
@@ -58,6 +58,15 @@ export const getProyectosByEmpresa = async () => {
 export const getProyectobyID = async (proyecto_id) => {
   try {
     const response = await client.get(`/get-proyecto-filtrado-onnet-cubicado/${proyecto_id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getProyectoVNObyID = async (proyecto_id) => {
+  try {
+    const response = await client.get(`/get-proyecto-filtrado-onnet-link-vno/${proyecto_id}`);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;

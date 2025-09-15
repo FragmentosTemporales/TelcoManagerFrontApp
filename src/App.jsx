@@ -43,7 +43,9 @@ import ReparacionesView from "./views/ReparacionesView";
 import InventarioView from "./views/InventarioView";
 import CreateTareaInterna from "./views/CreateTarea";
 import LatestLogsView from "./views/LatestLogsView";
-import ProyectoFiltrado from "./views/ProyectoFiltrado";
+import ProyectoFiltradoCubicado from "./views/ProyectoFiltradoCubicado";
+import ProyectosLinkVNOView from "./views/ProyectosLinkVNOView";
+import ProyectoFiltradoVNO from "./views/ProyectoFiltradoVNO";
 
 function App() {
   return (
@@ -95,7 +97,9 @@ function App() {
           <Route path="/modulo:inventario" element={<InventarioView />} />
 
           <Route path="/proyectos-onnet" element={<ProyectosOnNetView />} />
-          <Route path="/modulo:proyecto-filtrado/:proyecto_id" element={<ProyectoFiltrado />} />
+          <Route path="/proyectos-link-vno" element={<ProyectosLinkVNOView />} />
+          <Route path="/modulo:proyecto-filtrado-cubicado/:proyecto_id" element={<ProyectoFiltradoCubicado />} />
+          <Route path="/modulo:proyecto-filtrado-vno/:proyecto_id" element={<ProyectoFiltradoVNO />} />
 
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />

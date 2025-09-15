@@ -24,11 +24,11 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
-  getProyectosFiltrados,
-  getOptionToFilter
+  getProyectosFiltradosCubicados
 } from "../api/onnetAPI";
 import { MainLayout } from "./Layout";
 import { palette } from "../theme/palette";
+import ModuleHeader from "../components/ModuleHeader";
 
 function ProyectosOnNetView() {
   const [pages, setPages] = useState(1);
@@ -38,55 +38,17 @@ function ProyectosOnNetView() {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   const [toFilter, setToFilter] = useState({
-    proyecto: "",
-    bandeja: "",
-    agencia: "",
+    proyecto: ""
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [optionsToFilter, setOptionsToFilter] = useState([]);
-
-  const agencias = [
-    "CURICO",
-    "CENTRO",
-    "RANCAGUA",
-    "ANTOFAGASTA",
-    "PROVIDENCIA",
-    "CALAMA",
-    "HUALPEN",
-    "MELIPILLA",
-    "PUENTE ALTO",
-    "PENAFLOR",
-    "LOS ANGELES",
-    "INDEPENDENCIA",
-    "VIÑA DEL MAR",
-    "CHIGUAYANTE",
-    "LAS REJAS",
-    "VALDIVIA",
-    "CONCEPCION",
-    "VALPARAISO",
-    "QUILPUE",
-    "SAN ANTONIO",
-    "APOQUINDO",
-    "LOS ANDES",
-    "NUNOA",
-    "EL LLANO",
-    "QUILLOTA",
-    "MAIPU",
-    "CHILLAN",
-    "LA FLORIDA",
-    "SAN BERNARDO",
-    "TALCAHUANO",
-    "VINA DEL MAR",
-    "TALCA",
-  ];
 
   const fetchData = async () => {
     setIsLoading(true);
     setIsSubmitting(true);
     try {
-      const response = await getProyectosFiltrados(toFilter, page);
+      const response = await getProyectosFiltradosCubicados(toFilter, page);
       setPages(response.pages);
       setData(response.data);
     } catch (error) {
@@ -98,26 +60,6 @@ function ProyectosOnNetView() {
     setIsSubmitting(false);
   };
 
-
-  const fetchDataOptions = async () => {
-    setIsLoading(true);
-    setIsSubmitting(true);
-    try {
-      const response = await getOptionToFilter();
-      // Mapear los resultados al formato requerido
-      const mapped = Array.isArray(response)
-        ? response.map((opt) => ({
-          value: opt.macro_estado || "",
-          label: opt.macro_estado || "",
-        }))
-        : [];
-      setOptionsToFilter(mapped);
-    } catch (error) {
-      console.log(error);
-    }
-    setIsLoading(false);
-    setIsSubmitting(false);
-  };
 
   const handlePage = (newPage) => setPage(newPage);
 
@@ -169,7 +111,7 @@ function ProyectosOnNetView() {
     try {
       setToFilter({ bandeja: "", categoria: "" });
       setPage(1); // Reset to the first page
-      await getProyectosFiltrados(
+      await getProyectosFiltradosCubicados(
         { bandeja: "", categoria: "" },
         1
       ).then((res) => {
@@ -245,48 +187,6 @@ function ProyectosOnNetView() {
                 />
               </FormControl>
             ))}
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel id="bandeja-label">Bandeja</InputLabel>
-              <Select
-                label="bandeja-label"
-                id="bandeja-select"
-                variant="standard"
-                value={toFilter.bandeja || ''}
-                size="small"
-                onChange={(event) => setToFilter(p => ({ ...p, bandeja: event.target.value }))}
-              >
-                {optionsToFilter.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel id="agencia-label">Agencia</InputLabel>
-              <Select
-                label="agencia-label"
-                id="agencia-select"
-                variant="standard"
-                value={toFilter.agencia || ''}
-                size="small"
-                onChange={(e) => setToFilter(p => ({ ...p, agencia: e.target.value }))}
-              >
-                {agencias && agencias.map(option => (
-                  <MenuItem key={option} value={option}>{option}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          <Divider flexItem sx={{ width: '100%', borderColor: palette.borderSubtle }} />
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: { xs: 'column', sm: 'row' },
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 2,
-              width: '100%',
-            }}
-          >
             <Button
               variant="contained"
               onClick={handleClear}
@@ -380,7 +280,7 @@ function ProyectosOnNetView() {
             <TableRow
               key={index}
               component={Link}
-              to={`/modulo:proyecto-filtrado/${row.proyecto}`}
+              to={`/modulo:proyecto-filtrado-cubicado/${row.proyecto}`}
               sx={{
                 textDecoration: "none",
                 cursor: "pointer",
@@ -435,10 +335,6 @@ function ProyectosOnNetView() {
   }, [page]);
 
   useEffect(() => {
-    fetchDataOptions();
-  }, []);
-
-  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
@@ -477,7 +373,10 @@ function ProyectosOnNetView() {
           </Alert>
         )}
 
-
+        <ModuleHeader
+          title="Proyectos Cubicados Onnet"
+          subtitle="Gestión de cubicados Onnet"
+        />
         {filterCard()}
         <Box
           sx={{
