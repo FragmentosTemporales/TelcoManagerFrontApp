@@ -79,6 +79,7 @@ function Login() {
         navigate("/");
       }, 1000);
     } catch (error) {
+      console.error(error);
       dispatch(setMessage(error));
       setIsSubmitting(false);
       setOpen(true);

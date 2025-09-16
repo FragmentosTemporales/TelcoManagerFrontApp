@@ -51,7 +51,7 @@ function BodegaQuintaViewer() {
       setDataBodega(filteredDataBodega);
       setDataLogistica(filteredDataLogistica);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

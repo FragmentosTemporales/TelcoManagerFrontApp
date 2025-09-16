@@ -111,6 +111,7 @@ function ReparacionesView() {
             setPages(response.pages);
             console.log("Reparaciones data:", response.data);
         } catch (error) {
+            console.error(error);
             setMessage(error.message || "Error al obtener las Reparaciones");
             setAlertType("error");
             setOpen(true);

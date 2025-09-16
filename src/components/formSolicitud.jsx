@@ -197,7 +197,7 @@ function FormSolicitud() {
       const response = await getPersona(token);
       setData(response);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setIsLoading(false);
   };
@@ -210,7 +210,7 @@ function FormSolicitud() {
       }));
       setAreaOptions(transformedOptions);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -238,6 +238,7 @@ function FormSolicitud() {
       });
       navigate(response.path);
     } catch (error) {
+      console.error(error);
       dispatch(setMessage(error));
       setOpen(true);
     }

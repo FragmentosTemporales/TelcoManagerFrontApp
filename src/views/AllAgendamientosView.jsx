@@ -86,7 +86,7 @@ function AllAgendamientoViewer() {
     try {
       await getDespachosSemenalExcel();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setIsSubmitting(false);
   };
@@ -114,6 +114,7 @@ function AllAgendamientoViewer() {
       setData(response.data);
       setPages(response.pages);
     } catch (error) {
+      console.error(error);
       setAlertType("error");
       setMessage(error);
       setOpen(true);
@@ -133,7 +134,7 @@ function AllAgendamientoViewer() {
       setData(response);
       setPages(1);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setIsSubmitting(false);
   };

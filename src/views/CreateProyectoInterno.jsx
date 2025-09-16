@@ -50,6 +50,7 @@ function CreateProyectoInterno() {
             });
             setTitulo("Editar Proyecto Interno");
         } catch (error) {
+            console.error(error);
             setMessage(`Error al cargar el proyecto: ${error}`);
             setAlertType("error");
             setOpen(true);
@@ -93,6 +94,7 @@ function CreateProyectoInterno() {
                 navigate("/modulo:proyecto-interno");
             }, 3000);
         } catch (error) {
+            console.error(error);
             setMessage(`Error al crear el proyecto: ${error}`);
             setAlertType("error");
             setOpen(true);
@@ -112,6 +114,7 @@ function CreateProyectoInterno() {
                 navigate("/modulo:proyecto-interno");
             }, 3000);
         } catch (error) {
+            console.error(error);
             setMessage(`Error al actualizar el proyecto: ${error}`);
             setAlertType("error");
             setOpen(true);

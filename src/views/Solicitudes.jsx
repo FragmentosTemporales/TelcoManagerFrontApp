@@ -54,6 +54,7 @@ function Solicitudes() {
       dispatch(onLoad(res));
       setIsSubmitting(false);
     } catch (error) {
+      console.error(error);
       dispatch(setMessage("Información no encontrada."));
       setOpen(true);
       setIsSubmitting(false);
@@ -79,6 +80,7 @@ function Solicitudes() {
         }
       );
     } catch (error) {
+      console.error(error);
       dispatch(setMessage("Error al limpiar los filtros."));
       setOpen(true);
     }
@@ -97,7 +99,7 @@ function Solicitudes() {
     try {
       await getSolicitudesExcel();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     finally {
       setIsSubmitting(false);

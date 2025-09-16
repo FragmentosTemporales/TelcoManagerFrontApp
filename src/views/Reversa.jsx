@@ -84,7 +84,7 @@ function ReversaView() {
       }));
       setTecnicos(transformedOptions);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -121,6 +121,7 @@ function ReversaView() {
       setLoading(false);
       setIsSubmitting(false);
     } catch (error) {
+      console.error(error);
       setSeverity("error");
       setMessage("Error al obtener la información");
       setOpen(true);
@@ -148,6 +149,7 @@ function ReversaView() {
       setOpen(true);
       setSerie("");
     } catch (error) {
+      console.error(error);
       setSeverity("error");
       setMessage("Error al actualizar la información");
       setOpen(true);

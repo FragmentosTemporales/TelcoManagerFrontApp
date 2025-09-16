@@ -46,6 +46,15 @@ export const loadConsumosOnnet = async (payload) => {
   }
 };
 
+export const loadConsumosOnnetVNO = async (payload) => {
+  try {
+    const response = await client.post(`/load-plantilla-vno`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
 export const getProyectosByEmpresa = async () => {
   try {
     const response = await client.get(`/get-proyectos-asignados-por-empresa`);
@@ -82,6 +91,15 @@ export const updateValidacionEstado = async (payload) => {
   }
 };
 
+export const updateValidacionEstadoVNO = async (payload) => {
+  try {
+    const response = await client.put('/update-cubicado-vno-estado', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
 export const loadOnnetAprobados = async (proyecto_id) => {
   try {
     const response = await client.get(`/load-info-onnet-quickbase/${proyecto_id}`);
@@ -100,6 +118,15 @@ export const createCubicadoUnitario = async (payload) => {
   }
 };
 
+export const createCubicadoVNOUnitario = async (payload) => {
+  try {
+    const response = await client.post('/create-cubicado-onnet-vno', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
 export const getRelateds = async () => {
   try {
     const response = await client.get(`/get-relateds`);
@@ -108,7 +135,6 @@ export const getRelateds = async () => {
     throw error.response?.data?.error || error.message;
   }
 };
-
 
 export const updateCubicadoRecord = async (payload) => {
   try {

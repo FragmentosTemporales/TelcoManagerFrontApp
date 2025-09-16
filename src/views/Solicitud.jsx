@@ -845,6 +845,7 @@ function Solicitud() {
       handleCloseModal();
       setIsSubmitting(false);
     } catch (error) {
+      console.error(error);
       // Manejo de errores más específico para depuración y UX
       setMessage("Error al crear la gestión. Inténtalo nuevamente.");
       setAlertInfo("error");
@@ -883,6 +884,7 @@ function Solicitud() {
       setIsLoading(false);
       setIsSubmitting(false);
     } catch (error) {
+      console.error(error);
       setMessage("Error al cargar la información");
       setOpen(true);
     }
@@ -894,7 +896,7 @@ function Solicitud() {
   await downloadFile(payload);
       console.log("Archivo descargado exitosamente");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

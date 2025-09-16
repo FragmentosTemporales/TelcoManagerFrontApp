@@ -60,7 +60,7 @@ export default function CreateMigracionesProactivas() {
   const response = await getDataMigracionesComunas();
       setDataComuna(response);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -72,6 +72,7 @@ export default function CreateMigracionesProactivas() {
   const response = await getMigracionUnica(id);
       setMigracion(response);
     } catch (error) {
+      console.error(error);
       setAlertType("error");
       setMessage(error);
       setOpen(true);
@@ -180,6 +181,7 @@ const setEstadoOpciones = () => {
       setAlertType("error");
       setMessage(error);
       setOpen(true);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -195,6 +197,7 @@ const setEstadoOpciones = () => {
       setAlertType("error");
       setMessage(error);
       setOpen(true);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -227,6 +230,7 @@ const setEstadoOpciones = () => {
       setAlertType("error");
       setMessage(error);
       setOpen(true);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
       clearForm();

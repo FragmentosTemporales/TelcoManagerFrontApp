@@ -73,7 +73,7 @@ function FormAstList() {
       setData(res.data);
       setPages(res.pages);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsLoading(false);
       setIsSubmitting(false);
@@ -103,7 +103,7 @@ function FormAstList() {
         setPages(res.pages);
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsLoading(false);
       setIsSubmitting(false);
@@ -115,7 +115,7 @@ function FormAstList() {
   const res = await getDataCCStats(centroCosto);
       setDataStatsCCFiltered(res);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -124,7 +124,7 @@ function FormAstList() {
   const res = await getAstUsers();
       setDataUsers(res);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -154,7 +154,7 @@ function FormAstList() {
   const res = await getNotAstCC();
       setDataStatsCC(res);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -167,7 +167,7 @@ function FormAstList() {
     try {
   await getAstHistoricoExcel();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }

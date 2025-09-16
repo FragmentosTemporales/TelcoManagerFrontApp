@@ -93,6 +93,7 @@ function Settings() {
         handleLogout();
       }, 1800);
     } catch (error) {
+      console.error(error);
       setMessage("Error al actualizar la contraseña.");
       setSeverity("error");
       setOpen(true);

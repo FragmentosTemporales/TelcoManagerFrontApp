@@ -245,6 +245,7 @@ function TicketViewer() {
       setFormUpdate({ logID: logID, estado: "", comentario: "" });
       fetchTicket();
     } catch (error) {
+      console.error(error);
       setMessage(error || "Error al crear el ticket");
       setAlertType("error");
       setOpen(true);
@@ -258,6 +259,7 @@ function TicketViewer() {
   const ticket = await getTicketInfo(logID);
       setData(ticket);
     } catch (error) {
+      console.error(error);
       setMessage(error.message || "Error al obtener los tickets");
       setAlertType("error");
       setOpen(true);

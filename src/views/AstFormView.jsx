@@ -19,7 +19,7 @@ function AstViewer() {
       setWorker(res.usuario);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

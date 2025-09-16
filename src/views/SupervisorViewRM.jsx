@@ -44,7 +44,7 @@ function SupervisorViewRM() {
       const filteredData = response.filter((item) => item.CENTRO == userData.CENTRO);
       setData(filteredData);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -73,7 +73,7 @@ function SupervisorViewRM() {
   setIsSubmittingModal(true);
   await darSalida(trabajador.Rut);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsSubmittingModal(false);
       setTrabajador(undefined);
@@ -88,7 +88,7 @@ function SupervisorViewRM() {
   setIsSubmittingModal(true);
   await cancelarAtencion(trabajador.Rut);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsSubmittingModal(false);
       setTrabajador(undefined);

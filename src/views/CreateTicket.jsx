@@ -175,6 +175,7 @@ function TicketeraView() {
       setData(tickets.data);
       setPages(tickets.pages);
     } catch (error) {
+      console.error(error);
       setMessage(error.message || "Error al obtener los tickets");
       setAlertType("error");
       setOpen(true);
@@ -216,6 +217,7 @@ function TicketeraView() {
       clearForm();
       setOpen(true);
     } catch (error) {
+      console.error(error);
       // Manejo de error específico si el archivo está abierto por otro proceso
       let errorMsg = error?.message || error;
       if (
@@ -246,6 +248,7 @@ function TicketeraView() {
       }));
       setCategorias(categoriasTransformadas);
     } catch (error) {
+      console.error(error);
       setMessage(error.message || "Error al obtener las categorías");
       setAlertType("error");
       setOpen(true);
@@ -481,7 +484,7 @@ function TicketeraView() {
       await sendTicketInfo(logID);
       setLogID(null);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

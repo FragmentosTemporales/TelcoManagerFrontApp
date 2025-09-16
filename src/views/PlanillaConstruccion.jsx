@@ -47,6 +47,7 @@ function LoadConstruccion() {
       setMessage(response.message);
       setOpen(true);
     } catch (error) {
+      console.error(error);
       // Manejo de error específico si el archivo está abierto por otro proceso
       let errorMsg = error?.message || error;
       if (

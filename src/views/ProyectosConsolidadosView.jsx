@@ -52,6 +52,7 @@ function ProyectosOnNetView() {
       setPages(response.pages);
       setData(response.data);
     } catch (error) {
+      console.error(error);
       setAlertType("error");
       setMessage(error);
       setOpen(true);
@@ -119,6 +120,7 @@ function ProyectosOnNetView() {
         setData(res.data);
       });
     } catch (error) {
+      console.error(error);
       setMessage("Error al limpiar los filtros.");
       setOpen(true);
     }

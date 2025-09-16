@@ -14,8 +14,6 @@ import palette from "../../theme/palette";
 
 function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
 
-    const authState = useSelector((state) => state.auth);
-
     const migracionState = useSelector((state) => state.migraciones);
     const { id_selected } = migracionState;
 
@@ -42,7 +40,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
             const response = await getQMigracionesPendientesdeVista();
             setQMigracionesPendientesVista(response);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -52,7 +50,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
             const response = await getMigracionGestiones(id_vivienda);
             setDataGestiones(response);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -61,7 +59,7 @@ function MigracionLayout({ children, showNavbar = true, id_vivienda = null }) {
             const response = await getDataMigracionesPendientes();
             setDataPendiente(response.data);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 

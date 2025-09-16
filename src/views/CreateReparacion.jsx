@@ -98,6 +98,7 @@ function CreateReparacionView() {
       setAlertSeverity("success");
       setMessage("Formulario creado exitosamente.");
     } catch (error) {
+      console.error(error);
       setAlertSeverity("error");
       setMessage(
         "Error al crear el formulario. Por favor, inténtelo de nuevo."

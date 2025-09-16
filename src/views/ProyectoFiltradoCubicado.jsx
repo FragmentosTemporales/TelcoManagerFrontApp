@@ -116,7 +116,7 @@ export default function ProyectoFiltradoCubicado() {
             await downloadFile(payload);
             console.log("Archivo descargado exitosamente");
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -142,6 +142,7 @@ export default function ProyectoFiltradoCubicado() {
             });
 
         } catch (error) {
+            console.error(error);
             // Manejo de error específico si el archivo está abierto por otro proceso
             let errorMsg = error?.message || error;
             if (
@@ -179,6 +180,7 @@ export default function ProyectoFiltradoCubicado() {
             setOpen(true);
 
         } catch (error) {
+            console.error(error);
             // Manejo de error específico si el archivo está abierto por otro proceso
             let errorMsg = error?.message || error;
             if (
@@ -214,6 +216,7 @@ export default function ProyectoFiltradoCubicado() {
             setOpen(true);
             setToUpdate(undefined);
         } catch (error) {
+            console.error(error);
             setMessage(error.message || "Error al actualizar el registro");
             setAlertType("error");
             setOpen(true);
@@ -232,7 +235,7 @@ export default function ProyectoFiltradoCubicado() {
             setRelatedMO(res.related_mo.sort((a, b) => a.related_mo_label.localeCompare(b.related_mo_label)) || []);
             setRelatedUO(res.related_uo.sort((a, b) => a.related_uo_label.localeCompare(b.related_uo_label)) || []);
         } catch (error) {
-            console.log("Error fetching relateds: ", error);
+            console.error(error);
         }
     };
 
@@ -244,6 +247,7 @@ export default function ProyectoFiltradoCubicado() {
             setDataCubicada(res.data || []);
             setDataSubida(res.cubicados || []);
         } catch (error) {
+            console.error(error);
             setMessage("Error al cargar el proyecto");
             setAlertType("error");
         } finally {
@@ -255,7 +259,7 @@ export default function ProyectoFiltradoCubicado() {
         try {
             await loadOnnetAprobados(proyecto_id);
         } catch (error) {
-            console.log("Error al cargar los aprobados de Onnet: ", error);
+            console.error(error);
         }
     };
 
@@ -294,6 +298,7 @@ export default function ProyectoFiltradoCubicado() {
             execLoadOnnetAprobados();
             fetchProyecto();
         } catch (error) {
+            console.error(error);
             let errorMsg = error?.message || error;
             setMessage(errorMsg || "Error al actualizar");
             setAlertType("error");
@@ -348,6 +353,15 @@ export default function ProyectoFiltradoCubicado() {
             pointerEvents: "none",
             mixBlendMode: "overlay",
         },
+    };
+
+    // Sticky header style for table headers
+    const stickyTh = {
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+        background: palette.cardBg,
+        boxShadow: '0 2px 4px rgba(0,0,0,0.06)'
     };
 
     const primaryBtn = {
@@ -462,19 +476,19 @@ export default function ProyectoFiltradoCubicado() {
                         <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, maxHeight: 360, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
                             {/* Ensure table can overflow horizontally to show a lateral scrollbar on small viewports */}
                             <Table size="small" sx={{ minWidth: 1100 }}>
-                                <TableHead sx={{ background: palette.cardBg }}>
+                                <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Descripción</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>UM</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Material</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Descripción</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Descripción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>UM</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Cod. Material</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Descripción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -805,16 +819,16 @@ export default function ProyectoFiltradoCubicado() {
                     <CardContent sx={{ pt: 1 }}>
                         <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, overflow: 'hidden' }}>
                             <Table size="small">
-                                <TableHead sx={{ background: palette.cardBg }}>
+                                <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Fecha Carga</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Material</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Estado</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Fecha Validación</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Fecha Carga</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Cod. Material</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Estado</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Fecha Validación</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>

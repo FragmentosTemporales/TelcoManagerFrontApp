@@ -28,6 +28,7 @@ function AmonesatacionesViewer() {
       setPages(res.pages);
       setIsSubmitting(false);
     } catch (error) {
+      console.error(error);
       dispatch(setMessage("Información no encontrada."));
       setOpen(true);
       setIsSubmitting(false);

@@ -50,7 +50,7 @@ function MigracionesViewer() {
       setTotal(response.total);
       setStatsData(response.stats || []);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setMessage(error.error || "Error al cargar los datos");
       setOpen(true);
     } finally {
@@ -68,7 +68,7 @@ function MigracionesViewer() {
     try {
   await getMigracionesExcel();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }

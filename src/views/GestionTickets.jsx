@@ -68,6 +68,7 @@ function GestorTicketera() {
     try {
       fetchTickets();
     } catch (error) {
+      console.error(error);
       setMessage(error.message || "Error al crear el ticket");
       setAlertType("error");
       setOpen(true);
@@ -253,6 +254,7 @@ function GestorTicketera() {
       setStats(filterData);
       setStatsFinalizado(combinedStatsFinalizado);
     } catch (error) {
+      console.error(error);
       setMessage(error.message || "Error al obtener los tickets");
       setAlertType("error");
       setOpen(true);
@@ -266,6 +268,7 @@ function GestorTicketera() {
   const tickets = await getTicketera(form);
       setData(tickets);
     } catch (error) {
+      console.error(error);
       setMessage(error.message || "Error al obtener los tickets");
       setAlertType("error");
       setOpen(true);
@@ -415,6 +418,7 @@ function GestorTicketera() {
   const tickets = await getTicketera({ estado });
       setData(tickets);
     } catch (error) {
+      console.error(error);
       setMessage(error.message || "Error al obtener los tickets");
       setAlertType("error");
       setOpen(true);

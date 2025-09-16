@@ -44,6 +44,7 @@ export default function CreateTareaInterna() {
             setUsuarios(response);
             console.log("Usuarios fetched:", response);
         } catch (error) {
+            console.error(error);
             setMessage(`Error al cargar los usuarios: ${error}`);
             setAlertType("error");
             setOpen(true);
@@ -73,6 +74,7 @@ export default function CreateTareaInterna() {
                 navigate("/modulo:proyecto-interno");
             }, 3000);
         } catch (error) {
+            console.error(error);
             setMessage(`Error al crear la tarea: ${error}`);
             setAlertType("error");
             setOpen(true);

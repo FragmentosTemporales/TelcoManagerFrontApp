@@ -151,6 +151,7 @@ function NDCSinConsumoUpdate() {
             setOpen(true);
 
         } catch (error) {
+            console.error(error);
             setData(previousData);
             setMessage("Error al actualizar. Por favor, inténtelo nuevamente.");
             setAlertType("error");

@@ -70,6 +70,7 @@ import {
         setOpen(true);
         navigate("/modulo:solicitudes");
       } catch (error) {
+        console.error(error);
         dispatch(setMessage(error));
         setOpen(true);
       }

@@ -35,10 +35,10 @@ import { getProyectoVNObyID } from "../api/onnetAPI";
 import { extractDateOnly } from "../helpers/main";
 import { useParams } from "react-router-dom";
 import {
-    loadConsumosOnnet,
-    updateValidacionEstado,
+    loadConsumosOnnetVNO,
+    updateValidacionEstadoVNO,
     loadOnnetAprobados,
-    createCubicadoUnitario,
+    createCubicadoVNOUnitario,
     getRelateds,
     updateCubicadoRecord
 } from "../api/onnetAPI";
@@ -64,7 +64,7 @@ export default function ProyectoFiltradoVNO() {
 
     const [toUpdate, setToUpdate] = useState(undefined);
 
-    const filePath = "/home/ubuntu/telcomanager/app/data/Plantilla.xlsx";
+    const filePath = "/home/ubuntu/telcomanager/app/data/Planilla_VNO.xlsm";
 
 
     const [form, setForm] = useState({
@@ -85,7 +85,6 @@ export default function ProyectoFiltradoVNO() {
         uo_cubicada_construccion: "",
         uo_cubicada_interior: ""
     });
-
 
     const [formToUpdate, setFormToUpdate] = useState(undefined);
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -120,7 +119,7 @@ export default function ProyectoFiltradoVNO() {
             await downloadFile(payload);
             console.log("Archivo descargado exitosamente");
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
@@ -142,7 +141,7 @@ export default function ProyectoFiltradoVNO() {
                 uo_cubicada_interior: formUnitario.uo_cubicada_interior === '' ? null : Number(formUnitario.uo_cubicada_interior),
             };
 
-            const response = await createCubicadoUnitario(payload);
+            const response = await createCubicadoVNOUnitario(payload);
             setMessage(response.message || "Cubicado unitario creado exitosamente");
             setAlertType("success");
             setOpen(true);
@@ -160,6 +159,7 @@ export default function ProyectoFiltradoVNO() {
             });
 
         } catch (error) {
+            console.error(error);
             // Manejo de error específico si el archivo está abierto por otro proceso
             let errorMsg = error?.message || error;
             if (
@@ -190,13 +190,14 @@ export default function ProyectoFiltradoVNO() {
         formData.append("proyecto", form.proyecto);
         try {
 
-            const response = await loadConsumosOnnet(formData);
+            const response = await loadConsumosOnnetVNO(formData);
             clearForm();
             setAlertType("success");
             setMessage(response.message);
             setOpen(true);
 
         } catch (error) {
+            console.error(error);
             // Manejo de error específico si el archivo está abierto por otro proceso
             let errorMsg = error?.message || error;
             if (
@@ -232,6 +233,7 @@ export default function ProyectoFiltradoVNO() {
             setOpen(true);
             setToUpdate(undefined);
         } catch (error) {
+            console.error(error);
             setMessage(error.message || "Error al actualizar el registro");
             setAlertType("error");
             setOpen(true);
@@ -250,7 +252,7 @@ export default function ProyectoFiltradoVNO() {
             setRelatedMO(res.related_mo.sort((a, b) => a.related_mo_label.localeCompare(b.related_mo_label)) || []);
             setRelatedUO(res.related_uo.sort((a, b) => a.related_uo_label.localeCompare(b.related_uo_label)) || []);
         } catch (error) {
-            console.log("Error fetching relateds: ", error);
+            console.error("Error fetching relateds: ", error);
         }
     };
 
@@ -261,9 +263,14 @@ export default function ProyectoFiltradoVNO() {
             setInfoProyecto(res.info || []);
             setDataCubicada(res.data || []);
             setDataSubida(res.cubicados || []);
+
+            console.table(res.cubicados);
+
         } catch (error) {
+            console.error(error);
             setMessage("Error al cargar el proyecto");
             setAlertType("error");
+            setOpen(true);
         } finally {
             setIsSubmitting(false);
         }
@@ -273,7 +280,7 @@ export default function ProyectoFiltradoVNO() {
         try {
             await loadOnnetAprobados(proyecto_id);
         } catch (error) {
-            console.log("Error al cargar los aprobados de Onnet: ", error);
+            console.error(error);
         }
     };
 
@@ -304,14 +311,15 @@ export default function ProyectoFiltradoVNO() {
                 return;
             }
 
-            const res = await updateValidacionEstado(payload);
+            const res = await updateValidacionEstadoVNO(payload);
             setMessage(res.message || "Actualización exitosa");
             setAlertType("success");
             setOpen(true);
             setIsSubmitting(false);
-            execLoadOnnetAprobados();
+            // execLoadOnnetAprobados();
             fetchProyecto();
         } catch (error) {
+            console.error(error);
             let errorMsg = error?.message || error;
             setMessage(errorMsg || "Error al actualizar");
             setAlertType("error");
@@ -366,6 +374,16 @@ export default function ProyectoFiltradoVNO() {
             pointerEvents: "none",
             mixBlendMode: "overlay",
         },
+    };
+
+    // Sticky header style for table headers
+    const stickyTh = {
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+        background: palette.cardBg,
+        // ensure a subtle separation when scrolling
+        boxShadow: '0 2px 4px rgba(0,0,0,0.06)'
     };
 
     const primaryBtn = {
@@ -479,49 +497,49 @@ export default function ProyectoFiltradoVNO() {
                     <CardContent sx={{ pt: 1 }}>
                         <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, maxHeight: 420, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
                             {/* Ensure table can overflow horizontally to show a lateral scrollbar on small viewports */}
-                            <Table size="small" sx={{ }}>
-                                <TableHead sx={{ background: palette.cardBg }}>
+                            <Table size="small" sx={{}}>
+                                <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Descripción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Descripción</TableCell>
 
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Interior</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Construcción</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Habilitación</TableCell>
-
-
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Interior</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Construcción</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Habilitación</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Interior</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Construcción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Habilitación</TableCell>
 
 
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Interior</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Construcción</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Habilitación</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada Interior</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada Construcción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada Habilitación</TableCell>
 
 
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Material</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Descripción</TableCell>
-
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Interior</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Construcción</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Habilitación</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Interior</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Construcción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Habilitación</TableCell>
 
 
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Interior</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Construcción</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada Habilitación</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Cod. Material</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Descripción</TableCell>
+
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Interior</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Construcción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada Habilitación</TableCell>
 
 
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Interior</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Construcción</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Habilitación</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada Interior</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada Construcción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Informada Habilitación</TableCell>
+
+
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Interior</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Construcción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Q Aprobada Habilitación</TableCell>
 
                                     </TableRow>
                                 </TableHead>
@@ -598,7 +616,7 @@ export default function ProyectoFiltradoVNO() {
                         style={{ width: "100%" }}
                     >
                         <Box>
-                            <InputLabel id="file-label">Cargar Cubicados</InputLabel>
+                            <InputLabel id="file-label">Cargar Cubicados VNO</InputLabel>
                             <TextField
                                 required
                                 fullWidth
@@ -607,7 +625,7 @@ export default function ProyectoFiltradoVNO() {
                                 name="file"
                                 variant="standard"
                                 onChange={handleFileChange}
-                                inputProps={{ accept: ".xlsx,.xls" }}
+                                inputProps={{ accept: ".xlsx,.xls,.xlsm" }}
                             />
                         </Box>
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -780,7 +798,6 @@ export default function ProyectoFiltradoVNO() {
                             style={{ width: "100%" }}
                         >
                             <Grid container spacing={2} alignItems="center">
-
                                 <Grid item xs={12} md={6}>
                                     <InputLabel id="cod-actividad-label">Cod. Actividad</InputLabel>
                                     <Autocomplete
@@ -803,7 +820,7 @@ export default function ProyectoFiltradoVNO() {
                                 </Grid>
 
 
-                                <Grid item xs={12} md={4}>
+                                <Grid item xs={12} md={6}>
                                     <InputLabel id="mo-habilitacion-label">MO Habilitación</InputLabel>
                                     <TextField
                                         fullWidth
@@ -818,7 +835,7 @@ export default function ProyectoFiltradoVNO() {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} md={4}>
+                                <Grid item xs={12} md={6}>
                                     <InputLabel id="mo-construccion-label">MO Construcción</InputLabel>
                                     <TextField
                                         fullWidth
@@ -833,7 +850,7 @@ export default function ProyectoFiltradoVNO() {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} md={4}>
+                                <Grid item xs={12} md={6}>
                                     <InputLabel id="mo-interior-label">MO Interior</InputLabel>
                                     <TextField
                                         fullWidth
@@ -869,7 +886,7 @@ export default function ProyectoFiltradoVNO() {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} md={4}>
+                                <Grid item xs={12} md={6}>
                                     <InputLabel id="uo-habilitacion-label">UO Habilitación</InputLabel>
                                     <TextField
                                         fullWidth
@@ -884,7 +901,7 @@ export default function ProyectoFiltradoVNO() {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} md={4}>
+                                <Grid item xs={12} md={6}>
                                     <InputLabel id="uo-construccion-label">UO Construcción</InputLabel>
                                     <TextField
                                         fullWidth
@@ -899,7 +916,7 @@ export default function ProyectoFiltradoVNO() {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} md={4}>
+                                <Grid item xs={12} md={6}>
                                     <InputLabel id="uo-interior-label">UO Interior</InputLabel>
                                     <TextField
                                         fullWidth
@@ -943,18 +960,21 @@ export default function ProyectoFiltradoVNO() {
                 <Card sx={{ ...glass, width: '100%' }}>
                     <CardHeader title="Elementos cargados" sx={{ background: 'transparent', pb: 0 }} />
                     <CardContent sx={{ pt: 1 }}>
-                        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, maxHeight: 360, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, maxHeight: 420, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
                             <Table size="small">
-                                <TableHead sx={{ background: palette.cardBg }}>
+                                <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Fecha Carga</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Informada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Cod. Material</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Q Cubicada</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Estado</TableCell>
-                                        <TableCell sx={{ color: palette.textMuted, fontWeight: "bold" }}>Fecha Validación</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Fecha Carga</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Cod. Actividad</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>MO Cubicada Habilitación</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>MO Cubicada Construcción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>MO Cubicada Interior</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Cod. Material</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>UO Cubicada Habilitacion</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>UO Cubicada Construcción</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>UO Cubicada Interior</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Estado</TableCell>
+                                        <TableCell sx={{ ...stickyTh, color: palette.textMuted, fontWeight: "bold" }}>Fecha Validación</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -963,10 +983,13 @@ export default function ProyectoFiltradoVNO() {
                                             <TableRow key={index} hover sx={{ '&:hover': { backgroundColor: palette.accentSoft } }}>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['fecha_registro'] ? extractDateOnly(p['fecha_registro']) : 'Sin Información'}</TableCell>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['cod_actividad'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['cant_actividad_cubicada'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['cant_actividad_informada'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['mo_cubicada_habilitacion'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['mo_cubicada_construccion'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['mo_cubicada_interior'] ?? 'Sin Información'}</TableCell>
                                                 <TableCell sx={{ color: palette.textMuted }}>{p['cod_material'] ?? 'Sin Información'}</TableCell>
-                                                <TableCell sx={{ color: palette.textMuted }}>{p['cant_material_cubicada'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['uo_cubicada_habilitacion'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['uo_cubicada_construccion'] ?? 'Sin Información'}</TableCell>
+                                                <TableCell sx={{ color: palette.textMuted }}>{p['uo_cubicada_interior'] ?? 'Sin Información'}</TableCell>
                                                 <TableCell sx={{ color: palette.textMuted }}>
                                                     <Select
                                                         value={p['validacion_estado'] ?? '0'}
@@ -986,7 +1009,7 @@ export default function ProyectoFiltradoVNO() {
                                         ))
                                     ) : (
                                         <TableRow>
-                                            <TableCell colSpan={8} align="center">No hay datos disponibles</TableCell>
+                                            <TableCell colSpan={11} align="center">No hay datos disponibles</TableCell>
                                         </TableRow>
                                     )}
                                 </TableBody>

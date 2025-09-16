@@ -285,6 +285,7 @@ function AgendamientoViewer() {
       });
       setDataBacklogEstado(undefined);
     } catch (error) {
+      console.error(error);
       setAlertType("error");
       setMessage(error);
       setOpen(true);
@@ -299,6 +300,7 @@ function AgendamientoViewer() {
   const response = await getBacklog(formGetBacklog);
       setDataBacklog(response);
     } catch (error) {
+      console.error(error);
       setAlertType("error");
       setMessage(error);
       setOpen(true);
@@ -312,6 +314,7 @@ function AgendamientoViewer() {
       const response = await getBacklogEstado(orden);
       setDataBacklogEstado(response);
     } catch (error) {
+      console.error(error);
       setAlertType("error");
       setMessage(error);
       setOpen(true);
