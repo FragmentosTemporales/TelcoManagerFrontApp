@@ -66,12 +66,13 @@ export default function ProyectoFiltradoVNO() {
 
     const filePath = "/home/ubuntu/telcomanager/app/data/Planilla_VNO.xlsm";
 
+    const [vnoOption, setVnoOption] = useState([]);
 
     const [form, setForm] = useState({
         file: null,
-        proyecto: proyecto_id || ""
+        proyecto: proyecto_id || "",
+        related_vno: ""
     });
-
 
     const [formUnitario, setFormUnitario] = useState({
         proyecto: proyecto_id || "",
@@ -83,7 +84,8 @@ export default function ProyectoFiltradoVNO() {
         cod_material: "",
         uo_cubicada_habilitacion: "",
         uo_cubicada_construccion: "",
-        uo_cubicada_interior: ""
+        uo_cubicada_interior: "",
+        orden_vno: ""
     });
 
     const [formToUpdate, setFormToUpdate] = useState(undefined);
@@ -188,6 +190,7 @@ export default function ProyectoFiltradoVNO() {
             formData.append("file", form.file);
         }
         formData.append("proyecto", form.proyecto);
+        formData.append("related_vno", form.related_vno);
         try {
 
             const response = await loadConsumosOnnetVNO(formData);
@@ -264,7 +267,9 @@ export default function ProyectoFiltradoVNO() {
             setDataCubicada(res.data || []);
             setDataSubida(res.cubicados || []);
 
-            console.table(res.cubicados);
+            if (res.related_options) {
+                setVnoOption(res.related_options);
+            }
 
         } catch (error) {
             console.error(error);
@@ -316,7 +321,7 @@ export default function ProyectoFiltradoVNO() {
             setAlertType("success");
             setOpen(true);
             setIsSubmitting(false);
-            // execLoadOnnetAprobados();
+            execLoadOnnetAprobados();
             fetchProyecto();
         } catch (error) {
             console.error(error);
@@ -594,7 +599,7 @@ export default function ProyectoFiltradoVNO() {
                                         ))
                                     ) : (
                                         <TableRow>
-                                            <TableCell colSpan={11} align="center">No hay datos disponibles</TableCell>
+                                            <TableCell colSpan={28} align="center">No hay datos disponibles</TableCell>
                                         </TableRow>
                                     )}
                                 </TableBody>
@@ -615,6 +620,32 @@ export default function ProyectoFiltradoVNO() {
                         encType="multipart/form-data"
                         style={{ width: "100%" }}
                     >
+                        <Box sx={{ display: "flex", flexDirection: { lg: "row", xs: "column" }, gap: 4, justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                        <Box>
+                            <InputLabel id="file-label">Orden Asociada</InputLabel>
+                            <Select
+                                required
+                                fullWidth
+                                id="related_vno"
+                                name="related_vno"
+                                variant="standard"
+                                value={form.related_vno}
+                                onChange={(e, newValue) => {
+                                    const value = e.target.value;
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        related_vno: value
+                                    }));
+                                }}
+                                sx={{ mb: 2, minWidth: 240 }}
+                            >
+                                {vnoOption.map((option, index) => (
+                                    <MenuItem key={index} value={option.ORDEN}>
+                                        {option.ORDEN}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </Box>
                         <Box>
                             <InputLabel id="file-label">Cargar Cubicados VNO</InputLabel>
                             <TextField
@@ -626,7 +657,9 @@ export default function ProyectoFiltradoVNO() {
                                 variant="standard"
                                 onChange={handleFileChange}
                                 inputProps={{ accept: ".xlsx,.xls,.xlsm" }}
+                                sx={{ mb: 2, minWidth: 240 }}
                             />
+                        </Box>
                         </Box>
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                             <Button
@@ -929,6 +962,28 @@ export default function ProyectoFiltradoVNO() {
                                         onChange={handleUnitarioChange}
                                         value={formUnitario.uo_cubicada_interior}
                                     />
+                                </Grid>
+
+                                <Grid item xs={12} md={6}>
+                        <Box>
+                            <InputLabel id="file-label">Orden Asociada</InputLabel>
+                            <Select
+                                required
+                                fullWidth
+                                id="orden_vno"
+                                name="orden_vno"
+                                variant="standard"
+                                onChange={handleUnitarioChange}
+                                value={formUnitario.orden_vno}
+                                sx={{ mb: 2, minWidth: 240 }}
+                            >
+                                {vnoOption.map((option, index) => (
+                                    <MenuItem key={index} value={option.ORDEN}>
+                                        {option.ORDEN}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </Box>
                                 </Grid>
 
                                 <Grid item xs={12}>
