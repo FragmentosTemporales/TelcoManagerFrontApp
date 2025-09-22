@@ -71,12 +71,12 @@ function Home() {
     //   link: "/modulo:registro-reparacion",
     //   moduloID: 4,
     // },
-    // {
-    //   head: "Registro de Reparaciones",
-    //   title: "Visualiza las reparaciones realizadas",
-    //   link: "/modulo:reparaciones",
-    //   moduloID: 4,
-    // },
+    {
+      head: "Registro de Reparaciones",
+      title: "Visualiza las reparaciones realizadas",
+      link: "/modulo:reparaciones",
+      moduloID: 21,
+    },
 
     {
       head: "NDC_Bot Manager",

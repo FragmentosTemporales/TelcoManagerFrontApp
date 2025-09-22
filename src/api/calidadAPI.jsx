@@ -9,9 +9,18 @@ export const createRegistroReparacion = async (payload) => {
   }
 };
 
-export const getReparaciones = async (page) => {
+export const getReparaciones = async (page, payload) => {
   try {
-    const response = await client.get(`/get-reparaciones/${page}`);
+    const response = await client.post(`/get-reparaciones/${page}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getReparacionByID = async (reparacion_id) => {
+  try {
+    const response = await client.get(`/get-reparacion/${reparacion_id}`);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;
