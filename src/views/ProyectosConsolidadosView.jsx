@@ -107,6 +107,15 @@ function ProyectosOnNetView() {
     </>
   );
 
+  // Header array for the table
+  const tableHeaders = [
+    "PROYECTO",
+    "BANDEJA",
+    "CENTRAL FTTX",
+    "AGENCIA",
+    "DESPLIEGUE",
+  ];
+
   const handleClear = async (e) => {
     e.preventDefault();
     try {
@@ -243,13 +252,7 @@ function ProyectosOnNetView() {
     <>
       <TableHead>
         <TableRow>
-          {[
-            "PROYECTO",
-            "BANDEJA",
-            "CENTRAL FTTX",
-            "AGENCIA",
-            "DESPLIEGUE",
-          ].map((header) => (
+          {tableHeaders.map((header) => (
             <TableCell
               key={header}
               align="center"

@@ -107,6 +107,15 @@ function ProyectosLinkVNOView() {
         </>
     );
 
+    // Header array for the table
+    const tableHeaders = [
+        "PROYECTO",
+        "COMUNA",
+        "ESTADO",
+        "ESTADO OT A",
+        "ESTADO OT B",
+    ];
+
     const handleClear = async (e) => {
         e.preventDefault();
         try {
@@ -243,13 +252,7 @@ function ProyectosLinkVNOView() {
         <>
             <TableHead>
                 <TableRow>
-                    {[
-                        "PROYECTO",
-                        "COMUNA",
-                        "ESTADO",
-                        "ESTADO OT A",
-                        "ESTADO OT B",
-                    ].map((header) => (
+                    {tableHeaders.map((header) => (
                         <TableCell
                             key={header}
                             align="center"

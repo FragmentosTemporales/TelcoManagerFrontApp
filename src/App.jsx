@@ -47,6 +47,7 @@ import ProyectoFiltradoCubicado from "./views/ProyectoFiltradoCubicado";
 import ProyectosLinkVNOView from "./views/ProyectosLinkVNOView";
 import ProyectoFiltradoVNO from "./views/ProyectoFiltradoVNO";
 import RepaView from "./views/RepaView";
+import ReparacionesInfoEdit from "./views/ReparacionesInfoEdit";
 
 function App() {
   return (
@@ -89,6 +90,7 @@ function App() {
           <Route path="/modulo:registro-reparacion" element={<CreateReparacionView />} />
           <Route path="/modulo:reparaciones" element={<ReparacionesView />} />
           <Route path="/modulo:repa/:orden" element={<RepaView />} />
+          <Route path="/modulo:reparacionesinfo" element={<ReparacionesInfoEdit />} />
 
           <Route path="/modulo:ndc/pendientes-sin-consumo" element={<NDCSinConsumoUpdate />} />
           <Route path="/modulo:ndc/error-stock-consumo" element={<NDCErrorConConsumo />} />

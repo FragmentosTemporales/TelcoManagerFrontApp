@@ -16,7 +16,7 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useEffect, useState } from "react";
-import { getReparaciones } from "../api/calidadAPI";
+import { getReparaciones, getZonaItoTecnico } from "../api/calidadAPI";
 import { palette } from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 import { MainLayout } from "./Layout";
@@ -329,6 +329,50 @@ function ReparacionesView() {
         fetchData();
     }, [page]);
 
+      const gestionInfo = () => (
+        <Box
+          sx={{
+            width: "90%",
+            mt: 3,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+        >
+          <Link style={{ color: "white", textDecoration: "none" }} to="/modulo:reparacionesinfo">
+            <Button
+              variant="contained"
+              sx={{
+                width: "400px",
+                background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+                color: '#fff',
+                transition: 'all .35s',
+                '&:before': {
+                  content: '""',
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+                  mixBlendMode: 'overlay',
+                  pointerEvents: 'none'
+                },
+                '&:hover': {
+                  transform: 'translateY(-3px)',
+                  boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                  background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+                },
+                '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+                '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+              }}
+            >
+              Gestionar Información
+            </Button>
+          </Link>
+
+        </Box>
+      );
+
     return (
         <MainLayout>
             <Box
@@ -372,6 +416,7 @@ function ReparacionesView() {
                     subtitle="Listado y seguimiento de reparaciones registradas"
                     divider
                 />
+                {gestionInfo()}
                 {loading ? (
                     <Paper
                         elevation={8}
@@ -379,6 +424,7 @@ function ReparacionesView() {
                             background: palette.cardBg,
                             height: "30vh",
                             width: "80%",
+                            my: 3,
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
@@ -421,6 +467,12 @@ function ReparacionesView() {
 
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", my: 4 }}>
                     {getButtons()}
+                </Box>
+
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", my: 4 }}>
+                    <Typography variant="body2" color="textSecondary">
+                        Página {page} de {pages} | Total de registros: {data.length}
+                    </Typography>
                 </Box>
             </Box>
         </MainLayout>
