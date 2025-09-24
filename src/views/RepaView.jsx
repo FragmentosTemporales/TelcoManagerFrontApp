@@ -39,22 +39,6 @@ export default function RepaView() {
     const [respaldo3, setRespaldo3] = useState(null);
     const [evidenciaRegularizacion, setEvidenciaRegularizacion] = useState(null);
 
-    const extractDate = (rawString) => {
-        const normalized = rawString.replace(/(\.\d{3})\d+$/, "$1");
-        const date = new Date(normalized);
-        if (isNaN(date.getTime())) return rawString; // fallback si el parse falla
-
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-        const seconds = String(date.getSeconds()).padStart(2, "0");
-
-        return `${hours}:${minutes}:${seconds} ${day}-${month}-${year}`;
-    };
-
     const handleClose = () => {
         setOpen(false);
     };
@@ -153,8 +137,8 @@ export default function RepaView() {
                 <LabelRow label="CLIENTE:">{data.rutCliente || 'No disponible'}</LabelRow>
                 <LabelRow label="COMUNA:">{data.comuna || 'No disponible'}</LabelRow>
                 <LabelRow label="DIRECCION:">{data.direccion || 'No disponible'}</LabelRow>
-                <LabelRow label="ITO FORMADOR:">{data.ito || 'No disponible'}</LabelRow>
                 <LabelRow label="TECNICO:">{data.tecnico || 'No disponible'}</LabelRow>
+                <LabelRow label="RUT TECNICO:">{data.rutTecnico || 'No disponible'}</LabelRow>
                 <LabelRow label="TIPO FALTA:">{data.tipoFalta || 'No disponible'}</LabelRow>
                 <LabelRow label="DESCRIPCION FALTA:">{data.observacionFalta || 'No disponible'}</LabelRow>
                 <LabelRow label="IMAGEN FALTA 1:">

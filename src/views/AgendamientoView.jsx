@@ -554,6 +554,7 @@ function AgendamientoViewer() {
                           }))
                         }
                       >
+                        <MenuItem value="Sin Contacto">Sin Contacto</MenuItem>
                         <MenuItem value="Adelanta">Adelanta</MenuItem>
                         <MenuItem value="Adelanta Tramo">Adelanta Tramo</MenuItem>
                         <MenuItem value="Confirma Visita">Confirma Visita</MenuItem>
@@ -561,7 +562,6 @@ function AgendamientoViewer() {
                         <MenuItem value="Mantiene Agenda">Mantiene Agenda</MenuItem>
                         <MenuItem value="Orden con Problemas">Orden con Problemas</MenuItem>
                         <MenuItem value="Reagenda">Reagenda</MenuItem>
-                        <MenuItem value="Sin Contacto">Sin Contacto</MenuItem>
                       </Select>
                     </FormControl>
                   </Box>

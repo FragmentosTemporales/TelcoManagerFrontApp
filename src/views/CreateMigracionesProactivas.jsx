@@ -82,8 +82,8 @@ export default function CreateMigracionesProactivas() {
   };
 
   const contactoOptions = [
-    "Sin Factibilidad",
     "Sin Contacto",
+    "Sin Factibilidad",
     "Contactado"
   ];
 

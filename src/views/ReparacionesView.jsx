@@ -61,10 +61,10 @@ function ReparacionesView() {
 
     const repaTable = () => (
         <Box sx={{ overflowX: "auto", width: "95%", my: 4 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="reparaciones-table" stickyHeader>
+            <Table sx={{ minWidth: 650 }} aria-label="reparaciones-table" stickyHeader size="small">
                 <TableHead>
                     <TableRow>
-                        {["FECHA", "ORDEN", "CLIENTE", "INSPECTOR", "TECNICO", "FALTA", "RESULTADO"].map((header) => (
+                        {["FECHA", "ORDEN", "CLIENTE", "INSPECTOR", "TECNICO", "RUT TECNICO", "FALTA", "RESULTADO"].map((header) => (
                             <TableCell
                                 key={header}
                                 align="center"
@@ -101,13 +101,14 @@ function ReparacionesView() {
                                 <TableCell align="center" width={"15%"}>{row.rutCliente ?? "N/A"}</TableCell>
                                 <TableCell align="center" width={"20%"}>{row.nombre ?? "N/A"}</TableCell>
                                 <TableCell align="center" width={"15%"}>{row.tecnico ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"15%"}>{row.rutTecnico ?? "N/A"}</TableCell>
                                 <TableCell align="center" width={"15%"}>{row.tipoFalta ?? "N/A"}</TableCell>
                                 <TableCell align="center" width={"20%"}>{row.resultado ?? "N/A"}</TableCell>
                             </TableRow>
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={7} align="center">
+                            <TableCell colSpan={8} align="center">
                                 <Typography fontFamily="initial">No hay datos disponibles</Typography>
                             </TableCell>
                         </TableRow>
