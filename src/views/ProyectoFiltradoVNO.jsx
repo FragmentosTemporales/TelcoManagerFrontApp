@@ -64,7 +64,7 @@ export default function ProyectoFiltradoVNO() {
 
     const [toUpdate, setToUpdate] = useState(undefined);
 
-    const filePath = "/home/ubuntu/telcomanager/app/data/Planilla_VNO.xlsm";
+    const filePath = "/home/ubuntu/telcomanager/app/data/PLANILLA_VNO.xlsm";
 
     const [vnoOption, setVnoOption] = useState([]);
 

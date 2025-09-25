@@ -64,7 +64,7 @@ export default function ProyectoFiltradoCubicado() {
 
     const [toUpdate, setToUpdate] = useState(undefined);
 
-    const filePath = "/home/ubuntu/telcomanager/app/data/Planilla.xlsm";
+    const filePath = "/home/ubuntu/telcomanager/app/data/PLANILLA_CUBICADOS.xlsm";
 
 
     const [form, setForm] = useState({
