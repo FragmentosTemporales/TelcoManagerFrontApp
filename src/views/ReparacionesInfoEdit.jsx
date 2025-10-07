@@ -16,7 +16,13 @@ import {
     Select,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getZonaItoTecnico, createZonaCalidad, createTecnicoCalidad } from "../api/calidadAPI";
+import { 
+    getZonaItoTecnico, 
+    createZonaCalidad, 
+    createTecnicoCalidad, 
+    createTipoFaltaCalidad, 
+    createTipoInspeccionCalidad 
+} from "../api/calidadAPI";
 import { palette } from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 import { MainLayout } from "./Layout";
@@ -33,6 +39,8 @@ export default function ReparacionesInfoEdit() {
 
     const [zonas, setZonas] = useState([]);
     const [tecnicos, setTecnicos] = useState([]);
+    const [faltas, setFaltas] = useState([]);
+    const [inspecciones, setInspecciones] = useState([]);
     const [formulario, setFormulario] = useState("ZONA"); // "ZONA", "TECNICO"
 
 
@@ -42,6 +50,8 @@ export default function ReparacionesInfoEdit() {
             const response = await getZonaItoTecnico();
             setZonas(response.zonas || []);
             setTecnicos(response.tecnicos || []);
+            setFaltas(response.tipo_faltas || []);
+            setInspecciones(response.tipo_inspecciones || []);
         } catch (error) {
             console.error("Error fetching zonas, itos, tecnicos:", error);
             setMessage("Error cargando datos. Por favor, intenta de nuevo.");
@@ -67,12 +77,9 @@ export default function ReparacionesInfoEdit() {
         return `${hours}:${minutes}:${seconds} ${day}-${month}-${year}`;
     };
 
-    useEffect(() => {
-        console.log(formToSend);
-    }, [formToSend]);
-
     const zonaHeaders = ["NOMBRE", "CREACIÓN"];
     const tecnicoHeaders = ["NOMBRE", "RUT", "ZONA", "CREACIÓN"];
+    const inspeccionHeaders = ["DESCRIPCIÓN", "CREACIÓN"];
 
     const modalForm = () => {
         let formInModal = null;
@@ -164,7 +171,70 @@ export default function ReparacionesInfoEdit() {
                     </Box>
                 </form>
             );
+        } else if (formulario === "TIPO_FALTA") {
+            formInModal = (
+                <form onSubmit={handleSubmit}>
+                    <Box>
+                        <Typography variant="h6" sx={{ mb: 2, color: palette.primary, fontWeight: 600 }}>
+                            Crear Nuevo Tipo de Falta
+                        </Typography>
+                        <TextField
+                            required
+                            label="Descripción de la Falta"
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            sx={{ mb: 2 }}
+                            onChange={(e) => setFormToSend({ ...formToSend, descripcion: e.target.value })}
+                        />
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: palette.primary,
+                                width: '200px',
+                                '&:hover': { backgroundColor: palette.primaryDark }
+                            }}
+                            size="small"
+                            type="submit"
+                        >
+                            CREAR
+                        </Button>
+                    </Box>
+                </form>
+            );
+        } else if (formulario === "INSPECCION") {
+            formInModal = (
+                <form onSubmit={handleSubmit}>
+                    <Box>
+                        <Typography variant="h6" sx={{ mb: 2, color: palette.primary, fontWeight: 600 }}>
+                            Crear Nuevo Tipo de Inspección
+                        </Typography>
+                        <TextField
+                            required
+                            label="Descripción de la Inspección"
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            sx={{ mb: 2 }}
+                            onChange={(e) => setFormToSend({ ...formToSend, descripcion: e.target.value })}
+                        />
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: palette.primary,
+                                width: '200px',
+                                '&:hover': { backgroundColor: palette.primaryDark }
+                            }}
+                            size="small"
+                            type="submit"
+                        >
+                            CREAR
+                        </Button>
+                    </Box>
+                </form>
+            );
         }
+
         return (
             <Modal
                 open={openModal}
@@ -203,6 +273,10 @@ export default function ReparacionesInfoEdit() {
                 await createZonaCalidad(formToSend);
             } else if (formulario === "TECNICO") {
                 await createTecnicoCalidad(formToSend);
+            } else if (formulario === "TIPO_FALTA") {
+                await createTipoFaltaCalidad(formToSend);
+            } else if (formulario === "INSPECCION") {
+                await createTipoInspeccionCalidad(formToSend);
             }
             setMessage("Creación exitosa.");
             setAlertType("success");
@@ -274,7 +348,7 @@ export default function ReparacionesInfoEdit() {
                         sx={{
                             background: 'rgba(255,255,255,0.92)',
                             height: '30vh',
-                            width: '80%',
+                            width: '90%',
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -397,6 +471,110 @@ export default function ReparacionesInfoEdit() {
                                     }}
                                     sx={{ background: palette.danger, width: '400px', fontWeight: 'bold', borderRadius: 3 }}>
                                     CREAR NUEVO TECNICO
+                                </Button>
+                            </Box>
+
+                            <Box sx={{ p: 3, background: palette.cardBg, borderRadius: 3, boxShadow: 4, width: '100%' }}>
+                                <Typography variant="h6" sx={{ mb: 2, color: palette.primary, fontWeight: 600 }}>
+                                    Tipo de Inspecciones
+                                </Typography>
+                                {inspecciones.length === 0 ? (
+                                    <Typography variant="body2" color="textSecondary">
+                                        No hay tipos de inspecciones disponibles.
+                                    </Typography>
+                                ) : (
+                                    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, maxHeight: 360, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                                        <Table size="small">
+                                            <TableHead>
+                                                <TableRow>
+                                                    {inspeccionHeaders.map((h) => (
+                                                        <TableCell key={h} sx={{
+                                                            fontWeight: 600,
+                                                            backgroundColor: palette.primary,
+                                                            color: "white",
+                                                            letterSpacing: 0.4,
+                                                            borderBottom: `2px solid ${palette.primaryDark}`,
+                                                        }}>
+                                                            {h}
+                                                        </TableCell>
+                                                    ))}
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {inspecciones.map((inspeccion) => (
+                                                    <TableRow key={inspeccion.id}>
+                                                        <TableCell>{inspeccion.descripcion ?? "N/A"}</TableCell>
+                                                        <TableCell>{extractDate(inspeccion.fecha_registro) ?? "N/A"}</TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                )}
+                            </Box>
+
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+                                <Button
+                                    variant="contained"
+                                    onClick={() => {
+                                        setOpenModal(true);
+                                        setFormulario("INSPECCION");
+                                        setFormToSend({});
+                                    }}
+                                    sx={{ background: palette.danger, width: '400px', fontWeight: 'bold', borderRadius: 3 }}>
+                                    CREAR NUEVO TIPO DE INSPECCION
+                                </Button>
+                            </Box>
+
+                            <Box sx={{ p: 3, background: palette.cardBg, borderRadius: 3, boxShadow: 4, width: '100%' }}>
+                                <Typography variant="h6" sx={{ mb: 2, color: palette.primary, fontWeight: 600 }}>
+                                    Tipo de Faltas
+                                </Typography>
+                                {faltas.length === 0 ? (
+                                    <Typography variant="body2" color="textSecondary">
+                                        No hay tipos de faltas disponibles.
+                                    </Typography>
+                                ) : (
+                                    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: `1px solid ${palette.borderSubtle}`, borderRadius: 1, maxHeight: 360, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                                        <Table size="small">
+                                            <TableHead>
+                                                <TableRow>
+                                                    {inspeccionHeaders.map((h) => (
+                                                        <TableCell key={h} sx={{
+                                                            fontWeight: 600,
+                                                            backgroundColor: palette.primary,
+                                                            color: "white",
+                                                            letterSpacing: 0.4,
+                                                            borderBottom: `2px solid ${palette.primaryDark}`,
+                                                        }}>
+                                                            {h}
+                                                        </TableCell>
+                                                    ))}
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {faltas.map((falta) => (
+                                                    <TableRow key={falta.id}>
+                                                        <TableCell>{falta.descripcion ?? "N/A"}</TableCell>
+                                                        <TableCell>{extractDate(falta.fecha_registro) ?? "N/A"}</TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                )}
+                            </Box>
+
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+                                <Button
+                                    variant="contained"
+                                    onClick={() => {
+                                        setOpenModal(true);
+                                        setFormulario("TIPO_FALTA");
+                                        setFormToSend({});
+                                    }}
+                                    sx={{ background: palette.danger, width: '400px', fontWeight: 'bold', borderRadius: 3 }}>
+                                    CREAR NUEVO TIPO DE  FALTA
                                 </Button>
                             </Box>
                         </Box>

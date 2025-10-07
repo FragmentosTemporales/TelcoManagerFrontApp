@@ -3,15 +3,9 @@ import {
     Box,
     Button,
     Divider,
-    MenuItem,
-    Rating,
-    Select,
-    TextField,
     Typography,
     CircularProgress,
     Tooltip,
-    Chip,
-    Fade,
     Paper,
     Stack,
 } from "@mui/material";
@@ -20,7 +14,7 @@ import { getReparacionByID } from "../api/calidadAPI";
 import { palette } from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 import { MainLayout } from "./Layout";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { fetchFileUrl } from "../api/downloadApi";
 
 export default function RepaView() {
@@ -34,9 +28,15 @@ export default function RepaView() {
     const [loading2, setLoading2] = useState(false);
     const [loading3, setLoading3] = useState(false);
     const [loading4, setLoading4] = useState(false);
+    const [loading5, setLoading5] = useState(false);
+    const [loading6, setLoading6] = useState(false);
+    const [loading7, setLoading7] = useState(false);
     const [respaldo, setRespaldo] = useState(null);
     const [respaldo2, setRespaldo2] = useState(null);
     const [respaldo3, setRespaldo3] = useState(null);
+    const [respaldo4, setRespaldo4] = useState(null);
+    const [respaldo5, setRespaldo5] = useState(null);
+    const [respaldo6, setRespaldo6] = useState(null);
     const [evidenciaRegularizacion, setEvidenciaRegularizacion] = useState(null);
 
     const handleClose = () => {
@@ -82,6 +82,24 @@ export default function RepaView() {
     }, [data]);
 
     useEffect(() => {
+        if (data && data.respaldoFalta4 && data.respaldoFalta4 !== "None") {
+            fetchFile(data.respaldoFalta4, 4);
+        }
+    }, [data]);
+
+    useEffect(() => {
+        if (data && data.respaldoFalta5 && data.respaldoFalta5 !== "None") {
+            fetchFile(data.respaldoFalta5, 5);
+        }
+    }, [data]);
+
+    useEffect(() => {
+        if (data && data.respaldoFalta6 && data.respaldoFalta6 !== "None") {
+            fetchFile(data.respaldoFalta6, 6);
+        }
+    }, [data]);
+
+    useEffect(() => {
         if (data && data.evidenciaRegularizacion && data.evidenciaRegularizacion !== "None") {
             fetchFile(data.evidenciaRegularizacion, 4);
         }
@@ -93,6 +111,9 @@ export default function RepaView() {
             setLoading2(true);
             setLoading3(true);
             setLoading4(true);
+            setLoading5(true);
+            setLoading6(true);
+            setLoading7(true);
 
             const res = await fetchFileUrl({ file_path: filePath });
             if (variable === 1) {
@@ -109,6 +130,18 @@ export default function RepaView() {
             else if (variable === 4) {
                 setEvidenciaRegularizacion(res);
                 setLoading4(false);
+            }
+            else if (variable === 5) {
+                setRespaldo4(res);
+                setLoading5(false);
+            }
+            else if (variable === 6) {
+                setRespaldo5(res);
+                setLoading6(false);
+            }
+            else if (variable === 7) {
+                setRespaldo6(res);
+                setLoading7(false);
             }
         } catch (error) {
             console.error("Error al obtener la URL del archivo:", error);
@@ -185,6 +218,63 @@ export default function RepaView() {
                             <a href={respaldo3} target="_blank" rel="noopener noreferrer">
                                 <img
                                     src={respaldo3}
+                                    alt="Imagen de la reparación"
+                                    style={{ maxHeight: 260, maxWidth: 400, cursor: 'pointer', borderRadius: 8, boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)' }}
+                                />
+                            </a>
+                        </Tooltip>
+                    ) : loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', height: 100 }}>
+                            <CircularProgress size={32} />
+                        </Box>
+                    ) : (
+                        'Sin documento'
+                    )}
+                </LabelRow>
+                <LabelRow label="IMAGEN FALTA 4:">
+                    {respaldo4 && !loading5 ? (
+                        <Tooltip title="Ver imagen" placement="top">
+                            <a href={respaldo4} target="_blank" rel="noopener noreferrer">
+                                <img
+                                    src={respaldo4}
+                                    alt="Imagen de la reparación"
+                                    style={{ maxHeight: 260, maxWidth: 400, cursor: 'pointer', borderRadius: 8, boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)' }}
+                                />
+                            </a>
+                        </Tooltip>
+                    ) : loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', height: 100 }}>
+                            <CircularProgress size={32} />
+                        </Box>
+                    ) : (
+                        'Sin documento'
+                    )}
+                </LabelRow>
+                <LabelRow label="IMAGEN FALTA 5:">
+                    {respaldo5 && !loading6 ? (
+                        <Tooltip title="Ver imagen" placement="top">
+                            <a href={respaldo5} target="_blank" rel="noopener noreferrer">
+                                <img
+                                    src={respaldo5}
+                                    alt="Imagen de la reparación"
+                                    style={{ maxHeight: 260, maxWidth: 400, cursor: 'pointer', borderRadius: 8, boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)' }}
+                                />
+                            </a>
+                        </Tooltip>
+                    ) : loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', height: 100 }}>
+                            <CircularProgress size={32} />
+                        </Box>
+                    ) : (
+                        'Sin documento'
+                    )}
+                </LabelRow>
+                <LabelRow label="IMAGEN FALTA 6:">
+                    {respaldo6 && !loading7 ? (
+                        <Tooltip title="Ver imagen" placement="top">
+                            <a href={respaldo6} target="_blank" rel="noopener noreferrer">
+                                <img
+                                    src={respaldo6}
                                     alt="Imagen de la reparación"
                                     style={{ maxHeight: 260, maxWidth: 400, cursor: 'pointer', borderRadius: 8, boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)' }}
                                 />
@@ -320,6 +410,25 @@ export default function RepaView() {
                     subtitle="Auditoría de Reparación"
                     divider
                 />
+                <Box sx={{ width: '80%', display: 'flex', justifyContent: 'start', pb: 4, }}>
+                    <Button
+                        component={Link}
+                        to="/modulo:reparaciones"
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                            width: "300px",
+                            '&:hover': {
+                                transform: 'translateY(-3px)',
+                                boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                            },
+                            '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+                            '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+                        }}
+                    >
+                        VOLVER
+                    </Button>
+                </Box>
                 {isSubmitting ? (
                     <Box
                         sx={{

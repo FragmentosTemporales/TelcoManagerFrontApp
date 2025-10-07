@@ -12,11 +12,15 @@ import {
     TextField,
     Paper,
     ButtonGroup,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useEffect, useState } from "react";
-import { getReparaciones, getZonaItoTecnico } from "../api/calidadAPI";
+import { getReparaciones, getReparacionesExcel } from "../api/calidadAPI";
 import { palette } from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 import { MainLayout } from "./Layout";
@@ -31,13 +35,20 @@ function ReparacionesView() {
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [totalData, setTotalData] = useState(0);
 
     const [filterForm, setFilterForm] = useState({
         orden: "",
         rutCliente: "",
-        tipoFalta: "",
+        tipoInspeccion: "",
         resultado: "",
     });
+
+    const handlePage = (newPage) => {
+        if (newPage >= 1 && newPage <= pages) {
+            setPage(newPage);
+        }
+    };
 
     const extractDate = (rawString) => {
         const normalized = rawString.replace(/(\.\d{3})\d+$/, "$1");
@@ -64,7 +75,7 @@ function ReparacionesView() {
             <Table sx={{ minWidth: 650 }} aria-label="reparaciones-table" stickyHeader size="small">
                 <TableHead>
                     <TableRow>
-                        {["FECHA", "ORDEN", "CLIENTE", "INSPECTOR", "TECNICO", "RUT TECNICO", "FALTA", "RESULTADO"].map((header) => (
+                        {["FECHA", "ORDEN", "CLIENTE", "INSPECTOR", "TECNICO", "RUT TECNICO", "INSPECCION", "RESULTADO"].map((header) => (
                             <TableCell
                                 key={header}
                                 align="center"
@@ -85,7 +96,7 @@ function ReparacionesView() {
                     {data && data.length > 0 ? (
                         data.map((row, index) => (
                             <TableRow
-                            component={Link}
+                                component={Link}
                                 to={`/modulo:repa/${row.id}`}
                                 key={index}
                                 sx={{
@@ -96,14 +107,14 @@ function ReparacionesView() {
                                     '&:hover': { backgroundColor: palette.accentSoft },
                                 }}
                             >
-                                <TableCell align="center" width={"15%"}>{extractDate(row.fecha_registro)}</TableCell>
-                                <TableCell align="center" width={"15%"} sx={{fontWeight: "bold"}}>{row.orden ?? "N/A"}</TableCell>
-                                <TableCell align="center" width={"15%"}>{row.rutCliente ?? "N/A"}</TableCell>
-                                <TableCell align="center" width={"20%"}>{row.nombre ?? "N/A"}</TableCell>
-                                <TableCell align="center" width={"15%"}>{row.tecnico ?? "N/A"}</TableCell>
-                                <TableCell align="center" width={"15%"}>{row.rutTecnico ?? "N/A"}</TableCell>
-                                <TableCell align="center" width={"15%"}>{row.tipoFalta ?? "N/A"}</TableCell>
-                                <TableCell align="center" width={"20%"}>{row.resultado ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"13%"}>{extractDate(row.fecha_registro)}</TableCell>
+                                <TableCell align="center" width={"12%"} sx={{ fontWeight: "bold" }}>{row.orden ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"12%"}>{row.rutCliente ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"13%"}>{row.nombre ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"13%"}>{row.tecnico ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"12%"}>{row.rutTecnico ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"13%"}>{row.tipoInspeccion ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"12%"}>{row.resultado ?? "N/A"}</TableCell>
                             </TableRow>
                         ))
                     ) : (
@@ -174,34 +185,52 @@ function ReparacionesView() {
                             sx={{ minWidth: 200 }}
                             size="small"
                         />
-                        <TextField
-                            id="tipoFalta-input"
-                            label="Tipo Falta"
-                            variant="standard"
-                            value={filterForm.tipoFalta || ""}
-                            onChange={(event) => {
-                                setFilterForm((prev) => ({
-                                    ...prev,
-                                    tipoFalta: event.target.value,
-                                }));
-                            }}
-                            sx={{ minWidth: 200 }}
-                            size="small"
-                        />
-                        <TextField
-                            id="resultado-input"
-                            label="Resultado"
-                            variant="standard"
-                            value={filterForm.resultado || ""}
-                            onChange={(event) => {
-                                setFilterForm((prev) => ({
-                                    ...prev,
-                                    resultado: event.target.value,
-                                }));
-                            }}
-                            sx={{ minWidth: 200 }}
-                            size="small"
-                        />
+                        <FormControl variant="standard" sx={{ minWidth: 200 }} size="small">
+                            <InputLabel id="tipoInspeccion-label">Tipo Inspeccion</InputLabel>
+                            <Select
+                                labelId="tipoInspeccion-label"
+                                id="tipoInspeccion-select"
+                                value={filterForm.tipoInspeccion || ""}
+                                onChange={(event) => {
+                                    setFilterForm((prev) => ({
+                                        ...prev,
+                                        tipoInspeccion: event.target.value,
+                                    }));
+                                }}
+                            >
+                                <MenuItem value="">
+                                    <em>Todos</em>
+                                </MenuItem>
+                                {tiposInspeccion.map((tipo) => (
+                                    <MenuItem key={tipo} value={tipo}>
+                                        {tipo}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" sx={{ minWidth: 200 }} size="small">
+                            <InputLabel id="resultado-label">Resultado</InputLabel>
+                            <Select
+                                labelId="resultado-label"
+                                id="resultado-select"
+                                value={filterForm.resultado || ""}
+                                onChange={(event) => {
+                                    setFilterForm((prev) => ({
+                                        ...prev,
+                                        resultado: event.target.value,
+                                    }));
+                                }}
+                            >
+                                <MenuItem value="">
+                                    <em>Todos</em>
+                                </MenuItem>
+                                {resultados.map((resultado) => (
+                                    <MenuItem key={resultado} value={resultado}>
+                                        {resultado}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Box>
                     <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap", justifyContent: "center", alignItems: "center", mt: 1 }}>
                         <Button
@@ -243,12 +272,27 @@ function ReparacionesView() {
         </Paper>
     );
 
+    const getExcel = async () => {
+        setIsSubmitting(true);
+        try {
+            await getReparacionesExcel();
+        } catch (error) {
+            console.error(error);
+        }
+        finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const tiposInspeccion = ["Alertas de Terreno", "Apoyo Terreno", "Auditoría en Terreno", "Autoinspección", "Avería de Infancia", "Folio", "Multa", "Otro"];
+    const resultados = ["Cumple", "No Cumple"];
+
     const handleClear = async (e) => {
         e.preventDefault();
         try {
-            setFilterForm({ orden: "", rutCliente: "", tipoFalta: "", resultado: "" });
+            setFilterForm({ orden: "", rutCliente: "", tipoInspeccion: "", resultado: "" });
             setPage(1); // Reset to the first page
-            const response = await getReparaciones(1, { orden: "", rutCliente: "", tipoFalta: "", resultado: "" })
+            const response = await getReparaciones(1, { orden: "", rutCliente: "", tipoInspeccion: "", resultado: "" })
             setData(response.data);
             setPages(response.pages);
             setMessage("Filtros limpiados.");
@@ -262,6 +306,10 @@ function ReparacionesView() {
         }
     };
 
+    useEffect(() => {
+        setPage(1);
+    }, [filterForm]);
+
     const fetchData = async () => {
         setLoading(true);
         setIsSubmitting(true);
@@ -269,7 +317,7 @@ function ReparacionesView() {
             const response = await getReparaciones(page, filterForm);
             setData(response.data);
             setPages(response.pages);
-            console.log("Reparaciones data:", response.data);
+            setTotalData(response.total_data || 0);
         } catch (error) {
             console.error(error);
             setMessage(error.message || "Error al obtener las Reparaciones");
@@ -330,49 +378,44 @@ function ReparacionesView() {
         fetchData();
     }, [page]);
 
-      const gestionInfo = () => (
+    const gestionInfo = () => (
         <Box
-          sx={{
-            width: "90%",
-            mt: 3,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: 2,
-          }}
+            sx={{
+                width: "90%",
+                mt: 3,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 2
+            }}
         >
-          <Link style={{ color: "white", textDecoration: "none" }} to="/modulo:reparacionesinfo">
+            <Link style={{ color: "white", textDecoration: "none" }} to="/modulo:reparacionesinfo">
+                <Button
+                    variant="contained"
+                    sx={{
+                        width: "300px",
+                        '&:hover': {
+                            transform: 'translateY(-3px)',
+                            boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                        },
+                        '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+                        '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+                    }}
+                >
+                    Gestionar Información
+                </Button>
+            </Link>
+
             <Button
-              variant="contained"
-              sx={{
-                width: "400px",
-                background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
-                color: '#fff',
-                transition: 'all .35s',
-                '&:before': {
-                  content: '""',
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
-                  mixBlendMode: 'overlay',
-                  pointerEvents: 'none'
-                },
-                '&:hover': {
-                  transform: 'translateY(-3px)',
-                  boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
-                  background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
-                },
-                '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
-                '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
-              }}
-            >
-              Gestionar Información
-            </Button>
-          </Link>
+                disabled={isSubmitting}
+                onClick={getExcel}
+                variant="contained"
+                color="error"
+                sx={{ width: "300px" }} > DESCARGA EXCEL </Button>
 
         </Box>
-      );
+    );
 
     return (
         <MainLayout>
@@ -424,7 +467,7 @@ function ReparacionesView() {
                         sx={{
                             background: palette.cardBg,
                             height: "30vh",
-                            width: "80%",
+                            width: "90%",
                             my: 3,
                             display: "flex",
                             justifyContent: "center",
@@ -472,7 +515,7 @@ function ReparacionesView() {
 
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", my: 4 }}>
                     <Typography variant="body2" color="textSecondary">
-                        Página {page} de {pages} | Total de registros: {data.length}
+                        Página {page} de {pages} | Total de registros: {totalData}
                     </Typography>
                 </Box>
             </Box>
