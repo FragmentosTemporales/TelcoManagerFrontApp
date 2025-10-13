@@ -25,8 +25,11 @@ import { palette } from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 import { MainLayout } from "./Layout";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function ReparacionesView() {
+    const authState = useSelector((state) => state.auth);
+    const { user_id, area, permisos } = authState;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [alertType, setAlertType] = useState(undefined);
@@ -42,7 +45,18 @@ function ReparacionesView() {
         rutCliente: "",
         tipoInspeccion: "",
         resultado: "",
+        rutTecnico: "",
+        contrato: "",
     });
+
+    const validatePermiso = () => {
+        if (permisos && permisos.length > 0) {
+            const permisoAuditoria = permisos.find((permiso) => permiso.moduloID === 21)
+            return !permisoAuditoria.edit
+        }
+    }
+
+    useEffect(() => {validatePermiso()}, [permisos]);
 
     const handlePage = (newPage) => {
         if (newPage >= 1 && newPage <= pages) {
@@ -185,6 +199,20 @@ function ReparacionesView() {
                             sx={{ minWidth: 200 }}
                             size="small"
                         />
+                        <TextField
+                            id="rutTecnico-input"
+                            label="Técnico"
+                            variant="standard"
+                            value={filterForm.rutTecnico || ""}
+                            onChange={(event) => {
+                                setFilterForm((prev) => ({
+                                    ...prev,
+                                    rutTecnico: event.target.value,
+                                }));
+                            }}
+                            sx={{ minWidth: 200 }}
+                            size="small"
+                        />
                         <FormControl variant="standard" sx={{ minWidth: 200 }} size="small">
                             <InputLabel id="tipoInspeccion-label">Tipo Inspeccion</InputLabel>
                             <Select
@@ -227,6 +255,29 @@ function ReparacionesView() {
                                 {resultados.map((resultado) => (
                                     <MenuItem key={resultado} value={resultado}>
                                         {resultado}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" sx={{ minWidth: 200 }} size="small">
+                            <InputLabel id="contrato-label">Contrato</InputLabel>
+                            <Select
+                                labelId="contrato-label"
+                                id="contrato-select"
+                                value={filterForm.contrato || ""}
+                                onChange={(event) => {
+                                    setFilterForm((prev) => ({
+                                        ...prev,
+                                        contrato: event.target.value,
+                                    }));
+                                }}
+                            >
+                                <MenuItem value="">
+                                    <em>Todos</em>
+                                </MenuItem>
+                                {contratos.map((contrato) => (
+                                    <MenuItem key={contrato} value={contrato}>
+                                        {contrato}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -286,6 +337,7 @@ function ReparacionesView() {
 
     const tiposInspeccion = ["Alertas de Terreno", "Apoyo Terreno", "Auditoría en Terreno", "Autoinspección", "Avería de Infancia", "Folio", "Multa", "Otro"];
     const resultados = ["Cumple", "No Cumple"];
+    const contratos = ["VTR", "MOVISTAR"]
 
     const handleClear = async (e) => {
         e.preventDefault();
@@ -393,6 +445,7 @@ function ReparacionesView() {
             <Link style={{ color: "white", textDecoration: "none" }} to="/modulo:reparacionesinfo">
                 <Button
                     variant="contained"
+                    disabled={validatePermiso()}
                     sx={{
                         width: "300px",
                         '&:hover': {

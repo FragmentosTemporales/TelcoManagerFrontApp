@@ -43,7 +43,6 @@ export default function ReparacionesInfoEdit() {
     const [inspecciones, setInspecciones] = useState([]);
     const [formulario, setFormulario] = useState("ZONA"); // "ZONA", "TECNICO"
 
-
     const fetchDataZonasItosTecnicos = async () => {
         setLoading(true);
         try {
