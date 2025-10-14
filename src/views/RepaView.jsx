@@ -83,19 +83,19 @@ export default function RepaView() {
 
     useEffect(() => {
         if (data && data.respaldoFalta4 && data.respaldoFalta4 !== "None") {
-            fetchFile(data.respaldoFalta4, 4);
+            fetchFile(data.respaldoFalta4, 5);
         }
     }, [data]);
 
     useEffect(() => {
         if (data && data.respaldoFalta5 && data.respaldoFalta5 !== "None") {
-            fetchFile(data.respaldoFalta5, 5);
+            fetchFile(data.respaldoFalta5, 6);
         }
     }, [data]);
 
     useEffect(() => {
         if (data && data.respaldoFalta6 && data.respaldoFalta6 !== "None") {
-            fetchFile(data.respaldoFalta6, 6);
+            fetchFile(data.respaldoFalta6, 7);
         }
     }, [data]);
 
@@ -145,6 +145,15 @@ export default function RepaView() {
             }
         } catch (error) {
             console.error("Error al obtener la URL del archivo:", error);
+        }
+        finally {
+            setLoading(false);
+            setLoading2(false);
+            setLoading3(false);
+            setLoading4(false);
+            setLoading5(false);
+            setLoading6(false);
+            setLoading7(false);
         }
     };
 
