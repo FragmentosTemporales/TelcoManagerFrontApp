@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardHeader, Grid, Paper, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardHeader, Grid, Paper, Typography, Table, TableHead, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getNumeros } from "../api/totemAPI";
 import { playAlertSound } from "../helpers/sounds";
@@ -107,22 +107,26 @@ function BodegaViewer() {
         {atencion && atencion.length > 0 ? (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              {atencion.map((item, index) => (
-                <Paper elevation={0} key={`ab-${index}`} sx={personPaper}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12} sx={{ display: 'flex' }}>
-                      <Grid item xs={3}>
-                        <Typography variant="body2" color="text.primary" sx={{ fontSize: '2rem', textAlign: 'center', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>N° {item.Numero}</Typography>
-                      </Grid>
-                      <Grid item xs={9}>
-                        <Typography variant="body2" color="text.primary" sx={{ fontSize: '2rem', textAlign: 'center' }}>{item.nombre}</Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem', textAlign: 'center' }}>Proceso: {item.Proceso}</Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem', textAlign: 'center' }}>Atiende: {item.Atendedor}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              ))}
+              <TableContainer>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left" sx={{ width: "10%", fontWeight: "bold" }}>N°</TableCell>
+                      <TableCell align="left" sx={{ width: "45%", fontWeight: "bold" }}>Nombre</TableCell>
+                      <TableCell align="left" sx={{ width: "45%", fontWeight: "bold" }}>Atiende</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {atencion.map((item, index) => (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="left" sx={{ width: "10%" }}>{item.Numero}</TableCell>
+                        <TableCell align="left" sx={{ width: "45%" }}>{item.nombre}</TableCell>
+                        <TableCell align="left" sx={{ width: "45%" }}>{item.Atendedor}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  ))}
+                </Table>
+              </TableContainer>
             </Grid>
           </Grid>
         ) : (
@@ -139,22 +143,26 @@ function BodegaViewer() {
         {atencion && atencion.length > 0 ? (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              {atencion.map((item, index) => (
-                <Paper elevation={0} key={`al-${index}`} sx={personPaper}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12} sx={{ display: 'flex' }}>
-                      <Grid item xs={3}>
-                        <Typography variant="body2" color="text.primary" sx={{ fontSize: '2rem', textAlign: 'center', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>N° {item.Numero}</Typography>
-                      </Grid>
-                      <Grid item xs={9}>
-                        <Typography variant="body2" color="text.primary" sx={{ fontSize: '2rem', textAlign: 'center' }}>{item.nombre}</Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem', textAlign: 'center' }}>Proceso: {item.Proceso}</Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem', textAlign: 'center' }}>Atiende: {item.Atendedor}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              ))}
+              <TableContainer>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left" sx={{ width: "10%", fontWeight: "bold" }}>N°</TableCell>
+                      <TableCell align="left" sx={{ width: "45%", fontWeight: "bold" }}>Nombre</TableCell>
+                      <TableCell align="left" sx={{ width: "45%", fontWeight: "bold" }}>Atiende</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {atencion.map((item, index) => (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="left" sx={{ width: "10%" }}>{item.Numero}</TableCell>
+                        <TableCell align="left" sx={{ width: "45%" }}>{item.nombre}</TableCell>
+                        <TableCell align="left" sx={{ width: "45%" }}>{item.Atendedor}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  ))}
+                </Table>
+              </TableContainer>
             </Grid>
           </Grid>
         ) : (
@@ -170,41 +178,25 @@ function BodegaViewer() {
       <CardContent>
         {data && data.length > 0 ? (
           <Grid container spacing={2}>
-            <Grid item xs={6}>
-              {data.filter((_, i) => i % 2 === 0).map((item, idx) => (
-                <Paper elevation={0} key={`e1-${idx}`} sx={personPaper}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={4}>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>Proceso:</Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>Número:</Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>Nombre:</Typography>
-                    </Grid>
-                    <Grid item xs={8}>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.Proceso}</Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.Numero}</Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.nombre}</Typography>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              ))}
-            </Grid>
-            <Grid item xs={6}>
-              {data.filter((_, i) => i % 2 !== 0).map((item, idx) => (
-                <Paper elevation={0} key={`e2-${idx}`} sx={personPaper}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={4}>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>Proceso:</Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>Número:</Typography>
-                      <Typography variant="body2" color="text.secondary" sx={estilo}>Nombre:</Typography>
-                    </Grid>
-                    <Grid item xs={8}>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.Proceso}</Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.Numero}</Typography>
-                      <Typography variant="body2" color="text.primary" sx={estilo}>{item.nombre}</Typography>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              ))}
+            <Grid item xs={12}>
+              <TableContainer>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left" sx={{ width: "10%", fontWeight: "bold" }}>N°</TableCell>
+                      <TableCell align="left" sx={{ width: "45%", fontWeight: "bold" }}>Nombre</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {data.map((item, index) => (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="left" sx={{ width: "10%" }}>{item.Numero}</TableCell>
+                        <TableCell align="left" sx={{ width: "90%" }}>{item.nombre}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  ))}
+                </Table>
+              </TableContainer>
             </Grid>
           </Grid>
         ) : (

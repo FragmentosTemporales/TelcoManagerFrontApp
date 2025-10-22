@@ -47,6 +47,7 @@ function ReparacionesView() {
         resultado: "",
         rutTecnico: "",
         contrato: "",
+        tipoFalta: ""
     });
 
     const validatePermiso = () => {
@@ -73,11 +74,7 @@ function ReparacionesView() {
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
 
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-        const seconds = String(date.getSeconds()).padStart(2, "0");
-
-        return `${hours}:${minutes}:${seconds} ${day}-${month}-${year}`;
+        return `${day}-${month}-${year}`;
     };
 
     const handleClose = () => {
@@ -237,6 +234,29 @@ function ReparacionesView() {
                             </Select>
                         </FormControl>
                         <FormControl variant="standard" sx={{ minWidth: 200 }} size="small">
+                            <InputLabel id="tipoFalta-label">Tipo Falta</InputLabel>
+                            <Select
+                                labelId="tipoFalta-label"
+                                id="tipoFalta-select"
+                                value={filterForm.tipoFalta || ""}
+                                onChange={(event) => {
+                                    setFilterForm((prev) => ({
+                                        ...prev,
+                                        tipoFalta: event.target.value,
+                                    }));
+                                }}
+                            >
+                                <MenuItem value="">
+                                    <em>Todos</em>
+                                </MenuItem>
+                                {tiposFaltas.map((tipo) => (
+                                    <MenuItem key={tipo} value={tipo}>
+                                        {tipo}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" sx={{ minWidth: 200 }} size="small">
                             <InputLabel id="resultado-label">Resultado</InputLabel>
                             <Select
                                 labelId="resultado-label"
@@ -336,6 +356,31 @@ function ReparacionesView() {
     };
 
     const tiposInspeccion = ["Alertas de Terreno", "Apoyo Terreno", "Auditoría en Terreno", "Autoinspección", "Avería de Infancia", "Folio", "Multa", "Otro"];
+
+    // CREAR ARRAY CON LOS SIGUIENTES VALORES 
+
+
+    const tiposFaltas = [
+        "FALLA EN CONECTOR DE CAMPO", 
+        "Falta de herramientas", 
+        "Estado de Camioneta",
+        "Clave mal aplicada",
+        "Comentario deficiente",
+        "Dirección mal instalada",
+        "Equipos fuera de rango RSI",
+        "Extensor fuera de norma",
+        "FO mal rotulada enrolamiento",
+        "No aplica",
+        "No cuida la estética del lugar",
+        "No genera ticket de desconexión",
+        "No instala pasamuros",
+        "No realiza estados vecinos u onfide",
+        "Reutilización fuera de norma",
+        "Roseta fuera de norma",
+        "Ruta de Drop",
+        "Técnico no capacita",
+        "Utiliza pelo no asignado"
+    ]
     const resultados = ["Cumple", "No Cumple"];
     const contratos = ["VTR", "MOVISTAR"]
 
