@@ -506,7 +506,7 @@ function ReparacionesView() {
             </Link>
 
             <Button
-                disabled={isSubmitting}
+                disabled={isSubmitting || validatePermiso()}
                 onClick={getExcel}
                 variant="contained"
                 color="error"
