@@ -14,12 +14,10 @@ import {
     Paper,
     Chip,
 } from "@mui/material";
-import { PieChart } from '@mui/x-charts/PieChart';
-import { BarChart } from '@mui/x-charts/BarChart';
 import { NdcLayout } from "./Layout";
 import { palette } from "../theme/palette";
 import { useEffect, useState } from "react";
-import { fetchPendientesSinConsumo, updateOrdenSinConsumo, fetchPendientesStats } from "../api/logisticaAPI";
+import { fetchPendientesSinConsumo, updateOrdenSinConsumo } from "../api/logisticaAPI";
 import { extractDateOnly } from "../helpers/main";
 
 function NDCSinConsumoUpdate() {
@@ -38,22 +36,7 @@ function NDCSinConsumoUpdate() {
         { value: 'Reparación', label: 'Reparación' },
         { value: 'Upgrade promoción', label: 'Upgrade promoción' },
     ];
-    const [statsEstado, setStatsEstado] = useState(null);
-    const [statsTipo, setStatsTipo] = useState(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                        const response = await fetchPendientesStats();
-                setStatsEstado(response.estado);
-                setStatsTipo(response.tipo);
-            } catch (error) {
-                console.error("Error fetching stats:", error);
-            }
-        };
-
-        fetchData();
-    }, []);
 
     const estadoOptions = [{
         value: 'Pendiente',
@@ -67,67 +50,6 @@ function NDCSinConsumoUpdate() {
         value: 'NO',
         label: 'Rechazado'
     }];
-
-    const pieEstado = () => (
-        <Paper elevation={12}
-            sx={{
-                width: "92%",
-                p: 3,
-                background: palette.cardBg,
-                borderRadius: 3,
-                border: `1px solid ${palette.borderSubtle}`,
-                display: "flex",
-                flexDirection: { lg: "row", xs: "column" },
-                mb: 3,
-                gap: 2,
-                backdropFilter: 'blur(4px)',
-                boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)"
-            }}
-        >
-            <Box sx={{ width: { lg: "40%", xs: "100%" }, display: "flex", flexDirection: "column" }}>
-                <Chip label="Estado de las Órdenes" sx={{ alignSelf: 'flex-start', mb: 1, fontWeight: 600, letterSpacing: .5, background: `linear-gradient(120deg, ${palette.accent}, ${palette.primaryDark})`, color: '#fff' }} />
-                <PieChart
-                    series={[
-                        {
-                            data: statsEstado.map((item) => ({
-                                id: item.estado,
-                                value: item.Q,
-                                label: item.estado === 'Pendiente' ? 'Pendiente' : item.estado === 'SI' ? 'Aprobado' : 'Rechazado',
-                                color: item.estado === 'Pendiente' ? '#ff9800' : item.estado === 'SI' ? '#4caf50' : '#f44336'
-                            })),
-                            highlightScope: { faded: 'global', highlighted: 'item' },
-                            faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
-                            innerRadius: 30,
-                            outerRadius: 70,
-                        },
-                    ]}
-                    height={180}
-                />
-            </Box>
-            <Box sx={{ width: { lg: "60%", xs: "100%" }, display: "flex", flexDirection: "column" }}>
-                <Chip label="Tipo de Órdenes" sx={{ alignSelf: 'flex-start', mb: 1, fontWeight: 600, letterSpacing: .5, background: `linear-gradient(120deg, ${palette.accent}, ${palette.primaryDark})`, color: '#fff' }} />
-                <BarChart
-                    xAxis={[{
-                        scaleType: 'band',
-                        data: statsTipo.map((item) => item.tipo),
-                    }]}
-                    grid={{ vertical: true, horizontal: true }}
-                    series={[{
-                        data: statsTipo.map((item) => item.Q),
-                        color: palette.primary,
-                    }]}
-                    height={180}
-                    margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
-                    onAxisClick={(event, d) => {
-                        if (d && d.axisValue) {
-                            setTipo(d.axisValue);
-                        }
-                    }}
-                    sx={{ cursor: 'pointer' }}
-                />
-            </Box>
-        </Paper>
-    )
 
 
     const handleSaveChanges = async (e, id) => {
@@ -306,7 +228,6 @@ function NDCSinConsumoUpdate() {
                         {message}
                     </Alert>
                 )}
-                {statsEstado && Object.keys(statsEstado).length > 0 && pieEstado()}
                 <Paper elevation={12} sx={{ width: '92%', p: 3, background: palette.cardBg, borderRadius: 3, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)', boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)" }}>
                     <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', fontWeight: 700 }}>
                         Sin Consumo de Ferretería

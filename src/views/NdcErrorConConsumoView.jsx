@@ -286,6 +286,7 @@ function NDCErrorConConsumo() {
                     alignItems: "center",
                     flexDirection: "column",
                     minHeight: "90vh",
+                    py: 8,
                     px: 1,
                     background: palette.bgGradient,
                     position: 'relative',
@@ -310,7 +311,7 @@ function NDCErrorConConsumo() {
                 {!isSubmitting ? (
                     <Paper elevation={10} sx={{ width: "90%", p: 3, background: palette.cardBg, borderRadius: 3, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)', boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)" }}>
                         <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
-                            Error Stock Consumo de Ferretería
+                            Error Stock Consumo de Ferretería últimos 30 días
                         </Typography>
                         <Divider sx={{ marginBottom: 2 }} />
                         {data && data.length > 0 ? (

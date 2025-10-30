@@ -73,19 +73,7 @@ function NDCSessionLogs() {
 
     const tableDataSession = () => (
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <Box sx={{ display: "flex", justifyContent: "center", p: 1, background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`, borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
-                <Typography
-                    sx={{
-                        color: "white",
-                        padding: 1,
-                        fontStyle: "italic",
-                        fontSize: "12px",
-                    }}
-                    align="center"
-                >
-                    Total de Ejecuciones: {total}
-                </Typography>
-            </Box>
+
             <TableContainer>
                 <Table stickyHeader>
                     <TableRow>
@@ -191,7 +179,7 @@ function NDCSessionLogs() {
                             boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)"
                         }}>
                             <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: 700 }}>
-                                REGISTRO DE EJECUCIONES - NDC
+                                ÚLTIMAS 10 EJECUCIONES NDC
                             </Typography>
                             <Divider sx={{ mb: 2 }} />
                             {data && data.length > 0 ? (

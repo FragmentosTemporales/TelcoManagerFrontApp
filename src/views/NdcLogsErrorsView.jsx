@@ -51,7 +51,7 @@ function NDCLogsError() {
                     }}
                     align="center"
                 >
-                    Total de Órdenes: {total}
+                    Total de Órdenes últimos 30 días: {total}
                 </Typography>
 
             </Box>

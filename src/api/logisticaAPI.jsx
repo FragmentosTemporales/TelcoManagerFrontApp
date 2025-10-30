@@ -50,15 +50,6 @@ export const fetchPendientesSinConsumo = async (tipo) => {
   }
 };
 
-export const fetchPendientesStats = async () => {
-  try {
-    const response = await client.get('/ndc-bot/get-pendientes-stats');
-    return response.data;
-  } catch (error) {
-    throw error.response?.data?.error || error.message;
-  }
-};
-
 export const fetchErroresConConsumo = async () => {
   try {
     const response = await client.get('/ndc-bot/errores_con_consumo');
