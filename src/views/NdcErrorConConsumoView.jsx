@@ -22,6 +22,95 @@ import { useEffect, useState } from "react";
 import { fetchErroresConConsumo, createOrdenValidada } from "../api/logisticaAPI";
 import { extractDateOnly } from "../helpers/main";
 
+// Mover UpdateCard fuera del componente principal para evitar re-renders
+const UpdateCard = ({ updateForm, handleChangeUpdate, handleUpdateSubmit, isSubmitting }) => {
+    return (
+        <Paper
+            elevation={10}
+            sx={{
+                width: "90%",
+                p: 3,
+                background: palette.cardBg,
+                borderRadius: 3,
+                border: `1px solid ${palette.borderSubtle}`,
+                backdropFilter: 'blur(4px)',
+                boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
+                marginTop: 2
+            }}>
+            <Typography variant="h5" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
+                Corregir Error Stock Consumo
+            </Typography>
+            <Divider sx={{ marginBottom: 2 }} />
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly" }}>
+                <TextField
+                    label="Orden"
+                    variant="standard"
+                    disabled
+                    value={updateForm.orden}
+                    onChange={(e) => handleChangeUpdate('orden', e.target.value)}
+                    sx={{ mb: 2, width: "30%" }}
+                />
+                <TextField
+                    label="Región"
+                    variant="standard"
+                    disabled
+                    value={updateForm.region}
+                    onChange={(e) => handleChangeUpdate('region', e.target.value)}
+                    sx={{ mb: 2, width: "30%" }}
+                />
+
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly" }}>
+                <TextField
+                    label="Material"
+                    variant="standard"
+                    value={updateForm.material}
+                    onChange={(e) => handleChangeUpdate('material', e.target.value)}
+                    sx={{ mb: 2, width: "30%" }}
+                />
+                <TextField
+                    label="Cantidad"
+                    variant="standard"
+                    type="number"
+                    value={updateForm.cantidad}
+                    onChange={(e) => handleChangeUpdate('cantidad', e.target.value)}
+                    sx={{ mb: 2, width: "30%" }}
+                />
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", marginTop: 2 }}>
+                <Button
+                    variant="contained"
+                    onClick={handleUpdateSubmit}
+                    disabled={isSubmitting}
+                    sx={{
+                        width: "200px",
+                        background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
+                        color: '#fff',
+                        transition: 'all .35s',
+                        '&:before': {
+                            content: '""',
+                            position: 'absolute',
+                            inset: 0,
+                            background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+                            mixBlendMode: 'overlay',
+                            pointerEvents: 'none'
+                        },
+                        '&:hover': {
+                            transform: 'translateY(-3px)',
+                            boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
+                            background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
+                        },
+                        '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+                        '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
+                    }}
+                >
+                    {isSubmitting ? <CircularProgress size={24} /> : "Actualizar"}
+                </Button>
+            </Box>
+
+        </Paper>
+    );
+};
 
 function NDCErrorConConsumo() {
     const authState = useSelector((state) => state.auth);
@@ -88,7 +177,7 @@ function NDCErrorConConsumo() {
     const tableDataError = () => (
         //crea una tabla con los datos de pendientes sin consumo
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <Box sx={{ display: "flex", justifyContent: "center", p: 1, background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`, borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`, borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
                 <Typography
                     sx={{
                         color: "white",
@@ -102,22 +191,22 @@ function NDCErrorConConsumo() {
                 </Typography>
 
             </Box>
-            <TableContainer>
-                <Table stickyHeader>
+            <TableContainer sx={{ maxWidth: '100%', overflowX: 'auto' }}>
+                <Table stickyHeader sx={{ minWidth: 800 }}>
                     <TableRow>
                         {[
                             "FECHA",
-                            "REGION",
-                            "SESSION ID",
                             "N° ORDEN",
                             "MATERIAL",
-                            "STOCK INGRESADO",
-                            "STOCK DISPONIBLE",
-                            "OBSERVACION",
+                            "PRODUCTO",
+                            "INGRESADO",
+                            "DISPONIBLE",
+                            "TECNICO",
+                            "RUT"
                         ].map((header) => (
                             <TableCell
                                 key={header}
-                                align="center"
+                                align="left"
                                 sx={{
                                     fontWeight: 600,
                                     backgroundColor: palette.primary,
@@ -159,14 +248,14 @@ function NDCErrorConConsumo() {
                                     }}
                                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } }}
                                 >
-                                    <TableCell align="center" sx={{ fontSize: "12px" }} >{item.fecha_registro ? extractDateOnly(item.fecha_registro) : 'N/A'}</TableCell>
-                                    <TableCell sx={{ fontSize: "12px" }} align="center">{item.region}</TableCell>
-                                    <TableCell sx={{ fontWeight: "bold", fontSize: "12px" }} align="center">{item.session_id}</TableCell>
-                                    <TableCell sx={{ fontWeight: "bold", fontSize: "12px" }} align="center">{item.orden}</TableCell>
-                                    <TableCell align="center" sx={{ fontSize: "12px" }} >{item.material ? item.material : 'N/A'}</TableCell>
-                                    <TableCell align="center" sx={{ fontSize: "12px" }} >{item.cantidad ? item.cantidad : 'N/A'}</TableCell>
-                                    <TableCell align="center" sx={{ fontSize: "12px" }} >{item.stock_disponible}</TableCell>
-                                    <TableCell align="center" sx={{ fontSize: "12px" }} >{item.observacion ? item.observacion : 'N/A'}</TableCell>
+                                    <TableCell align="left" sx={{ fontSize: "10px" }} >{item.fecha_registro ? extractDateOnly(item.fecha_registro) : 'N/A'}</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "10px" }} align="left">{item.orden ?? 'N/A'}</TableCell>
+                                    <TableCell align="left" sx={{ fontSize: "10px" }} >{item.material ?? 'N/A'}</TableCell>
+                                    <TableCell align="left" sx={{ fontSize: "10px" }} >{item.productoSGS ?? 'N/A'}</TableCell>
+                                    <TableCell align="left" sx={{ fontSize: "10px" }} >{item.cantidad ?? 'N/A'}</TableCell>
+                                    <TableCell align="left" sx={{ fontSize: "10px" }} >{item.stock_disponible ?? 'N/A'}</TableCell>
+                                    <TableCell align="left" sx={{ fontSize: "10px" }} >{item.tecnico ?? 'N/A'}</TableCell>
+                                    <TableCell align="left" sx={{ fontSize: "10px" }} >{item.numDoc ?? 'N/A'}</TableCell>
                                 </TableRow>
                             </Tooltip>
                         ))}
@@ -176,95 +265,8 @@ function NDCErrorConConsumo() {
         </Box>
     );
 
-    const UpdateCard = () => {
-        const handleChangeUpdate = (field, value) => {
-            setUpdateForm((prev) => ({ ...prev, [field]: value }));
-        };
-        return (
-            <Paper
-                elevation={10}
-                sx={{
-                    width: "90%",
-                    p: 3,
-                    background: palette.cardBg,
-                    borderRadius: 3,
-                    border: `1px solid ${palette.borderSubtle}`,
-                    backdropFilter: 'blur(4px)',
-                    boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
-                    marginTop: 2
-                }}>
-                <Typography variant="h5" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
-                    Corregir Error Stock Consumo
-                </Typography>
-                <Divider sx={{ marginBottom: 2 }} />
-                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly" }}>
-                    <TextField
-                        label="Orden"
-                        variant="standard"
-                        disabled
-                        value={updateForm.orden}
-                        onChange={(e) => handleChangeUpdate('orden', e.target.value)}
-                        sx={{ mb: 2, width: "30%" }}
-                    />
-                    <TextField
-                        label="Región"
-                        variant="standard"
-                        disabled
-                        value={updateForm.region}
-                        onChange={(e) => handleChangeUpdate('region', e.target.value)}
-                        sx={{ mb: 2, width: "30%" }}
-                    />
-
-                </Box>
-                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly" }}>
-                    <TextField
-                        label="Material"
-                        variant="standard"
-                        value={updateForm.material}
-                        onChange={(e) => handleChangeUpdate('material', e.target.value)}
-                        sx={{ mb: 2, width: "30%" }}
-                    />
-                    <TextField
-                        label="Cantidad"
-                        variant="standard"
-                        value={updateForm.cantidad}
-                        onChange={(e) => handleChangeUpdate('cantidad', e.target.value)}
-                        sx={{ mb: 2, width: "30%" }}
-                    />
-                </Box>
-                <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", marginTop: 2 }}>
-                    <Button
-                        variant="contained"
-                        onClick={handleUpdateSubmit}
-                        disabled={isSubmitting}
-                        sx={{
-                            width: "200px",
-                            background: `linear-gradient(135deg, ${palette.accent} 0%, #43baf5 50%, ${palette.accent} 100%)`,
-                            color: '#fff',
-                            transition: 'all .35s',
-                            '&:before': {
-                                content: '""',
-                                position: 'absolute',
-                                inset: 0,
-                                background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
-                                mixBlendMode: 'overlay',
-                                pointerEvents: 'none'
-                            },
-                            '&:hover': {
-                                transform: 'translateY(-3px)',
-                                boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
-                                background: `linear-gradient(135deg, #43baf5 0%, ${palette.accent} 55%, #1d88c0 100%)`
-                            },
-                            '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
-                            '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
-                        }}
-                    >
-                        {isSubmitting ? <CircularProgress size={24} /> : "Actualizar"}
-                    </Button>
-                </Box>
-
-            </Paper>
-        );
+    const handleChangeUpdate = (field, value) => {
+        setUpdateForm((prev) => ({ ...prev, [field]: value }));
     };
 
     const handleClose = () => {
@@ -328,7 +330,14 @@ function NDCErrorConConsumo() {
                     </Paper>
                 )
                 }
-                {openUpdate && (<UpdateCard />)}
+                {openUpdate && (
+                    <UpdateCard 
+                        updateForm={updateForm}
+                        handleChangeUpdate={handleChangeUpdate}
+                        handleUpdateSubmit={handleUpdateSubmit}
+                        isSubmitting={isSubmitting}
+                    />
+                )}
             </Box>
         </NdcLayout>
     );
