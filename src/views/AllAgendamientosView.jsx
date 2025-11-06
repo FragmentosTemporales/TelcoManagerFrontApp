@@ -7,7 +7,6 @@ import {
   CardContent,
   CardHeader,
   InputLabel,
-  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -15,23 +14,23 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
   LinearProgress,
-  Chip,
+  Typography,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useEffect, useState } from "react";
 import {
   getAllAgendamientos,
   filterAgendamiento,
   getDespachosSemenalExcel,
+  getDataFuturaAgendamientos
 } from "../api/despachoAPI";
 import extractDate from "../helpers/main";
+import {extractDateOnly} from "../helpers/main";
 import { Link } from "react-router-dom";
 import palette from "../theme/palette";
+import { BarChart } from '@mui/x-charts/BarChart';
 
 function AllAgendamientoViewer() {
   const [open, setOpen] = useState(false);
@@ -43,6 +42,15 @@ function AllAgendamientoViewer() {
   const [page, setPage] = useState(1);
   const handlePage = (newPage) => setPage(newPage);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [dataChart, setDataChart] = useState(undefined);
+
+  const [dailyData, setDailyData] = useState([]);
+
+  const [verBarChartDaily, setVerBarChartDaily] = useState(false);
+
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [countNombre, setCountNombre] = useState([]);
 
   // Theming helpers (consistent with AgendamientoView)
   const gradient = palette.bgGradient;
@@ -80,6 +88,185 @@ function AllAgendamientoViewer() {
     boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
     "&:hover": { background: palette.primaryDark },
   };
+
+  const processChartData = (rawData) => {
+    const groupedData = rawData.reduce((acc, item) => {
+      const date = extractDateOnly(item.fecha);
+      acc[date] = (acc[date] || 0) + parseInt(item.Q || 0);
+      return acc;
+    }, {});
+
+    return Object.entries(groupedData).map(([x, y]) => ({ x, y: parseInt(y) }));
+  };
+
+  const processCountNombre = (selectedDate) => {
+    if (!dataChart || !selectedDate) return [];
+    
+    // Filtrar registros del día seleccionado
+    const filteredData = dataChart.filter(item => 
+      extractDateOnly(item.fecha) === selectedDate
+    );
+    
+    // Agrupar por nombre (despachador)
+    const groupedByNombre = filteredData.reduce((acc, item) => {
+      const nombre = item.nombre || 'Sin nombre';
+      acc[nombre] = (acc[nombre] || 0) + parseInt(item.Q || 0);
+      return acc;
+    }, {});
+    
+    return Object.entries(groupedByNombre).map(([nombre, cantidad]) => ({ 
+      nombre, 
+      cantidad: parseInt(cantidad)
+    }));
+  };
+
+  const handleBarClick = (event, data) => {
+    if (data && data.dataIndex !== undefined) {
+      const clickedDate = dailyData[data.dataIndex].x;
+      setSelectedDay(clickedDate);
+      const nombreData = processCountNombre(clickedDate);
+      setCountNombre(nombreData);
+    }
+  };
+
+  const fetchDataChart = async () => {
+    try {
+      const response = await getDataFuturaAgendamientos();
+      setDataChart(response);
+    } catch (error) {
+      console.error(error);
+      setAlertType("error");
+      setMessage(error);
+      setOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataChart();
+  }, []);
+
+  useEffect(() => {
+    if (dataChart) {
+      setDailyData(processChartData(dataChart));
+      setVerBarChartDaily(true);
+    }
+  }, [dataChart]);
+
+  const barChartDaily = () => {
+    if (verBarChartDaily === false) return null;
+
+    const dates = dailyData.map(item => item.x);
+    const counts = dailyData.map(item => item.y);
+
+    return <> 
+    <Box sx={{ ...glass, height: "400px", my:2 }}>
+      <Typography variant="h6" sx={{ p: 2, fontWeight: "bold", textAlign: "center" }}>
+        Agendamientos últimos 10 días
+      </Typography>
+      <Box sx={{ height: "320", px: 2, pb: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <BarChart
+          width={1000}
+          height={300}
+          layout="horizontal"
+          series={[
+            {
+              data: counts,
+              label: 'Cantidad de Agendamientos',
+              color: palette.primary,
+            },
+          ]}
+          yAxis={[
+            {
+              data: dates,
+              scaleType: 'band',
+              categoryGapRatio: 0.2,
+              barGapRatio: 0.1,
+            },
+          ]}
+          xAxis={[
+            {
+              label: 'Cantidad',
+            },
+          ]}
+          grid={{ vertical: true, horizontal: true }}
+          margin={{
+            left: 100,
+            right: 50,
+            top: 50,
+            bottom: 50,
+          }}
+          slotProps={{
+            legend: {
+              direction: 'row',
+              position: { vertical: 'top', horizontal: 'middle' },
+              padding: 20,
+            },
+          }}
+          onItemClick={handleBarClick}
+        />
+      </Box>
+    </Box>
+    </>
+  }
+
+  const barChartByDespachador = () => {
+    if (!selectedDay || countNombre.length === 0) return null;
+
+    const nombres = countNombre.map(item => item.nombre);
+    const cantidades = countNombre.map(item => item.cantidad);
+
+    return (
+      <Box sx={{ ...glass, height: "400px", my: 2 }}>
+        <Typography variant="h6" sx={{ p: 2, fontWeight: "bold", textAlign: "center" }}>
+          Agendamientos por Despachador - {selectedDay}
+        </Typography>
+        <Box sx={{ height: "320", px: 2, pb: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <BarChart
+            width={1000}
+            height={300}
+            layout="horizontal"
+            series={[
+              {
+                data: cantidades,
+                label: 'Cantidad de Agendamientos',
+                color: palette.primary,
+              },
+            ]}
+            yAxis={[
+              {
+                data: nombres,
+                scaleType: 'band',
+                categoryGapRatio: 0.2,
+                barGapRatio: 0.1,
+              },
+            ]}
+            xAxis={[
+              {
+                label: 'Cantidad',
+                valueFormatter: (value) => Math.round(value).toString(),
+                tickNumber: Math.max(...cantidades) <= 10 ? Math.max(...cantidades) + 1 : 10
+              },
+            ]}
+            grid={{ vertical: true, horizontal: true }}
+            margin={{
+              left: 150,
+              right: 50,
+              top: 50,
+              bottom: 50,
+            }}
+            slotProps={{
+              legend: {
+                direction: 'row',
+                position: { vertical: 'top', horizontal: 'middle' },
+                padding: 20,
+              },
+            }}
+          />
+        </Box>
+      </Box>
+    );
+  };
+
 
   const getExcel = async () => {
     setIsSubmitting(true);
@@ -318,7 +505,7 @@ function AllAgendamientoViewer() {
                 borderRadius: 2,
                 fontWeight: "bold",
                 borderColor: palette.primary,
-                color: palette.primary,
+                color: palette.cardBg,
                 minWidth: 200,
               }}
             >
@@ -328,6 +515,8 @@ function AllAgendamientoViewer() {
           {downloadExcel()}
         </Box>
 
+        {barChartDaily()}
+        {barChartByDespachador()}
         <Card sx={{ ...glass }}>
           <CardHeader
             titleTypographyProps={{ fontSize: 18, fontWeight: "bold" }}
