@@ -108,7 +108,7 @@ function App() {
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />
         <Route path="/bodegaQuinta" element={<BodegaQuintaViewer />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/loginPage" element={<Login />} />
         <Route path="*" element={<ErrorHandler/>} />
       </Routes>
   </HashRouter>
