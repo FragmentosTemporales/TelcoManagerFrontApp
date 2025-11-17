@@ -1,29 +1,10 @@
 import { Alert, Autocomplete, Box, Button, Skeleton, TextField, Typography } from "@mui/material";
-import FeedIcon from "@mui/icons-material/Feed";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createSolicitud } from "../api/solicitudAPI";
-import {
-  motivoData17,
-  motivoData18,
-  motivoData19,
-  motivoData20,
-  motivoData22,
-  motivoData24,
-  motivoData26,
-  motivoData27
-} from "../data/submotivoData";
-import areaData from "../data/areaData";
-import {
-  prevencionData,
-  calidadData,
-  operacionesData,
-  logisticaData,
-  recursoshumanosData,
-  flotaData,
-} from "../data/motivoData";
 import { getPersona } from "../api/personaAPI";
+import { getAreaMotivos } from "../api/solicitudAPI";
 
 import { onLoad, onLoading, setMessage } from "../slices/solicitudSlice";
 import palette from "../theme/palette";
@@ -43,175 +24,85 @@ function FormSolicitud() {
     areaID: "",
     submotivoID: null,
   });
-  const [motivoOptions, setMotivoOptions] = useState([]);
   const [personaOptions, setPersonaOptions] = useState([]);
-  const [areaOptions, setAreaOptions] = useState([]);
-  const [smOptions, setSmOptions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [newAreaOptions, setNewAreaOptions] = useState([]);
+  
+  const [allMotivos, setAllMotivos] = useState([]);
+  const [allSubmotivos, setAllSubmotivos] = useState([]);
+
+  const [filteredMotivos, setFilteredMotivos] = useState([]);
+  const [filteredSubmotivos, setFilteredSubmotivos] = useState([]);
+
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const setSubmotivoData = () => {
-    if (form.motivoID && form.motivoID != "") {
-      switch (form.motivoID) {
-        case "17":
-          const transformedOptions = motivoData17.map((item) => ({
-            value: item.submotivoID,
-            label: item.descri,
-          }));
-          setSmOptions(transformedOptions);
-          break;
-
-        case "18":
-          const transformedOptions2 = motivoData18.map((item) => ({
-            value: item.submotivoID,
-            label: item.descri,
-          }));
-          setSmOptions(transformedOptions2);
-          break;
-
-        case "19":
-          const transformedOptions3 = motivoData19.map((item) => ({
-            value: item.submotivoID,
-            label: item.descri,
-          }));
-          setSmOptions(transformedOptions3);
-          break;
-
-        case "20":
-          const transformedOptions4 = motivoData20.map((item) => ({
-            value: item.submotivoID,
-            label: item.descri,
-          }));
-          setSmOptions(transformedOptions4);
-          break;
-
-        case "22":
-          const transformedOptions5 = motivoData22.map((item) => ({
-            value: item.submotivoID,
-            label: item.descri,
-          }));
-          setSmOptions(transformedOptions5);
-          break;
-
-        case "24":
-          const transformedOptions6 = motivoData24.map((item) => ({
-            value: item.submotivoID,
-            label: item.descri,
-          }));
-          setSmOptions(transformedOptions6);
-          break;
-
-        case "26":
-          const transformedOptions7 = motivoData26.map((item) => ({
-            value: item.submotivoID,
-            label: item.descri,
-          }));
-          setSmOptions(transformedOptions7);
-          break;
-
-        case "27":
-          const transformedOptions8 = motivoData27.map((item) => ({
-            value: item.submotivoID,
-            label: item.descri,
-          }));
-          setSmOptions(transformedOptions8);
-          break;
-
-        default:
-          console.log("motivoID no reconocida");
-          break;
-      }
-    } else {
-      console.log("No hay submotivos disponible");
-    }
-  };
-
-  const setMotivoData = () => {
-    if (form.areaID && form.areaID != "") {
-      switch (form.areaID) {
-        case "1":
-          const transformedOptions = prevencionData.map((item) => ({
-            value: item.motivoID,
-            label: item.descri,
-          }));
-          setMotivoOptions(transformedOptions);
-          break;
-
-        case "2":
-          const transformedOptions2 = calidadData.map((item) => ({
-            value: item.motivoID,
-            label: item.descri,
-          }));
-          setMotivoOptions(transformedOptions2);
-          break;
-
-        case "3":
-          const transformedOptions3 = operacionesData.map((item) => ({
-            value: item.motivoID,
-            label: item.descri,
-          }));
-          setMotivoOptions(transformedOptions3);
-          break;
-
-        case "4":
-          const transformedOptions4 = logisticaData.map((item) => ({
-            value: item.motivoID,
-            label: item.descri,
-          }));
-          setMotivoOptions(transformedOptions4);
-          break;
-
-        case "5":
-          const transformedOptions5 = recursoshumanosData.map((item) => ({
-            value: item.motivoID,
-            label: item.descri,
-          }));
-          setMotivoOptions(transformedOptions5);
-          break;
-
-        case "6":
-          const transformedOptions6 = flotaData.map((item) => ({
-            value: item.motivoID,
-            label: item.descri,
-          }));
-          setMotivoOptions(transformedOptions6);
-          break;
-
-        default:
-          console.log("Area no reconocida");
-          break;
-      }
-    } else {
-      console.log("No hay motivos disponible");
-    }
   };
 
   const fetchPersonas = async () => {
     setIsLoading(true);
     try {
       const response = await getPersona(token);
+
+      const res = await getAreaMotivos();
+
+      let dataArray;
+      if (typeof res === 'string') {
+        const sanitizedRes = res.replace(/:\s*NaN/g, ': null');
+        dataArray = JSON.parse(sanitizedRes);
+      } else {
+        dataArray = res?.data || res;
+      }
+      
+      if (dataArray && Array.isArray(dataArray) && dataArray.length > 0) {
+        const uniqueAreas = dataArray.reduce((acc, item) => {
+          if (!acc.find(area => area.value === item.areaID)) {
+            acc.push({
+              value: item.areaID,
+              label: item.area
+            });
+          }
+          return acc;
+        }, []);
+
+        setNewAreaOptions(uniqueAreas);
+
+        const uniqueMotivos = dataArray.reduce((acc, item) => {
+          if (!acc.find(motivo => motivo.value === item.motivoID)) {
+            acc.push({
+              value: item.motivoID,
+              label: item.motivo,
+              areaID: item.areaID
+            });
+          }
+          return acc;
+        }, []);
+        
+        setAllMotivos(uniqueMotivos);
+
+        const uniqueSubmotivos = dataArray.reduce((acc, item) => {
+          if (item.submotivo && item.submotivoID !== null) {
+            if (!acc.find(sm => sm.value === item.submotivoID)) {
+              acc.push({
+                value: item.submotivoID,
+                label: item.submotivo,
+                motivoID: item.motivoID
+              });
+            }
+          }
+          return acc;
+        }, []);
+        
+        setAllSubmotivos(uniqueSubmotivos);
+      }
+
       setData(response);
     } catch (error) {
       console.error(error);
     }
     setIsLoading(false);
-  };
-
-  const fetchArea = async () => {
-    try {
-      const transformedOptions = areaData.map((item) => ({
-        value: item.areaID,
-        label: item.descri,
-      }));
-      setAreaOptions(transformedOptions);
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -238,21 +129,10 @@ function FormSolicitud() {
       });
       navigate(response.path);
     } catch (error) {
-      console.error(error);
       dispatch(setMessage(error));
       setOpen(true);
     }
   };
-
-  useEffect(() => {
-    fetchArea();
-  }, []);
-
-  useEffect(() => {
-    {
-      form.motivoID != "" ? setSubmotivoData() : null;
-    }
-  }, [form.motivoID]);
 
   useEffect(() => {
     setForm((prevForm) => ({
@@ -262,10 +142,30 @@ function FormSolicitud() {
   }, [user_id]);
 
   useEffect(() => {
-    if (form.areaID && form.areaID != "") {
-      setMotivoData();
+    if (form.areaID && allMotivos.length > 0) {
+      const motivosFiltrados = allMotivos.filter(motivo => motivo.areaID === form.areaID);
+      setFilteredMotivos(motivosFiltrados);
+      
+      if (form.motivoID && !motivosFiltrados.find(m => m.value === form.motivoID)) {
+        setForm(prev => ({ ...prev, motivoID: '', submotivoID: null }));
+      }
+    } else {
+      setFilteredMotivos([]);
     }
-  }, [form.areaID]);
+  }, [form.areaID, allMotivos]);
+
+  useEffect(() => {
+    if (form.motivoID && allSubmotivos.length > 0) {
+      const submotivosFiltrados = allSubmotivos.filter(sm => sm.motivoID === form.motivoID);
+      setFilteredSubmotivos(submotivosFiltrados);
+      
+      if (form.submotivoID && !submotivosFiltrados.find(sm => sm.value === form.submotivoID)) {
+        setForm(prev => ({ ...prev, submotivoID: null }));
+      }
+    } else {
+      setFilteredSubmotivos([]);
+    }
+  }, [form.motivoID, allSubmotivos]);
 
   useEffect(() => {
     fetchPersonas();
@@ -318,7 +218,6 @@ function FormSolicitud() {
 
   return (
     <Box sx={{ position: 'relative', minHeight: '40vh', width: '100%', py: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', background: palette.bgGradient }}>
-      {/* decorative overlays */}
       <Box sx={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         <Box sx={{ position: 'absolute', top: -120, left: -80, width: 300, height: 300, borderRadius: '50%', background: `${palette.accent}22`, filter: 'blur(80px)' }} />
         <Box sx={{ position: 'absolute', bottom: -140, right: -100, width: 360, height: 360, borderRadius: '50%', background: `${palette.primary}1f`, filter: 'blur(90px)' }} />
@@ -342,11 +241,11 @@ function FormSolicitud() {
           <form onSubmit={handleSubmit} style={{ width: '100%' }}>
             <Box sx={fieldBox}>
               <Autocomplete
-                options={areaOptions}
+                options={newAreaOptions}
                 variant="standard"
                 size="small"
                 getOptionLabel={(option) => option.label}
-                value={areaOptions.find((option) => option.value === form.areaID) || null}
+                value={newAreaOptions.find((option) => option.value === form.areaID) || null}
                 onChange={(event, newValue) => {
                   setForm({ ...form, areaID: newValue ? newValue.value : '' });
                 }}
@@ -370,11 +269,11 @@ function FormSolicitud() {
 
             <Box sx={fieldBox}>
               <Autocomplete
-                options={motivoOptions}
+                options={filteredMotivos}
                 getOptionLabel={(option) => option.label}
                 variant="standard"
                 size="small"
-                value={motivoOptions.find((option) => option.value === form.motivoID) || null}
+                value={filteredMotivos.find((option) => option.value === form.motivoID) || null}
                 onChange={(event, newValue) => {
                   setForm({ ...form, motivoID: newValue ? newValue.value : '' });
                 }}
@@ -384,11 +283,11 @@ function FormSolicitud() {
 
             <Box sx={fieldBox}>
               <Autocomplete
-                options={smOptions}
+                options={filteredSubmotivos}
                 variant="standard"
                 size="small"
                 getOptionLabel={(option) => option.label}
-                value={smOptions.find((option) => option.value === form.submotivoID) || null}
+                value={filteredSubmotivos.find((option) => option.value === form.submotivoID) || null}
                 onChange={(event, newValue) => {
                   setForm({ ...form, submotivoID: newValue ? newValue.value : '' });
                 }}

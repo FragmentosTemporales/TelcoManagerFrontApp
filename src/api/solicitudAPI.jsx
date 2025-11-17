@@ -36,23 +36,6 @@ export const getSolicitudePendientes = async () => {
   }
 };
 
-export const getSolicitudeStats = async () => {
-  try {
-    const response = await client.get('/get-stats-solicitudes');
-    return response.data;
-  } catch (error) {
-    throw error.response?.data?.error || error.message;
-  }
-};
-
-export const getSolicitudeStatsByUser = async () => {
-  try {
-    const response = await client.get('/get-stats-solicitudes-by-user');
-    return response.data;
-  } catch (error) {
-    throw error.response?.data?.error || error.message;
-  }
-};
 
 export const getSolicitudesExcel = async () => {
   try {
@@ -100,23 +83,15 @@ export const getUniqueSolicitud = async (solicitud_id) => {
   }
 };
 
-export const updateSolicitud = async (solicitud_id, payload) => {
+export const getAreaMotivos = async () => {
   try {
-    const response = await client.put(`/update-solicitud/${solicitud_id}`, payload);
+    const response = await client.get('/get-motivos-solicitudes');
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;
   }
 };
 
-export const deleteSolicitud = async (solicitud_id) => {
-  try {
-    const response = await client.delete(`/update-solicitud/${solicitud_id}`);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data?.error || error.message;
-  }
-};
 
 export const createFolio = async (payload) => {
   try {
