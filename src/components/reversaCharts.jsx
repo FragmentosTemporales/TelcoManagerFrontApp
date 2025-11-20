@@ -189,7 +189,7 @@ function ReversaCharts() {
               series={[
                 { data: chartData.atcData, label: 'ATC', color: palette.primary },
                 { data: chartData.vtrRmData, label: 'VTR RM', color: palette.accent },
-                { data: chartData.vtrVRegionData, label: 'VTR V Región', color: palette.primaryDark },
+                { data: chartData.vtrVRegionData, label: 'VTR V Región', color: palette.textMuted },
               ]}
               xAxis={[{ scaleType: 'point', data: chartData.fechas, tickLabelStyle: { fill: palette.textMuted } }]}
               yAxis={[{ width: 50, tickLabelStyle: { fill: palette.textMuted } }]}
@@ -210,7 +210,7 @@ function ReversaCharts() {
               series={Object.entries(weeklyChartData.centroCostoData).map(([centroCosto, data], index) => ({
                 data,
                 label: centroCosto,
-                color: index === 0 ? palette.primary : index === 1 ? palette.accent : palette.primaryDark
+                color: index === 0 ? palette.primary : index === 1 ? palette.accent : palette.textMuted
               }))}
               xAxis={[{
                 scaleType: 'band',

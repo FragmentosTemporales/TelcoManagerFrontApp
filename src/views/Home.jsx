@@ -21,12 +21,12 @@ function Home() {
       link: "/modulo:gestion-ticketera",
       moduloID: 26,
     },
-    // {
-    //   head: "Mis Proyectos Asignados",
-    //   title: "Revisa la lista de proyectos asignados a tu empresa",
-    //   link: "/modulo:proyectos-asignados",
-    //   moduloID: 4,
-    // },
+    {
+      head: "Respaldos Calidad",
+      title: "Revisa la lista de respaldos",
+      link: "/modulo:respaldos",
+      moduloID: 1028,
+    },
     {
       head: "Lista de Proyectos Consolidados",
       title: "Gestiona y visualiza Proyectos",
