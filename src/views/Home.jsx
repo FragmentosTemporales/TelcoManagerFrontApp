@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, Typography, Paper, Chip, Fade } from "@mui/material";
+import { Box, Divider, Grid, Typography, Paper, Fade } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainLayout } from "./Layout";
@@ -14,7 +14,6 @@ function Home() {
   }, []);
 
   const secciones = [
-
     {
       head: "Gestión de Tickets",
       title: "Gestiona los tickets de soporte",
@@ -22,10 +21,28 @@ function Home() {
       moduloID: 26,
     },
     {
-      head: "Respaldos Calidad",
-      title: "Revisa la lista de respaldos",
-      link: "/modulo:respaldos",
-      moduloID: 1028,
+      head: "NDC_Bot Manager",
+      title: "Gestiona la automatización del NDC Bot",
+      link: "/modulo:ndc/session-logs",
+      moduloID: 2,
+    },
+    {
+      head: "Monitoreo Telcomanager",
+      title: "Visualiza estadísticas de consultas Log Query para Telcomanager",
+      link: "/modulo:log-query",
+      moduloID: 26,
+    },
+    {
+      head: "Registro de Reparaciones",
+      title: "Visualiza las reparaciones realizadas",
+      link: "/modulo:reparaciones",
+      moduloID: 21,
+    },
+    {
+      head: "Registros DomApp",
+      title: "Visualiza, filtra y monitorea los últimos registros de las automatizaciones en DomApp.",
+      link: "/modulo:ultimos-logs",
+      moduloID: 26,
     },
     {
       head: "Lista de Proyectos Consolidados",
@@ -39,50 +56,29 @@ function Home() {
       link: "/proyectos-link-vno",
       moduloID: 24,
     },
-    {
-      head: "Registros DomApp",
-      title: "Visualiza, filtra y monitorea los últimos registros de las automatizaciones en DomApp.",
-      link: "/modulo:ultimos-logs",
-      moduloID: 26,
-    },
-
-    {
-      head: "Gestion de Proyectos",
-      title: "Gestiona tus proyectos y tareas",
-      link: "/modulo:proyecto-interno",
-      moduloID: 26,
-    },
-    {
-      head: "Migraciones Proactivas",
-      title: "Vista de Migraciones Proactivas",
-      link: "/modulo:migraciones-proactivas",
-      moduloID: 27,
-    },
+    // {
+    //   head: "Gestion de Proyectos",
+    //   title: "Gestiona tus proyectos y tareas",
+    //   link: "/modulo:proyecto-interno",
+    //   moduloID: 26,
+    // },
+    // {
+    //   head: "Migraciones Proactivas",
+    //   title: "Vista de Migraciones Proactivas",
+    //   link: "/modulo:migraciones-proactivas",
+    //   moduloID: 27,
+    // },
     {
       head: "Reversa",
       title: "Listado de Reversas Pendientes",
       link: "/modulo:reversa",
       moduloID: 2,
     },
-
-    // {
-    //   head: "Creación de Reparaciones",
-    //   title: "Carga las pruebas de las reparaciones realizadas",
-    //   link: "/modulo:registro-reparacion",
-    //   moduloID: 4,
-    // },
     {
-      head: "Registro de Reparaciones",
-      title: "Visualiza las reparaciones realizadas",
-      link: "/modulo:reparaciones",
-      moduloID: 21,
-    },
-
-    {
-      head: "NDC_Bot Manager",
-      title: "Gestiona la automatización del NDC Bot",
-      link: "/modulo:ndc/session-logs",
-      moduloID: 2,
+      head: "Creación de Reparaciones",
+      title: "Carga las pruebas de las reparaciones realizadas",
+      link: "/modulo:registro-reparacion",
+      moduloID: 4,
     },
     {
       head: "Amonestaciones",
@@ -103,16 +99,34 @@ function Home() {
       moduloID: 20,
     },
     {
+      head: "Respaldos Calidad",
+      title: "Revisa la lista de respaldos",
+      link: "/modulo:respaldos",
+      moduloID: 1028,
+    },
+    {
       head: "Crear Ticket",
       title: "Crear Ticket para Soporte Estadístico",
       link: "/modulo:ticketera",
       moduloID: 25,
     },
+    // {
+    //   head: "Crear Migraciones Proactivas",
+    //   title: "Crear Migraciones Proactivas ",
+    //   link: "/modulo:create-migracion-proactiva",
+    //   moduloID: 27,
+    // },
     {
-      head: "Crear Migraciones Proactivas",
-      title: "Crear Migraciones Proactivas ",
-      link: "/modulo:create-migracion-proactiva",
-      moduloID: 27,
+      head: "Agendamiento",
+      title: "Gestiona despachos y agendamientos",
+      link: "/agendamientos",
+      moduloID: 19,
+    },
+    {
+      head: "Gestión Totem",
+      title: "Espacio para gestión de atención",
+      link: "/totem",
+      moduloID: 13,
     },
     {
       head: "Objetivos OnNet",
@@ -134,35 +148,17 @@ function Home() {
       moduloID: 12,
     },
     {
-      head: "Gestión Totem",
-      title: "Espacio para gestión de atención",
-      link: "/totem",
-      moduloID: 13,
-    },
-    {
       head: "Gestión Supervisor",
       title: "Espacio para gestión de técnicos",
       link: "/supervisor",
       moduloID: 14,
     },
-    {
-      head: "Agendamiento",
-      title: "Gestiona despachos y agendamientos",
-      link: "/agendamientos",
-      moduloID: 19,
-    },
-    {
-      head: "Carga Planilla Construcción",
-      title: "Espacio para cargar planilla de construcción",
-      link: "/carga-construccion",
-      moduloID: 6,
-    },
-    {
-      head: "Monitoreo Telcomanager",
-      title: "Visualiza estadísticas de consultas Log Query para Telcomanager",
-      link: "/modulo:log-query",
-      moduloID: 26,
-    },
+    // {
+    //   head: "Carga Planilla Construcción",
+    //   title: "Espacio para cargar planilla de construcción",
+    //   link: "/carga-construccion",
+    //   moduloID: 6,
+    // },
     // {
     //   head: "Gestión Inventario",
     //   title: "Gestiona lista de asistentes a inventario",
@@ -231,7 +227,6 @@ function Home() {
             container
             rowSpacing={{ xs: 5, sm: 6, md: 7 }}
             columnSpacing={{ xs: 2.5, sm: 3, md: 3.5, lg: 4 }}
-            // Mantener 3 columnas en pantallas grandes y permitir que el ancho de cada card crezca
             sx={{
               width: "100%",
               maxWidth: { xs: 1320, lg: 1460, xl: 1600 },
@@ -248,7 +243,7 @@ function Home() {
                   elevation={10}
                   sx={{
                     textDecoration: "none",
-                    height: "100%",
+                    minHeight: "70%",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
@@ -284,17 +279,6 @@ function Home() {
                   }}
                 >
                   <Box>
-                    <Chip
-                      label={acceso.head}
-                      size="small"
-                      sx={{
-                        mb: 1.5,
-                        fontWeight: 600,
-                        bgcolor: palette.accentSoft,
-                        color: palette.primary,
-                        letterSpacing: 0.3,
-                      }}
-                    />
                     <Typography
                       variant="h6"
                       sx={{
@@ -302,6 +286,7 @@ function Home() {
                         lineHeight: 1.25,
                         color: palette.primary,
                         mb: 1,
+                        textAlign: "center"
                       }}
                     >
                       {acceso.head}
@@ -309,25 +294,11 @@ function Home() {
                     <Divider sx={{ mb: 1.5, borderColor: palette.borderSubtle }} />
                     <Typography
                       variant="body2"
-                      sx={{ color: palette.textMuted, fontSize: "0.85rem" }}
+                      sx={{ color: palette.textMuted, fontSize: "0.85rem", textAlign: "center" }}
                     >
                       {acceso.title}
                     </Typography>
                   </Box>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      mt: 2,
-                      color: palette.accent,
-                      fontWeight: 500,
-                      letterSpacing: 0.5,
-                      opacity: 0.9,
-                      transition: "opacity .3s",
-                      '.MuiPaper-root:hover &': { opacity: 1 },
-                    }}
-                  >
-                    Ingresar →
-                  </Typography>
                 </Paper>
               </Grid>
             ))}

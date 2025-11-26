@@ -1,7 +1,7 @@
 import { AppBar, Box, Button, Toolbar, Tooltip, Typography, IconButton, Divider } from "@mui/material";
-import WidgetsIcon from '@mui/icons-material/Widgets';
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
+import HomeIcon from '@mui/icons-material/Home';
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -23,7 +23,6 @@ function Navbar() {
     dispatch(domsetLogout());
   };
 
-  // Watch token expiry and force navigation to login when it expires.
   useEffect(() => {
     let logoutTimer = null;
     let warnTimer = null;
@@ -33,14 +32,12 @@ function Navbar() {
 
     const remaining = token_expires_at - Date.now();
     if (remaining <= 0) {
-      // already expired -> immediate logout + navigate
       dispatch(setLogout());
       dispatch(domsetLogout());
       navigate('/login', { replace: true });
       return;
     }
 
-    // Schedule a warning 10 seconds before expiry. If less than 10s remain, show immediately.
     const timeToWarn = remaining - 10 * 1000;
     if (timeToWarn <= 0) {
       setShowExpiryWarning(true);
@@ -48,9 +45,7 @@ function Navbar() {
       warnTimer = setTimeout(() => setShowExpiryWarning(true), timeToWarn);
     }
 
-    // Keep a ticking seconds-left counter while the warning is visible (or once started).
     const startTick = () => {
-      // set initial value immediately
       setSecondsLeft(Math.max(0, Math.ceil((token_expires_at - Date.now()) / 1000)));
       tickInterval = setInterval(() => {
         const s = Math.max(0, Math.ceil((token_expires_at - Date.now()) / 1000));
@@ -61,31 +56,22 @@ function Navbar() {
       }, 1000);
     };
 
-    // If we already showed the warning immediately, start the tick.
     if (timeToWarn <= 0) startTick();
 
-    // When the warning becomes visible (either now or later) ensure ticking starts.
     const warnObserver = () => {
       if (!tickInterval) startTick();
     };
 
-    // fallback: observe showExpiryWarning change via a short timeout hook —
-    // we'll also start ticking when the warnTimer fires by wrapping setShowExpiryWarning above.
-
-    // schedule logout at expiry time
     logoutTimer = setTimeout(() => {
       dispatch(setLogout());
       dispatch(domsetLogout());
       try {
         navigate('/login', { replace: true });
       } catch (e) {
-        // ignore navigation errors in non-router contexts
       }
     }, remaining);
 
-    // if the warning will fire later, make sure to start ticking when it does by overriding the setter
     if (warnTimer) {
-      // wrap the warn timer so it also starts the tick interval when warning shows
       clearTimeout(warnTimer);
       warnTimer = setTimeout(() => {
         setShowExpiryWarning(true);
@@ -100,8 +86,6 @@ function Navbar() {
     };
   }, [token_expires_at, dispatch, navigate]);
 
-  // Ensure a safe seconds-left ticker when the warning is visible. This keeps
-  // the UI updated even if the main effect didn't start the interval.
   useEffect(() => {
     let interval = null;
     if (showExpiryWarning && token_expires_at) {
@@ -159,7 +143,7 @@ function Navbar() {
                 }
               }}
             >
-              <WidgetsIcon fontSize="medium" />
+              <HomeIcon fontSize="medium" />
             </IconButton>
             <Typography
               variant="h6"
@@ -170,7 +154,7 @@ function Navbar() {
                 textShadow: '0 2px 4px rgba(0,0,0,0.35)'
               }}
             >
-              Telco Manager
+              Telco
             </Typography>
           </Box>
 

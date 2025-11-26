@@ -206,7 +206,7 @@ function ReversaCharts() {
               Registros por Semana y Centro de Costo
             </Box>
             <BarChart
-              height={300}
+              height={250}
               series={Object.entries(weeklyChartData.centroCostoData).map(([centroCosto, data], index) => ({
                 data,
                 label: centroCosto,
@@ -225,7 +225,7 @@ function ReversaCharts() {
               yAxis={[{
                 tickLabelStyle: { fill: palette.textMuted }
               }]}
-              margin={{ bottom: 120, right: 24, left: 50, top: 20 }}
+              margin={{ bottom: 70, right: 24, left: 50, top: 50 }}
             />
           </Box>
         </Box>

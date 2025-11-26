@@ -109,7 +109,7 @@ function SupervisorViewRM() {
     background: 'rgba(255,255,255,0.92)',
     backdropFilter: 'blur(10px)',
     border: `1px solid ${palette.borderSubtle}`,
-    borderRadius: 12,
+    borderRadius: 2,
     boxShadow: '0 8px 26px rgba(0,0,0,0.18)'
   };
   const headCell = { background: gradient, color: '#fff', fontWeight: 'bold' };
