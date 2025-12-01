@@ -1,13 +1,15 @@
-import { Box, Divider, Grid, Typography, Paper, Fade } from "@mui/material";
+import { Box, Divider, Grid, Typography, Paper, Fade, TextField, InputAdornment } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainLayout } from "./Layout";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { palette } from "../theme/palette";
+import SearchIcon from '@mui/icons-material/Search';
 
 function Home() {
   const authState = useSelector((state) => state.auth);
   const { permisos } = authState;
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -74,12 +76,12 @@ function Home() {
       link: "/modulo:reversa",
       moduloID: 2,
     },
-    {
-      head: "Creación de Reparaciones",
-      title: "Carga las pruebas de las reparaciones realizadas",
-      link: "/modulo:registro-reparacion",
-      moduloID: 4,
-    },
+    // {
+    //   head: "Creación de Reparaciones",
+    //   title: "Carga las pruebas de las reparaciones realizadas",
+    //   link: "/modulo:registro-reparacion",
+    //   moduloID: 4,
+    // },
     {
       head: "Amonestaciones",
       title: "Listado de Solicitudes de Amonestación",
@@ -173,6 +175,9 @@ function Home() {
     )
   );
 
+  const accesosFiltrados = accesos.filter((acceso) =>
+    acceso.head.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -201,7 +206,7 @@ function Home() {
           },
         }}
       >
-        <Fade in timeout={600}>
+        <Fade in timeout={1000}>
           <Box sx={{ width: "100%", maxWidth: 1320, mb: 6 }}>
             <Typography
               variant="h4"
@@ -222,6 +227,48 @@ function Home() {
             </Typography>
           </Box>
         </Fade>
+        
+        <Box sx={{ width: "100%", maxWidth: 1320, mb: 4 }}>
+          <TextField
+            fullWidth
+            placeholder="Buscar módulo..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "rgba(255,255,255,0.6)" }} />
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                background: 'rgba(255,255,255,0.1)',
+                backdropFilter: 'blur(8px)',
+                borderRadius: 2,
+                color: '#fff',
+                transition: 'all 0.3s',
+                '& fieldset': {
+                  borderColor: 'rgba(255,255,255,0.2)',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'rgba(255,255,255,0.4)',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: palette.accent,
+                },
+              },
+              '& .MuiInputBase-input': {
+                color: '#fff',
+                '&::placeholder': {
+                  color: 'rgba(255,255,255,0.6)',
+                  opacity: 1,
+                },
+              },
+            }}
+          />
+        </Box>
+
         {accesos && accesos.length > 0 ? (
           <Grid
             container
@@ -235,7 +282,7 @@ function Home() {
             }}
             alignItems="stretch"
           >
-            {accesos.map((acceso, index) => (
+            {accesosFiltrados.map((acceso, index) => (
               <Grid item xs={12} sm={6} md={4} lg={4} xl={4} key={index}>
                 <Paper
                   component={Link}
