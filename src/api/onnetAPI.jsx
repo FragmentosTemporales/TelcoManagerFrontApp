@@ -1,15 +1,6 @@
 import client from './axiosClient';
 
 
-export const getInfoProyecto = async (proyecto) => {
-  try {
-    const response = await client.get(`/get-info-proyecto/${proyecto}`);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data?.error || error.message;
-  }
-};
-
 export const getProyectosFiltradosCubicados = async (payload, page) => {
   try {
     const response = await client.post(`/get-proyectos-filtrados-cubicados/${page}`, payload);
@@ -49,15 +40,6 @@ export const loadConsumosOnnet = async (payload) => {
 export const loadConsumosOnnetVNO = async (payload) => {
   try {
     const response = await client.post(`/load-plantilla-vno`, payload);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data?.error || error.message;
-  }
-};
-
-export const getProyectosByEmpresa = async () => {
-  try {
-    const response = await client.get(`/get-proyectos-asignados-por-empresa`);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;
@@ -139,6 +121,43 @@ export const getRelateds = async () => {
 export const updateCubicadoRecord = async (payload) => {
   try {
     const response = await client.post('/create-registro-actualizacion-record', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getProyectosOnnet = async (page, payload) => {
+  try {
+    const response = await client.post(`/get-proyectos/${page}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getProyectoOnnet = async (proyecto_id) => {
+  try {
+    const response = await client.get(`/get-proyecto/${proyecto_id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getProyectosOnnetEmpresa = async (empresa_id) => {
+  try {
+    const response = await client.get(`/get-proyecto-by-empresa/${empresa_id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};  
+
+export const uploadProyectoOnnet = async (payload, proyecto_id) => {
+  try {
+    const response = await client.put(`/upload-proyecto/${proyecto_id}`, payload);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;

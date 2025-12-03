@@ -23,6 +23,12 @@ function Home() {
       moduloID: 26,
     },
     {
+      head: "ONNET PROYECTOS CONSTRUCCIÓN",
+      title: "Gestiona los proyectos de construcción OnNet",
+      link: "/onnet/modulo/proyectos",
+      moduloID: 26,
+    },
+    {
       head: "NDC_Bot Manager",
       title: "Gestiona la automatización del NDC Bot",
       link: "/modulo:ndc/session-logs",
@@ -76,12 +82,6 @@ function Home() {
       link: "/modulo:reversa",
       moduloID: 2,
     },
-    // {
-    //   head: "Creación de Reparaciones",
-    //   title: "Carga las pruebas de las reparaciones realizadas",
-    //   link: "/modulo:registro-reparacion",
-    //   moduloID: 4,
-    // },
     {
       head: "Amonestaciones",
       title: "Listado de Solicitudes de Amonestación",

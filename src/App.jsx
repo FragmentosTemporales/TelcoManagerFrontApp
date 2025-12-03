@@ -50,6 +50,8 @@ import RepaView from "./views/RepaView";
 import ReparacionesInfoEdit from "./views/ReparacionesInfoEdit";
 import RespaldosView from "./views/RespaldosView";
 import RespaldoView from "./views/RespaldoView";
+import OnnetProyectos from "./views/OnnetProyectos";
+import OnnetProyecto from "./views/OnnetProyecto";
 
 function App() {
   return (
@@ -109,6 +111,9 @@ function App() {
           <Route path="/proyectos-link-vno" element={<ProyectosLinkVNOView />} />
           <Route path="/modulo:proyecto-filtrado-cubicado/:proyecto_id" element={<ProyectoFiltradoCubicado />} />
           <Route path="/modulo:proyecto-filtrado-vno/:proyecto_id" element={<ProyectoFiltradoVNO />} />
+
+          <Route path="/onnet/modulo/proyectos" element={<OnnetProyectos />} />
+          <Route path="/onnet/modulo/proyecto/:proyecto_id" element={<OnnetProyecto />} />
 
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />
