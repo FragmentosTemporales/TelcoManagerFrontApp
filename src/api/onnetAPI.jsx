@@ -163,3 +163,21 @@ export const uploadProyectoOnnet = async (payload, proyecto_id) => {
     throw error.response?.data?.error || error.message;
   }
 };
+
+export const getComponenteTipoOnnet = async () => {
+  try {
+    const response = await client.get(`/get-componente-tipos`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const createComponenteOnnet = async (payload) => {
+  try {
+    const response = await client.post('/create-componente', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};

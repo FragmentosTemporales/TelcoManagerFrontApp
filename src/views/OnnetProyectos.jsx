@@ -60,6 +60,7 @@ export default function OnnetProyectos() {
         setLoading(true);
         try {
             const res = await getProyectosOnnet(page, filterPayload);
+            console.log(res)
             setProyectos(res.data);
             setPages(res.pages);
             setCount(res.count);
@@ -310,6 +311,11 @@ export default function OnnetProyectos() {
 
                         <Divider sx={{ width: '90%', my: 2, borderColor: palette.borderSubtle }} />
 
+                        {proyectos.length === 0 && (
+                            <Typography variant="h6" sx={{ color: palette.textMuted, mt: 5 }}>
+                                No se encontraron proyectos con los filtros aplicados.
+                            </Typography>
+                        )}
                         <Grid container spacing={2} sx={{ width: '90%', mt: 1, mb: 5 }}>
                             {proyectos.map((proyecto) => (
                                 <Grid item xs={12} sm={6} md={4} key={proyecto.id}>
