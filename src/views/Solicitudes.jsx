@@ -387,6 +387,7 @@ function Solicitudes() {
         </TableRow>
       )}
     </TableBody>
+    
   );
 
   const setTableCard = () => (

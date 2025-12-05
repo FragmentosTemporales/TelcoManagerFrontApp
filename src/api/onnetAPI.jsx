@@ -173,6 +173,15 @@ export const getComponenteTipoOnnet = async () => {
   }
 };
 
+export const getComponenteTipoFormularioOnnet = async () => {
+  try {
+    const response = await client.get(`/get-componente-tipos-formulario`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
 export const createComponenteOnnet = async (payload) => {
   try {
     const response = await client.post('/create-componente', payload);

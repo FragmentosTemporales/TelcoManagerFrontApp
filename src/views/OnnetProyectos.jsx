@@ -11,8 +11,6 @@ import {
     Grid,
     InputLabel,
     TextField,
-    LinearProgress,
-    Autocomplete,
     Paper,
     Typography,
     FormControl,
@@ -28,12 +26,10 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
-import { extractDateOnly } from "../helpers/main";
 import { getProyectosOnnet } from "../api/onnetAPI";
 import { PieChart } from '@mui/x-charts/PieChart';
 
 export default function OnnetProyectos() {
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [alertType, setAlertType] = useState(undefined);

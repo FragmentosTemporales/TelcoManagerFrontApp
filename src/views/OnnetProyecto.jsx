@@ -2,17 +2,12 @@ import {
     Alert,
     Box,
     Button,
-    ButtonGroup,
-    Card,
-    CardHeader,
     CardContent,
     CircularProgress,
     Divider,
     Grid,
     InputLabel,
     TextField,
-    LinearProgress,
-    Autocomplete,
     Paper,
     Typography,
     FormControl,
@@ -25,7 +20,6 @@ import { useParams, Link } from "react-router-dom";
 import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
-import { extractDateOnly } from "../helpers/main";
 import { 
     getProyectoOnnet, 
     uploadProyectoOnnet, 
@@ -143,6 +137,7 @@ export default function OnnetProyecto() {
             setAlertType("success");
             setOpen(true);
             fetchProyectoData();
+
         } catch (error) {
             setMessage(error);
             setAlertType("error");
