@@ -190,3 +190,39 @@ export const createComponenteOnnet = async (payload) => {
     throw error.response?.data?.error || error.message;
   }
 };
+
+export const updateComponenteForm = async (payload, id_form) => {
+  try {
+    const response = await client.put(`/update-delete-formcomponente/${id_form}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const deleteComponenteOnnet = async (id_form) => {
+  try {
+    const response = await client.delete(`/update-delete-formcomponente/${id_form}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const createFormularioOnnet = async (payload) => {
+  try {
+    const response = await client.post('/create-formcomponente', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getUniqueComponenteOnnet = async (id_componente) => {
+  try {
+    const response = await client.get(`/get-componente/${id_componente}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};

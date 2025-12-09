@@ -381,41 +381,43 @@ export default function OnnetProyecto() {
                                     ) : (
                                         componentes && componentes.map((componente, index) => (
                                             <Grid item xs={12} sm={6} md={4} key={index}>
-                                                <Box sx={{
-                                                    width: '80%',
-                                                    p: 2,
-                                                    borderRadius: 2,
-                                                    my: 1,
-                                                    mx: 'auto',
-                                                    textAlign: 'center',
-                                                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                                                    transition: "all .35s",
-                                                    background: palette.accentSoft,
-                                                    cursor: "pointer",
-                                                    '&:before': {
-                                                        content: '""',
-                                                        position: "absolute",
-                                                        inset: 0,
-                                                        background:
-                                                            "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)",
-                                                        opacity: 0,
-                                                        transition: "opacity .4s",
-                                                        pointerEvents: "none",
-                                                    },
-                                                    '&:hover': {
-                                                        transform: 'translateY(-8px)',
-                                                        boxShadow:
-                                                            "0 14px 34px -6px rgba(0,0,0,0.42), 0 6px 16px -2px rgba(0,0,0,0.30)",
-                                                        borderColor: palette.accent,
-                                                        '&:before': { opacity: 1 },
-                                                    },
-                                                    '&:active': { transform: 'translateY(-3px)', boxShadow: "0 8px 20px -8px rgba(0,0,0,0.4)" },
-
-                                                }}>
-                                                    <Typography variant="subtitle1" sx={{ width: '100%', color: palette.accent, fontWeight: 600 }}>
+                                                <Box
+                                                    component={Link}
+                                                    to={`/onnet/modulo/componente/${componente.id}`}
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        width: { xs: '95%', sm: '90%', md: '85%' },
+                                                        minHeight: 60,
+                                                        p: 2.5,
+                                                        borderRadius: 3,
+                                                        my: 2,
+                                                        mx: 'auto',
+                                                        textAlign: 'center',
+                                                        textDecoration: 'none',
+                                                        boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
+                                                        transition: 'all .35s',
+                                                        background: `linear-gradient(135deg, ${palette.accentSoft} 80%, #fff 100%)`,
+                                                        cursor: 'pointer',
+                                                        position: 'relative',
+                                                        border: `2px solid transparent`,
+                                                        '&:hover': {
+                                                            transform: 'translateY(-6px) scale(1.03)',
+                                                            boxShadow: '0 12px 32px -6px rgba(0,0,0,0.22), 0 6px 16px -2px rgba(0,0,0,0.18)',
+                                                            borderColor: palette.accent,
+                                                        },
+                                                        '&:active': {
+                                                            transform: 'translateY(-2px) scale(1.01)',
+                                                            boxShadow: '0 6px 16px -6px rgba(0,0,0,0.18)',
+                                                        },
+                                                    }}
+                                                >
+                                                    <Typography variant="subtitle1" sx={{ width: '100%', color: palette.accent, fontWeight: 700, fontSize: 20, mb: 0.5, letterSpacing: 0.5 }}>
                                                         {componente.referencia}
                                                     </Typography>
-                                                    <Typography variant="body2" sx={{ color: palette.textMuted }}>
+                                                    <Typography variant="body2" sx={{ color: palette.textMuted, fontWeight: 500, fontSize: 15 }}>
                                                         {componente.componentetipo.nombre}
                                                     </Typography>
                                                 </Box>

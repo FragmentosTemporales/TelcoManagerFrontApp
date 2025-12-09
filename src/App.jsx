@@ -53,6 +53,7 @@ import RespaldoView from "./views/RespaldoView";
 import OnnetProyectos from "./views/OnnetProyectos";
 import OnnetProyecto from "./views/OnnetProyecto";
 import OnnetFormularioComponentes from "./views/OnnetFormularioComponentes";
+import OnnetComponente from "./views/OnnetComponente";
 
 function App() {
   return (
@@ -116,6 +117,7 @@ function App() {
           <Route path="/onnet/modulo/proyectos" element={<OnnetProyectos />} />
           <Route path="/onnet/modulo/proyecto/:proyecto_id" element={<OnnetProyecto />} />
           <Route path="onnet/modulo/formulario-construccion" element={<OnnetFormularioComponentes />} />
+          <Route path="/onnet/modulo/componente/:componente_id" element={<OnnetComponente />} />
 
         </Route>
         <Route path="/bodegaRM" element={<BodegaViewer />} />
