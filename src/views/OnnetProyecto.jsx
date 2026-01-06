@@ -2,6 +2,7 @@ import {
     Alert,
     Box,
     Button,
+    Card,
     CardContent,
     CircularProgress,
     Divider,
@@ -14,17 +15,20 @@ import {
     Select,
     MenuItem,
 } from "@mui/material";
+import PushPinIcon from '@mui/icons-material/PushPin';
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Form } from "react-router-dom";
 
 import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
-import { 
-    getProyectoOnnet, 
-    uploadProyectoOnnet, 
-    getComponenteTipoOnnet, 
-    createComponenteOnnet
+import {
+    getProyectoOnnet,
+    uploadProyectoOnnet,
+    getComponenteTipoOnnet,
+    createComponenteOnnet,
+    getProyectoOnnetUsers,
+    createAsignadoOnnet
 } from "../api/onnetAPI";
 import { getEmpresas } from "../api/authAPI";
 
@@ -37,7 +41,6 @@ export default function OnnetProyecto() {
     const [loading, setLoading] = useState(true);
 
     const [empresas, setEmpresas] = useState(null);
-    const [empresa, setEmpresa] = useState(null);
 
     const [proyectoData, setProyectoData] = useState(null);
 
@@ -48,12 +51,21 @@ export default function OnnetProyecto() {
     const [formComponenteTipo, setFormComponenteTipo] = useState({
         referencia: "",
         proyecto_id: proyecto_id,
+        asignado_id: "",
         tipo_id: "",
     });
 
-    const [formEmpresa, setFormEmpresa] = useState({
-        empresa_id: ""
+    const [formAsignacion, setFormAsignacion] = useState({
+        proyecto_id: proyecto_id,
+        userID: "",
+        empresaID: "",
+        subgrupo: "",
     });
+
+    const [asignadoSeleccionado, setAsignadoSeleccionado] = useState(null);
+
+    const [userList, setUserList] = useState([]);
+    const [asignados, setAsignados] = useState([]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -64,9 +76,8 @@ export default function OnnetProyecto() {
         try {
             const data = await getProyectoOnnet(proyecto_id);
             setProyectoData(data);
-            setEmpresa(data.empresa);
-            setComponentes(data.componente);
-            console.log(data)
+            setAsignados(data.asignados);
+            setAsignadoSeleccionado(null);
         } catch (error) {
             setMessage(error);
             setAlertType("error");
@@ -99,16 +110,37 @@ export default function OnnetProyecto() {
         }
     };
 
-    const onUpdateProyecto = async () => {
+    const fetchUserList = async (empresa_id) => {
+        try {
+            const users = await getProyectoOnnetUsers(empresa_id);
+            setUserList(users.data);
+        } catch (error) {
+            setMessage(error);
+            setAlertType("error");
+            setOpen(true);
+        }
+    };
+
+    const onCreateAsignado = async () => {
         setIsSubmitting(true);
+        if (formAsignacion.empresaID === "" || formAsignacion.userID === "") {
+            setMessage("Por favor, complete todos los campos del formulario.");
+            setAlertType("warning");
+            setOpen(true);
+            setIsSubmitting(false);
+            return;
+        }
         try {
             const payload = {
-                empresaID: formEmpresa.empresa_id,
-                estado: 1
+                empresaID: formAsignacion.empresaID,
+                userID: formAsignacion.userID,
+                proyecto_id: proyecto_id,
             };
-            await uploadProyectoOnnet(payload, proyecto_id);
-            console.log(payload);
-            setMessage("Proyecto actualizado correctamente");
+            if (formAsignacion.subgrupo && formAsignacion.subgrupo !== "") {
+                payload.subgrupo = formAsignacion.subgrupo;
+            }
+            await createAsignadoOnnet(payload);
+            setMessage("Asignado correctamente");
             setAlertType("success");
             setOpen(true);
             fetchProyectoData();
@@ -147,6 +179,7 @@ export default function OnnetProyecto() {
             setFormComponenteTipo({
                 referencia: "",
                 proyecto_id: proyecto_id,
+                asignado_id: "",
                 tipo_id: "",
             });
         }
@@ -158,19 +191,23 @@ export default function OnnetProyecto() {
 
     useEffect(() => {
         fetchEmpresas();
-    }, [empresa]);
+    }, []);
 
     useEffect(() => {
         fetchComponentesTipos();
     }, []);
 
-    useEffect(() => {
-        console.log(componentes);
-    }, [componentes]);
-
     const handleClose = () => {
         setOpen(false);
     };
+
+    useEffect(() => {
+        if (asignadoSeleccionado?.componente) {
+            console.log("Componente del asignado seleccionado:", asignadoSeleccionado.componente);
+            setComponentes(asignadoSeleccionado.componente);
+        }
+    }, [asignadoSeleccionado]);
+
 
     return (
         <MainLayout showNavbar={true}>
@@ -249,6 +286,24 @@ export default function OnnetProyecto() {
                     </Paper>
                 ) : (
                     <>
+                        <>
+                            <Divider sx={{ width: '90%', mb: 2, borderColor: palette.borderSubtle }} />
+
+                            <Typography variant="h5" sx={{ color: palette.accentSoft, fontWeight: 600 }}>
+                                {
+                                    proyectoData?.estado === 0
+                                        ? "PENDIENTE ASIGNACIÓN"
+                                        : proyectoData?.estado === 1
+                                            ? "EN PROCESO"
+                                            : proyectoData?.estado === 2
+                                                ? "COMPLETADO"
+                                                : "DESCONOCIDO"
+                                }
+                            </Typography>
+
+                            <Divider sx={{ width: '90%', my: 2, borderColor: palette.borderSubtle }} />
+                        </>
+
                         <Paper
                             elevation={10}
                             sx={{
@@ -259,6 +314,7 @@ export default function OnnetProyecto() {
                                 backdropFilter: 'blur(6px)',
                                 position: 'relative',
                                 overflow: 'hidden',
+                                mb: 2,
                                 '&:before': {
                                     content: '""',
                                     position: 'absolute',
@@ -268,106 +324,215 @@ export default function OnnetProyecto() {
                                 }
                             }}
                         >
-                            <CardContent>
-                                <Box sx={{
-                                    width: '100%',
-                                    height: 40,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}>
-                                    {empresa != null ? (
-                                        <Box sx={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                        }}>
-                                            <Typography variant="h6" sx={{ color: palette.primary, fontWeight: 600 }}>
-                                                {empresa.nombre}
-                                            </Typography>
-                                            <Typography variant="h6" sx={{ color: palette.textMuted, fontWeight: 600 }}>
-                                                {empresa.rut}
-                                            </Typography>
-                                        </Box>
-                                    ) : (
-                                        <>
-                                            <FormControl sx={{ minWidth: 200, mr: 2 }}>
-                                                <InputLabel id="filter-empresa-label">Empresa</InputLabel>
-                                                <Select
-                                                    labelId="filter-empresa-label"
-                                                    id="filter-empresa"
-                                                    value={formEmpresa.empresa_id || ''}
-                                                    label="Empresa"
-                                                    onChange={(e) => setFormEmpresa({ empresa_id: e.target.value || null })}
-                                                    sx={{ minWidth: 300 }}
-                                                    size="small"
-                                                >
-                                                    {empresas && empresas.map((emp) => (
-                                                        <MenuItem key={emp.empresaID} value={emp.empresaID}>{emp.nombre}</MenuItem>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
-                                            <Button
-                                                sx={{ minWidth: 300, mr: 2, mt: { xs: 1, md: 1, lg: 0 }, background: palette.primary, "&:hover": { background: palette.primaryDark } }}
-                                                variant="contained"
-                                                onClick={onUpdateProyecto}
-                                                disabled={isSubmitting}
-                                            >
-                                                {isSubmitting ? 'Actualizando...' : 'Asignar Empresa'}
-                                            </Button>
-                                        </>
-                                    )}
-                                </Box>
-                            </CardContent>
+                            <Box sx={{ p: 2, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Typography variant="h6" sx={{ color: palette.primary, fontWeight: 600 }}>
+                                    CREAR ASIGNACIÓN
+                                </Typography>
+                            </Box>
+                            <Divider sx={{ width: '100%', borderColor: palette.bgGradient }} />
+                            <Box sx={{
+                                display: "flex",
+                                flexDirection: { xs: 'column', md: 'column', lg: 'row' },
+                                justifyContent: "space-around",
+                                alignItems: "center",
+                                pt: 2
+                            }}>
+                                {/* SELECTOR DE EMPRESA */}
+                                <FormControl sx={{ minWidth: 200, mt: { xs: 1, md: 0, lg: 0 } }}>
+                                    <InputLabel id="filter-empresa-label">Empresa</InputLabel>
+                                    <Select
+                                        labelId="filter-empresa-label"
+                                        id="filter-empresa"
+                                        value={formAsignacion.empresaID || ''}
+                                        label="Empresa"
+                                        onChange={(e) => { setFormAsignacion({ ...formAsignacion, empresaID: e.target.value || null }); fetchUserList(e.target.value || null); }}
+                                        sx={{ minWidth: 300, backdropFilter: 'blur(6px)' }}
+                                        size="small"
+                                    >
+                                        <MenuItem value="">Ninguno</MenuItem>
+                                        {empresas && empresas.map((emp, index) => (
+                                            <MenuItem key={index} value={emp.empresaID}>{emp.nombre}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                {/* SELECTOR DE USUARIO */}
+                                <FormControl sx={{ minWidth: 200, mt: { xs: 1, md: 1, lg: 0 } }}>
+                                    <InputLabel id="filter-usuario-label">Usuario</InputLabel>
+                                    <Select
+                                        labelId="filter-usuario-label"
+                                        id="filter-usuario"
+                                        label="Usuario"
+                                        value={formAsignacion.userID || ''}
+                                        onChange={(e) => setFormAsignacion({ ...formAsignacion, userID: e.target.value || null })}
+                                        sx={{ minWidth: 300, backdropFilter: 'blur(6px)' }}
+                                        size="small"
+                                        disabled={userList.length === 0}
+                                    >
+                                        <MenuItem value="">Ninguno</MenuItem>
+                                        {userList.length > 0 && userList.map((user, index) => (
+                                            <MenuItem key={index} value={user.userID}>{user.nombre}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                {/* SELECTOR DE SUBGRUPO */}
+                                <FormControl sx={{ minWidth: 200, mt: { xs: 1, md: 1, lg: 0 } }}>
+                                    <InputLabel id="filter-subgrupo-label">Subgrupo</InputLabel>
+                                    <Select
+                                        labelId="filter-subgrupo-label"
+                                        id="filter-subgrupo"
+                                        label="Subgrupo"
+                                        value={formAsignacion.subgrupo || ''}
+                                        onChange={(e) => setFormAsignacion({ ...formAsignacion, subgrupo: e.target.value || null })}
+                                        sx={{ minWidth: 300, backdropFilter: 'blur(6px)' }}
+                                        size="small"
+                                        disabled={userList.length === 0}
+                                    >
+                                        <MenuItem value="">Ninguno</MenuItem>
+                                        <MenuItem value="linea">Linea</MenuItem>
+                                        <MenuItem value="empalme">Empalme</MenuItem>
+                                    </Select>
+                                </FormControl>
+
+                            </Box>
+                            <Box sx={{
+                                display: "flex",
+                                flexDirection: { xs: 'column', md: 'row', lg: 'row' },
+                                justifyContent: "space-around",
+                                alignItems: "center",
+                                py: 2
+                            }}>
+
+                                <Button
+                                    sx={{ minWidth: 300, mt: { xs: 1, md: 1, lg: 0 }, background: palette.primary, "&:hover": { background: palette.primaryDark } }}
+                                    variant="contained"
+                                    disabled={isSubmitting}
+                                    onClick={onCreateAsignado}
+                                >
+                                    {isSubmitting ? 'Actualizando...' : 'Asignar'}
+                                </Button>
+                            </Box>
                         </Paper>
 
-                        <Divider sx={{ width: '90%', my: 2, borderColor: palette.borderSubtle }} />
-                        <Typography variant="h5" sx={{ color: palette.accentSoft, fontWeight: 600 }}>
-                            {
-                                proyectoData.estado === 0
-                                    ? "PENDIENTE ASIGNACIÓN"
-                                    : proyectoData.estado === 1
-                                        ? "EN PROCESO"
-                                        : proyectoData.estado === 2
-                                            ? "COMPLETADO"
-                                            : "DESCONOCIDO"
-                            }
-                        </Typography>
-                        <Divider sx={{ width: '90%', my: 2, borderColor: palette.borderSubtle }} />
+                        {asignados && asignados.length > 0 ? (
+                            <Paper
+                                elevation={10}
+                                sx={{
+                                    background: palette.cardBg,
+                                    width: "90%",
+                                    border: `1px solid ${palette.borderSubtle}`,
+                                    borderRadius: 3,
+                                    backdropFilter: 'blur(6px)',
+                                    position: 'relative',
+                                    overflow: 'hidden',
+                                    mb: 2,
+                                    '&:before': {
+                                        content: '""',
+                                        position: 'absolute',
+                                        inset: 0,
+                                        background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)',
+                                        pointerEvents: 'none'
+                                    }
+                                }}
+                            >
+                                <Box sx={{ p: 2, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Typography variant="h6" sx={{ color: palette.primary, fontWeight: 600 }}>
+                                        ASIGNADOS AL PROYECTO
+                                    </Typography>
+                                </Box>
+                                <Divider sx={{ width: '100%', borderColor: palette.bgGradient }} />
+                                <Grid container sx={{ width: '100%', p: 2 }}>
+                                    {asignados.map((asignado, index) => (
+                                        <Grid item xs={12} sm={6} md={4} key={index} >
+                                            <Card
+                                                onClick={() => {
+                                                    setAsignadoSeleccionado(asignado);
+                                                    setFormComponenteTipo({ ...formComponenteTipo, asignado_id: asignado.id });
+                                                }}
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    width: { xs: '90%', sm: '80%', md: '80%' },
+                                                    minHeight: 60,
+                                                    p: 2.5,
+                                                    borderRadius: 3,
+                                                    my: 2,
+                                                    mx: 'auto',
+                                                    textAlign: 'center',
+                                                    textDecoration: 'none',
+                                                    boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
+                                                    transition: 'all .35s',
+                                                    background: `linear-gradient(135deg, ${palette.accentSoft} 80%, #fff 100%)`,
+                                                    cursor: 'pointer',
+                                                    position: 'relative',
+                                                    border: asignadoSeleccionado?.id === asignado.id ? `2px solid ${palette.accent}` : `2px solid transparent`,
+                                                    '&:hover': {
+                                                        transform: 'translateY(-6px) scale(1.03)',
+                                                        boxShadow: '0 12px 32px -6px rgba(0,0,0,0.22), 0 6px 16px -2px rgba(0,0,0,0.18)',
+                                                        borderColor: palette.accent,
+                                                    },
+                                                    '&:active': {
+                                                        transform: 'translateY(-2px) scale(1.01)',
+                                                        boxShadow: '0 6px 16px -6px rgba(0,0,0,0.18)',
+                                                    },
+                                                }}>
+                                                <Typography variant="body1" sx={{ color: palette.primary, fontWeight: 600 }}>
+                                                    {asignadoSeleccionado?.id === asignado.id ? (
+                                                        <>
+                                                            <PushPinIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} />
+                                                            {asignado.empresa.nombre}
+                                                        </>
+                                                    ) : asignado.empresa.nombre}
+                                                </Typography>
+                                                <Divider sx={{ width: '80%', my: 1, borderColor: palette.borderSubtle }} />
+                                                <Typography variant="body1" sx={{ color: palette.textMuted, fontWeight: 500, m: 0.5 }}>
+                                                    {asignado.user.nombre}
+                                                </Typography>
+                                                <Typography variant="body1" sx={{ color: palette.textMuted, fontWeight: 500, m: 0.5 }}>
+                                                    {asignado.subgrupo ? asignado.subgrupo.charAt(0).toUpperCase() + asignado.subgrupo.slice(1) : 'Sin subgrupo asignado'}
+                                                </Typography>
+                                                <Typography variant="body1" sx={{ color: palette.textMuted, fontWeight: 500, m: 0.5 }}>
+                                                    {asignado.componente.length} componentes asignados
+                                                </Typography>
+                                            </Card>
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            </Paper>
+                        ) : null}
 
-                        <Paper
-                            elevation={10}
-                            sx={{
-                                background: palette.cardBg,
-                                width: "90%",
-                                border: `1px solid ${palette.borderSubtle}`,
-                                borderRadius: 3,
-                                backdropFilter: 'blur(6px)',
-                                position: 'relative',
-                                overflow: 'hidden',
-                                '&:before': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    inset: 0,
-                                    background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)',
-                                    pointerEvents: 'none'
-                                }
-                            }}
-                        >
-                            <CardContent>
-                                <Box sx={{
-                                    width: '100%',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}>
+                        {asignadoSeleccionado ? (
+                            <Paper
+                                elevation={10}
+                                sx={{
+                                    background: palette.cardBg,
+                                    width: "90%",
+                                    border: `1px solid ${palette.borderSubtle}`,
+                                    borderRadius: 3,
+                                    backdropFilter: 'blur(6px)',
+                                    position: 'relative',
+                                    overflow: 'hidden',
+                                    mb: 2,
+                                    '&:before': {
+                                        content: '""',
+                                        position: 'absolute',
+                                        inset: 0,
+                                        background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)',
+                                        pointerEvents: 'none'
+                                    }
+                                }}
+                            >
+                                <Box sx={{ p: 2, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     <Typography variant="h6" sx={{ color: palette.primary, fontWeight: 600 }}>
                                         COMPONENTES
                                     </Typography>
                                 </Box>
                                 <Divider sx={{ width: '100%', borderColor: palette.bgGradient }} />
-                                <Grid container sx={{ m: 1, width: '100%' }}>
+
+                                <Grid container sx={{ width: '100%', p: 2 }}>
                                     {componentes && componentes.length === 0 ? (
                                         <Typography variant="body1" sx={{
                                             color: palette.textMuted,
@@ -389,7 +554,7 @@ export default function OnnetProyecto() {
                                                         flexDirection: 'column',
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
-                                                        width: { xs: '95%', sm: '90%', md: '85%' },
+                                                        width: { xs: '90%', sm: '80%', md: '80%' },
                                                         minHeight: 60,
                                                         p: 2.5,
                                                         borderRadius: 3,
@@ -425,7 +590,9 @@ export default function OnnetProyecto() {
                                         ))
                                     )}
                                 </Grid>
+
                                 <Divider sx={{ width: '100%', borderColor: palette.bgGradient }} />
+
                                 <Box sx={{
                                     width: '100%',
                                     display: 'flex',
@@ -446,7 +613,7 @@ export default function OnnetProyecto() {
                                                 value={formComponenteTipo.tipo_id || ''}
                                                 label="Tipo"
                                                 onChange={(e) => setFormComponenteTipo({ ...formComponenteTipo, tipo_id: e.target.value || null })}
-                                                sx={{ minWidth: 250 }}
+                                                sx={{ minWidth: 250, backdropFilter: 'blur(6px)' }}
                                                 size="small"
                                             >
                                                 {componentesTipos && componentesTipos.map((tipo) => (
@@ -459,7 +626,7 @@ export default function OnnetProyecto() {
                                             variant="outlined"
                                             value={formComponenteTipo.referencia || ''}
                                             onChange={(e) => setFormComponenteTipo({ ...formComponenteTipo, referencia: e.target.value || null })}
-                                            sx={{ minWidth: 250, mr: 2, mt: { xs: 1, md: 1, lg: 0 } }}
+                                            sx={{ minWidth: 250, mr: 2, mt: { xs: 1, md: 1, lg: 0 }, backdropFilter: 'blur(6px)' }}
                                             size="small"
                                         />
 
@@ -473,8 +640,9 @@ export default function OnnetProyecto() {
                                         </Button>
                                     </Box>
                                 </Box>
-                            </CardContent>
-                        </Paper>
+
+                            </Paper>
+                        ) : null}
                     </>
                 )}
             </Box>

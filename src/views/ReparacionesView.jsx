@@ -20,7 +20,7 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useEffect, useState } from "react";
-import { getReparaciones, getReparacionesExcel } from "../api/calidadAPI";
+import { getReparaciones, getReparacionesExcel, getZonaItoTecnico } from "../api/calidadAPI";
 import { palette } from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 import { MainLayout } from "./Layout";
@@ -39,6 +39,8 @@ function ReparacionesView() {
     const [pages, setPages] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [totalData, setTotalData] = useState(0);
+    const [inspeccionData, setInspeccionData] = useState([]);
+    const [faltaData, setFaltaData] = useState([]);
 
     const [filterForm, setFilterForm] = useState({
         orden: "",
@@ -226,9 +228,9 @@ function ReparacionesView() {
                                 <MenuItem value="">
                                     <em>Todos</em>
                                 </MenuItem>
-                                {tiposInspeccion.map((tipo) => (
-                                    <MenuItem key={tipo} value={tipo}>
-                                        {tipo}
+                                {inspeccionData.map((tipo) => (
+                                    <MenuItem key={tipo.index} value={tipo.descripcion}>
+                                        {tipo.descripcion}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -249,9 +251,9 @@ function ReparacionesView() {
                                 <MenuItem value="">
                                     <em>Todos</em>
                                 </MenuItem>
-                                {tiposFaltas.map((tipo) => (
-                                    <MenuItem key={tipo} value={tipo}>
-                                        {tipo}
+                                {faltaData.map((tipo) => (
+                                    <MenuItem key={tipo.index} value={tipo.descripcion}>
+                                        {tipo.descripcion}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -355,32 +357,20 @@ function ReparacionesView() {
         }
     };
 
-    const tiposInspeccion = ["Alertas de Terreno", "Apoyo Terreno", "Auditoría en Terreno", "Autoinspección", "Avería de Infancia", "Folio", "Multa", "Otro"];
+    const fetchTiposFaltas = async () => {
+        try {
+            const respuesta = await getZonaItoTecnico();
+            setInspeccionData(respuesta.tipo_inspecciones || []);
+            setFaltaData(respuesta.tipo_faltas || []);
+        } catch (error) {
+            console.error("Error al obtener los tipos de faltas:", error);
+        }
+    };
 
-    // CREAR ARRAY CON LOS SIGUIENTES VALORES 
+    useEffect(() => {
+        fetchTiposFaltas();
+    }, []);
 
-
-    const tiposFaltas = [
-        "FALLA EN CONECTOR DE CAMPO", 
-        "Falta de herramientas", 
-        "Estado de Camioneta",
-        "Clave mal aplicada",
-        "Comentario deficiente",
-        "Dirección mal instalada",
-        "Equipos fuera de rango RSI",
-        "Extensor fuera de norma",
-        "FO mal rotulada enrolamiento",
-        "No aplica",
-        "No cuida la estética del lugar",
-        "No genera ticket de desconexión",
-        "No instala pasamuros",
-        "No realiza estados vecinos u onfide",
-        "Reutilización fuera de norma",
-        "Roseta fuera de norma",
-        "Ruta de Drop",
-        "Técnico no capacita",
-        "Utiliza pelo no asignado"
-    ]
     const resultados = ["Cumple", "No Cumple"];
     const contratos = ["VTR", "MOVISTAR"]
 

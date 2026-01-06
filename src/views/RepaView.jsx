@@ -48,7 +48,6 @@ export default function RepaView() {
         setLoading(true);
         try {
             const response = await getReparacionByID(orden);
-            console.table(response)
             setData(response);
             setMessage("Reparación cargada correctamente");
             setAlertType("success");

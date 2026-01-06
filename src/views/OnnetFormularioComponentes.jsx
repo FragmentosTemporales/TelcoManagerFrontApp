@@ -403,6 +403,7 @@ export default function OnnetFormularioComponentes() {
                                         labelId="tipo-componente-label"
                                         value={createForm.tipo_id}
                                         label="Tipo de componente"
+                                        size="small"
                                         onChange={(e) => setCreateForm({ ...createForm, tipo_id: e.target.value })}
                                     >
                                         {data.map((componente) => (
@@ -414,6 +415,7 @@ export default function OnnetFormularioComponentes() {
                                 </FormControl>
                                 <TextField
                                     label="Orden"
+                                    size="small"
                                     fullWidth
                                     type="number"
                                     sx={{ mb: 2 }}
@@ -422,6 +424,7 @@ export default function OnnetFormularioComponentes() {
                                 />
                                 <TextField
                                     label="Pregunta"
+                                    size="small"
                                     fullWidth
                                     sx={{ mb: 2 }}
                                     value={createForm.pregunta}

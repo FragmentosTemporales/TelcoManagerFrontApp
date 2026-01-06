@@ -13,6 +13,8 @@ import {
     Typography,
     Paper,
     Chip,
+    FormLabel,
+    Button,
 } from "@mui/material";
 import { NdcLayout } from "./Layout";
 import { palette } from "../theme/palette";
@@ -28,6 +30,7 @@ function NDCSinConsumoUpdate() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [alertType, setAlertType] = useState(undefined);
     const [tipo, setTipo] = useState('todos');
+    const [region, setRegion] = useState('todas');
     const tipoOptions = [
         { value: 'todos', label: 'Todos' },
         { value: 'alta', label: 'Alta' },
@@ -36,7 +39,13 @@ function NDCSinConsumoUpdate() {
         { value: 'Reparación', label: 'Reparación' },
         { value: 'Upgrade promoción', label: 'Upgrade promoción' },
     ];
-
+    const regionOptions = [
+        { value: 'todas', label: 'Todas' },
+        { value: 'Valparaíso', label: 'Centro' },
+        { value: 'Metropolitana', label: 'Metropolitana' },
+        { value: 'Biobío', label: 'Sur' },
+    ];
+    const [ isVisible, setIsVisible ] = useState(false);
 
     const estadoOptions = [{
         value: 'Pendiente',
@@ -50,7 +59,6 @@ function NDCSinConsumoUpdate() {
         value: 'NO',
         label: 'Rechazado'
     }];
-
 
     const handleSaveChanges = async (e, id) => {
         e.preventDefault();
@@ -80,7 +88,6 @@ function NDCSinConsumoUpdate() {
             setOpen(true);
         }
     };
-
 
     const tablependientes = () => (
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
@@ -161,27 +168,74 @@ function NDCSinConsumoUpdate() {
     };
 
     const filterCard = () => (
-        <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
-            <Select
-                value={tipo}
-                onChange={(e) => setTipo(e.target.value)}
-                size="small"
-                variant="standard"
-                sx={{ minWidth: 200, background: 'rgba(255,255,255,0.6)', px: 1, borderRadius: 1, '&:hover': { background: 'rgba(255,255,255,0.75)' } }}
-            >
-                {tipoOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                    </MenuItem>
-                ))}
-            </Select>
+        <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-around', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FormLabel sx={{ alignSelf: 'center', fontWeight: 600 }}>Región:</FormLabel>
+                <Select
+                    value={region}
+                    onChange={(e) => setRegion(e.target.value)}
+                    size="small"
+                    variant="standard"
+                    sx={{ minWidth: 200, background: 'rgba(255,255,255,0.6)', px: 1, borderRadius: 1, '&:hover': { background: 'rgba(255,255,255,0.75)' } }}
+                >
+                    {regionOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FormLabel sx={{ alignSelf: 'center', fontWeight: 600 }}>Tipo de Orden:</FormLabel>
+                <Select
+                    value={tipo}
+                    onChange={(e) => setTipo(e.target.value)}
+                    size="small"
+                    variant="standard"
+                    sx={{ minWidth: 200, background: 'rgba(255,255,255,0.6)', px: 1, borderRadius: 1, '&:hover': { background: 'rgba(255,255,255,0.75)' } }}
+                >
+                    {tipoOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Button
+                    variant="contained"
+                    onClick={() => fetchData()}
+                    sx={{ mt: { xs: 1, sm: 0 }, width: '200px', background: palette.primary, '&:hover': { background: palette.primaryDark } }}>
+                    Filtrar
+                </Button>
+            </Box>
+        </Box>
+    );
+
+
+    const statsCard = () => (
+        <Box sx={{ my: 4, display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
+            {Object.entries(dataStats()).map(([key, value]) => (
+                <Chip
+                    key={key}
+                    label={`${key.replace(/_/g, ' ').toUpperCase()}: ${value}`}
+                    sx={{
+                        fontWeight: 600,
+                        background: palette.accent,
+                        color: 'white',
+                        fontSize: '12px',
+                        padding: '8px 12px',
+                        boxShadow: 3,
+                    }}
+                />
+            ))}
         </Box>
     );
 
     const fetchData = async () => {
         setIsSubmitting(true);
         try {
-            const result = await fetchPendientesSinConsumo(tipo);
+            const result = await fetchPendientesSinConsumo(tipo, region);
             setData(result.pendientes);
             setTotal(result.total);
         } catch (error) {
@@ -190,11 +244,36 @@ function NDCSinConsumoUpdate() {
         setIsSubmitting(false);
     };
 
+    const dataStats = () => {
+        const pendientes = data.filter(item => item.estado === 'Pendiente').length;
+
+        const valparaiso_total = data.filter(item => item.region === 'Valparaíso').length;
+        const metropolitana_total = data.filter(item => item.region === 'Metropolitana').length;
+        const biobio_total = data.filter(item => item.region === 'Biobío').length;
+        const valparaiso_pendientes = data.filter(item => item.region === 'Valparaíso' && item.estado === 'Pendiente').length;
+        const metropolitana_pendientes = data.filter(item => item.region === 'Metropolitana' && item.estado === 'Pendiente').length;
+        const biobio_pendientes = data.filter(item => item.region === 'Biobío' && item.estado === 'Pendiente').length;
+
+        return {
+            pendientes,
+            valparaiso_total,
+            metropolitana_total,
+            biobio_total,
+            valparaiso_pendientes,
+            metropolitana_pendientes,
+            biobio_pendientes
+        };
+    };
 
     useEffect(() => {
         fetchData();
         window.scrollTo(0, 0);
-    }, [tipo]);
+    }, []);
+
+    // useEffect(() => {
+    //     fetchData();
+    //     window.scrollTo(0, 0);
+    // }, [tipo]);
 
 
     return (
@@ -202,11 +281,11 @@ function NDCSinConsumoUpdate() {
             <Box
                 sx={{
                     display: "flex",
-                    justifyContent: "center",
+                    justifyContent: "start",
                     alignItems: "center",
                     flexDirection: "column",
                     minHeight: "100vh",
-                    py: 8,
+                    py: 1,
                     px: 1,
                     background: palette.bgGradient,
                     position: 'relative',
@@ -239,7 +318,24 @@ function NDCSinConsumoUpdate() {
                             <CircularProgress />
                         </Box>
                     )}
+
                     {!isSubmitting && (
+                        data.length > 0 ? (
+                            statsCard()
+                        ) : (
+                            <Box sx={{ textAlign: 'center', mt: 4 }}>
+                                <Typography variant="body1">No hay datos disponibles.</Typography>
+                            </Box>
+                        )
+                    )}
+                    
+                    <Typography 
+                    onClick={() => setIsVisible(!isVisible)}
+                    variant="body2" gutterBottom sx={{ textAlign: 'left', mt: 4, color: palette.primary, cursor: 'pointer', textDecoration: 'underline' }}>
+                        {isVisible ? 'Ocultar Detalles' : 'Mostrar Detalles'}
+                    </Typography>
+
+                    {!isSubmitting && isVisible && (
                         data.length > 0 ? (
                             tablependientes()
                         ) : (
@@ -248,7 +344,9 @@ function NDCSinConsumoUpdate() {
                             </Box>
                         )
                     )}
+
                 </Paper>
+
             </Box>
         </NdcLayout>
     );

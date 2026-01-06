@@ -50,9 +50,9 @@ export const getReversaDataUpdate = async () => {
   }
 };
 
-export const fetchPendientesSinConsumo = async (tipo) => {
+export const fetchPendientesSinConsumo = async (tipo, region) => {
   try {
-    const response = await client.get(`/ndc-bot/get-pendientes-sin-consumo/${tipo}`);
+    const response = await client.get(`/ndc-bot/get-pendientes-sin-consumo/${tipo}&${region}`);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;

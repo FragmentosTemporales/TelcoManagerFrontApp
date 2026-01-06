@@ -14,6 +14,7 @@ import {
     Tooltip,
     Typography,
     Paper,
+    Chip,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { NdcLayout } from "./Layout";
@@ -22,7 +23,6 @@ import { useEffect, useState } from "react";
 import { fetchErroresConConsumo, createOrdenValidada } from "../api/logisticaAPI";
 import { extractDateOnly } from "../helpers/main";
 
-// Mover UpdateCard fuera del componente principal para evitar re-renders
 const UpdateCard = ({ updateForm, handleChangeUpdate, handleUpdateSubmit, isSubmitting }) => {
     return (
         <Paper
@@ -35,7 +35,7 @@ const UpdateCard = ({ updateForm, handleChangeUpdate, handleUpdateSubmit, isSubm
                 border: `1px solid ${palette.borderSubtle}`,
                 backdropFilter: 'blur(4px)',
                 boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
-                marginTop: 2
+                marginBottom: 2
             }}>
             <Typography variant="h5" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
                 Corregir Error Stock Consumo
@@ -67,6 +67,7 @@ const UpdateCard = ({ updateForm, handleChangeUpdate, handleUpdateSubmit, isSubm
                     value={updateForm.material}
                     onChange={(e) => handleChangeUpdate('material', e.target.value)}
                     sx={{ mb: 2, width: "30%" }}
+                    disabled
                 />
                 <TextField
                     label="Cantidad"
@@ -131,6 +132,8 @@ function NDCErrorConConsumo() {
         user_id: "",
     });
 
+    const [toFilter, setToFilter] = useState([])
+
     const handleUpdateSubmit = async () => {
         setIsSubmitting(true);
         try {
@@ -163,6 +166,7 @@ function NDCErrorConConsumo() {
         try {
             const response = await fetchErroresConConsumo();
             setData(response.pendientes);
+            setToFilter(response.pendientes)
             setTotal(response.total);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -172,6 +176,12 @@ function NDCErrorConConsumo() {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const dataFiltered = (region) => {
+        const dataNueva = data.filter(item => item.region === region)
+        setToFilter(dataNueva)
+
     };
 
     const tableDataError = () => (
@@ -197,6 +207,7 @@ function NDCErrorConConsumo() {
                         {[
                             "FECHA",
                             "N° ORDEN",
+                            "REGION",
                             "MATERIAL",
                             "PRODUCTO",
                             "INGRESADO",
@@ -220,7 +231,7 @@ function NDCErrorConConsumo() {
                         ))}
                     </TableRow>
                     <TableBody>
-                        {data.map((item, index) => (
+                        {toFilter.map((item, index) => (
                             <Tooltip key={index} title="Haga clic para editar entrada" arrow>
                                 <TableRow
                                     key={index}
@@ -235,6 +246,8 @@ function NDCErrorConConsumo() {
                                         };
                                         setUpdateForm(selected);
                                         setOpenUpdate(true);
+                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+
                                     }}
                                     role="button"
                                     aria-label={`Orden ${item.orden} material ${item.material || 'N/A'}`}
@@ -250,6 +263,7 @@ function NDCErrorConConsumo() {
                                 >
                                     <TableCell align="left" sx={{ fontSize: "10px" }} >{item.fecha_registro ? extractDateOnly(item.fecha_registro) : 'N/A'}</TableCell>
                                     <TableCell sx={{ fontWeight: "bold", fontSize: "10px" }} align="left">{item.orden ?? 'N/A'}</TableCell>
+                                    <TableCell align="left" sx={{ fontSize: "10px" }} >{item.region ?? 'N/A'}</TableCell>
                                     <TableCell align="left" sx={{ fontSize: "10px" }} >{item.material ?? 'N/A'}</TableCell>
                                     <TableCell align="left" sx={{ fontSize: "10px" }} >{item.productoSGS ?? 'N/A'}</TableCell>
                                     <TableCell align="left" sx={{ fontSize: "10px" }} >{item.cantidad ?? 'N/A'}</TableCell>
@@ -310,13 +324,76 @@ function NDCErrorConConsumo() {
                         {message}
                     </Alert>
                 )}
+                {openUpdate && (
+                    <UpdateCard
+                        updateForm={updateForm}
+                        handleChangeUpdate={handleChangeUpdate}
+                        handleUpdateSubmit={handleUpdateSubmit}
+                        isSubmitting={isSubmitting}
+                    />
+                )}
                 {!isSubmitting ? (
                     <Paper elevation={10} sx={{ width: "90%", p: 3, background: palette.cardBg, borderRadius: 3, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)', boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)" }}>
                         <Typography variant="h4" gutterBottom sx={{ textAlign: "center", fontWeight: "bold" }}>
                             Error Stock Consumo de Ferretería últimos 30 días
                         </Typography>
                         <Divider sx={{ marginBottom: 2 }} />
-                        {data && data.length > 0 ? (
+                        {/* Agregar carta con filtro por region, la cual nos permita  utilizar dataFiltered() */}
+                        <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+                            <Chip
+                                label="Todos"
+                                onClick={() => setToFilter(data)}
+                                sx={{
+                                    fontWeight: 600,
+                                    background: palette.accent,
+                                    color: 'white',
+                                    fontSize: '12px',
+                                    padding: '8px 12px',
+                                    boxShadow: 3,
+                                    mx: 1,
+                                }}
+                            />
+                            <Chip
+                                label="Valparaíso"
+                                onClick={() => dataFiltered('Valparaíso')}
+                                sx={{
+                                    fontWeight: 600,
+                                    background: palette.accent,
+                                    color: 'white',
+                                    fontSize: '12px',
+                                    padding: '8px 12px',
+                                    boxShadow: 3,
+                                    mx: 1,
+                                }}
+                            />
+                            <Chip
+                                label="Metropolitana"
+                                onClick={() => dataFiltered('Metropolitana')}
+                                sx={{
+                                    fontWeight: 600,
+                                    background: palette.accent,
+                                    color: 'white',
+                                    fontSize: '12px',
+                                    padding: '8px 12px',
+                                    boxShadow: 3,
+                                    mx: 1,
+                                }}
+                            />
+                            <Chip
+                                label="Biobío"
+                                onClick={() => dataFiltered('Biobío')}
+                                sx={{
+                                    fontWeight: 600,
+                                    background: palette.accent,
+                                    color: 'white',
+                                    fontSize: '12px',
+                                    padding: '8px 12px',
+                                    boxShadow: 3,
+                                    mx: 1,
+                                }}
+                            />
+                        </Box>
+                        {toFilter && toFilter.length > 0 ? (
                             tableDataError()
                         ) : (
                             <Typography variant="body1" sx={{ textAlign: "center" }}>
@@ -330,14 +407,7 @@ function NDCErrorConConsumo() {
                     </Paper>
                 )
                 }
-                {openUpdate && (
-                    <UpdateCard 
-                        updateForm={updateForm}
-                        handleChangeUpdate={handleChangeUpdate}
-                        handleUpdateSubmit={handleUpdateSubmit}
-                        isSubmitting={isSubmitting}
-                    />
-                )}
+
             </Box>
         </NdcLayout>
     );

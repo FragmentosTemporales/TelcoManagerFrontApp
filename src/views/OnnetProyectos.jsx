@@ -266,7 +266,7 @@ export default function OnnetProyectos() {
                                             value={filterPayload.estado || ''}
                                             label="Estado"
                                             onChange={(e) => setFilterPayload({ estado: e.target.value || null })}
-                                            sx={{ minWidth: 250 }}
+                                            sx={{ minWidth: 250, backdropFilter: 'blur(6px)' }}
                                             size="small"
                                         >
                                             <MenuItem value=''><em>Todos</em></MenuItem>
@@ -280,7 +280,7 @@ export default function OnnetProyectos() {
                                         variant="outlined"
                                         value={filterPayload.proyecto_id || ''}
                                         onChange={(e) => setFilterPayload({ proyecto_id: e.target.value || null })}
-                                        sx={{ minWidth: 250, mr: 2, mt: { xs: 1, md: 1, lg: 0 } }}
+                                        sx={{ minWidth: 250, mr: 2, mt: { xs: 1, md: 1, lg: 0 }, backdropFilter: 'blur(6px)' }}
                                         size="small"
                                     />
                                     <Button
@@ -365,14 +365,7 @@ export default function OnnetProyectos() {
                                             sx={{ color: palette.primary, fontWeight: 600 }}
                                             subheaderTypographyProps={{ color: palette.textMuted }}
                                         />
-                                        <CardContent sx={{ flexGrow: 1 }}>
-                                            <Typography variant="body2" sx={{ mb: 1 }}>
-                                                <strong>Empresa:</strong> {proyecto.nombre || 'N/A'}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ mb: 1 }}>
-                                                <strong>Rut:</strong> {proyecto.rut || 'N/A'}
-                                            </Typography>
-                                        </CardContent>
+
                                     </Card>
                                 </Grid>
                             ))}
