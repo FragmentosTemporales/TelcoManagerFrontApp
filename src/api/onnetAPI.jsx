@@ -145,25 +145,6 @@ export const getProyectoOnnet = async (proyecto_id) => {
   }
 };
 
-export const getProyectosOnnetEmpresa = async (empresa_id) => {
-  try {
-    const response = await client.get(`/get-proyecto-by-empresa/${empresa_id}`);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data?.error || error.message;
-  }
-};  
-
-export const uploadProyectoOnnet = async (payload, proyecto_id) => {
-  try {
-    const response = await client.put(`/upload-proyecto/${proyecto_id}`, payload);
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data?.error || error.message;
-  }
-};
-
 export const getComponenteTipoOnnet = async () => {
   try {
     const response = await client.get(`/get-componente-tipos`);
@@ -239,6 +220,24 @@ export const getProyectoOnnetUsers = async (empresa_id) => {
 export const createAsignadoOnnet = async (payload) => {
   try {
     const response = await client.post('/create-asignado', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const updateRecursoEstado = async (payload, recurso_id) => {
+  try {
+    const response = await client.put(`/update-recurso-estado/${recurso_id}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getPendientesComponente = async (componente_id) => {
+  try {
+    const response = await client.get(`/get_pendientes_componente/${componente_id}`);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;

@@ -24,11 +24,11 @@ import palette from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
 import {
     getProyectoOnnet,
-    uploadProyectoOnnet,
     getComponenteTipoOnnet,
     createComponenteOnnet,
     getProyectoOnnetUsers,
-    createAsignadoOnnet
+    createAsignadoOnnet,
+    getPendientesComponente
 } from "../api/onnetAPI";
 import { getEmpresas } from "../api/authAPI";
 
@@ -45,6 +45,7 @@ export default function OnnetProyecto() {
     const [proyectoData, setProyectoData] = useState(null);
 
     const [componentes, setComponentes] = useState([]);
+    const [pendientesMap, setPendientesMap] = useState({});
 
     const [componentesTipos, setComponentesTipos] = useState([]);
 
@@ -66,6 +67,23 @@ export default function OnnetProyecto() {
 
     const [userList, setUserList] = useState([]);
     const [asignados, setAsignados] = useState([]);
+
+
+    const fetchAllPendientes = async (componentesList) => {
+        const pendientesObj = {};
+        await Promise.all(
+            (componentesList || []).map(async (componente) => {
+                try {
+                    const pendientes = await getPendientesComponente(componente.id);
+                    const pendientes2 = pendientes.pendientes;
+                    pendientesObj[componente.id] = `Pendientes: ${pendientes2[0].q_pendiente ?? 0}`;
+                } catch (error) {
+                    pendientesObj[componente.id] = 'Pendientes: 0';
+                }
+            })
+        );
+        setPendientesMap(pendientesObj);
+    };
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -201,10 +219,14 @@ export default function OnnetProyecto() {
         setOpen(false);
     };
 
+
     useEffect(() => {
         if (asignadoSeleccionado?.componente) {
-            console.log("Componente del asignado seleccionado:", asignadoSeleccionado.componente);
             setComponentes(asignadoSeleccionado.componente);
+            fetchAllPendientes(asignadoSeleccionado.componente);
+        } else {
+            setComponentes([]);
+            setPendientesMap({});
         }
     }, [asignadoSeleccionado]);
 
@@ -580,11 +602,19 @@ export default function OnnetProyecto() {
                                                     }}
                                                 >
                                                     <Typography variant="subtitle1" sx={{ width: '100%', color: palette.accent, fontWeight: 700, fontSize: 20, mb: 0.5, letterSpacing: 0.5 }}>
-                                                        {componente.referencia}
+                                                        REFERENCIA : {componente.referencia}
                                                     </Typography>
-                                                    <Typography variant="body2" sx={{ color: palette.textMuted, fontWeight: 500, fontSize: 15 }}>
+
+                                                    <Divider sx={{ width: '80%', my: 1, borderColor: palette.borderSubtle }} />
+
+                                                    <Typography variant="body2" sx={{ color: palette.primary, fontWeight: 600, fontSize: 15 }}>
                                                         {componente.componentetipo.nombre}
                                                     </Typography>
+
+                                                    <Typography variant="body2" sx={{ color: palette.primary, fontWeight: 600, fontSize: 15 }}>
+                                                        {pendientesMap[componente.id] ?? 'Cargando pendientes...'}
+                                                    </Typography>
+
                                                 </Box>
                                             </Grid>
                                         ))

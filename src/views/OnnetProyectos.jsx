@@ -365,7 +365,11 @@ export default function OnnetProyectos() {
                                             sx={{ color: palette.primary, fontWeight: 600 }}
                                             subheaderTypographyProps={{ color: palette.textMuted }}
                                         />
-
+                                            <CardContent>
+                                                <Typography variant="body2" sx={{ color: palette.textPrimary }}>
+                                                    <strong>Pendientes por revisar:</strong> {proyecto.q_pendiente || '0'}
+                                                </Typography>
+                                            </CardContent>
                                     </Card>
                                 </Grid>
                             ))}
