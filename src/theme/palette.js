@@ -10,6 +10,8 @@ export const palette = {
   cardBg: "rgba(255,255,255,0.92)",
   borderSubtle: "#d9e2ec",
   textMuted: "#5f6b7a",
+  succes: "#388e3c",
+  succesHover: "#2e7d32",
 };
 
 export default palette;

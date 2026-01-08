@@ -1183,7 +1183,7 @@ function Solicitud() {
 
           {/* BOX PARA ANULAR AMONESTACIONES */}
           <Box sx={{ width: '100%', mx: 'auto' }}>
-            {(user_id == 4) && (dataGestiones[0].estado != 'ANULADA' && dataGestiones[0].estado != 'FINALIZADA') ? componenteAnulacion() : null}
+            {(user_id == 4 || user_id == 1) && (dataGestiones[0].estado != 'ANULADA' && dataGestiones[0].estado != 'FINALIZADA') ? componenteAnulacion() : null}
           </Box>
 
           {/* BOX PARA EVALUACION LEGAL */}

@@ -9,15 +9,13 @@ import {
     CircularProgress,
     Divider,
     Grid,
-    InputLabel,
     Modal,
-    TextField,
     Paper,
     Typography,
-    FormControl,
-    Select,
-    MenuItem,
+    Fade,
+    Skeleton,
 } from "@mui/material";
+import { PieChart } from '@mui/x-charts/PieChart';
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchFileUrl } from "../api/downloadApi";
@@ -28,6 +26,8 @@ import {
     getUniqueComponenteOnnet,
     updateRecursoEstado
 } from "../api/onnetAPI";
+
+import { downloadAprobadasAsZip } from "../helpers/downloadAprobadasZip";
 
 export default function OnnetComponente() {
     const { componente_id } = useParams();
@@ -43,14 +43,23 @@ export default function OnnetComponente() {
     const [toUpdate, setToUpdate] = useState(null);
     const [estadoRecurso, setEstadoRecurso] = useState(0);
 
-    const [recursoData, setRecursoData] = useState([]);
+    const [recursoData, setRecursoData] = useState(null);
+    const [componenteTipoData, setComponenteTipoData] = useState(null);
     const [recursoUrls, setRecursoUrls] = useState([]);
+    const [isLoadingImg, setIsLoadingImg] = useState(true);
+
+    const [countPendientes, setCountPendientes] = useState(0);
+    const [countAprobados, setCountAprobados] = useState(0);
+    const [countRechazados, setCountRechazados] = useState(0);
+    const [q_formulario, setQ_Formulario] = useState(0);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         fetchComponenteDetails();
     }, []);
 
     useEffect(() => {
+        if (!recursoData || recursoData.length === 0) return;
         let isMounted = true;
         const fetchRecursos = async () => {
             if (recursoData && recursoData.length > 0) {
@@ -69,6 +78,7 @@ export default function OnnetComponente() {
             } else {
                 setRecursoUrls([]);
             }
+            setIsLoadingImg(false);
         };
         fetchRecursos();
 
@@ -95,10 +105,22 @@ export default function OnnetComponente() {
         }
     };
 
-    // FUNCION PARA FILTRAR POR ESTADO
     const estadoFilter = (estado) => {
+        if (!recursoData) return [];
         return recursoData.filter(recurso => recurso.estado === estado);
     }
+
+    useEffect(() => {
+        if (!recursoData) {
+            setCountPendientes(0);
+            setCountAprobados(0);
+            setCountRechazados(0);
+            return;
+        }
+        setCountPendientes(recursoData.filter(r => r.estado === 0).length);
+        setCountAprobados(recursoData.filter(r => r.estado === 1).length);
+        setCountRechazados(recursoData.filter(r => r.estado === 2).length);
+    }, [recursoData]);
 
     const fetchComponenteDetails = async () => {
         try {
@@ -106,6 +128,7 @@ export default function OnnetComponente() {
             setData(data);
             setMedicionCtoData(data.medicioncto);
             setRecursoData(data.recurso);
+            setComponenteTipoData(data.componentetipo);
         } catch (error) {
             setAlertType('error');
             setMessage(`Error al cargar los detalles del componente: ${error}`);
@@ -114,6 +137,11 @@ export default function OnnetComponente() {
         setLoading(false);
     };
 
+    useEffect(() => {
+        if (componenteTipoData && componenteTipoData.formulario) {
+            setQ_Formulario(componenteTipoData.formulario.length);
+        }
+    }, [componenteTipoData]);
 
 
     return (
@@ -275,506 +303,766 @@ export default function OnnetComponente() {
                 ) : (
                     <>
 
-                        {recursoData && recursoData.length > 0 && (
-                            <Box sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                py: 1,
-                                width: '90%',
-                            }}>
+                        {recursoData && recursoData.length > 0 ?
+                            (
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    py: 1,
+                                    width: '90%',
+                                }}>
 
-                                <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        color: palette.cardBg,
-                                        fontWeight: "bold",
-                                        width: '100%',
-                                        textAlign: 'start'
-                                    }}>
-                                    RECURSOS PENDIENTES
-                                </Typography>
-                                <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
+                                    <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
 
-                                <Grid container justifyContent="center" sx={{ mb: 2 }}>
-                                    {estadoFilter(0).map((recurso) => {
-                                        const originalIdx = recursoData.findIndex(r => r.id === recurso.id);
-                                        return (
-                                            <Grid item xs={12} md={6} lg={4} key={recurso.id} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                                <Card key={recurso.id} sx={{
-                                                    background: palette.accentSoft,
-                                                    width: '450px',
-                                                    my: 1,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    border: `1px solid ${palette.borderSubtle}`,
-                                                    borderRadius: 3,
-                                                    boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
+                                    <Fade in={true} timeout={1500}>
+                                        <Typography
+                                            variant="h5"
+                                            sx={{
+                                                color: palette.cardBg,
+                                                fontWeight: "bold",
+                                                width: '100%',
+                                                textAlign: 'start',
+                                                background: "#2b587e"
+                                            }}>
+                                            DETALLES
+                                        </Typography>
+                                    </Fade>
+
+                                    <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
+
+                                    <Fade in={true} timeout={1000}>
+                                        <Paper
+                                            elevation={8}
+                                            sx={{
+                                                background: palette.cardBg,
+                                                width: "100%",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                flexDirection: "column",
+                                                border: `1px solid ${palette.borderSubtle}`,
+                                                borderRadius: 3,
+                                                backdropFilter: 'blur(4px)',
+                                                boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
+                                            }}>
+                                            <Box sx={{
+                                                display: 'flex',
+                                                flexDirection: { xs: 'column', md: 'row' },
+                                                width: '100%',
+                                                minHeight: '220px',
+                                                justifyContent: 'space-around',
+                                            }}>
+                                                <Box sx={{
+                                                    width: "100%"
                                                 }}>
-
-                                                    <CardMedia sx={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                        my: 1,
-
-                                                    }}>
-                                                        {recurso.file && recursoUrls[originalIdx] ? (
-                                                            <a href={recursoUrls[originalIdx]} target="_blank" rel="noopener noreferrer">
-                                                                <img
-                                                                    src={recursoUrls[originalIdx]}
-                                                                    alt="Imagen de la reparación"
-                                                                    style={{
-                                                                        maxHeight: 260,
-                                                                        maxWidth: 400,
-                                                                        cursor: 'pointer',
-                                                                        boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)'
-                                                                    }}
-                                                                />
-                                                            </a>
-                                                        ) : (
-                                                            <Typography variant="body2" sx={{ color: palette.textSecondary }}>
-                                                                Sin documento
-                                                            </Typography>
-                                                        )}
-                                                    </CardMedia>
+                                                    <PieChart
+                                                        series={[{
+                                                            data: [
+                                                                { id: 0, value: countAprobados, label: 'Aprobados', color: 'green' },
+                                                                { id: 1, value: countRechazados, label: 'Rechazados', color: 'red' },
+                                                                { id: 2, value: countPendientes, label: 'Pendientes', color: 'yellow' },
+                                                            ],
+                                                            highlightScope: { faded: "global", highlighted: "item" },
+                                                            faded: {
+                                                                innerRadius: 30,
+                                                                additionalRadius: -30,
+                                                                color: "gray",
+                                                            },
+                                                            innerRadius: 40,
+                                                            outerRadius: 70,
+                                                        }]}
+                                                        width={500}
+                                                        height={200}
+                                                    />
+                                                </Box>
+                                                <Box sx={{
+                                                    width: "100%",
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                }}>
                                                     <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
-
-                                                    <CardContent
+                                                    <Typography
+                                                        variant="subtitle1"
                                                         sx={{
-                                                            width: '100%',
-                                                            display: 'flex',
-                                                            justifyContent: 'center',
-                                                            alignItems: 'center',
+                                                            color: palette.primaryDark,
+                                                            fontWeight: "bold",
+                                                            width: '90%'
+                                                        }}>
+                                                        TIPO COMPONENTE
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{
+                                                            color: palette.textMuted,
+                                                            width: '90%'
+                                                        }}>
+                                                        {componenteTipoData ? componenteTipoData.nombre : 'N/A'}
+                                                    </Typography>
+                                                    <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+                                                    <Typography
+                                                        variant="subtitle1"
+                                                        sx={{
+                                                            color: palette.primaryDark,
+                                                            fontWeight: "bold",
+                                                            width: '90%'
+                                                        }}>
+                                                        CANTIDAD REGISTROS REQUERIDOS
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{
+                                                            color: palette.textMuted,
+                                                            width: '90%'
+                                                        }}>
+                                                        {q_formulario}
+                                                    </Typography>
+                                                    <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+                                                    <Typography
+                                                        variant="subtitle1"
+                                                        sx={{
+                                                            color: palette.primaryDark,
+                                                            fontWeight: "bold",
+                                                            width: '90%'
+                                                        }}>
+                                                        CANTIDAD REGISTROS APROBADOS
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{
+                                                            color: palette.textMuted,
+                                                            width: '90%'
+                                                        }}>
+                                                        {countAprobados}
+                                                    </Typography>
+                                                    <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+                                                    <Typography
+                                                        variant="subtitle1"
+                                                        sx={{
+                                                            color: palette.primaryDark,
+                                                            fontWeight: "bold",
+                                                            width: '90%'
+                                                        }}>
+                                                        % AVANCE
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{
+                                                            color: palette.textMuted,
+                                                            width: '90%'
+                                                        }}>
+                                                        {q_formulario > 0 ? ((countAprobados / q_formulario) * 100).toFixed(2) : 0}%
+                                                    </Typography>
+                                                    <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+                                                </Box>
+
+                                            </Box>
+                                        </Paper>
+                                    </Fade>
+
+                                    <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
+
+                                    <Fade in={true} timeout={1500}>
+                                        <Typography
+                                            variant="h5"
+                                            sx={{
+                                                color: palette.cardBg,
+                                                fontWeight: "bold",
+                                                width: '100%',
+                                                textAlign: 'start',
+                                                background: "#2b587e"
+                                            }}>
+                                            RECURSOS PENDIENTES
+                                        </Typography>
+                                    </Fade>
+
+                                    <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
+
+                                    <Fade in={true} timeout={1000}>
+                                        <Grid container justifyContent="left" sx={{ mb: 2 }}>
+                                            {estadoFilter(0).map((recurso) => {
+                                                const originalIdx = recursoData.findIndex(r => r.id === recurso.id);
+                                                return (
+                                                    <Grid item xs={12} md={6} lg={4} key={recurso.id} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                        <Card key={recurso.id} sx={{
                                                             background: palette.accentSoft,
-                                                        }}
-                                                    >
-                                                        <Box sx={{
+                                                            width: '450px',
+                                                            my: 1,
                                                             display: 'flex',
                                                             flexDirection: 'column',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            width: '90%',
+                                                            border: `1px solid ${palette.borderSubtle}`,
+                                                            borderRadius: 3,
+                                                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
                                                         }}>
-                                                            <Typography
-                                                                variant="h6"
+
+                                                            {isLoadingImg ? (
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        my: 1,
+                                                                        height: 260,
+                                                                        width: 400,
+                                                                    }}>
+                                                                    <Skeleton variant="rectangular" width={180} height={260} />
+                                                                </Box>
+                                                            ) : (
+                                                                <CardMedia
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        my: 1,
+
+                                                                    }}>
+                                                                    {recurso.file && recursoUrls[originalIdx] ? (
+                                                                        <a href={recursoUrls[originalIdx]} target="_blank" rel="noopener noreferrer">
+                                                                            <img
+                                                                                src={recursoUrls[originalIdx]}
+                                                                                alt="Imagen de la reparación"
+                                                                                style={{
+                                                                                    maxHeight: 260,
+                                                                                    maxWidth: 400,
+                                                                                    cursor: 'pointer',
+                                                                                    boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)'
+                                                                                }}
+                                                                                onLoad={() => setIsLoadingImg(false)}
+                                                                            />
+                                                                        </a>
+                                                                    ) : (
+                                                                        <Typography variant="body2" sx={{ color: palette.textSecondary }}>
+                                                                            Sin documento
+                                                                        </Typography>
+                                                                    )}
+                                                                </CardMedia>)}
+
+
+                                                            <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+
+                                                            <CardContent
                                                                 sx={{
-                                                                    color: recurso.estado === 1 ? 'green' : recurso.estado === 2 ? 'red' : 'orange',
-                                                                    textAlign: 'center',
-                                                                    fontWeight: 'bold',
-                                                                    width: '100%'
+                                                                    width: '100%',
+                                                                    display: 'flex',
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                    background: palette.accentSoft,
                                                                 }}
                                                             >
-                                                                {estadoSetter(recurso.estado)}
-                                                            </Typography>
-                                                            <Box
-                                                                sx={{
+                                                                <Box sx={{
                                                                     display: 'flex',
                                                                     flexDirection: 'column',
                                                                     justifyContent: 'center',
                                                                     alignItems: 'center',
-                                                                    width: '100%',
+                                                                    width: '90%',
                                                                 }}>
-                                                                <Typography
-                                                                    variant="h6"
-                                                                    sx={{
-                                                                        color: palette.textPrimary,
-                                                                        width: '100%'
-                                                                    }}
-                                                                >
-                                                                    <span style={{ fontWeight: 'bold' }}>{recurso.formulario.pregunta}</span>{' '}
-                                                                </Typography>
-                                                                <Typography
-                                                                    variant="h6"
-                                                                    sx={{
-                                                                        color: palette.textMuted,
-                                                                        width: '100%'
-                                                                    }}
-                                                                >
-                                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{recurso.respuesta}</span>
-                                                                </Typography>
-                                                            </Box>
-                                                        </Box>
-                                                    </CardContent>
+                                                                    <Typography
+                                                                        variant="h6"
+                                                                        sx={{
+                                                                            color: recurso.estado === 1 ? 'green' : recurso.estado === 2 ? 'red' : 'orange',
+                                                                            textAlign: 'center',
+                                                                            fontWeight: 'bold',
+                                                                            width: '100%'
+                                                                        }}
+                                                                    >
+                                                                        {estadoSetter(recurso.estado)}
+                                                                    </Typography>
+                                                                    <Box
+                                                                        sx={{
+                                                                            display: 'flex',
+                                                                            flexDirection: 'column',
+                                                                            justifyContent: 'center',
+                                                                            alignItems: 'center',
+                                                                            width: '100%',
+                                                                        }}>
+                                                                        <Typography
+                                                                            variant="h6"
+                                                                            sx={{
+                                                                                color: palette.textPrimary,
+                                                                                width: '100%'
+                                                                            }}
+                                                                        >
+                                                                            <span style={{ fontWeight: 'bold' }}>{recurso.formulario.pregunta}</span>{' '}
+                                                                        </Typography>
+                                                                        <Typography
+                                                                            variant="h6"
+                                                                            sx={{
+                                                                                color: palette.textMuted,
+                                                                                width: '100%'
+                                                                            }}
+                                                                        >
+                                                                            <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{recurso.respuesta}</span>
+                                                                        </Typography>
+                                                                    </Box>
+                                                                </Box>
+                                                            </CardContent>
 
-                                                    {recurso.estado === 0 && (
-                                                        <CardActions>
-                                                            <Button
-                                                                variant="contained"
-                                                                onClick={() => {
-                                                                    setEstadoRecurso(1)
-                                                                    setToUpdate(recurso.id)
-                                                                    setOpenModal(true)
-                                                                }}
-                                                                sx={{
-                                                                    width: 200,
-                                                                    my: { xs: 1, md: 1, lg: 1 },
-                                                                    background: palette.primary,
-                                                                    "&:hover": { background: palette.primaryDark }
-                                                                }}
-                                                            >
-                                                                <Typography sx={{ color: '#fff' }}>
-                                                                    APROBAR
-                                                                </Typography>
-                                                            </Button>
-                                                            <Button
-                                                                variant="contained"
-                                                                onClick={() => {
-                                                                    setEstadoRecurso(2)
-                                                                    setToUpdate(recurso.id)
-                                                                    setOpenModal(true)
-                                                                }}
-                                                                sx={{
-                                                                    minWidth: 200,
-                                                                    my: { xs: 1, md: 1, lg: 1 },
-                                                                    background: palette.danger,
-                                                                    "&:hover": { background: palette.dangerHover }
-                                                                }}
-                                                            >
-                                                                <Typography sx={{ color: '#fff' }}>
-                                                                    RECHAZAR
-                                                                </Typography>
-                                                            </Button>
-                                                        </CardActions>
-                                                    )}
-                                                </Card>
-                                            </Grid>
-                                        )
-                                    })}
-                                </Grid>
+                                                            {recurso.estado === 0 && (
+                                                                <CardActions>
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        onClick={() => {
+                                                                            setEstadoRecurso(1)
+                                                                            setToUpdate(recurso.id)
+                                                                            setOpenModal(true)
+                                                                        }}
+                                                                        sx={{
+                                                                            width: 200,
+                                                                            my: { xs: 1, md: 1, lg: 1 },
+                                                                            background: palette.primary,
+                                                                            "&:hover": { background: palette.primaryDark }
+                                                                        }}
+                                                                    >
+                                                                        <Typography sx={{ color: '#fff' }}>
+                                                                            APROBAR
+                                                                        </Typography>
+                                                                    </Button>
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        onClick={() => {
+                                                                            setEstadoRecurso(2)
+                                                                            setToUpdate(recurso.id)
+                                                                            setOpenModal(true)
+                                                                        }}
+                                                                        sx={{
+                                                                            minWidth: 200,
+                                                                            my: { xs: 1, md: 1, lg: 1 },
+                                                                            background: palette.danger,
+                                                                            "&:hover": { background: palette.dangerHover }
+                                                                        }}
+                                                                    >
+                                                                        <Typography sx={{ color: '#fff' }}>
+                                                                            RECHAZAR
+                                                                        </Typography>
+                                                                    </Button>
+                                                                </CardActions>
+                                                            )}
+                                                        </Card>
+                                                    </Grid>
+                                                )
+                                            })}
+                                        </Grid>
+                                    </Fade>
 
-                                <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        color: palette.cardBg,
-                                        fontWeight: "bold",
-                                        width: '100%',
-                                        textAlign: 'start'
-                                    }}>
-                                    RECURSOS APROBADOS
-                                </Typography>
-                                <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
+                                    <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
 
-                                <Grid container justifyContent="center" sx={{ mb: 2 }}>
-                                    {estadoFilter(1).map((recurso) => {
-                                        const originalIdx = recursoData.findIndex(r => r.id === recurso.id);
-                                        return (
-                                            <Grid item xs={12} md={6} lg={4} key={recurso.id} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                                <Card key={recurso.id} sx={{
-                                                    background: palette.accentSoft,
-                                                    width: '450px',
-                                                    my: 1,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    border: `1px solid ${palette.borderSubtle}`,
-                                                    borderRadius: 3,
-                                                    boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
+                                    <Fade in={true} timeout={1500}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                                            <Typography
+                                                variant="h5"
+                                                sx={{
+                                                    color: palette.cardBg,
+                                                    fontWeight: "bold",
+                                                    width: '100%',
+                                                    textAlign: 'start',
+                                                    background: "#2b587e"
                                                 }}>
+                                                RECURSOS APROBADOS
+                                            </Typography>
+                                        </Box>
+                                    </Fade>
 
-                                                    <CardMedia sx={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                        my: 1,
+                                    <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
 
-                                                    }}>
-                                                        {recurso.file && recursoUrls[originalIdx] ? (
-                                                            <a href={recursoUrls[originalIdx]} target="_blank" rel="noopener noreferrer">
-                                                                <img
-                                                                    src={recursoUrls[originalIdx]}
-                                                                    alt="Imagen de la reparación"
-                                                                    style={{
-                                                                        maxHeight: 260,
-                                                                        maxWidth: 400,
-                                                                        cursor: 'pointer',
-                                                                        boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)'
-                                                                    }}
-                                                                />
-                                                            </a>
-                                                        ) : (
-                                                            <Typography variant="body2" sx={{ color: palette.textSecondary }}>
-                                                                Sin documento
-                                                            </Typography>
-                                                        )}
-                                                    </CardMedia>
-                                                    <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+                                    <Fade in={true} timeout={1500}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                                            <Button
+                                                variant="contained"
+                                                sx={{
+                                                    width: "250px",
+                                                    background: palette.succes,
+                                                    '&:hover': { background: palette.succesHover }
+                                                }}
+                                                onClick={async () => {
+                                                    await downloadAprobadasAsZip(estadoFilter(1), recursoData, recursoUrls);
+                                                }}
+                                            >
+                                                Descargar aprobadas
+                                            </Button>
+                                        </Box>
+                                    </Fade>
 
-                                                    <CardContent
-                                                        sx={{
-                                                            width: '100%',
-                                                            display: 'flex',
-                                                            justifyContent: 'center',
-                                                            alignItems: 'center',
+                                    <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
+
+                                    <Fade in={true} timeout={1000}>
+                                        <Grid container justifyContent="left" sx={{ mb: 2 }}>
+
+                                            {estadoFilter(1).map((recurso) => {
+                                                const originalIdx = recursoData.findIndex(r => r.id === recurso.id);
+                                                return (
+                                                    <Grid item xs={12} md={6} lg={4} key={recurso.id} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                        <Card key={recurso.id} sx={{
                                                             background: palette.accentSoft,
-                                                        }}
-                                                    >
-                                                        <Box sx={{
+                                                            width: '450px',
+                                                            my: 1,
                                                             display: 'flex',
                                                             flexDirection: 'column',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            width: '90%',
+                                                            border: `1px solid ${palette.borderSubtle}`,
+                                                            borderRadius: 3,
+                                                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
                                                         }}>
-                                                            <Typography
-                                                                variant="h6"
+
+
+
+                                                            {isLoadingImg ? (
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        my: 1,
+                                                                        height: 260,
+                                                                        width: 400,
+                                                                    }}>
+                                                                    <Skeleton variant="rectangular" width={180} height={260} />
+                                                                </Box>
+                                                            ) : (
+                                                                <CardMedia
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        my: 1,
+
+                                                                    }}>
+                                                                    {recurso.file && recursoUrls[originalIdx] ? (
+                                                                        <a href={recursoUrls[originalIdx]} target="_blank" rel="noopener noreferrer">
+                                                                            <img
+                                                                                src={recursoUrls[originalIdx]}
+                                                                                alt="Imagen de la reparación"
+                                                                                style={{
+                                                                                    maxHeight: 260,
+                                                                                    maxWidth: 400,
+                                                                                    cursor: 'pointer',
+                                                                                    boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)'
+                                                                                }}
+                                                                            />
+                                                                        </a>
+                                                                    ) : (
+                                                                        <Typography variant="body2" sx={{ color: palette.textSecondary }}>
+                                                                            Sin documento
+                                                                        </Typography>
+                                                                    )}
+                                                                </CardMedia>)}
+
+
+                                                            <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+
+                                                            <CardContent
                                                                 sx={{
-                                                                    color: recurso.estado === 1 ? 'green' : recurso.estado === 2 ? 'red' : 'orange',
-                                                                    textAlign: 'center',
-                                                                    fontWeight: 'bold',
-                                                                    width: '100%'
+                                                                    width: '100%',
+                                                                    display: 'flex',
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                    background: palette.accentSoft,
                                                                 }}
                                                             >
-                                                                {estadoSetter(recurso.estado)}
-                                                            </Typography>
-                                                            <Box
-                                                                sx={{
+                                                                <Box sx={{
                                                                     display: 'flex',
                                                                     flexDirection: 'column',
                                                                     justifyContent: 'center',
                                                                     alignItems: 'center',
-                                                                    width: '100%',
+                                                                    width: '90%',
                                                                 }}>
-                                                                <Typography
-                                                                    variant="h6"
-                                                                    sx={{
-                                                                        color: palette.textPrimary,
-                                                                        width: '100%'
-                                                                    }}
-                                                                >
-                                                                    <span style={{ fontWeight: 'bold' }}>{recurso.formulario.pregunta}</span>{' '}
-                                                                </Typography>
-                                                                <Typography
-                                                                    variant="h6"
-                                                                    sx={{
-                                                                        color: palette.textMuted,
-                                                                        width: '100%'
-                                                                    }}
-                                                                >
-                                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{recurso.respuesta}</span>
-                                                                </Typography>
-                                                            </Box>
-                                                        </Box>
-                                                    </CardContent>
+                                                                    <Typography
+                                                                        variant="h6"
+                                                                        sx={{
+                                                                            color: recurso.estado === 1 ? 'green' : recurso.estado === 2 ? 'red' : 'orange',
+                                                                            textAlign: 'center',
+                                                                            fontWeight: 'bold',
+                                                                            width: '100%'
+                                                                        }}
+                                                                    >
+                                                                        {estadoSetter(recurso.estado)}
+                                                                    </Typography>
+                                                                    <Box
+                                                                        sx={{
+                                                                            display: 'flex',
+                                                                            flexDirection: 'column',
+                                                                            justifyContent: 'center',
+                                                                            alignItems: 'center',
+                                                                            width: '100%',
+                                                                        }}>
+                                                                        <Typography
+                                                                            variant="h6"
+                                                                            sx={{
+                                                                                color: palette.textPrimary,
+                                                                                width: '100%'
+                                                                            }}
+                                                                        >
+                                                                            <span style={{ fontWeight: 'bold' }}>{recurso.formulario.pregunta}</span>{' '}
+                                                                        </Typography>
+                                                                        <Typography
+                                                                            variant="h6"
+                                                                            sx={{
+                                                                                color: palette.textMuted,
+                                                                                width: '100%'
+                                                                            }}
+                                                                        >
+                                                                            <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{recurso.respuesta}</span>
+                                                                        </Typography>
+                                                                    </Box>
+                                                                </Box>
+                                                            </CardContent>
 
-                                                    {recurso.estado === 0 && (
-                                                        <CardActions>
-                                                            <Button
-                                                                variant="contained"
-                                                                onClick={() => {
-                                                                    setEstadoRecurso(1)
-                                                                    setToUpdate(recurso.id)
-                                                                    setOpenModal(true)
-                                                                }}
-                                                                sx={{
-                                                                    width: 200,
-                                                                    my: { xs: 1, md: 1, lg: 1 },
-                                                                    background: palette.primary,
-                                                                    "&:hover": { background: palette.primaryDark }
-                                                                }}
-                                                            >
-                                                                <Typography sx={{ color: '#fff' }}>
-                                                                    APROBAR
-                                                                </Typography>
-                                                            </Button>
-                                                            <Button
-                                                                variant="contained"
-                                                                onClick={() => {
-                                                                    setEstadoRecurso(2)
-                                                                    setToUpdate(recurso.id)
-                                                                    setOpenModal(true)
-                                                                }}
-                                                                sx={{
-                                                                    minWidth: 200,
-                                                                    my: { xs: 1, md: 1, lg: 1 },
-                                                                    background: palette.danger,
-                                                                    "&:hover": { background: palette.dangerHover }
-                                                                }}
-                                                            >
-                                                                <Typography sx={{ color: '#fff' }}>
-                                                                    RECHAZAR
-                                                                </Typography>
-                                                            </Button>
-                                                        </CardActions>
-                                                    )}
-                                                </Card>
-                                            </Grid>
-                                        )
-                                    })}
-                                </Grid>
+                                                            {recurso.estado === 0 && (
+                                                                <CardActions>
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        onClick={() => {
+                                                                            setEstadoRecurso(1)
+                                                                            setToUpdate(recurso.id)
+                                                                            setOpenModal(true)
+                                                                        }}
+                                                                        sx={{
+                                                                            width: 200,
+                                                                            my: { xs: 1, md: 1, lg: 1 },
+                                                                            background: palette.primary,
+                                                                            "&:hover": { background: palette.primaryDark }
+                                                                        }}
+                                                                    >
+                                                                        <Typography sx={{ color: '#fff' }}>
+                                                                            APROBAR
+                                                                        </Typography>
+                                                                    </Button>
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        onClick={() => {
+                                                                            setEstadoRecurso(2)
+                                                                            setToUpdate(recurso.id)
+                                                                            setOpenModal(true)
+                                                                        }}
+                                                                        sx={{
+                                                                            minWidth: 200,
+                                                                            my: { xs: 1, md: 1, lg: 1 },
+                                                                            background: palette.danger,
+                                                                            "&:hover": { background: palette.dangerHover }
+                                                                        }}
+                                                                    >
+                                                                        <Typography sx={{ color: '#fff' }}>
+                                                                            RECHAZAR
+                                                                        </Typography>
+                                                                    </Button>
+                                                                </CardActions>
+                                                            )}
+                                                        </Card>
+                                                    </Grid>
+                                                )
+                                            })}
 
-                                <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        color: palette.cardBg,
-                                        fontWeight: "bold",
-                                        width: '100%',
-                                        textAlign: 'start'
-                                    }}>
-                                    RECURSOS RECHAZADOS
-                                </Typography>
-                                <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
+                                        </Grid>
+                                    </Fade>
 
-                                <Grid container justifyContent="center" sx={{ mb: 2 }}>
-                                    {estadoFilter(2).map((recurso) => {
-                                        const originalIdx = recursoData.findIndex(r => r.id === recurso.id);
-                                        return (
-                                            <Grid item xs={12} md={6} lg={4} key={recurso.id} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                                <Card key={recurso.id} sx={{
-                                                    background: palette.accentSoft,
-                                                    width: '450px',
-                                                    my: 1,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    border: `1px solid ${palette.borderSubtle}`,
-                                                    borderRadius: 3,
-                                                    boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
-                                                }}>
+                                    <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
 
-                                                    <CardMedia sx={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                        my: 1,
+                                    <Fade in={true} timeout={1500}>
+                                        <Typography
+                                            variant="h5"
+                                            sx={{
+                                                color: palette.cardBg,
+                                                fontWeight: "bold",
+                                                width: '100%',
+                                                textAlign: 'start',
+                                                background: "#2b587e"
+                                            }}>
+                                            RECURSOS RECHAZADOS
+                                        </Typography>
+                                    </Fade>
 
-                                                    }}>
-                                                        {recurso.file && recursoUrls[originalIdx] ? (
-                                                            <a href={recursoUrls[originalIdx]} target="_blank" rel="noopener noreferrer">
-                                                                <img
-                                                                    src={recursoUrls[originalIdx]}
-                                                                    alt="Imagen de la reparación"
-                                                                    style={{
-                                                                        maxHeight: 260,
-                                                                        maxWidth: 400,
-                                                                        cursor: 'pointer',
-                                                                        boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)'
-                                                                    }}
-                                                                />
-                                                            </a>
-                                                        ) : (
-                                                            <Typography variant="body2" sx={{ color: palette.textSecondary }}>
-                                                                Sin documento
-                                                            </Typography>
-                                                        )}
-                                                    </CardMedia>
-                                                    <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+                                    <Divider sx={{ width: '100%', borderColor: palette.borderSubtle, my: 2 }} />
 
-                                                    <CardContent
-                                                        sx={{
-                                                            width: '100%',
-                                                            display: 'flex',
-                                                            justifyContent: 'center',
-                                                            alignItems: 'center',
+                                    <Fade in={true} timeout={1000}>
+                                        <Grid container justifyContent="left" sx={{ mb: 2 }}>
+                                            {estadoFilter(2).map((recurso) => {
+                                                const originalIdx = recursoData.findIndex(r => r.id === recurso.id);
+                                                return (
+                                                    <Grid item xs={12} md={6} lg={4} key={recurso.id} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                        <Card key={recurso.id} sx={{
                                                             background: palette.accentSoft,
-                                                        }}
-                                                    >
-                                                        <Box sx={{
+                                                            width: '450px',
+                                                            my: 1,
                                                             display: 'flex',
                                                             flexDirection: 'column',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            width: '90%',
+                                                            border: `1px solid ${palette.borderSubtle}`,
+                                                            borderRadius: 3,
+                                                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
                                                         }}>
-                                                            <Typography
-                                                                variant="h6"
+
+                                                            {isLoadingImg ? (
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        my: 1,
+                                                                        height: 260,
+                                                                        width: 400,
+                                                                    }}>
+                                                                    <Skeleton variant="rectangular" width={180} height={260} />
+                                                                </Box>
+                                                            ) : (
+                                                                <CardMedia sx={{
+                                                                    display: 'flex',
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                    my: 1,
+
+                                                                }}>
+                                                                    {recurso.file && recursoUrls[originalIdx] ? (
+                                                                        <a href={recursoUrls[originalIdx]} target="_blank" rel="noopener noreferrer">
+                                                                            <img
+                                                                                src={recursoUrls[originalIdx]}
+                                                                                alt="Imagen de la reparación"
+                                                                                style={{
+                                                                                    maxHeight: 260,
+                                                                                    maxWidth: 400,
+                                                                                    cursor: 'pointer',
+                                                                                    boxShadow: '0 4px 14px -4px rgba(0,0,0,0.4)'
+                                                                                }}
+                                                                            />
+                                                                        </a>
+                                                                    ) : (
+                                                                        <Typography variant="body2" sx={{ color: palette.textSecondary }}>
+                                                                            Sin documento
+                                                                        </Typography>
+                                                                    )}
+                                                                </CardMedia>
+                                                            )}
+                                                            <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+
+                                                            <CardContent
                                                                 sx={{
-                                                                    color: recurso.estado === 1 ? 'green' : recurso.estado === 2 ? 'red' : 'orange',
-                                                                    textAlign: 'center',
-                                                                    fontWeight: 'bold',
-                                                                    width: '100%'
+                                                                    width: '100%',
+                                                                    display: 'flex',
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                    background: palette.accentSoft,
                                                                 }}
                                                             >
-                                                                {estadoSetter(recurso.estado)}
-                                                            </Typography>
-                                                            <Box
-                                                                sx={{
+                                                                <Box sx={{
                                                                     display: 'flex',
                                                                     flexDirection: 'column',
                                                                     justifyContent: 'center',
                                                                     alignItems: 'center',
-                                                                    width: '100%',
+                                                                    width: '90%',
                                                                 }}>
-                                                                <Typography
-                                                                    variant="h6"
-                                                                    sx={{
-                                                                        color: palette.textPrimary,
-                                                                        width: '100%'
-                                                                    }}
-                                                                >
-                                                                    <span style={{ fontWeight: 'bold' }}>{recurso.formulario.pregunta}</span>{' '}
-                                                                </Typography>
-                                                                <Typography
-                                                                    variant="h6"
-                                                                    sx={{
-                                                                        color: palette.textMuted,
-                                                                        width: '100%'
-                                                                    }}
-                                                                >
-                                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{recurso.respuesta}</span>
-                                                                </Typography>
-                                                            </Box>
-                                                        </Box>
-                                                    </CardContent>
+                                                                    <Typography
+                                                                        variant="h6"
+                                                                        sx={{
+                                                                            color: recurso.estado === 1 ? 'green' : recurso.estado === 2 ? 'red' : 'orange',
+                                                                            textAlign: 'center',
+                                                                            fontWeight: 'bold',
+                                                                            width: '100%'
+                                                                        }}
+                                                                    >
+                                                                        {estadoSetter(recurso.estado)}
+                                                                    </Typography>
+                                                                    <Box
+                                                                        sx={{
+                                                                            display: 'flex',
+                                                                            flexDirection: 'column',
+                                                                            justifyContent: 'center',
+                                                                            alignItems: 'center',
+                                                                            width: '100%',
+                                                                        }}>
+                                                                        <Typography
+                                                                            variant="h6"
+                                                                            sx={{
+                                                                                color: palette.textPrimary,
+                                                                                width: '100%'
+                                                                            }}
+                                                                        >
+                                                                            <span style={{ fontWeight: 'bold' }}>{recurso.formulario.pregunta}</span>{' '}
+                                                                        </Typography>
+                                                                        <Typography
+                                                                            variant="h6"
+                                                                            sx={{
+                                                                                color: palette.textMuted,
+                                                                                width: '100%'
+                                                                            }}
+                                                                        >
+                                                                            <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{recurso.respuesta}</span>
+                                                                        </Typography>
+                                                                    </Box>
+                                                                </Box>
+                                                            </CardContent>
 
-                                                    {recurso.estado === 0 && (
-                                                        <CardActions>
-                                                            <Button
-                                                                variant="contained"
-                                                                onClick={() => {
-                                                                    setEstadoRecurso(1)
-                                                                    setToUpdate(recurso.id)
-                                                                    setOpenModal(true)
-                                                                }}
-                                                                sx={{
-                                                                    width: 200,
-                                                                    my: { xs: 1, md: 1, lg: 1 },
-                                                                    background: palette.primary,
-                                                                    "&:hover": { background: palette.primaryDark }
-                                                                }}
-                                                            >
-                                                                <Typography sx={{ color: '#fff' }}>
-                                                                    APROBAR
-                                                                </Typography>
-                                                            </Button>
-                                                            <Button
-                                                                variant="contained"
-                                                                onClick={() => {
-                                                                    setEstadoRecurso(2)
-                                                                    setToUpdate(recurso.id)
-                                                                    setOpenModal(true)
-                                                                }}
-                                                                sx={{
-                                                                    minWidth: 200,
-                                                                    my: { xs: 1, md: 1, lg: 1 },
-                                                                    background: palette.danger,
-                                                                    "&:hover": { background: palette.dangerHover }
-                                                                }}
-                                                            >
-                                                                <Typography sx={{ color: '#fff' }}>
-                                                                    RECHAZAR
-                                                                </Typography>
-                                                            </Button>
-                                                        </CardActions>
-                                                    )}
-                                                </Card>
-                                            </Grid>
-                                        )
-                                    })}
-                                </Grid>
+                                                            {recurso.estado === 0 && (
+                                                                <CardActions>
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        onClick={() => {
+                                                                            setEstadoRecurso(1)
+                                                                            setToUpdate(recurso.id)
+                                                                            setOpenModal(true)
+                                                                        }}
+                                                                        sx={{
+                                                                            width: 200,
+                                                                            my: { xs: 1, md: 1, lg: 1 },
+                                                                            background: palette.primary,
+                                                                            "&:hover": { background: palette.primaryDark }
+                                                                        }}
+                                                                    >
+                                                                        <Typography sx={{ color: '#fff' }}>
+                                                                            APROBAR
+                                                                        </Typography>
+                                                                    </Button>
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        onClick={() => {
+                                                                            setEstadoRecurso(2)
+                                                                            setToUpdate(recurso.id)
+                                                                            setOpenModal(true)
+                                                                        }}
+                                                                        sx={{
+                                                                            minWidth: 200,
+                                                                            my: { xs: 1, md: 1, lg: 1 },
+                                                                            background: palette.danger,
+                                                                            "&:hover": { background: palette.dangerHover }
+                                                                        }}
+                                                                    >
+                                                                        <Typography sx={{ color: '#fff' }}>
+                                                                            RECHAZAR
+                                                                        </Typography>
+                                                                    </Button>
+                                                                </CardActions>
+                                                            )}
+                                                        </Card>
+                                                    </Grid>
+                                                )
+                                            })}
+                                        </Grid>
+                                    </Fade>
 
-                            </Box >
-                        )}
+                                </Box >
+                            )
+                            :
+                            (
+                                <>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            color: palette.accentSoft,
+                                            fontWeight: "bold",
+                                            width: '100%',
+                                            textAlign: 'center',
+                                            my: 2
+                                        }}>
+                                        No hay recursos asociados a este componente.
+                                    </Typography>
+                                </>
+                            )}
 
-                        {medicionCtoData && medicionCtoData.length > 0 && (
+                        {/* {medicionCtoData && medicionCtoData.length > 0 && (
                             <Paper
                                 elevation={8}
                                 sx={{
@@ -932,7 +1220,7 @@ export default function OnnetComponente() {
                                     ))}
                                 </Box>
                             </Paper>
-                        )}
+                        )} */}
 
                     </>)}
             </Box>

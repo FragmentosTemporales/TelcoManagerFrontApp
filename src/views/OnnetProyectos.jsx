@@ -16,6 +16,7 @@ import {
     FormControl,
     Select,
     MenuItem,
+    Fade,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -56,7 +57,6 @@ export default function OnnetProyectos() {
         setLoading(true);
         try {
             const res = await getProyectosOnnet(page, filterPayload);
-            console.log(res)
             setProyectos(res.data);
             setPages(res.pages);
             setCount(res.count);
@@ -256,7 +256,7 @@ export default function OnnetProyectos() {
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    flexDirection: { md: 'column', lg: 'row', xs: 'column'}
+                                    flexDirection: { md: 'column', lg: 'row', xs: 'column' }
                                 }}>
                                     <FormControl sx={{ minWidth: 200, mr: 2 }}>
                                         <InputLabel id="filter-estado-label">Estado</InputLabel>
@@ -315,62 +315,77 @@ export default function OnnetProyectos() {
                         <Grid container spacing={2} sx={{ width: '90%', mt: 1, mb: 5 }}>
                             {proyectos.map((proyecto) => (
                                 <Grid item xs={12} sm={6} md={4} key={proyecto.id}>
-                                    <Card
-                                        elevation={6}
-                                        component={Link}
-                                        to={`/onnet/modulo/proyecto/${proyecto.proyecto_id}`}
-                                        sx={{
-                                            textDecoration: "none",
-                                            minHeight: "40%",
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "space-between",
-                                            position: "relative",
-                                            borderRadius: 3,
-                                            background: palette.cardBg,
-                                            border: `1px solid ${palette.borderSubtle}`,
-                                            backdropFilter: "blur(4px)",
-                                            transition: "all .35s",
-                                            overflow: "hidden",
-                                            willChange: "transform, box-shadow",
-                                            transformOrigin: "top center",
-                                            mt: 0.5,
-                                            '&:before': {
-                                                content: '""',
-                                                position: "absolute",
-                                                inset: 0,
-                                                background:
-                                                    "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)",
-                                                opacity: 0,
-                                                transition: "opacity .4s",
-                                                pointerEvents: "none",
-                                            },
-                                            '&:hover': {
-                                                transform: 'translateY(-8px)',
-                                                boxShadow:
-                                                    "0 14px 34px -6px rgba(0,0,0,0.42), 0 6px 16px -2px rgba(0,0,0,0.30)",
-                                                borderColor: palette.accent,
-                                                '&:before': { opacity: 1 },
-                                            },
-                                            '&:active': { transform: 'translateY(-3px)', boxShadow: "0 8px 20px -8px rgba(0,0,0,0.4)" },
-                                        }}
-                                    >
-                                        <CardHeader
-                                            title={proyecto.proyecto_id}
-                                            subheader={`${proyecto.estado === 0 ? 'Pendiente de asignación' :
-                                                proyecto.estado === 1 ? 'Proyecto en ejecución' :
-                                                    proyecto.estado === 2 ? 'Proyecto finalizado' :
-                                                        proyecto.estado
-                                                }`}
-                                            sx={{ color: palette.primary, fontWeight: 600 }}
-                                            subheaderTypographyProps={{ color: palette.textMuted }}
-                                        />
+                                    <Fade in={true} timeout={1000}>
+                                        <Card
+                                            elevation={6}
+                                            component={Link}
+                                            to={`/onnet/modulo/proyecto/${proyecto.proyecto_id}`}
+                                            sx={{
+                                                textDecoration: "none",
+                                                minHeight: "40%",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                justifyContent: "space-between",
+                                                position: "relative",
+                                                borderRadius: 3,
+                                                background: palette.cardBg,
+                                                border: `1px solid ${palette.borderSubtle}`,
+                                                backdropFilter: "blur(4px)",
+                                                transition: "all .35s",
+                                                overflow: "hidden",
+                                                willChange: "transform, box-shadow",
+                                                transformOrigin: "top center",
+                                                mt: 0.5,
+                                                '&:before': {
+                                                    content: '""',
+                                                    position: "absolute",
+                                                    inset: 0,
+                                                    background:
+                                                        "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)",
+                                                    opacity: 0,
+                                                    transition: "opacity .4s",
+                                                    pointerEvents: "none",
+                                                },
+                                                '&:hover': {
+                                                    transform: 'translateY(-8px)',
+                                                    boxShadow:
+                                                        "0 14px 34px -6px rgba(0,0,0,0.42), 0 6px 16px -2px rgba(0,0,0,0.30)",
+                                                    borderColor: palette.accent,
+                                                    '&:before': { opacity: 1 },
+                                                },
+                                                '&:active': { transform: 'translateY(-3px)', boxShadow: "0 8px 20px -8px rgba(0,0,0,0.4)" },
+                                            }}
+                                        >
+
+                                            {/* <CardHeader
+                                                title={proyecto.proyecto_id}
+                                                subheader={`${proyecto.estado === 0 ? 'Pendiente de asignación' :
+                                                    proyecto.estado === 1 ? 'Proyecto en ejecución' :
+                                                        proyecto.estado === 2 ? 'Proyecto finalizado' :
+                                                            proyecto.estado
+                                                    }`}
+                                                sx={{ color: palette.primary, fontWeight: 600 }}
+                                                subheaderTypographyProps={{ color: palette.textMuted }}
+                                            /> */}
+
                                             <CardContent>
+                                                <Typography variant="h6" sx={{ color: palette.textPrimary, fontWeight: 600 }}>
+                                                    {proyecto.proyecto_id}
+                                                </Typography>
+                                                <Divider sx={{ my: 1, borderColor: palette.borderSubtle }} />
+                                                <Typography variant="body2" sx={{ color: palette.textMuted }}>
+                                                    {proyecto.estado === 0 ? 'Pendiente de asignación' :
+                                                        proyecto.estado === 1 ? 'Proyecto en ejecución' :
+                                                            proyecto.estado === 2 ? 'Proyecto finalizado' :
+                                                                proyecto.estado
+                                                    }
+                                                </Typography>
                                                 <Typography variant="body2" sx={{ color: palette.textPrimary }}>
                                                     <strong>Pendientes por revisar:</strong> {proyecto.q_pendiente || '0'}
                                                 </Typography>
                                             </CardContent>
-                                    </Card>
+                                        </Card>
+                                    </Fade>
                                 </Grid>
                             ))}
                         </Grid>

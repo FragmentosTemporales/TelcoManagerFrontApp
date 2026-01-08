@@ -14,6 +14,7 @@ import {
     FormControl,
     Select,
     MenuItem,
+    Fade,
 } from "@mui/material";
 import PushPinIcon from '@mui/icons-material/PushPin';
 import { useEffect, useState } from "react";
@@ -438,95 +439,99 @@ export default function OnnetProyecto() {
                         </Paper>
 
                         {asignados && asignados.length > 0 ? (
-                            <Paper
-                                elevation={10}
-                                sx={{
-                                    background: palette.cardBg,
-                                    width: "90%",
-                                    border: `1px solid ${palette.borderSubtle}`,
-                                    borderRadius: 3,
-                                    backdropFilter: 'blur(6px)',
-                                    position: 'relative',
-                                    overflow: 'hidden',
-                                    mb: 2,
-                                    '&:before': {
-                                        content: '""',
-                                        position: 'absolute',
-                                        inset: 0,
-                                        background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)',
-                                        pointerEvents: 'none'
-                                    }
-                                }}
-                            >
-                                <Box sx={{ p: 2, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                    <Typography variant="h6" sx={{ color: palette.primary, fontWeight: 600 }}>
-                                        ASIGNADOS AL PROYECTO
-                                    </Typography>
-                                </Box>
-                                <Divider sx={{ width: '100%', borderColor: palette.bgGradient }} />
-                                <Grid container sx={{ width: '100%', p: 2 }}>
-                                    {asignados.map((asignado, index) => (
-                                        <Grid item xs={12} sm={6} md={4} key={index} >
-                                            <Card
-                                                onClick={() => {
-                                                    setAsignadoSeleccionado(asignado);
-                                                    setFormComponenteTipo({ ...formComponenteTipo, asignado_id: asignado.id });
-                                                }}
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    width: { xs: '90%', sm: '80%', md: '80%' },
-                                                    minHeight: 60,
-                                                    p: 2.5,
-                                                    borderRadius: 3,
-                                                    my: 2,
-                                                    mx: 'auto',
-                                                    textAlign: 'center',
-                                                    textDecoration: 'none',
-                                                    boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
-                                                    transition: 'all .35s',
-                                                    background: `linear-gradient(135deg, ${palette.accentSoft} 80%, #fff 100%)`,
-                                                    cursor: 'pointer',
-                                                    position: 'relative',
-                                                    border: asignadoSeleccionado?.id === asignado.id ? `2px solid ${palette.accent}` : `2px solid transparent`,
-                                                    '&:hover': {
-                                                        transform: 'translateY(-6px) scale(1.03)',
-                                                        boxShadow: '0 12px 32px -6px rgba(0,0,0,0.22), 0 6px 16px -2px rgba(0,0,0,0.18)',
-                                                        borderColor: palette.accent,
-                                                    },
-                                                    '&:active': {
-                                                        transform: 'translateY(-2px) scale(1.01)',
-                                                        boxShadow: '0 6px 16px -6px rgba(0,0,0,0.18)',
-                                                    },
-                                                }}>
-                                                <Typography variant="body1" sx={{ color: palette.primary, fontWeight: 600 }}>
-                                                    {asignadoSeleccionado?.id === asignado.id ? (
-                                                        <>
-                                                            <PushPinIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-                                                            {asignado.empresa.nombre}
-                                                        </>
-                                                    ) : asignado.empresa.nombre}
-                                                </Typography>
-                                                <Divider sx={{ width: '80%', my: 1, borderColor: palette.borderSubtle }} />
-                                                <Typography variant="body1" sx={{ color: palette.textMuted, fontWeight: 500, m: 0.5 }}>
-                                                    {asignado.user.nombre}
-                                                </Typography>
-                                                <Typography variant="body1" sx={{ color: palette.textMuted, fontWeight: 500, m: 0.5 }}>
-                                                    {asignado.subgrupo ? asignado.subgrupo.charAt(0).toUpperCase() + asignado.subgrupo.slice(1) : 'Sin subgrupo asignado'}
-                                                </Typography>
-                                                <Typography variant="body1" sx={{ color: palette.textMuted, fontWeight: 500, m: 0.5 }}>
-                                                    {asignado.componente.length} componentes asignados
-                                                </Typography>
-                                            </Card>
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                            </Paper>
+                            <Fade in={true} timeout={1000}>
+                                <Paper
+                                    elevation={10}
+                                    sx={{
+                                        background: palette.cardBg,
+                                        width: "90%",
+                                        border: `1px solid ${palette.borderSubtle}`,
+                                        borderRadius: 3,
+                                        backdropFilter: 'blur(6px)',
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                        mb: 2,
+                                        '&:before': {
+                                            content: '""',
+                                            position: 'absolute',
+                                            inset: 0,
+                                            background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)',
+                                            pointerEvents: 'none'
+                                        }
+                                    }}
+                                >
+                                    <Box sx={{ p: 2, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Typography variant="h6" sx={{ color: palette.primary, fontWeight: 600 }}>
+                                            ASIGNADOS AL PROYECTO
+                                        </Typography>
+                                    </Box>
+                                    <Divider sx={{ width: '100%', borderColor: palette.bgGradient }} />
+                                    <Grid container sx={{ width: '100%', p: 2 }}>
+                                        {asignados.map((asignado, index) => (
+                                            <Grid item xs={12} sm={6} md={4} key={index} >
+
+                                                <Card
+                                                    onClick={() => {
+                                                        setAsignadoSeleccionado(asignado);
+                                                        setFormComponenteTipo({ ...formComponenteTipo, asignado_id: asignado.id });
+                                                    }}
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        width: { xs: '90%', sm: '80%', md: '80%' },
+                                                        minHeight: 60,
+                                                        p: 2.5,
+                                                        borderRadius: 3,
+                                                        my: 2,
+                                                        mx: 'auto',
+                                                        textAlign: 'center',
+                                                        textDecoration: 'none',
+                                                        boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
+                                                        transition: 'all .35s',
+                                                        background: `linear-gradient(135deg, ${palette.accentSoft} 80%, #fff 100%)`,
+                                                        cursor: 'pointer',
+                                                        position: 'relative',
+                                                        border: asignadoSeleccionado?.id === asignado.id ? `2px solid ${palette.accent}` : `2px solid transparent`,
+                                                        '&:hover': {
+                                                            transform: 'translateY(-6px) scale(1.03)',
+                                                            boxShadow: '0 12px 32px -6px rgba(0,0,0,0.22), 0 6px 16px -2px rgba(0,0,0,0.18)',
+                                                            borderColor: palette.accent,
+                                                        },
+                                                        '&:active': {
+                                                            transform: 'translateY(-2px) scale(1.01)',
+                                                            boxShadow: '0 6px 16px -6px rgba(0,0,0,0.18)',
+                                                        },
+                                                    }}>
+                                                    <Typography variant="body1" sx={{ color: palette.primary, fontWeight: 600 }}>
+                                                        {asignadoSeleccionado?.id === asignado.id ? (
+                                                            <>
+                                                                <PushPinIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} />
+                                                                {asignado.empresa.nombre}
+                                                            </>
+                                                        ) : asignado.empresa.nombre}
+                                                    </Typography>
+                                                    <Divider sx={{ width: '80%', my: 1, borderColor: palette.borderSubtle }} />
+                                                    <Typography variant="body1" sx={{ color: palette.textMuted, fontWeight: 500, m: 0.5 }}>
+                                                        {asignado.user.nombre}
+                                                    </Typography>
+                                                    <Typography variant="body1" sx={{ color: palette.textMuted, fontWeight: 500, m: 0.5 }}>
+                                                        {asignado.subgrupo ? asignado.subgrupo.charAt(0).toUpperCase() + asignado.subgrupo.slice(1) : 'Sin subgrupo asignado'}
+                                                    </Typography>
+                                                    <Typography variant="body1" sx={{ color: palette.textMuted, fontWeight: 500, m: 0.5 }}>
+                                                        {asignado.componente.length} componentes asignados
+                                                    </Typography>
+                                                </Card>
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                </Paper>
+                            </Fade>
                         ) : null}
 
                         {asignadoSeleccionado ? (
+                            <Fade in={true} timeout={1000}>
                             <Paper
                                 elevation={10}
                                 sx={{
@@ -672,6 +677,7 @@ export default function OnnetProyecto() {
                                 </Box>
 
                             </Paper>
+                            </Fade>
                         ) : null}
                     </>
                 )}
