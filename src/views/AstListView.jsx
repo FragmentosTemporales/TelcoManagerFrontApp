@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Modal,
   Skeleton,
   Table,
   TableBody,
@@ -15,6 +16,7 @@ import {
   TableHead,
   TextField,
   Typography,
+  Divider,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -28,6 +30,7 @@ import {
   getDataCCStats,
   getAstHistoricoExcel,
   getAstUsers,
+  getAstUsersNoActualizados
 } from "../api/prevencionAPI";
 import { Link } from "react-router-dom";
 import { MainLayout } from "./Layout";
@@ -48,6 +51,10 @@ function FormAstList() {
   const [centroCosto, setCentroCosto] = useState({ centro: "VTR RM" });
   const [form, setForm] = useState({ fecha: "", numDoc: "" });
   const [selectedUser, setSelectedUser] = useState(null); // Nuevo estado para Autocomplete
+  const [noActualizados, setNoActualizados] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleCloseModal = () => setOpenModal(false);
 
   const extractDate = (gmtString) => {
     const date = new Date(gmtString);
@@ -77,12 +84,26 @@ function FormAstList() {
     } finally {
       setIsLoading(false);
       setIsSubmitting(false);
-      window.scrollTo(0, 0); // Scroll to top after fetching data
+      window.scrollTo(0, 0);
     }
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  const fetchNoActualizados = async () => {
+    try {
+      const res = await getAstUsersNoActualizados();
+      setNoActualizados(res);
+      console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNoActualizados();
   }, []);
 
   const handleSubmit = (e) => {
@@ -207,7 +228,7 @@ function FormAstList() {
         mb: 2,
         mt: 2,
         display: "flex",
-        justifyContent: "start",
+        justifyContent: "space-between",
       }}
     >
       <Button
@@ -215,7 +236,14 @@ function FormAstList() {
         disabled={isSubmitting}
         sx={{ ...gradientBtn, width: 260, height: 44, borderRadius: 2 }}
       >
-        {isSubmitting ? "Procesando..." : "Descargar Excel"}
+        {isSubmitting ? "Procesando..." : "DESCARGAR EXCEL"}
+      </Button>
+      <Button
+        onClick={() => setOpenModal(true)}
+        disabled={!noActualizados || noActualizados.length === 0}
+        sx={{ ...gradientBtn, width: 260, height: 44, borderRadius: 2 }}
+      >
+        VER NO ACTUALIZADOS
       </Button>
     </Box>
   );
@@ -710,6 +738,55 @@ function FormAstList() {
           subtitle="Listado, filtros y estadísticas de AST"
           divider
         />
+        <Modal open={openModal} onClose={handleCloseModal}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: { xs: "90%", sm: 600, md: 800 },
+              maxHeight: "80vh",
+              bgcolor: "background.paper",
+              border: `2px solid ${palette.primary}`,
+              boxShadow: 24,
+              p: 4,
+              overflowY: "auto",
+              borderRadius: 3,
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Usuarios No Actualizados
+            </Typography>
+            {noActualizados && noActualizados.length > 0 ? (
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        <Typography fontWeight={700}>NOMBRE</Typography>
+                        </TableCell>
+                      <TableCell>
+                        <Typography fontWeight={700}>
+                        RUT</Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {noActualizados.map((user, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{user.nombre}</TableCell>
+                        <TableCell>{user.RUT}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            ) : (
+              <Typography>No hay usuarios no actualizados.</Typography>
+            )}
+          </Box>
+        </Modal>
         {statsCard()}
         {filterCard()}
         {downloadExcel()}

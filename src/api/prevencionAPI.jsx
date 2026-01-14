@@ -36,6 +36,15 @@ export const getAstUsers = async () => {
   }
 };
 
+export const getAstUsersNoActualizados = async () => {
+  try {
+    const response = await client.get('/get-no-actualizados-ast');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
 export const getNotAstCC = async () => {
   try {
     const response = await client.get('/get-ast-data-centro-costo');
