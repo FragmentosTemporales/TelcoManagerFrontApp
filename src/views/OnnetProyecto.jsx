@@ -237,6 +237,40 @@ export default function OnnetProyecto() {
         }
     };
 
+    const onSubmitComponenteUnitario = async () => {
+        setIsSubmitting(true);
+        try {
+            if (formComponenteTipo.tipo_id === "" || formComponenteTipo.referencia === "") {
+                setMessage("Por favor, complete todos los campos del formulario.");
+                setAlertType("warning");
+                setOpen(true);
+                setIsSubmitting(false);
+                return;
+            }
+            const componentePayload = {
+                proyecto_id: proyecto_id,
+                asignado_id: formComponenteTipo.asignado_id,
+                tipo_id: formComponenteTipo.tipo_id,
+                referencia: formComponenteTipo.referencia,
+            };
+            await createComponenteOnnet(componentePayload);
+            fetchProyectoData();
+            setFormComponenteTipo({
+                referencia: "",
+                proyecto_id: proyecto_id,
+                asignado_id: "",
+                tipo_id: "",
+            });
+        } catch (error) {
+            setMessage(error);
+            setAlertType("error");
+            setOpen(true);
+        }
+        finally {
+            setIsSubmitting(false);
+        }
+    };
+
     useEffect(() => {
         if (asignadoSeleccionado?.componente) {
             setComponentes(asignadoSeleccionado.componente);
@@ -455,7 +489,7 @@ export default function OnnetProyecto() {
                                         size="small"
                                         disabled={userList.length === 0}
                                     >
-                                        <MenuItem value="">Ninguno</MenuItem>
+                                        <MenuItem value="">Conjunto</MenuItem>
                                         <MenuItem value="linea">Linea</MenuItem>
                                         <MenuItem value="empalme">Empalme</MenuItem>
                                     </Select>
@@ -649,6 +683,91 @@ export default function OnnetProyecto() {
                                             >
                                                 {isSubmitting ? 'Creando...' : 'Crear Serie de Componentes'}
                                             </Button>
+                                        </Box>
+                                    </Box>
+                                </Paper>
+                            </Fade>
+                        ) : null}
+
+                        {asignadoSeleccionado ? (
+                            <Fade in={true} timeout={1000}>
+                                <Paper
+                                    elevation={10}
+                                    sx={{
+                                        background: palette.cardBg,
+                                        width: "90%",
+                                        border: `1px solid ${palette.borderSubtle}`,
+                                        borderRadius: 3,
+                                        backdropFilter: 'blur(6px)',
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                        mb: 2,
+                                        '&:before': {
+                                            content: '""',
+                                            position: 'absolute',
+                                            inset: 0,
+                                            background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)',
+                                            pointerEvents: 'none'
+                                        }
+                                    }}
+                                >
+                                    <Box sx={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        flexDirection: 'column',
+                                        my: 2,
+                                    }}>
+                                        
+                                        <Box sx={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            flexDirection: 'column',
+                                            mb: 2,
+                                        }}>
+                                            <Typography variant="h6" sx={{ color: palette.primary, fontWeight: 600 }}>
+                                                CREAR COMPONENTE UNITARIO
+                                            </Typography>
+                                            <Divider sx={{ width: '90%', my: 2, borderColor: palette.borderSubtle }} />
+                                            <Box sx={{ mt: 1, display: 'flex', flexDirection: { xs: 'column', md: 'row', lg: 'row' }, justifyContent: 'center', alignItems: 'center' }}>
+                                                <FormControl sx={{ minWidth: 200, mr: 2 }}>
+                                                    <InputLabel id="filter-tipo-label">Tipo</InputLabel>
+                                                    <Select
+                                                        labelId="filter-tipo-label"
+                                                        id="filter-tipo"
+                                                        value={formComponenteTipo.tipo_id || ''}
+                                                        label="Tipo"
+                                                        onChange={(e) => setFormComponenteTipo({ ...formComponenteTipo, tipo_id: e.target.value || null })}
+                                                        sx={{ minWidth: 250, backdropFilter: 'blur(6px)' }}
+                                                        size="small"
+                                                    >
+                                                        {componentesTipos && componentesTipos.map((tipo) => (
+                                                            <MenuItem key={tipo.id} value={tipo.id}>{tipo.nombre}</MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+
+                                                <TextField
+                                                    label="Referencia Inicial"
+                                                    variant="outlined"
+                                                    value={formComponenteTipo.referencia}
+                                                    onChange={(e) => setFormComponenteTipo({ ...formComponenteTipo, referencia: e.target.value || '' })}
+                                                    sx={{ minWidth: 250, mr: 2, mt: { xs: 1, md: 1, lg: 0 }, backdropFilter: 'blur(6px)' }}
+                                                    size="small"
+                                                />
+
+                                                <Button
+                                                    sx={{ minWidth: 250, mr: 2, mt: { xs: 1, md: 1, lg: 0 }, background: palette.primary, "&:hover": { background: palette.primaryDark } }}
+                                                    variant="contained"
+                                                    onClick={onSubmitComponenteUnitario}
+                                                    disabled={isSubmitting}
+                                                >
+                                                    {isSubmitting ? 'Creando...' : 'Crear Componente Unitario'}
+                                                </Button>
+                                            </Box>
                                         </Box>
                                     </Box>
 
