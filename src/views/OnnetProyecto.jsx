@@ -19,7 +19,6 @@ import {
 import PushPinIcon from '@mui/icons-material/PushPin';
 import { useEffect, useState } from "react";
 import { useParams, Link, Form } from "react-router-dom";
-
 import { MainLayout } from "./Layout";
 import palette from "../theme/palette";
 import ModuleHeader from "../components/ModuleHeader";
@@ -47,6 +46,8 @@ export default function OnnetProyecto() {
 
     const [componentes, setComponentes] = useState([]);
     const [pendientesMap, setPendientesMap] = useState({});
+    const [aprobadosMap, setAprobadosMap] = useState({});
+    const [rechazadosMap, setRechazadosMap] = useState({});
 
     const [componentesTipos, setComponentesTipos] = useState([]);
 
@@ -78,18 +79,32 @@ export default function OnnetProyecto() {
 
     const fetchAllPendientes = async (componentesList) => {
         const pendientesObj = {};
+        const aprobadosObj = {};
+        const rechazadosObj = {};
         await Promise.all(
             (componentesList || []).map(async (componente) => {
                 try {
                     const pendientes = await getPendientesComponente(componente.id);
+
                     const pendientes2 = pendientes.pendientes;
                     pendientesObj[componente.id] = `Pendientes: ${pendientes2[0].q_pendiente ?? 0}`;
+
+                    const aprobados2 = pendientes.pendientes;
+                    aprobadosObj[componente.id] = `Aprobados: ${aprobados2[0].q_aprobada ?? 0}`;
+
+                    const rechazados2 = pendientes.pendientes;
+                    rechazadosObj[componente.id] = `Rechazados: ${rechazados2[0].q_rechazada ?? 0}`;
+
                 } catch (error) {
                     pendientesObj[componente.id] = 'Pendientes: 0';
+                    aprobadosObj[componente.id] = 'Aprobados: 0';
+                    rechazadosObj[componente.id] = 'Rechazados: 0';
                 }
             })
         );
         setPendientesMap(pendientesObj);
+        setAprobadosMap(aprobadosObj);
+        setRechazadosMap(rechazadosObj);
     };
 
     useEffect(() => {
@@ -852,19 +867,24 @@ export default function OnnetProyecto() {
                                                         }}
                                                     >
                                                         <Typography variant="subtitle1" sx={{ width: '100%', color: palette.accent, fontWeight: 700, fontSize: 20, mb: 0.5, letterSpacing: 0.5 }}>
-                                                            REFERENCIA : {componente.referencia}
+                                                            {componente.componentetipo.nombre}
                                                         </Typography>
 
                                                         <Divider sx={{ width: '80%', my: 1, borderColor: palette.borderSubtle }} />
 
-                                                        <Typography variant="body2" sx={{ color: palette.primary, fontWeight: 600, fontSize: 15 }}>
-                                                            {componente.componentetipo.nombre}
+                                                        <Typography variant="body2" sx={{ color: palette.primary, fontWeight: 600, fontSize: 15, width: "100%", textAlign: 'left' }}>
+                                                            {componente.referencia}
                                                         </Typography>
 
-                                                        <Typography variant="body2" sx={{ color: palette.primary, fontWeight: 600, fontSize: 15 }}>
+                                                        <Typography variant="body2" sx={{ color: palette.primary, fontWeight: 600, fontSize: 15, width: "100%", textAlign: 'left' }}>
                                                             {pendientesMap[componente.id] ?? 'Cargando pendientes...'}
                                                         </Typography>
-
+                                                        <Typography variant="body2" sx={{ color: palette.primary, fontWeight: 600, fontSize: 15, width: "100%", textAlign: 'left' }}>
+                                                            {aprobadosMap[componente.id] ?? 'Cargando aprobados...'}
+                                                        </Typography>
+                                                        <Typography variant="body2" sx={{ color: palette.primary, fontWeight: 600, fontSize: 15, width: "100%", textAlign: 'left' }}>
+                                                            {rechazadosMap[componente.id] ?? 'Cargando rechazados...'}
+                                                        </Typography>
                                                     </Box>
                                                 </Grid>
                                             ))
@@ -877,7 +897,6 @@ export default function OnnetProyecto() {
                     </>
                 )}
             </Box>
-
         </MainLayout>
     );
 }

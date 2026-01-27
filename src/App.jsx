@@ -1,66 +1,72 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
-import PrivateRoutes from "./utils/PrivateRoutes";
-import CreateArea from "./views/CreateArea";
-import Home from "./views/Home";
-import Login from "./views/Login";
-import Solicitudes from "./views/Solicitudes";
-import Solicitud from "./views/Solicitud";
-import FormFlota from "./views/CreateFormFlota";
-import FormPrevencion from "./views/CreateFormPrevencion";
-import FormCalidad from "./views/CreateFormCalidad";
-import FormRRHH from "./views/CreateFormRRHH";
-import FormOperaciones from "./views/CreateFormOperaciones";
-import FormLogistica from "./views/CreateFormLogistica";
-import ReversaView from "./views/Reversa";
-import ObjetivosView from "./views/Objetivos";
-import FormAstList from "./views/AstListView";
-import AstViewer from "./views/AstFormView";
-import Settings from "./views/Settings";
-import BodegaViewer from "./views/BodegaView";
-import BodegaQuintaViewer from "./views/BodegaQuintaView";
-import AtencionTotem from "./views/AtencionTotem";
-import SupervisorViewRM from "./views/SupervisorViewRM";
-import AgendamientoViewer from "./views/AgendamientoView";
-import AllAgendamientoViewer from "./views/AllAgendamientosView";
-import AmonesatacionesViewer from "./views/AmonestacionesUserView";
-import ErrorHandler from "./utils/404NotFound";
-import ProyectosOnNetView from "./views/ProyectosConsolidadosView";
-import LoadConstruccion from "./views/PlanillaConstruccion";
-import TicketeraView from "./views/CreateTicket";
-import GestorTicketera from "./views/GestionTickets";
-import TicketViewer from "./views/TicketView";
-import CreateMigracionesProactivas from "./views/CreateMigracionesProactivas";
-import MigracionesViewer from "./views/MigracionesView";
-import ProyectoInternoView from "./views/Proyecto_InternoView";
-import NDCSinConsumoUpdate from "./views/NdcSinConsumoView";
-import CreateProyectoInterno from "./views/CreateProyectoInterno";
-import LogQueryStats from "./views/LogQueryStatsView";
-import NDCErrorConConsumo from "./views/NdcErrorConConsumoView";
-import NDCLogsError from "./views/NdcLogsErrorsView";
-import NDCSessionLogs from "./views/NdcSessionLogsView";
-import CreateReparacionView from "./views/CreateReparacion";
-import ReparacionesView from "./views/ReparacionesView";
-import InventarioView from "./views/InventarioView";
-import CreateTareaInterna from "./views/CreateTarea";
-import LatestLogsView from "./views/LatestLogsView";
-import ProyectoFiltradoCubicado from "./views/ProyectoFiltradoCubicado";
-import ProyectosLinkVNOView from "./views/ProyectosLinkVNOView";
-import ProyectoFiltradoVNO from "./views/ProyectoFiltradoVNO";
-import RepaView from "./views/RepaView";
-import ReparacionesInfoEdit from "./views/ReparacionesInfoEdit";
-import RespaldosView from "./views/RespaldosView";
-import RespaldoView from "./views/RespaldoView";
-import OnnetProyectos from "./views/OnnetProyectos";
-import OnnetProyecto from "./views/OnnetProyecto";
-import OnnetFormularioComponentes from "./views/OnnetFormularioComponentes";
-import OnnetComponente from "./views/OnnetComponente";
+import {PrivateRoutes, ErrorHandler} from "./utils";
+import {
+  AgendamientoViewer
+  ,AllAgendamientoViewer
+  ,AmonesatacionesViewer
+  ,AstViewer
+  ,AtencionTotem
+  ,BodegaQuintaViewer
+  ,BodegaViewer
+  ,CreateArea
+  ,CreateMigracionesProactivas
+  ,CreateProyectoInterno
+  ,CreateReparacionView
+  ,CreateTareaInterna
+  ,FormulariosCalidadReactiva
+  ,FormAstList
+  ,FormCalidad
+  ,FormRRHH
+  ,FormFlota
+  ,FormLogistica
+  ,FormOperaciones
+  ,FormPrevencion
+  ,GestorTicketera
+  ,Home
+  ,InventarioView
+  ,LatestLogsView
+  ,LogQueryStats
+  ,LoadConstruccion
+  ,Login
+  ,MigracionesViewer
+  ,NDCLogsError
+  ,NDCSessionLogs
+  ,NDCSinConsumoUpdate
+  ,NDCErrorConConsumo
+  ,OnnetComponente
+  ,ObjetivosView
+  ,OnnetProyecto
+  ,OnnetProyectos
+  ,OnnetFormularioComponentes
+  ,ProyectoFiltradoCubicado
+  ,ProyectoFiltradoVNO
+  ,ProyectosLinkVNOView
+  ,ProyectoInternoView
+  ,ProyectosOnNetView
+  ,ReparacionesInfoEdit
+  ,RepaView
+  ,ReparacionesView
+  ,RespaldoView
+  ,RespaldosView
+  ,ReversaView
+  ,Settings
+  ,Solicitud
+  ,Solicitudes
+  ,SupervisorViewRM
+  ,TicketeraView
+  ,TicketViewer
+} from "./views";
 
 function App() {
   return (
     <HashRouter>
+
       <Routes>
+
         <Route element={<PrivateRoutes />}>
+
           <Route path="/" element={<Home />} />
+
           <Route path="/mis-solicitudes" element={<AmonesatacionesViewer />} />
           <Route path="/modulo:solicitudes" element={<Solicitudes />} />
           <Route path="/solicitud/:solicitud_id" element={<Solicitud />} />
@@ -71,19 +77,29 @@ function App() {
           <Route path="/RECURSOS HUMANOS/:logID" element={<FormRRHH />} />
           <Route path="/OPERACIONES/:logID" element={<FormOperaciones />} />
           <Route path="/LOGISTICA/:logID" element={<FormLogistica />} />
+
           <Route path="/modulo:reversa" element={<ReversaView />} />
+
           <Route path="/objetivos" element={<ObjetivosView />} />
+
           <Route path="/form-ast-list" element={<FormAstList />} />
           <Route path="/formulario-ast/:formID" element={<AstViewer />} />
+
           <Route path="/configuraciones" element={<Settings />} />
+
           <Route path="/totem" element={<AtencionTotem />} />
+
           <Route path="/supervisor" element={<SupervisorViewRM />} />
+
           <Route path="/agendamientos" element={<AgendamientoViewer />} />
           <Route path="/all_agendamientos" element={<AllAgendamientoViewer />} />
+
           <Route path="/carga-construccion" element={<LoadConstruccion />} />
+
           <Route path="/modulo:ticketera" element={<TicketeraView />} />
           <Route path="/modulo:gestion-ticketera" element={<GestorTicketera />} />
           <Route path="/ticketviewer/:logID" element={<TicketViewer />} />
+
           <Route path="/modulo:create-migracion-proactiva" element={<CreateMigracionesProactivas />} />
           <Route path="/modulo:migraciones-proactivas" element={<MigracionesViewer />} />
 
@@ -119,12 +135,19 @@ function App() {
           <Route path="onnet/modulo/formulario-construccion" element={<OnnetFormularioComponentes />} />
           <Route path="/onnet/modulo/componente/:componente_id" element={<OnnetComponente />} />
 
+          <Route path="/modulo:formulario-calidad-reactiva" element={<FormulariosCalidadReactiva />} />
+
         </Route>
+
         <Route path="/bodegaRM" element={<BodegaViewer />} />
         <Route path="/bodegaQuinta" element={<BodegaQuintaViewer />} />
+
         <Route path="/loginPage" element={<Login />} />
+
         <Route path="*" element={<ErrorHandler/>} />
+
       </Routes>
+
   </HashRouter>
   );
 }

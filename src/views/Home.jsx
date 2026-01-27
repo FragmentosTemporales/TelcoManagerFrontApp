@@ -29,10 +29,16 @@ function Home() {
       moduloID: 1030,
     },
     {
-      head: "ONNET Construcción Formularios",
-      title: "Gestiona los formularios asociados a los componentes de construcción OnNet",
-      link: "/onnet/modulo/formulario-construccion",
+      head: "ONNET Construcción",
+      title: "Gestiona los proyectos de construcción OnNet",
+      link: "/onnet/modulo/proyectos",
       moduloID: 1030,
+    },
+    {
+      head: "Formularios Calidad Reactiva",
+      title: "Gestiona los formularios asociados a calidad reactiva",
+      link: "/modulo:formulario-calidad-reactiva",
+      moduloID: 1031,
     },
     {
       head: "NDC_Bot Manager",

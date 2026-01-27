@@ -37,7 +37,7 @@ export default function OnnetComponente() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const [medicionCtoData, setMedicionCtoData] = useState([]);
+    const [formulario, setFormulario] = useState(null);
 
     const [openModal, setOpenModal] = useState(false);
     const [toUpdate, setToUpdate] = useState(null);
@@ -126,7 +126,7 @@ export default function OnnetComponente() {
         try {
             const data = await getUniqueComponenteOnnet(componente_id);
             setData(data);
-            setMedicionCtoData(data.medicioncto);
+            setFormulario(data.componentetipo.formulario || []);
             setRecursoData(data.recurso);
             setComponenteTipoData(data.componentetipo);
         } catch (error) {
@@ -136,6 +136,12 @@ export default function OnnetComponente() {
         }
         setLoading(false);
     };
+
+    useEffect(()=> {
+        if (formulario) {
+            console.log("Formulario actualizado:", formulario);
+        }
+    }, [formulario])
 
     useEffect(() => {
         if (componenteTipoData && componenteTipoData.formulario) {
@@ -1061,166 +1067,6 @@ export default function OnnetComponente() {
                                     </Typography>
                                 </>
                             )}
-
-                        {/* {medicionCtoData && medicionCtoData.length > 0 && (
-                            <Paper
-                                elevation={8}
-                                sx={{
-                                    background: palette.cardBg,
-                                    width: { lg: "50%", xs: "90%" },
-                                    my: 1,
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    flexDirection: "column",
-                                    border: `1px solid ${palette.borderSubtle}`,
-                                    borderRadius: 3,
-                                    backdropFilter: 'blur(4px)',
-                                    boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
-                                }}>
-                                <Box sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center',
-                                    py: 1,
-                                    width: '100%',
-                                }}>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: palette.primary,
-                                            fontWeight: "bold",
-                                            textAlign: 'center'
-                                        }}>
-                                        MEDICIONES CTO
-                                    </Typography>
-                                    <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
-                                    {medicionCtoData.map((medicion) => (
-                                        <Box key={medicion.id} sx={{ width: "100%" }}>
-                                            <Box
-                                                sx={{
-                                                    my: 1,
-                                                    display: 'flex',
-                                                    flexDirection: { lg: 'row', xs: 'column' },
-                                                    justifyContent: { lg: 'space-around', xs: 'center' }
-                                                }}
-                                            >
-                                                <Typography
-                                                    variant="h6"
-                                                    sx={{
-                                                        color: palette.textPrimary,
-                                                        textAlign: 'center'
-                                                    }}
-                                                >
-                                                    <span style={{ fontWeight: 'bold' }}>MEDICION 1 :</span>{' '}
-                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{medicion.value_1}</span>
-                                                </Typography>
-                                                <Typography
-                                                    variant="h6"
-                                                    sx={{
-                                                        color: palette.textPrimary,
-                                                        textAlign: 'center'
-                                                    }}
-                                                >
-                                                    <span style={{ fontWeight: 'bold' }}>MEDICION 2 :</span>{' '}
-                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{medicion.value_2}</span>
-                                                </Typography>
-                                            </Box>
-                                            <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
-                                            <Box
-                                                sx={{
-                                                    my: 1,
-                                                    display: 'flex',
-                                                    flexDirection: { lg: 'row', xs: 'column' },
-                                                    justifyContent: { lg: 'space-around', xs: 'center' }
-                                                }}
-                                            >
-                                                <Typography
-                                                    variant="h6"
-                                                    sx={{
-                                                        color: palette.textPrimary,
-                                                        textAlign: 'center'
-                                                    }}
-                                                >
-                                                    <span style={{ fontWeight: 'bold' }}>MEDICION 3 :</span>{' '}
-                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{medicion.value_3}</span>
-                                                </Typography>
-                                                <Typography
-                                                    variant="h6"
-                                                    sx={{
-                                                        color: palette.textPrimary,
-                                                        textAlign: 'center'
-                                                    }}
-                                                >
-                                                    <span style={{ fontWeight: 'bold' }}>MEDICION 4 :</span>{' '}
-                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{medicion.value_4}</span>
-                                                </Typography>
-                                            </Box>
-                                            <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
-                                            <Box
-                                                sx={{
-                                                    my: 1,
-                                                    display: 'flex',
-                                                    flexDirection: { lg: 'row', xs: 'column' },
-                                                    justifyContent: { lg: 'space-around', xs: 'center' }
-                                                }}
-                                            >
-                                                <Typography
-                                                    variant="h6"
-                                                    sx={{
-                                                        color: palette.textPrimary,
-                                                        textAlign: 'center'
-                                                    }}
-                                                >
-                                                    <span style={{ fontWeight: 'bold' }}>MEDICION 5 :</span>{' '}
-                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{medicion.value_5}</span>
-                                                </Typography>
-                                                <Typography
-                                                    variant="h6"
-                                                    sx={{
-                                                        color: palette.textPrimary,
-                                                        textAlign: 'center'
-                                                    }}
-                                                >
-                                                    <span style={{ fontWeight: 'bold' }}>MEDICION 6 :</span>{' '}
-                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{medicion.value_6}</span>
-                                                </Typography>
-                                            </Box>
-                                            <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
-                                            <Box
-                                                sx={{
-                                                    my: 1,
-                                                    display: 'flex',
-                                                    flexDirection: { lg: 'row', xs: 'column' },
-                                                    justifyContent: { lg: 'space-around', xs: 'center' }
-                                                }}
-                                            >
-                                                <Typography
-                                                    variant="h6"
-                                                    sx={{
-                                                        color: palette.textPrimary,
-                                                        textAlign: 'center'
-                                                    }}
-                                                >
-                                                    <span style={{ fontWeight: 'bold' }}>MEDICION 7 :</span>{' '}
-                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{medicion.value_7}</span>
-                                                </Typography>
-                                                <Typography
-                                                    variant="h6"
-                                                    sx={{
-                                                        color: palette.textPrimary,
-                                                        textAlign: 'center'
-                                                    }}
-                                                >
-                                                    <span style={{ fontWeight: 'bold' }}>MEDICION 8 :</span>{' '}
-                                                    <span style={{ color: palette.textSecondary, fontWeight: 'normal' }}>{medicion.value_8}</span>
-                                                </Typography>
-                                            </Box>
-                                        </Box>
-                                    ))}
-                                </Box>
-                            </Paper>
-                        )} */}
 
                     </>)}
             </Box>
