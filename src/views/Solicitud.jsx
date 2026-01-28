@@ -832,7 +832,7 @@ function Solicitud() {
 
     try {
       // Crear solicitud de gestión
-  const response = await createSG(formAnulacion);
+      const response = await createSG(formAnulacion);
 
       setAlertInfo("success");
 
@@ -875,7 +875,7 @@ function Solicitud() {
 
   const fetchData = async () => {
     try {
-  const res = await getUniqueSolicitud(solicitud_id);
+      const res = await getUniqueSolicitud(solicitud_id);
       setData(res);
       setValidate(res.userID);
       setDataGestiones(res.gestiones);
@@ -893,7 +893,7 @@ function Solicitud() {
   const downloadInforme = async () => {
     try {
       const payload = { file_path: filePath };
-  await downloadFile(payload);
+      await downloadFile(payload);
       console.log("Archivo descargado exitosamente");
     } catch (error) {
       console.error(error);
@@ -903,7 +903,7 @@ function Solicitud() {
   // COMPONENTES GENERALES DESDE AQUI
 
   const setTableEstado = () => (
-  <Box sx={{ width: '80%', mt: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, borderRadius: 3, overflow: 'hidden', backdropFilter: 'blur(4px)', boxShadow: '0 6px 20px -8px rgba(0,0,0,0.3)' }}>
+    <Box sx={{ width: '80%', mt: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, borderRadius: 3, overflow: 'hidden', backdropFilter: 'blur(4px)', boxShadow: '0 6px 20px -8px rgba(0,0,0,0.3)' }}>
       <TableContainer>
         <Table stickyHeader>
           <TableHead>
@@ -984,7 +984,7 @@ function Solicitud() {
   };
 
   const setDetallesView = () => (
-  <Box sx={{ width: '80%', mt: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, borderRadius: 3, backdropFilter: 'blur(4px)', boxShadow: '0 6px 20px -8px rgba(0,0,0,0.3)' }}>
+    <Box sx={{ width: '80%', mt: 2, background: palette.cardBg, border: `1px solid ${palette.borderSubtle}`, borderRadius: 3, backdropFilter: 'blur(4px)', boxShadow: '0 6px 20px -8px rgba(0,0,0,0.3)' }}>
       {dataForm !== false && dataForm !== null ? (
         setFormViewer()
       ) : (
@@ -1016,7 +1016,7 @@ function Solicitud() {
   );
 
   const setSolicitudView = () => (
-  <Box sx={{ width: '80%', mt: 2, background: palette.cardBg, borderRadius: 3, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)', boxShadow: '0 6px 20px -8px rgba(0,0,0,0.3)' }}>
+    <Box sx={{ width: '80%', mt: 2, background: palette.cardBg, borderRadius: 3, border: `1px solid ${palette.borderSubtle}`, backdropFilter: 'blur(4px)', boxShadow: '0 6px 20px -8px rgba(0,0,0,0.3)' }}>
       {[
         { label: "Fecha Solicitud :", value: extractDate(data.fechaSolicitud) },
         { label: "Folio :", value: data.folio },
@@ -1028,11 +1028,11 @@ function Solicitud() {
         { label: "Amonestado :", value: data.amonestado },
         { label: "Rut Amonestado :", value: data.rutAmonestado },
       ].map((item, index) => (
-    <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: index !== 8 ? `1px solid ${palette.borderSubtle}` : 'none', px: 1, py: .8, backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent' }}>
+        <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: index !== 8 ? `1px solid ${palette.borderSubtle}` : 'none', px: 1, py: .8, backgroundColor: index % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent' }}>
           <Typography
             sx={{
               width: { lg: "25%", md: "40%", sm: "50%", xs: "60%" },
-      color: palette.primary,
+              color: palette.primary,
               paddingLeft: 1,
             }}
           >
@@ -1040,7 +1040,7 @@ function Solicitud() {
           </Typography>
           <Typography
             sx={{
-      color: palette.textMuted,
+              color: palette.textMuted,
               width: "75%",
             }}
           >
@@ -1147,23 +1147,15 @@ function Solicitud() {
             <Link to="/modulo:solicitudes">
               <Button
                 variant="contained"
+                color="error"
                 sx={{
-                  background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primary} 85%)`,
-                  borderRadius: 2.5,
-                  width: 200,
-                  fontWeight: 600,
-                  letterSpacing: .5,
-                  color: 'white',
-                  border: `1px solid ${palette.accentSoft}`,
-                  boxShadow: '0 4px 14px -6px rgba(0,0,0,0.55)',
-                  textTransform: 'uppercase',
-                  transition: 'background .25s ease, box-shadow .25s ease, transform .25s ease',
+                  width: "200px",
                   '&:hover': {
-                    background: `linear-gradient(130deg, ${palette.accent} 0%, ${palette.primaryDark} 90%)`,
-                    boxShadow: '0 6px 18px -8px rgba(0,0,0,0.65)'
+                    transform: 'translateY(-3px)',
+                    boxShadow: '0 14px 28px -6px rgba(0,0,0,0.55), 0 4px 12px -2px rgba(0,0,0,0.45)',
                   },
-                  '&:active': { transform: 'translateY(1px)', boxShadow: '0 3px 10px -5px rgba(0,0,0,0.55)' },
-                  '&:focus-visible': { outline: `2px solid ${palette.accent}`, outlineOffset: 3 }
+                  '&:active': { transform: 'translateY(-1px)', boxShadow: '0 8px 18px -6px rgba(0,0,0,0.55)' },
+                  '&:focus-visible': { outline: '2px solid #ffffff', outlineOffset: 2 }
                 }}
               >
                 Volver

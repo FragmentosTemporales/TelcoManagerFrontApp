@@ -136,3 +136,43 @@ export const getRespaldosExcel = async () => {
     throw error.response?.data?.error || 'Error al descargar el archivo.';
   }
 };
+
+
+export const getFormulariosCalidadReactiva = async (page) => {
+  try {
+    const response = await client.get(`/GET/formularios-calidad-reactiva/${page}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+
+export const getFormularioCalidadReactiva = async (id) => {
+  try {
+    const response = await client.get(`/GET/formulario-calidad-reactiva/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+
+export const getFormulariosReactivosExcel = async () => {
+  try {
+    const response = await client.get('/GET/all-formularios-calidad-reactiva-excel', { responseType: 'blob' });
+
+    // Create a download link for the Excel file
+    const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = urlBlob;
+    link.setAttribute('download', 'formularios_calidad_reactiva.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    return 'Archivo descargado exitosamente.';
+  } catch (error) {
+    throw error.response?.data?.error || 'Error al descargar el archivo.';
+  }
+};

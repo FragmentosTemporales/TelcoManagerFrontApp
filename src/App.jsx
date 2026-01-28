@@ -20,6 +20,7 @@ import {
   ,FormFlota
   ,FormLogistica
   ,FormOperaciones
+  ,FormularioCalidadReactiva
   ,FormPrevencion
   ,GestorTicketera
   ,Home
@@ -136,6 +137,7 @@ function App() {
           <Route path="/onnet/modulo/componente/:componente_id" element={<OnnetComponente />} />
 
           <Route path="/modulo:formulario-calidad-reactiva" element={<FormulariosCalidadReactiva />} />
+          <Route path="/modulo:formulario-calidad-reactiva/:formulario_id" element={<FormularioCalidadReactiva />} />
 
         </Route>
 

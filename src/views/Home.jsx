@@ -29,9 +29,9 @@ function Home() {
       moduloID: 1030,
     },
     {
-      head: "ONNET Construcción",
-      title: "Gestiona los proyectos de construcción OnNet",
-      link: "/onnet/modulo/proyectos",
+      head: "ONNET Construcción Formularios",
+      title: "Gestiona los formularios asociados a los componentes de construcción OnNet",
+      link: "/onnet/modulo/formulario-construccion",
       moduloID: 1030,
     },
     {
