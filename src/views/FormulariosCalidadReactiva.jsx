@@ -49,8 +49,6 @@ export default function FormulariosCalidadReactiva() {
             const response = await getFormulariosCalidadReactiva(page);
             setData(response.data);
             setPages(response.pages || 1);
-
-            console.log("response", response);
         } catch (error) {
             setAlertType('error');
             setMessage(`Error al cargar los formularios: ${error}`);
@@ -152,10 +150,10 @@ export default function FormulariosCalidadReactiva() {
 
     const respaldoTable = () => (
         <Box sx={{ overflowX: "auto", width: "95%", my: 4 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="reparaciones-table" stickyHeader size="small">
+            <Table sx={{ minWidth: 650 }} aria-label="reparaciones-table" stickyHeader >
                 <TableHead>
                     <TableRow>
-                        {["FECHA", "ORDEN", "AREA RESPONSABILIDAD", "COD CIERRE", "SUB CATEGORÍA"].map((header) => (
+                        {["FECHA", "ORDEN TRABAJO", "ORDEN AVERIA", "AREA RESPONSABILIDAD", "COD CIERRE", "SUB CATEGORÍA"].map((header) => (
                             <TableCell
                                 key={header}
                                 align="center"
@@ -188,10 +186,11 @@ export default function FormulariosCalidadReactiva() {
                                 }}
                             >
                                 <TableCell align="center" width={"15%"}>{extractDateOnly(row.fecha_registro)}</TableCell>
-                                <TableCell align="center" width={"15%"} sx={{ fontWeight: "bold" }}>{row.orden ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"15%"} sx={{ fontWeight: "bold" }}>{row.orden_trabajo ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"15%"} sx={{ fontWeight: "bold" }}>{row.orden_averia ?? "N/A"}</TableCell>
                                 <TableCell align="center" width={"20%"}>{row.area_responsabilidad.descripcion ?? "N/A"}</TableCell>
                                 <TableCell align="center" width={"20%"}>{row.codigo_cierre.descripcion ?? "N/A"}</TableCell>
-                                <TableCell align="center" width={"20%"}>{row.sub_categoria.descripcion ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"20%"}>{row.sub_categoria ? row.sub_categoria.descripcion : "N/A"}</TableCell>
                             </TableRow>
                         ))
                     ) : (
@@ -270,7 +269,6 @@ export default function FormulariosCalidadReactiva() {
                             elevation={8}
                             sx={{
                                 background: palette.cardBg,
-                                height: "30vh",
                                 width: "90%",
                                 my: 3,
                                 display: "flex",

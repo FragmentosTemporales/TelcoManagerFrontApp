@@ -29,7 +29,7 @@ import { useSelector } from "react-redux";
 
 function ReparacionesView() {
     const authState = useSelector((state) => state.auth);
-    const { user_id, area, permisos } = authState;
+    const { permisos } = authState;
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [alertType, setAlertType] = useState(undefined);

@@ -2,25 +2,12 @@ import {
     Alert,
     Box,
     Button,
-    ButtonGroup,
-    Card,
-    CardActions,
-    CardMedia,
-    CardContent,
     CircularProgress,
     Divider,
     Grid,
-    Modal,
     Paper,
-    Table,
-    TableHead,
-    TableBody,
-    TableCell,
-    TableRow,
-    Chip,
     Typography,
     Fade,
-    Skeleton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -42,10 +29,8 @@ export default function FormularioCalidadReactiva() {
     const FetchData = async () => {
         setLoading(true);
         try {
-            console.log("Fetching data for page:");
             const response = await getFormularioCalidadReactiva(formulario_id);
             setData(response);
-            console.log("Data fetched:", response);
         } catch (error) {
             setAlertType('error');
             setMessage(`Error al cargar los formularios: ${error}`);
@@ -100,7 +85,7 @@ export default function FormularioCalidadReactiva() {
 
                 <ModuleHeader
                     title="Formulario Calidad Reactiva"
-                    subtitle={data ? `Detalle orden: ${data.orden}` : 'Cargando...'}
+                    subtitle={data ? `Detalle orden trabajo: ${data.orden_trabajo}` : 'Cargando...'}
                 />
                 <Box sx={{ width: '80%', overflow: 'hidden', mx: 'auto' }}>
                     <Link to="/modulo:formulario-calidad-reactiva">
@@ -168,7 +153,7 @@ export default function FormularioCalidadReactiva() {
                         >
                             <Box sx={{ mb: 2, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' } }}>
                                 <Typography variant="h5" sx={{ color: palette.primary, fontWeight: 700, letterSpacing: 1 }}>
-                                    ORDEN: {data.orden}
+                                    ORDEN TRABAJO: {data.orden_trabajo}
                                 </Typography>
                                 <Typography variant="subtitle1" sx={{ color: palette.textSecondary, fontWeight: 500, mt: { xs: 1, sm: 0 } }}>
                                     Fecha: {extractDateOnly(data.fecha_registro)}
@@ -197,7 +182,7 @@ export default function FormularioCalidadReactiva() {
                                         Sub Categoría
                                     </Typography>
                                     <Typography variant="body1" sx={{ color: palette.textPrimary, fontWeight: 600 }}>
-                                        {data.sub_categoria.descripcion || 'N/A'}
+                                        {data.sub_categoria ? data.sub_categoria.descripcion : 'N/A'}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -208,14 +193,56 @@ export default function FormularioCalidadReactiva() {
                                         {data.usuario.nombre || 'N/A'}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} sm={6}>
                                     <Typography variant="body2" sx={{ color: palette.textSecondary, fontWeight: 500, mb: 0.5 }}>
+                                        Fecha Orden
+                                    </Typography>
+                                    <Typography variant="body1" sx={{ color: palette.textPrimary, fontWeight: 600 }}>
+                                        {data.fecha_orden || 'N/A'}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant="body2" sx={{ color: palette.textSecondary, fontWeight: 500, mb: 0.5 }}>
+                                        Fecha Avería
+                                    </Typography>
+                                    <Typography variant="body1" sx={{ color: palette.textPrimary, fontWeight: 600 }}>
+                                        {data.fecha_averia || 'N/A'}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant="body2" sx={{ color: palette.textSecondary, fontWeight: 500, mb: 0.5 }}>
+                                        Región
+                                    </Typography>
+                                    <Typography variant="body1" sx={{ color: palette.textPrimary, fontWeight: 600 }}>
+                                        {data.region || 'N/A'}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant="body2" sx={{ color: palette.textSecondary, fontWeight: 500, mb: 0.5 }}>
+                                        Técnico repara
+                                    </Typography>
+                                    <Typography variant="body1" sx={{ color: palette.textPrimary, fontWeight: 600 }}>
+                                        {data.tecnico_repara || 'N/A'}
+                                    </Typography>
+                                </Grid>
+                                <Divider sx={{ width: '100%', my: 2 }} />
+                                <Grid item xs={12}>
+                                    <Typography variant="body2" sx={{ color: palette.textSecondary, fontWeight: 600, mb: 0.5 }}>
+                                        Nota cierre
+                                    </Typography>
+                                    <Typography variant="body1" sx={{ color: palette.textPrimary, fontWeight: 500 }}>
+                                        {data.notas_cierre || 'N/A'}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="body2" sx={{ color: palette.textSecondary, fontWeight: 600, mb: 0.5 }}>
                                         Comentarios
                                     </Typography>
                                     <Typography variant="body1" sx={{ color: palette.textPrimary, fontWeight: 500 }}>
                                         {data.comentarios || 'N/A'}
                                     </Typography>
                                 </Grid>
+
                             </Grid>
                         </Paper>
                     </Fade>)}
