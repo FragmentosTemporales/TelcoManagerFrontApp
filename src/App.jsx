@@ -39,6 +39,7 @@ import {
   ,OnnetProyecto
   ,OnnetProyectos
   ,OnnetFormularioComponentes
+  ,PlanillaOnnetSGSView
   ,ProyectoFiltradoCubicado
   ,ProyectoFiltradoVNO
   ,ProyectosLinkVNOView
@@ -138,6 +139,8 @@ function App() {
 
           <Route path="/modulo:formulario-calidad-reactiva" element={<FormulariosCalidadReactiva />} />
           <Route path="/modulo:formulario-calidad-reactiva/:formulario_id" element={<FormularioCalidadReactiva />} />
+
+          <Route path="/modulo:planilla-onnet-sgs" element={<PlanillaOnnetSGSView />} />
 
         </Route>
 

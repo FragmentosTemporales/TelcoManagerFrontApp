@@ -53,3 +53,4 @@ export {default as OnnetProyecto} from './OnnetProyecto';
 export {default as OnnetFormularioComponentes} from './OnnetFormularioComponentes';
 export {default as OnnetComponente} from './OnnetComponente';
 export {default as FormularioCalidadReactiva} from './FormularioCalidadReactiva';
+export {default as PlanillaOnnetSGSView} from './PlanillaOnnetSgsView';

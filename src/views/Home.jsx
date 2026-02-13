@@ -23,6 +23,12 @@ function Home() {
       moduloID: 26,
     },
     {
+      head: "Planilla OnNet/SGS",
+      title: "Busca proyectos y descarga plantillas de construcción OnNet/SGS",
+      link: "/modulo:planilla-onnet-sgs",
+      moduloID: 1033,
+    },
+    {
       head: "ONNET / Construcción",
       title: "Gestiona los proyectos de construcción OnNet",
       link: "/onnet/modulo/proyectos",

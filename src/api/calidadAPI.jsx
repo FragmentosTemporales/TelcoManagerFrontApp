@@ -176,3 +176,23 @@ export const getFormulariosReactivosExcel = async () => {
     throw error.response?.data?.error || 'Error al descargar el archivo.';
   }
 };
+
+
+export const getPlantillaQuickBaseSGS = async (id_qb, pro) => {
+  try {
+    const response = await client.get(`/GET/planilla-quickbase-sgs/${id_qb}&${pro}`, { responseType: 'blob' });
+
+    // Create a download link for the Excel file
+    const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = urlBlob;
+    link.setAttribute('download', `Actividades_Materiales_${id_qb}.xlsx`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    return 'Archivo descargado exitosamente.';
+  } catch (error) {
+    throw error.response?.data?.error || 'Error al descargar el archivo.';
+  }
+};
