@@ -58,6 +58,8 @@ export default function FormulariosCalidadReactiva() {
         }
     };
 
+    const handlePage = (newPage) => setPage(newPage);
+
     useEffect(() => {
         FetchData();
     }, [page]);
