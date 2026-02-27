@@ -23,6 +23,12 @@ function Home() {
       moduloID: 26,
     },
     {
+      head: "Zona de Reportes BI",
+      title: "Visualiza y gestiona los reportes de Power BI",
+      link: "/modulo:power-bi",
+      moduloID: 1034,
+    },
+    {
       head: "Planilla OnNet/SGS",
       title: "Busca proyectos y descarga plantillas de construcción OnNet/SGS",
       link: "/modulo:planilla-onnet-sgs",
@@ -41,7 +47,7 @@ function Home() {
       moduloID: 1030,
     },
     {
-      head: "Formularios Calidad Reactiva",
+      head: "Registro de Averías Calidad Reactiva",
       title: "Gestiona los formularios asociados a calidad reactiva",
       link: "/modulo:formulario-calidad-reactiva",
       moduloID: 1031,
@@ -59,8 +65,8 @@ function Home() {
       moduloID: 26,
     },
     {
-      head: "Registro de Reparaciones",
-      title: "Visualiza las reparaciones realizadas",
+      head: "Registro de Auditorías",
+      title: "Visualiza las auditorías realizadas",
       link: "/modulo:reparaciones",
       moduloID: 21,
     },
@@ -119,7 +125,7 @@ function Home() {
       moduloID: 20,
     },
     {
-      head: "Respaldos Calidad",
+      head: "Evidencias Desconexiones",
       title: "Revisa la lista de respaldos",
       link: "/modulo:respaldos",
       moduloID: 1028,

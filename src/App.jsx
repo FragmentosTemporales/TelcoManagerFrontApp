@@ -40,6 +40,8 @@ import {
   ,OnnetProyectos
   ,OnnetFormularioComponentes
   ,PlanillaOnnetSGSView
+  ,PowerBiListView
+  ,PowerBiView
   ,ProyectoFiltradoCubicado
   ,ProyectoFiltradoVNO
   ,ProyectosLinkVNOView
@@ -141,6 +143,8 @@ function App() {
           <Route path="/modulo:formulario-calidad-reactiva/:formulario_id" element={<FormularioCalidadReactiva />} />
 
           <Route path="/modulo:planilla-onnet-sgs" element={<PlanillaOnnetSGSView />} />
+          <Route path="/modulo:power-bi" element={<PowerBiListView />} />
+          <Route path="/modulo:power-bi/:report_id" element={<PowerBiView />} />
 
         </Route>
 

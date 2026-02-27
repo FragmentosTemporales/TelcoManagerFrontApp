@@ -53,3 +53,21 @@ export const getEmpresas = async () => {
     throw error.response?.data?.error || error.message;
   }
 };
+
+export const getBiToken = async () => {
+  try {
+    const response = await client.get('/get-bi-token');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getBiListQuery = async () => {
+  try {
+    const response = await client.get('/GET/reportes-list');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};

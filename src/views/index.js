@@ -54,3 +54,5 @@ export {default as OnnetFormularioComponentes} from './OnnetFormularioComponente
 export {default as OnnetComponente} from './OnnetComponente';
 export {default as FormularioCalidadReactiva} from './FormularioCalidadReactiva';
 export {default as PlanillaOnnetSGSView} from './PlanillaOnnetSgsView';
+export {default as PowerBiView} from './PowerBiView';
+export {default as PowerBiListView} from './PowerBiListView';
