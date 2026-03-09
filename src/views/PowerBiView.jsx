@@ -27,7 +27,7 @@ import { getBiToken } from "../api/authAPI";
 import { useParams, Link } from "react-router-dom";
 
 function PowerBiView() {
-    const { report_id } = useParams();
+    const { report_id, tabla, columna, operador, valor } = useParams();
     const [accessToken, setAccessToken] = useState(null);
     const [loading, setLoading] = useState(true);
     const [reportId, setReportId] = useState(null);
@@ -49,6 +49,22 @@ function PowerBiView() {
         fetchBiToken();
         window.scrollTo(0, 0);
     }, []);
+
+    const seterFilter = () => {
+        if (tabla && columna && operador && valor) {
+            return {
+                $schema: "http://powerbi.com/product/schema#basic",
+                target: {
+                    table: tabla,
+                    column: columna,
+                },
+                operator: operador,
+                values: [valor],
+                filterType: models.FilterType.BasicFilter,
+            }
+        }
+        return null;
+    };
 
     useEffect(() => {
         if (report_id) {
@@ -125,6 +141,9 @@ function PowerBiView() {
                         <PowerBIEmbed
                             embedConfig={{
                                 type: 'report',
+                                filters: [
+                                    seterFilter()
+                                ],
                                 id: reportId,
                                 embedUrl: `https://app.powerbi.com/reportEmbed?reportId=${reportId}&groupId=d1753f40-5314-4159-8c3a-a1e59ea00c2c`,
                                 accessToken: accessToken,

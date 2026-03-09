@@ -144,7 +144,7 @@ function App() {
 
           <Route path="/modulo:planilla-onnet-sgs" element={<PlanillaOnnetSGSView />} />
           <Route path="/modulo:power-bi" element={<PowerBiListView />} />
-          <Route path="/modulo:power-bi/:report_id" element={<PowerBiView />} />
+          <Route path="/modulo:power-bi/:report_id/:tabla?/:columna?/:operador?/:valor?" element={<PowerBiView />} />
 
         </Route>
 

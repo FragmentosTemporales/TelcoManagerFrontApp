@@ -51,11 +51,21 @@ function PowerBiListView() {
       } finally {
       }
     };
-    { !data && fetchBiToken() }
+    { fetchBiToken() }
 
     window.scrollTo(0, 0);
   }, []);
 
+  const setLink = (acceso) => {
+ const inicial = `/modulo:power-bi/${acceso.rpt}`;
+ if (acceso.tabla && acceso.columna && acceso.operador && acceso.valor) {
+   return `${inicial}/${acceso.tabla}/${acceso.columna}/${acceso.operador}/${acceso.valor}`;
+ }
+ else {
+   return inicial;
+ }
+
+  }
 
   const accesosFiltrados = safeData.filter((acceso) => {
     const term = searchTerm.toLowerCase();
@@ -169,7 +179,7 @@ function PowerBiListView() {
               <Grid item xs={12} sm={6} md={4} lg={4} xl={4} key={index}>
                 <Paper
                   component={Link}
-                  to={`/modulo:power-bi/${acceso.rpt}`}
+                  to={setLink(acceso)}
                   elevation={10}
                   sx={{
                     textDecoration: "none",
