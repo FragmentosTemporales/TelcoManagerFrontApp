@@ -544,7 +544,7 @@ function ReparacionesView() {
                     </Alert>
                 )}
                 <ModuleHeader
-                    title="Registros de Reparaciones"
+                    title="Registro de Auditorías"
                     subtitle="Listado y seguimiento de reparaciones registradas"
                     divider
                 />

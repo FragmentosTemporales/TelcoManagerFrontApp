@@ -313,8 +313,8 @@ export default function OnnetProyectos() {
                             </Typography>
                         )}
                         <Grid container spacing={2} sx={{ width: '90%', mt: 1, mb: 5 }}>
-                            {proyectos.map((proyecto) => (
-                                <Grid item xs={12} sm={6} md={4} key={proyecto.id}>
+                            {proyectos.map((proyecto, index) => (
+                                <Grid item xs={12} sm={6} md={4} key={index}>
                                     <Fade in={true} timeout={1000}>
                                         <Card
                                             elevation={6}
@@ -356,17 +356,6 @@ export default function OnnetProyectos() {
                                                 '&:active': { transform: 'translateY(-3px)', boxShadow: "0 8px 20px -8px rgba(0,0,0,0.4)" },
                                             }}
                                         >
-
-                                            {/* <CardHeader
-                                                title={proyecto.proyecto_id}
-                                                subheader={`${proyecto.estado === 0 ? 'Pendiente de asignación' :
-                                                    proyecto.estado === 1 ? 'Proyecto en ejecución' :
-                                                        proyecto.estado === 2 ? 'Proyecto finalizado' :
-                                                            proyecto.estado
-                                                    }`}
-                                                sx={{ color: palette.primary, fontWeight: 600 }}
-                                                subheaderTypographyProps={{ color: palette.textMuted }}
-                                            /> */}
 
                                             <CardContent>
                                                 <Typography variant="h6" sx={{ color: palette.textPrimary, fontWeight: 600 }}>

@@ -414,7 +414,7 @@ function RespaldosView() {
                     </Alert>
                 )}
                 <ModuleHeader
-                    title="Registros de Respaldos"
+                    title="Evidencias Desconexiones"
                     subtitle="Listado y seguimiento de respaldos registrados"
                     divider
                 />

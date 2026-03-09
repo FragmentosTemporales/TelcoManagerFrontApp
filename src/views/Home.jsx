@@ -23,7 +23,7 @@ function Home() {
       moduloID: 26,
     },
     {
-      head: "Zona de Reportes BI",
+      head: "Reportes BI",
       title: "Visualiza y gestiona los reportes de Power BI",
       link: "/modulo:power-bi",
       moduloID: 1034,
@@ -35,17 +35,17 @@ function Home() {
       moduloID: 1033,
     },
     {
-      head: "Construcción",
+      head: "Onnet Construcción",
       title: "Gestiona los proyectos de construcción OnNet",
       link: "/onnet/modulo/proyectos",
       moduloID: 1030,
     },
-    {
-      head: "Construcción Formularios",
-      title: "Gestiona los formularios asociados a los componentes de construcción OnNet",
-      link: "/onnet/modulo/formulario-construccion",
-      moduloID: 1030,
-    },
+    // {
+    //   head: "Onnet Formularios Construcción",
+    //   title: "Gestiona los formularios asociados a los componentes de construcción OnNet",
+    //   link: "/onnet/modulo/formulario-construccion",
+    //   moduloID: 1030,
+    // },
     {
       head: "Registro de Averías Calidad Reactiva",
       title: "Gestiona los formularios asociados a calidad reactiva",
@@ -53,7 +53,7 @@ function Home() {
       moduloID: 1031,
     },
     {
-      head: "NDC_Bot Manager",
+      head: "Gestor NDC Bot",
       title: "Gestiona la automatización del NDC Bot",
       link: "/modulo:ndc/session-logs",
       moduloID: 2,
@@ -77,13 +77,13 @@ function Home() {
       moduloID: 26,
     },
     {
-      head: "Lista de Proyectos Consolidados",
+      head: "Proyectos Consolidados",
       title: "Gestiona y visualiza Proyectos",
       link: "/proyectos-onnet",
       moduloID: 24,
     },
     {
-      head: "Lista de Proyectos Link VNO",
+      head: "Proyectos Link VNO",
       title: "Gestiona y visualiza Proyectos Correspondientes a Link VNO",
       link: "/proyectos-link-vno",
       moduloID: 24,
@@ -101,7 +101,7 @@ function Home() {
     //   moduloID: 27,
     // },
     {
-      head: "Reversa",
+      head: "Logística Reversa",
       title: "Listado de Reversas Pendientes",
       link: "/modulo:reversa",
       moduloID: 2,

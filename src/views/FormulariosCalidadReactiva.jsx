@@ -238,7 +238,7 @@ export default function FormulariosCalidadReactiva() {
                 )}
 
                 <ModuleHeader
-                    title="Formularios Calidad Reactiva"
+                    title="Registro de Averías Calidad Reactiva"
                     subtitle="Gestiona los formularios asociados a calidad reactiva"
                 />
                 {gestionInfo()}

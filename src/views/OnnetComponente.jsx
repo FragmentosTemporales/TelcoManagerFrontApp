@@ -15,7 +15,6 @@ import {
     Fade,
     Skeleton,
 } from "@mui/material";
-import { PieChart } from '@mui/x-charts/PieChart';
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchFileUrl } from "../api/downloadApi";
@@ -48,9 +47,7 @@ export default function OnnetComponente() {
     const [recursoUrls, setRecursoUrls] = useState([]);
     const [isLoadingImg, setIsLoadingImg] = useState(true);
 
-    const [countPendientes, setCountPendientes] = useState(0);
     const [countAprobados, setCountAprobados] = useState(0);
-    const [countRechazados, setCountRechazados] = useState(0);
     const [q_formulario, setQ_Formulario] = useState(0);
 
     useEffect(() => {
@@ -112,14 +109,10 @@ export default function OnnetComponente() {
 
     useEffect(() => {
         if (!recursoData) {
-            setCountPendientes(0);
             setCountAprobados(0);
-            setCountRechazados(0);
             return;
         }
-        setCountPendientes(recursoData.filter(r => r.estado === 0).length);
         setCountAprobados(recursoData.filter(r => r.estado === 1).length);
-        setCountRechazados(recursoData.filter(r => r.estado === 2).length);
     }, [recursoData]);
 
     const fetchComponenteDetails = async () => {
@@ -136,12 +129,6 @@ export default function OnnetComponente() {
         }
         setLoading(false);
     };
-
-    useEffect(()=> {
-        if (formulario) {
-            console.log("Formulario actualizado:", formulario);
-        }
-    }, [formulario])
 
     useEffect(() => {
         if (componenteTipoData && componenteTipoData.formulario) {
@@ -357,56 +344,26 @@ export default function OnnetComponente() {
                                                 display: 'flex',
                                                 flexDirection: { xs: 'column', md: 'row' },
                                                 width: '100%',
-                                                minHeight: '220px',
+                                                minHeight: '100px',
                                                 justifyContent: 'space-around',
                                             }}>
                                                 <Box sx={{
-                                                    width: "100%"
-                                                }}>
-                                                    <PieChart
-                                                        series={[{
-                                                            data: [
-                                                                { id: 0, value: countAprobados, label: 'Aprobados', color: 'green' },
-                                                                { id: 1, value: countRechazados, label: 'Rechazados', color: 'red' },
-                                                                { id: 2, value: countPendientes, label: 'Pendientes', color: 'yellow' },
-                                                            ],
-                                                            highlightScope: { faded: "global", highlighted: "item" },
-                                                            faded: {
-                                                                innerRadius: 30,
-                                                                additionalRadius: -30,
-                                                                color: "gray",
-                                                            },
-                                                            innerRadius: 40,
-                                                            outerRadius: 70,
-                                                        }]}
-                                                        width={500}
-                                                        height={200}
-                                                    />
-                                                </Box>
-                                                <Box sx={{
                                                     width: "100%",
                                                     display: "flex",
-                                                    flexDirection: "column",
+                                                    flexDirection: "row",
                                                     alignItems: "center",
-                                                    justifyContent: "center",
+                                                    justifyContent: "space-evenly",
                                                 }}>
+                                                <Box>
                                                     <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
                                                     <Typography
                                                         variant="subtitle1"
                                                         sx={{
                                                             color: palette.primaryDark,
                                                             fontWeight: "bold",
-                                                            width: '90%'
+                                                            width: '100%'
                                                         }}>
-                                                        TIPO COMPONENTE
-                                                    </Typography>
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{
-                                                            color: palette.textMuted,
-                                                            width: '90%'
-                                                        }}>
-                                                        {componenteTipoData ? componenteTipoData.nombre : 'N/A'}
+                                                        TIPO COMPONENTE : {componenteTipoData ? componenteTipoData.nombre : 'N/A'}
                                                     </Typography>
                                                     <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
                                                     <Typography
@@ -414,17 +371,23 @@ export default function OnnetComponente() {
                                                         sx={{
                                                             color: palette.primaryDark,
                                                             fontWeight: "bold",
-                                                            width: '90%'
+                                                            width: '100%'
                                                         }}>
-                                                        CANTIDAD REGISTROS REQUERIDOS
+                                                        CANTIDAD REGISTROS REQUERIDOS : {q_formulario}
                                                     </Typography>
+                                                    <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+                                                </Box>
+
+                                                <Box>
+                                                    <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
                                                     <Typography
-                                                        variant="body2"
+                                                        variant="subtitle1"
                                                         sx={{
-                                                            color: palette.textMuted,
-                                                            width: '90%'
+                                                            color: palette.primaryDark,
+                                                            fontWeight: "bold",
+                                                            width: '100%'
                                                         }}>
-                                                        {q_formulario}
+                                                        CANTIDAD REGISTROS APROBADOS: {countAprobados}
                                                     </Typography>
                                                     <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
                                                     <Typography
@@ -432,37 +395,13 @@ export default function OnnetComponente() {
                                                         sx={{
                                                             color: palette.primaryDark,
                                                             fontWeight: "bold",
-                                                            width: '90%'
+                                                            width: '100%'
                                                         }}>
-                                                        CANTIDAD REGISTROS APROBADOS
-                                                    </Typography>
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{
-                                                            color: palette.textMuted,
-                                                            width: '90%'
-                                                        }}>
-                                                        {countAprobados}
+                                                        % AVANCE : {q_formulario > 0 ? ((countAprobados / q_formulario) * 100).toFixed(2) : 0}%
                                                     </Typography>
                                                     <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
-                                                    <Typography
-                                                        variant="subtitle1"
-                                                        sx={{
-                                                            color: palette.primaryDark,
-                                                            fontWeight: "bold",
-                                                            width: '90%'
-                                                        }}>
-                                                        % AVANCE
-                                                    </Typography>
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{
-                                                            color: palette.textMuted,
-                                                            width: '90%'
-                                                        }}>
-                                                        {q_formulario > 0 ? ((countAprobados / q_formulario) * 100).toFixed(2) : 0}%
-                                                    </Typography>
-                                                    <Divider sx={{ width: '90%', borderColor: palette.borderSubtle }} />
+                                                </Box>
+
                                                 </Box>
 
                                             </Box>
