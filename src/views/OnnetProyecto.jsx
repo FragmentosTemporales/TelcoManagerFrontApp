@@ -27,6 +27,7 @@ import {
     getComponenteTipoOnnet,
     createComponenteOnnet,
     getProyectoOnnetUsers,
+    getProyectoOnnetApoyos,
     createAsignadoOnnet,
     getPendientesComponente
 } from "../api/onnetAPI";
@@ -74,6 +75,7 @@ export default function OnnetProyecto() {
     const [asignadoSeleccionado, setAsignadoSeleccionado] = useState(null);
 
     const [userList, setUserList] = useState([]);
+    const [apoyosList, setApoyosList] = useState([]);
     const [asignados, setAsignados] = useState([]);
 
 
@@ -153,7 +155,8 @@ export default function OnnetProyecto() {
     const fetchUserList = async (empresa_id) => {
         try {
             const users = await getProyectoOnnetUsers(empresa_id);
-            setUserList(users.data);
+            console.log(users)
+            setUserList(users.usuarios);
         } catch (error) {
             setMessage(error);
             setAlertType("error");
@@ -288,6 +291,7 @@ export default function OnnetProyecto() {
 
     useEffect(() => {
         if (asignadoSeleccionado?.componente) {
+            console.log("ASIGNADOS : ", asignadoSeleccionado);
             setComponentes(asignadoSeleccionado.componente);
             fetchAllPendientes(asignadoSeleccionado.componente);
         } else {
@@ -491,6 +495,26 @@ export default function OnnetProyecto() {
                                     </Select>
                                 </FormControl>
 
+                                {/* SELECTOR DE APOYO */}
+                                {/* <FormControl sx={{ minWidth: 200, mt: { xs: 1, md: 1, lg: 0 } }}>
+                                    <InputLabel id="filter-apoyo-label">Apoyo</InputLabel>
+                                    <Select
+                                        labelId="filter-apoyo-label"
+                                        id="filter-apoyo"
+                                        label="Apoyo"
+                                        value={formAsignacion.apoyoID || ''}
+                                        onChange={(e) => setFormAsignacion({ ...formAsignacion, apoyoID: e.target.value || null })}
+                                        sx={{ minWidth: 300, backdropFilter: 'blur(6px)' }}
+                                        size="small"
+                                        disabled={apoyosList.length === 0}
+                                    >
+                                        <MenuItem value="">Ninguno</MenuItem>
+                                        {apoyosList.length > 0 && apoyosList.map((apoyo, index) => (
+                                            <MenuItem key={index} value={apoyo.apoyoID}>{apoyo.nombre}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl> */}
+
                                 {/* SELECTOR DE SUBGRUPO */}
                                 <FormControl sx={{ minWidth: 200, mt: { xs: 1, md: 1, lg: 0 } }}>
                                     <InputLabel id="filter-subgrupo-label">Subgrupo</InputLabel>
@@ -656,7 +680,7 @@ export default function OnnetProyecto() {
                                             CREAR SERIE DE COMPONENTE
                                         </Typography>
                                         <Divider sx={{ width: '90%', my: 2, borderColor: palette.borderSubtle }} />
-                                        <Box sx={{ mt: 1, display: 'flex', flexDirection: { xs: 'column', md: 'row', lg: 'row' }, justifyContent: 'center', alignItems: 'center' }}>
+                                        <Box sx={{ mt: 1, display: 'flex', flexDirection: { xs: 'column', md: 'column', lg: 'row' }, justifyContent: 'center', alignItems: 'center' }}>
                                             <FormControl sx={{ minWidth: 200, mr: 2 }}>
                                                 <InputLabel id="filter-tipo-label">Tipo</InputLabel>
                                                 <Select
@@ -747,7 +771,7 @@ export default function OnnetProyecto() {
                                                 CREAR COMPONENTE UNITARIO
                                             </Typography>
                                             <Divider sx={{ width: '90%', my: 2, borderColor: palette.borderSubtle }} />
-                                            <Box sx={{ mt: 1, display: 'flex', flexDirection: { xs: 'column', md: 'row', lg: 'row' }, justifyContent: 'center', alignItems: 'center' }}>
+                                            <Box sx={{ mt: 1, display: 'flex', flexDirection: { xs: 'column', md: 'column', lg: 'row' }, justifyContent: 'center', alignItems: 'center' }}>
                                                 <FormControl sx={{ minWidth: 200, mr: 2 }}>
                                                     <InputLabel id="filter-tipo-label">Tipo</InputLabel>
                                                     <Select

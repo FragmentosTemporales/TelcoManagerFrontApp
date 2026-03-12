@@ -217,6 +217,15 @@ export const getProyectoOnnetUsers = async (empresa_id) => {
   }
 };
 
+export const getProyectoOnnetApoyos = async (empresa_id) => {
+  try {
+    const response = await client.get(`/get-apoyos/empresa/${empresa_id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
 export const createAsignadoOnnet = async (payload) => {
   try {
     const response = await client.post('/create-asignado', payload);
