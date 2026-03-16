@@ -138,9 +138,9 @@ export const getRespaldosExcel = async () => {
 };
 
 
-export const getFormulariosCalidadReactiva = async (page) => {
+export const getFormulariosCalidadReactiva = async (page, orden='null') => {
   try {
-    const response = await client.get(`/GET/formularios-calidad-reactiva/${page}`);
+    const response = await client.get(`/GET/formularios-calidad-reactiva/${orden}/${page}`);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;

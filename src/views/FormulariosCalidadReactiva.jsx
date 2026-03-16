@@ -41,12 +41,12 @@ export default function FormulariosCalidadReactiva() {
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const [ordenToFind, setOrdenToFind] = useState('null');
 
     const FetchData = async () => {
         setLoading(true);
         try {
-            const response = await getFormulariosCalidadReactiva(page);
+            const response = await getFormulariosCalidadReactiva(page, ordenToFind);
             setData(response.data);
             setPages(response.pages || 1);
         } catch (error) {
@@ -241,6 +241,47 @@ export default function FormulariosCalidadReactiva() {
                     title="Registro de Averías Calidad Reactiva"
                     subtitle="Gestiona los formularios asociados a calidad reactiva"
                 />
+
+                {/* Tarjeta responsiva para buscar por orden */}
+                <Card sx={{ width: '90%', maxWidth: 500, my: 2, mx: 'auto', p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: 4 }}>
+                    <CardContent sx={{ width: '100%' }}>
+                        <Typography variant="h6" sx={{ mb: 2, color: palette.primary, fontWeight: 600 }}>
+                            Buscar por Orden
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, alignItems: 'center', width: '100%' }}>
+                            <input
+                                type="text"
+                                placeholder="Ingrese número de orden..."
+                                value={ordenToFind === 'null' ? '' : ordenToFind}
+                                onChange={e => setOrdenToFind(e.target.value)}
+                                style={{
+                                    flex: 1,
+                                    padding: '10px',
+                                    borderRadius: '6px',
+                                    border: `1px solid ${palette.primary}`,
+                                    fontSize: '1rem',
+                                    outline: 'none',
+                                    minWidth: 0
+                                }}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={FetchData}
+                                sx={{
+                                    minWidth: 120,
+                                    fontWeight: 600,
+                                    boxShadow: 2,
+                                    background: `linear-gradient(140deg, ${palette.primary} 0%, ${palette.primaryDark} 100%)`,
+                                    '&:hover': { background: palette.primaryDark }
+                                }}
+                            >
+                                Buscar
+                            </Button>
+                        </Box>
+                    </CardContent>
+                </Card>
+
                 {gestionInfo()}
                 {loading ? (
                     <Paper
