@@ -37,19 +37,22 @@ export default function FormulariosCalidadReactiva() {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [loading, setLoading] = useState(true);
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [ordenToFind, setOrdenToFind] = useState('null');
+    const [ordenToFind, setOrdenToFind] = useState("");
 
     const FetchData = async () => {
         setLoading(true);
         try {
-            const response = await getFormulariosCalidadReactiva(page, ordenToFind);
-            setData(response.data);
-            setPages(response.pages || 1);
+            const response = await getFormulariosCalidadReactiva(page, { orden: ordenToFind });
+            const parsed = typeof response === "string" ? JSON.parse(response) : response;
+            setData(parsed.data);
+            setPages(parsed.pages);
         } catch (error) {
+            setData([]);
+            setPages(1);
             setAlertType('error');
             setMessage(`Error al cargar los formularios: ${error}`);
             setOpen(true);
@@ -190,9 +193,9 @@ export default function FormulariosCalidadReactiva() {
                                 <TableCell align="center" width={"15%"}>{extractDateOnly(row.fecha_registro)}</TableCell>
                                 <TableCell align="center" width={"15%"} sx={{ fontWeight: "bold" }}>{row.orden_trabajo ?? "N/A"}</TableCell>
                                 <TableCell align="center" width={"15%"} sx={{ fontWeight: "bold" }}>{row.orden_averia ?? "N/A"}</TableCell>
-                                <TableCell align="center" width={"20%"}>{row.area_responsabilidad.descripcion ?? "N/A"}</TableCell>
-                                <TableCell align="center" width={"20%"}>{row.codigo_cierre.descripcion ?? "N/A"}</TableCell>
-                                <TableCell align="center" width={"20%"}>{row.sub_categoria ? row.sub_categoria.descripcion : "N/A"}</TableCell>
+                                <TableCell align="center" width={"20%"}>{row.responsabilidad_desc ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"20%"}>{row.codigo_desc ?? "N/A"}</TableCell>
+                                <TableCell align="center" width={"20%"}>{row.sub_desc ?? "N/A"}</TableCell>
                             </TableRow>
                         ))
                     ) : (

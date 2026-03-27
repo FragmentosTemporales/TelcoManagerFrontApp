@@ -291,7 +291,6 @@ export default function OnnetProyecto() {
 
     useEffect(() => {
         if (asignadoSeleccionado?.componente) {
-            console.log("ASIGNADOS : ", asignadoSeleccionado);
             setComponentes(asignadoSeleccionado.componente);
             fetchAllPendientes(asignadoSeleccionado.componente);
         } else {

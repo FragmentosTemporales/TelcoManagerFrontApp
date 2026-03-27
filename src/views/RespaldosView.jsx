@@ -167,7 +167,7 @@ function RespaldosView() {
                     <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap", justifyContent: "center", alignItems: "center", mt: 1 }}>
                         <TextField
                             id="orden-input"
-                            label="Orden"
+                            label="Orden Avería"
                             variant="standard"
                             value={filterForm.orden || ""}
                             onChange={(event) => {
@@ -262,7 +262,6 @@ function RespaldosView() {
             setFilterForm({ orden: "" });
             setPage(1);
             const response = await getRespaldos(1, { orden: "" })
-            console.log(response);
             setData(response.data);
             setPages(response.pages);
             setMessage("Filtros limpiados.");

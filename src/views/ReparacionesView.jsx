@@ -372,7 +372,7 @@ function ReparacionesView() {
     }, []);
 
     const resultados = ["Cumple", "No Cumple"];
-    const contratos = ["VTR", "MOVISTAR"]
+    const contratos = ["VTR", "MOVISTAR", "ONNET"]
 
     const handleClear = async (e) => {
         e.preventDefault();

@@ -137,16 +137,14 @@ export const getRespaldosExcel = async () => {
   }
 };
 
-
-export const getFormulariosCalidadReactiva = async (page, orden='null') => {
+export const getFormulariosCalidadReactiva = async (page, payload) => {
   try {
-    const response = await client.get(`/GET/formularios-calidad-reactiva/${orden}/${page}`);
+    const response = await client.post(`/POST/formularios-calidad-reactiva/${page}`, payload);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;
   }
 };
-
 
 export const getFormularioCalidadReactiva = async (id) => {
   try {
@@ -156,7 +154,6 @@ export const getFormularioCalidadReactiva = async (id) => {
     throw error.response?.data?.error || error.message;
   }
 };
-
 
 export const getFormulariosReactivosExcel = async () => {
   try {
@@ -176,7 +173,6 @@ export const getFormulariosReactivosExcel = async () => {
     throw error.response?.data?.error || 'Error al descargar el archivo.';
   }
 };
-
 
 export const getPlantillaQuickBaseSGS = async (id_qb, pro) => {
   try {
