@@ -70,6 +70,18 @@ function Home() {
       link: "/modulo:reparaciones",
       moduloID: 21,
     },
+    // {
+    //   head: "Calendario de Talleres Calidad",
+    //   title: "Visualiza los talleres de calidad programados",
+    //   link: "/modulo:calendario-talleres-calidad",
+    //   moduloID: 21,
+    // },
+    {
+      head: "Configuración Talleres Calidad",
+      title: "Configura los talleres de calidad programados",
+      link: "/modulo:config-talleres-calidad",
+      moduloID: 1036,
+    },
     {
       head: "Registros DomApp",
       title: "Visualiza, filtra y monitorea los últimos registros de las automatizaciones en DomApp.",

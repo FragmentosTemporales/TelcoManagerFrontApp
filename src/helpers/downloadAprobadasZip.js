@@ -1,26 +1,33 @@
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import client from '../api/axiosClient';
 
-export async function downloadAprobadasAsZip(aprobados, recursoData, recursoUrls) {
+export async function downloadAprobadasAsZip(aprobados) {
     const zip = new JSZip();
 
     let count = 0;
-    for (const recurso of aprobados) {
-        const idx = recursoData.findIndex(r => r.id === recurso.id);
-        if (recurso.file && recursoUrls[idx]) {
-            try {
-                const response = await fetch(recursoUrls[idx]);
-                const blob = await response.blob();
-                let ext = '';
-                try {
-                    ext = recursoUrls[idx].split('.').pop().split('?')[0];
-                    if (!['jpg','jpeg','png','gif','bmp','webp'].includes(ext.toLowerCase())) ext = 'jpg';
-                } catch { ext = 'jpg'; }
-                zip.file(`${recurso.formulario.pregunta}.${ext}`, blob);
-                count++;
-            } catch (e) {
-                // skip if error
+    for (let i = 0; i < aprobados.length; i++) {
+        const recurso = aprobados[i];
+        if (!recurso.file) {
+            console.warn(`[${i}] Recurso sin file:`, recurso);
+            continue;
+        }
+        try {
+            const response = await client.post('/view-image', { file_path: recurso.file }, { responseType: 'blob' });
+            const blob = response.data;
+            const ext = recurso.file.split('.').pop().toLowerCase() || 'jpg';
+            const rawName = recurso.formulario?.pregunta || `imagen_${i}`;
+            const baseName = rawName.replace(/[\t\n\r\\/:*?"<>|]+/g, '').trim();
+            let fileName = `${baseName}.${ext}`;
+            let suffix = 1;
+            while (zip.files[fileName]) {
+                fileName = `${baseName}_${suffix}.${ext}`;
+                suffix++;
             }
+            zip.file(fileName, blob);
+            count++;
+        } catch (e) {
+            console.error(`[${i}] Error descargando archivo:`, e, recurso);
         }
     }
     if (count === 0) {

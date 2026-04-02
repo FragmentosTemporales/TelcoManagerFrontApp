@@ -429,7 +429,7 @@ export default function OnnetComponente() {
                                     <Fade in={true} timeout={1000}>
                                         <Grid container justifyContent="left" sx={{ mb: 2 }}>
                                             {estadoFilter(0).map((recurso) => {
-                                                const originalIdx = recursoData.findIndex(r => r.id === recurso.id);
+                                                const originalIdx = recursoData.indexOf(recurso);
                                                 return (
                                                     <Grid item xs={12} md={6} lg={4} key={recurso.id} sx={{ display: 'flex', justifyContent: 'center' }}>
                                                         <Card key={recurso.id} sx={{
@@ -638,7 +638,7 @@ export default function OnnetComponente() {
                                         <Grid container justifyContent="left" sx={{ mb: 2 }}>
 
                                             {estadoFilter(1).map((recurso) => {
-                                                const originalIdx = recursoData.findIndex(r => r.id === recurso.id);
+                                                const originalIdx = recursoData.indexOf(recurso);
                                                 return (
                                                     <Grid item xs={12} md={6} lg={4} key={recurso.id} sx={{ display: 'flex', justifyContent: 'center' }}>
                                                         <Card key={recurso.id} sx={{

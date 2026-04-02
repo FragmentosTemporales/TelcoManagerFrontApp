@@ -192,3 +192,102 @@ export const getPlantillaQuickBaseSGS = async (id_qb, pro) => {
     throw error.response?.data?.error || 'Error al descargar el archivo.';
   }
 };
+
+export const getListaRelatoresTallerCalidad = async (zona_id) => {
+  try {
+    const response = await client.get(`/GET/lista-relatores-taller-calidad/${zona_id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getListaZonasTallerCalidad = async () => {
+  try {
+    const response = await client.get(`/GET/lista-zonas-taller-calidad`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getListaCursosCalidad = async () => {
+  try {
+    const response = await client.get(`/GET/lista-cursos-calidad`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getTop20CursosAgendados = async () => {
+  try {
+    const response = await client.get(`/GET/top20-cursos-agendados`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const createRelatorTallerCalidad = async (payload) => {
+  try {
+    const response = await client.post('/POST/create-relator-taller-calidad', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const createZonaTallerCalidad = async (payload) => {
+  try {
+    const response = await client.post('/POST/create-zona-taller-calidad', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const createCursoCalidad = async (payload) => {
+  try {
+    const response = await client.post('/POST/create-curso-calidad', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const agendarCursoCalidad = async (payload) => {
+  try {
+    const response = await client.post('/POST/agendar-curso-calidad', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const updateRelatorTallerCalidad = async (id, payload) => {
+  try {
+    const response = await client.put(`/PUT/update-relator-taller-calidad/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const updateZonaTallerCalidad = async (id, payload) => {
+  try {
+    const response = await client.put(`/PUT/update-zona-taller-calidad/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const updateCursoCalidad = async (id, payload) => {
+  try {
+    const response = await client.put(`/PUT/update-curso-calidad/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
