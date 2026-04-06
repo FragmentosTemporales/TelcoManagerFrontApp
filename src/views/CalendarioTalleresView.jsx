@@ -34,7 +34,6 @@ export default function CalendarioTalleresCalidadView() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
 
-
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);

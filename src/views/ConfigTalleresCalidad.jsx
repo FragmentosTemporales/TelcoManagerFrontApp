@@ -18,6 +18,7 @@ import {
     Fade,
     Input,
     Select,
+    Chip,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { MainLayout } from "./Layout";
@@ -315,7 +316,6 @@ export default function ConfigTalleresCalidad() {
                     Selecciona un relator
                 </option>
                 {relatores
-                    .filter((relator) => relator.habilitado && String(relator.zona_id) === String(payloadForm.zona_id))
                     .map((relator) => (
                         <option key={relator.id} value={relator.id}>
                             {relator.nombre}
@@ -593,11 +593,10 @@ export default function ConfigTalleresCalidad() {
                         <Typography variant="h6" sx={{ color: palette.accentSoft, fontWeight: 600, textAlign: 'left', width: '90%', my: 2 }}>
                             Zonas Registradas
                         </Typography>
-                        <Divider sx={{ width: '90%', mb: 1, background: palette.borderSubtle }} />
                         <Box sx={{
                             width: '90%',
                             display: 'flex',
-                            flexDirection: 'column',
+                            flexDirection: 'column'
                         }}>
                             <Button
                                 variant="contained"
@@ -622,14 +621,17 @@ export default function ConfigTalleresCalidad() {
                             display: 'flex',
                             flexDirection: 'column',
                             background: palette.cardBg,
-                            border: `1px solid ${palette.borderSubtle}`,
-                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)"
+                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
+                            mb: 4
                         }}>
                             <Table>
                                 <TableHead sx={{ background: palette.primary }}>
                                     <TableRow>
                                         <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
                                             NOMBRE
+                                        </TableCell>
+                                        <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
+                                            ESTADO
                                         </TableCell>
                                         <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
                                             ACCIONES
@@ -645,6 +647,9 @@ export default function ConfigTalleresCalidad() {
                                                 </Typography>
                                             </TableCell>
                                             <TableCell align="center" size="small">
+                                                <Chip index={index} label={zona.habilitado === true ? "Habilitada" : zona.habilitado === false ? "No Habilitada" : "Sin estado"} color={zona.habilitado === true ? "success" : zona.habilitado === false ? "error" : "default"} size="small" />
+                                            </TableCell>
+                                            <TableCell align="center" size="small">
                                                 <Button
                                                     variant="outlined"
                                                     color="error"
@@ -655,7 +660,7 @@ export default function ConfigTalleresCalidad() {
                                                         setPayloadForm({
                                                             id: zona.id,
                                                             nombre: zona.nombre,
-                                                            habilitada: zona.habilitada
+                                                            habilitado: zona.habilitado
                                                         })
                                                         setOpenModalUpdate(true)
                                                     }}
@@ -667,7 +672,7 @@ export default function ConfigTalleresCalidad() {
                                                         variant="outlined"
                                                         color="error"
                                                         size="small"
-                                                        onClick={()=>{
+                                                        onClick={() => {
                                                             setPayloadForm({
                                                                 id: zona.id,
                                                                 nombre: zona.nombre,
@@ -685,7 +690,7 @@ export default function ConfigTalleresCalidad() {
                                                         variant="outlined"
                                                         color="success"
                                                         size="small"
-                                                        onClick={()=>{
+                                                        onClick={() => {
                                                             setPayloadForm({
                                                                 id: zona.id,
                                                                 nombre: zona.nombre,
@@ -709,7 +714,6 @@ export default function ConfigTalleresCalidad() {
                         <Typography variant="h6" sx={{ color: palette.accentSoft, fontWeight: 600, textAlign: 'left', width: '90%', my: 2 }}>
                             Relatores Registrados
                         </Typography>
-                        <Divider sx={{ width: '90%', mb: 1, background: palette.borderSubtle }} />
                         <Box sx={{
                             width: '90%',
                             display: 'flex',
@@ -734,8 +738,8 @@ export default function ConfigTalleresCalidad() {
                             display: 'flex',
                             flexDirection: 'column',
                             background: palette.cardBg,
-                            border: `1px solid ${palette.borderSubtle}`,
-                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)"
+                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
+                            mb: 4
                         }}>
                             <Table>
                                 <TableHead sx={{ background: palette.primary }}>
@@ -748,6 +752,9 @@ export default function ConfigTalleresCalidad() {
                                         </TableCell>
                                         <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
                                             ZONA
+                                        </TableCell>
+                                        <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
+                                            ESTADO
                                         </TableCell>
                                         <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
                                             ACCIONES
@@ -771,6 +778,9 @@ export default function ConfigTalleresCalidad() {
                                                 <Typography variant="body2" sx={{ color: palette.textSecondary }}>
                                                     {relator.zona.nombre}
                                                 </Typography>
+                                            </TableCell>
+                                            <TableCell align="center" size="small">
+                                                <Chip label={relator.habilitado === true ? "Habilitado" : relator.habilitado === false ? "No Habilitada" : "Sin estado"} color={relator.habilitado === true ? "success" : relator.habilitado === false ? "error" : "default"} size="small" />
                                             </TableCell>
                                             <TableCell align="center" size="small">
                                                 <Button
@@ -844,7 +854,6 @@ export default function ConfigTalleresCalidad() {
                         <Typography variant="h6" sx={{ color: palette.accentSoft, fontWeight: 600, textAlign: 'left', width: '90%', my: 2 }}>
                             Cursos Registrados
                         </Typography>
-                        <Divider sx={{ width: '90%', mb: 1, background: palette.borderSubtle }} />
                         <Box sx={{
                             width: '90%',
                             display: 'flex',
@@ -869,8 +878,8 @@ export default function ConfigTalleresCalidad() {
                             display: 'flex',
                             flexDirection: 'column',
                             background: palette.cardBg,
-                            border: `1px solid ${palette.borderSubtle}`,
-                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)"
+                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
+                            mb: 4
                         }}>
                             <Table>
                                 <TableHead sx={{ background: palette.primary }}>
@@ -880,6 +889,9 @@ export default function ConfigTalleresCalidad() {
                                         </TableCell>
                                         <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
                                             DESCRIPCIÓN
+                                        </TableCell>
+                                        <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
+                                            ESTADO
                                         </TableCell>
                                         <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
                                             ACCIONES
@@ -898,6 +910,9 @@ export default function ConfigTalleresCalidad() {
                                                 <Typography variant="body2" sx={{ color: palette.textSecondary }}>
                                                     {curso.descripcion}
                                                 </Typography>
+                                            </TableCell>
+                                            <TableCell align="center" size="small">
+                                                <Chip index={index} label={curso.habilitado === true ? "Habilitada" : curso.habilitado === false ? "No Habilitada" : "Sin estado"} color={curso.habilitado === true ? "success" : curso.habilitado === false ? "error" : "default"} size="small" />
                                             </TableCell>
                                             <TableCell align="center" size="small">
                                                 <Button
@@ -972,7 +987,6 @@ export default function ConfigTalleresCalidad() {
                         <Typography variant="h6" sx={{ color: palette.accentSoft, fontWeight: 600, textAlign: 'left', width: '90%', my: 2 }}>
                             Últimos Cursos Agendados
                         </Typography>
-                        <Divider sx={{ width: '90%', mb: 1, background: palette.borderSubtle }} />
                         <Box sx={{
                             width: '90%',
                             display: 'flex',
@@ -997,8 +1011,8 @@ export default function ConfigTalleresCalidad() {
                             display: 'flex',
                             flexDirection: 'column',
                             background: palette.cardBg,
-                            border: `1px solid ${palette.borderSubtle}`,
-                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)"
+                            boxShadow: "0 10px 28px -10px rgba(0,0,0,0.34), 0 6px 12px -4px rgba(0,0,0,0.20)",
+                            mb: 4
                         }}>
                             <Table>
                                 <TableHead sx={{ background: palette.primary }}>
@@ -1017,6 +1031,9 @@ export default function ConfigTalleresCalidad() {
                                         </TableCell>
                                         <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
                                             INSCRITOS
+                                        </TableCell>
+                                        <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
+                                            ESTADO
                                         </TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -1047,6 +1064,9 @@ export default function ConfigTalleresCalidad() {
                                                 <Typography variant="body2" sx={{ color: palette.textSecondary }}>
                                                     {curso.inscritos}
                                                 </Typography>
+                                            </TableCell>
+                                            <TableCell align="center" size="small">
+                                                <Chip index={index} label={curso.estado_curso === true ? "Activo" : curso.estado_curso === false ? "Finalizado" : "Sin estado"} color={curso.estado_curso === true ? "success" : curso.estado_curso === false ? "error" : "default"} size="small" />
                                             </TableCell>
                                         </TableRow>
                                     ))}

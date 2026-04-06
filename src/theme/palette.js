@@ -12,6 +12,8 @@ export const palette = {
   textMuted: "#5f6b7a",
   succes: "#388e3c",
   succesHover: "#2e7d32",
+  warning: "#ffca28",
+  warningHover: "#cca120"
 };
 
 export default palette;

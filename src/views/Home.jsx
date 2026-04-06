@@ -83,6 +83,12 @@ function Home() {
       moduloID: 1036,
     },
     {
+      head: "Inscripciones Talleres Calidad",
+      title: "Gestiona las inscripciones a los talleres de calidad",
+      link: "/modulo:inscripciones-talleres-calidad",
+      moduloID: 1036,
+    },
+    {
       head: "Registros DomApp",
       title: "Visualiza, filtra y monitorea los últimos registros de las automatizaciones en DomApp.",
       link: "/modulo:ultimos-logs",
@@ -305,109 +311,109 @@ function Home() {
           />
         </Box>
 
-        {accesos && accesos.length > 0 ? (
-          <Grid
-            container
-            rowSpacing={{ xs: 5, sm: 6, md: 7 }}
-            columnSpacing={{ xs: 2.5, sm: 3, md: 3.5, lg: 4 }}
-            sx={{
-              width: "100%",
-              maxWidth: { xs: 1320, lg: 1460, xl: 1600 },
-              mb: 14,
-              transition: 'max-width .4s ease'
-            }}
-            alignItems="stretch"
-          >
-            {accesosFiltrados.map((acceso, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={4} xl={4} key={index}>
-                <Paper
-                  component={Link}
-                  to={acceso.link}
-                  elevation={10}
-                  sx={{
-                    textDecoration: "none",
-                    minHeight: "70%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    position: "relative",
-                    p: 2.5,
-                    borderRadius: 3,
-                    background: palette.cardBg,
-                    border: `1px solid ${palette.borderSubtle}`,
-                    backdropFilter: "blur(4px)",
-                    transition: "all .35s",
-                    overflow: "hidden",
-                    willChange: "transform, box-shadow",
-                    transformOrigin: "top center",
-                    mt: 0.5,
-                    '&:before': {
-                      content: '""',
-                      position: "absolute",
-                      inset: 0,
-                      background:
-                        "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)",
-                      opacity: 0,
-                      transition: "opacity .4s",
-                      pointerEvents: "none",
-                    },
-                    '&:hover': {
-                      transform: 'translateY(-8px)',
-                      boxShadow:
-                        "0 14px 34px -6px rgba(0,0,0,0.42), 0 6px 16px -2px rgba(0,0,0,0.30)",
-                      borderColor: palette.accent,
-                      '&:before': { opacity: 1 },
-                    },
-                    '&:active': { transform: 'translateY(-3px)', boxShadow: "0 8px 20px -8px rgba(0,0,0,0.4)" },
-                  }}
-                >
-                  <Box>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 600,
-                        lineHeight: 1.25,
-                        color: palette.primary,
-                        mb: 1,
-                        textAlign: "center"
-                      }}
-                    >
-                      {acceso.head}
-                    </Typography>
-                    <Divider sx={{ mb: 1.5, borderColor: palette.borderSubtle }} />
-                    <Typography
-                      variant="body2"
-                      sx={{ color: palette.textMuted, fontSize: "0.85rem", textAlign: "center" }}
-                    >
-                      {acceso.title}
-                    </Typography>
-                  </Box>
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Paper
-            elevation={6}
-            sx={{
-              px: 5,
-              py: 6,
-              borderRadius: 4,
-              background: palette.cardBg,
-              border: `1px solid ${palette.borderSubtle}`,
-              backdropFilter: "blur(4px)",
-              textAlign: "center",
-              maxWidth: 520,
-            }}
-          >
-            <Typography variant="h6" sx={{ fontWeight: 600, color: palette.primary }}>
-              Sin accesos disponibles
-            </Typography>
-            <Typography variant="body2" sx={{ mt: 1.5, color: palette.textMuted }}>
-              No se encontraron módulos asociados a tus permisos. Contacta a un administrador si esto es un error.
-            </Typography>
-          </Paper>
-        )}
+          {accesos && accesos.length > 0 ? (
+            <Grid
+              container
+              rowSpacing={{ xs: 5, sm: 6, md: 7 }}
+              columnSpacing={{ xs: 2.5, sm: 3, md: 3.5, lg: 4 }}
+              sx={{
+                width: "100%",
+                maxWidth: { xs: 1320, lg: 1460, xl: 1600 },
+                mb: 14,
+                transition: 'max-width .4s ease'
+              }}
+              alignItems="stretch"
+            >
+              {accesosFiltrados.map((acceso, index) => (
+                <Grid item xs={12} sm={6} md={4} lg={4} xl={4} key={index}>
+                  <Paper
+                    component={Link}
+                    to={acceso.link}
+                    elevation={10}
+                    sx={{
+                      textDecoration: "none",
+                      minHeight: "70%",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      position: "relative",
+                      p: 2.5,
+                      borderRadius: 3,
+                      background: palette.cardBg,
+                      border: `1px solid ${palette.borderSubtle}`,
+                      backdropFilter: "blur(4px)",
+                      transition: "all .35s",
+                      overflow: "hidden",
+                      willChange: "transform, box-shadow",
+                      transformOrigin: "top center",
+                      mt: 0.5,
+                      '&:before': {
+                        content: '""',
+                        position: "absolute",
+                        inset: 0,
+                        background:
+                          "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)",
+                        opacity: 0,
+                        transition: "opacity .4s",
+                        pointerEvents: "none",
+                      },
+                      '&:hover': {
+                        transform: 'translateY(-8px)',
+                        boxShadow:
+                          "0 14px 34px -6px rgba(0,0,0,0.42), 0 6px 16px -2px rgba(0,0,0,0.30)",
+                        borderColor: palette.accent,
+                        '&:before': { opacity: 1 },
+                      },
+                      '&:active': { transform: 'translateY(-3px)', boxShadow: "0 8px 20px -8px rgba(0,0,0,0.4)" },
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          lineHeight: 1.25,
+                          color: palette.primary,
+                          mb: 1,
+                          textAlign: "center"
+                        }}
+                      >
+                        {acceso.head}
+                      </Typography>
+                      <Divider sx={{ mb: 1.5, borderColor: palette.borderSubtle }} />
+                      <Typography
+                        variant="body2"
+                        sx={{ color: palette.textMuted, fontSize: "0.85rem", textAlign: "center" }}
+                      >
+                        {acceso.title}
+                      </Typography>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Paper
+              elevation={6}
+              sx={{
+                px: 5,
+                py: 6,
+                borderRadius: 4,
+                background: palette.cardBg,
+                border: `1px solid ${palette.borderSubtle}`,
+                backdropFilter: "blur(4px)",
+                textAlign: "center",
+                maxWidth: 520,
+              }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 600, color: palette.primary }}>
+                Sin accesos disponibles
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 1.5, color: palette.textMuted }}>
+                No se encontraron módulos asociados a tus permisos. Contacta a un administrador si esto es un error.
+              </Typography>
+            </Paper>
+          )}
       </Box>
     </MainLayout>
   );

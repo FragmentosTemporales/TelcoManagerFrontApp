@@ -48,14 +48,6 @@ function RespaldosView() {
         userID: "",
     });
 
-    const validatePermiso = () => {
-        if (permisos && permisos.length > 0) {
-            const permisoAuditoria = permisos.find((permiso) => permiso.moduloID === 21)
-            return !permisoAuditoria.edit
-        }
-    }
-
-    useEffect(() => { validatePermiso() }, [permisos]);
 
     const handlePage = (newPage) => {
         if (newPage >= 1 && newPage <= pages) {
@@ -366,7 +358,6 @@ function RespaldosView() {
             }}
         >
             <Button
-                disabled={isSubmitting || validatePermiso()}
                 onClick={getExcel}
                 variant="contained"
                 color="error"

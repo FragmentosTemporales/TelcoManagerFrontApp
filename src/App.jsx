@@ -26,6 +26,7 @@ import {
   ,FormPrevencion
   ,GestorTicketera
   ,Home
+  ,InscripcionTalleresCalidadView
   ,InventarioView
   ,LatestLogsView
   ,LogQueryStats
@@ -146,6 +147,7 @@ function App() {
 
           <Route path="/modulo:calendario-talleres-calidad" element={<CalendarioTalleresCalidadView />} />
           <Route path="/modulo:config-talleres-calidad" element={<ConfigTalleresCalidad />} />
+          <Route path="/modulo:inscripciones-talleres-calidad" element={<InscripcionTalleresCalidadView />} />
 
           <Route path="/modulo:planilla-onnet-sgs" element={<PlanillaOnnetSGSView />} />
           <Route path="/modulo:power-bi" element={<PowerBiListView />} />

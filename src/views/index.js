@@ -58,3 +58,4 @@ export {default as PowerBiView} from './PowerBiView';
 export {default as PowerBiListView} from './PowerBiListView';
 export {default as CalendarioTalleresCalidadView} from './CalendarioTalleresView';
 export {default as ConfigTalleresCalidad} from './ConfigTalleresCalidad';
+export {default as InscripcionTalleresCalidadView} from './InscripcionesTalleresCalidad';

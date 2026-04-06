@@ -99,6 +99,15 @@ export const getZonaItoTecnico = async () => {
   }
 };
 
+export const getTecnicos = async () => {
+  try {
+    const response = await client.get(`/get-tecnicos`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
 export const getReparacionesExcel = async () => {
   try {
     const response = await client.get('/get-all-reparaciones-excel', { responseType: 'blob' });
@@ -229,6 +238,24 @@ export const getTop20CursosAgendados = async () => {
   }
 };
 
+export const getCursosActivos = async () => {
+  try {
+    const response = await client.get(`/GET/cursos-agendados-disponibles`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const getInscritosCurso = async (curso_agendado_id) => {
+  try {
+    const response = await client.get(`/GET/inscritos-curso/${curso_agendado_id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
 export const createRelatorTallerCalidad = async (payload) => {
   try {
     const response = await client.post('/POST/create-relator-taller-calidad', payload);
@@ -241,6 +268,15 @@ export const createRelatorTallerCalidad = async (payload) => {
 export const createZonaTallerCalidad = async (payload) => {
   try {
     const response = await client.post('/POST/create-zona-taller-calidad', payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const createInscripcionTecnico = async (payload) => {
+  try {
+    const response = await client.post('/POST/agendar-tecnico-curso-calidad', payload);
     return response.data;
   } catch (error) {
     throw error.response?.data?.error || error.message;
