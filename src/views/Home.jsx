@@ -86,7 +86,13 @@ function Home() {
       head: "Inscripciones Talleres Calidad",
       title: "Gestiona las inscripciones a los talleres de calidad",
       link: "/modulo:inscripciones-talleres-calidad",
-      moduloID: 1036,
+      moduloID: 1037,
+    },
+    {
+      head: "Asistencia Talleres Calidad",
+      title: "Gestiona la asistencia a los talleres de calidad",
+      link: "/modulo:asistencia-talleres-calidad",
+      moduloID: 1038,
     },
     {
       head: "Registros DomApp",

@@ -327,3 +327,21 @@ export const updateCursoCalidad = async (id, payload) => {
     throw error.response?.data?.error || error.message;
   }
 };
+
+export const getCursosAsignados = async () => {
+  try {
+    const response = await client.get(`/GET/cursos-asignados-relator`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
+export const updateTecnicoInscritoCurso = async (tecnico_id, payload) => {
+  try {
+    const response = await client.put(`/PUT/update-tecnico-inscrito-curso/${tecnico_id}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};

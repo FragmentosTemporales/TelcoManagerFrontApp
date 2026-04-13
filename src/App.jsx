@@ -4,11 +4,11 @@ import {
   AgendamientoViewer
   ,AllAgendamientoViewer
   ,AmonesatacionesViewer
+  ,AsistenciaTallerCalidadView
   ,AstViewer
   ,AtencionTotem
   ,BodegaQuintaViewer
   ,BodegaViewer
-  ,CalendarioTalleresCalidadView
   ,CreateArea
   ,CreateMigracionesProactivas
   ,CreateProyectoInterno
@@ -145,9 +145,9 @@ function App() {
           <Route path="/modulo:formulario-calidad-reactiva" element={<FormulariosCalidadReactiva />} />
           <Route path="/modulo:formulario-calidad-reactiva/:formulario_id" element={<FormularioCalidadReactiva />} />
 
-          <Route path="/modulo:calendario-talleres-calidad" element={<CalendarioTalleresCalidadView />} />
           <Route path="/modulo:config-talleres-calidad" element={<ConfigTalleresCalidad />} />
           <Route path="/modulo:inscripciones-talleres-calidad" element={<InscripcionTalleresCalidadView />} />
+          <Route path="/modulo:asistencia-talleres-calidad" element={<AsistenciaTallerCalidadView />} />
 
           <Route path="/modulo:planilla-onnet-sgs" element={<PlanillaOnnetSGSView />} />
           <Route path="/modulo:power-bi" element={<PowerBiListView />} />

@@ -331,6 +331,23 @@ export default function ConfigTalleresCalidad() {
                 onChange={(e) => setPayloadForm({ ...payloadForm, fecha: e.target.value })}
                 sx={{ mt: 2 }}
             />
+            <Input
+                placeholder="Hora del Curso (HH:MM)"
+                size="small"
+                name="horario"
+                type="time"
+                value={payloadForm.horario || ""}
+                onChange={(e) => setPayloadForm({ ...payloadForm, horario: e.target.value })}
+                sx={{ mt: 2 }}
+            />
+            <Input
+                placeholder="Sala"
+                size="small"
+                name="sala"
+                value={payloadForm.sala || ""}
+                onChange={(e) => setPayloadForm({ ...payloadForm, sala: e.target.value })}
+                sx={{ mt: 2 }}
+            />
         </Box>
     )
 

@@ -56,6 +56,6 @@ export {default as FormularioCalidadReactiva} from './FormularioCalidadReactiva'
 export {default as PlanillaOnnetSGSView} from './PlanillaOnnetSgsView';
 export {default as PowerBiView} from './PowerBiView';
 export {default as PowerBiListView} from './PowerBiListView';
-export {default as CalendarioTalleresCalidadView} from './CalendarioTalleresView';
 export {default as ConfigTalleresCalidad} from './ConfigTalleresCalidad';
 export {default as InscripcionTalleresCalidadView} from './InscripcionesTalleresCalidad';
+export {default as AsistenciaTallerCalidadView} from './AsistenciaTallerCalidad';

@@ -50,6 +50,7 @@ export default function InscripcionTalleresCalidadView() {
     const [openModal, setOpenModal] = useState(false);
     const [openModalInscritos, setOpenModalInscritos] = useState(false);
     const [inscritosCurso, setInscritosCurso] = useState([]);
+    const [loadingInscritos, setLoadingInscritos] = useState(false);
 
     const handleCloseModal = () => {
         setOpenModal(false);
@@ -87,7 +88,7 @@ export default function InscripcionTalleresCalidadView() {
     }
 
     const onSubmitDetalles = async (curso_id) => {
-        setLoading(true);
+        setLoadingInscritos(true);
         setInscritosCurso([]);
         try {
             const inscritos = await getInscritosCurso(curso_id);
@@ -97,7 +98,7 @@ export default function InscripcionTalleresCalidadView() {
             setMessage(error);
             setOpen(true);
         }
-        setLoading(false);
+        setLoadingInscritos(false);
     };
 
     const onSubmitInscripcion = async () => {
@@ -246,48 +247,68 @@ export default function InscripcionTalleresCalidadView() {
                     closeAfterTransition
                     BackdropProps={{ timeout: 500 }}>
                     <Fade in={openModalInscritos}>
-                        <Box sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: "70%",
-                            bgcolor: 'background.paper',
-                            boxShadow: 24,
-                            p: 2,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}>
-                            <Typography variant="h6" component="h2" sx={{ mb: 2, color: palette.primary }}>
-                                Técnicos Inscritos
-                            </Typography>
-
-                            {inscritosCurso.length > 0 ? (
-                                <Table sx={{ width: '100%' }}>
-                                    <TableHead size="small">
-                                        <TableRow>
-                                            <TableCell>Nombre</TableCell>
-                                            <TableCell>RUT</TableCell>
-                                            <TableCell>CARGO</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody size="small">
-                                        {inscritosCurso.map((inscrito, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell>{inscrito.nombre}</TableCell>
-                                                <TableCell>{inscrito.rut}</TableCell>
-                                                <TableCell>{inscrito.cargo}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            ) : (
-                                <Typography variant="body2" sx={{ color: palette.textMuted }}>
-                                    No hay técnicos inscritos en este curso.
+                        {loadingInscritos ? (
+                            <Box sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: 2,
+                            }}>
+                                <CircularProgress />
+                                <Typography variant="body1" sx={{ color: palette.accentSoft }}>
+                                    Cargando inscritos...
                                 </Typography>
-                            )}
-                        </Box>
+                            </Box>
+                        ) : (
+                            <Box sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: "70%",
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 2,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}>
+                                <Typography variant="h6" component="h2" sx={{ mb: 2, color: palette.primary, fontWeight: 600 }}>
+                                    TÉCNICOS INSCRITOS
+                                </Typography>
+
+                                {inscritosCurso.length > 0 ? (
+                                    <Table sx={{ width: '100%', mb: 4 }} size="small">
+                                        <TableHead size="small">
+                                            <TableRow sx={{ background: palette.primaryDark }}>
+                                                <TableCell sx={{ color: palette.accentSoft, fontWeight: 'bold' }}>NOMBRE</TableCell>
+                                                <TableCell sx={{ color: palette.accentSoft, fontWeight: 'bold' }}>RUT</TableCell>
+                                                <TableCell sx={{ color: palette.accentSoft, fontWeight: 'bold' }}>CARGO</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody size="small">
+                                            {inscritosCurso.map((inscrito, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell>{inscrito.nombre}</TableCell>
+                                                    <TableCell>{inscrito.rut}</TableCell>
+                                                    <TableCell>{inscrito.cargo}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                ) : (
+                                    <Typography variant="body2" sx={{ color: palette.textMuted }}>
+                                        No hay técnicos inscritos en este curso.
+                                    </Typography>
+                                )}
+
+
+                            </Box>
+                        )}
                     </Fade>
                 </Modal>
 
@@ -307,7 +328,7 @@ export default function InscripcionTalleresCalidadView() {
                     />
                 </Box>
 
-                {cursosFiltrados && cursosFiltrados.length > 0 ? (
+                {!loading && cursosFiltrados ? (
                     <Grid
                         container
                         rowSpacing={{ xs: 5, sm: 6, md: 7 }}
@@ -420,27 +441,23 @@ export default function InscripcionTalleresCalidadView() {
                         ))}
                     </Grid>
                 ) : (
-                    <Paper
-                        elevation={6}
-                        sx={{
-                            px: 5,
-                            py: 6,
-                            borderRadius: 4,
-                            background: palette.cardBg,
-                            border: `1px solid ${palette.borderSubtle}`,
-                            backdropFilter: "blur(4px)",
-                            textAlign: "center",
-                            maxWidth: 520,
-                        }}
-                    >
-                        <Typography variant="h6" sx={{ fontWeight: 600, color: palette.primary }}>
-                            Sin cursos disponibles
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 2,
+                    }}>
+                        <CircularProgress />
+                        <Typography variant="body1" sx={{ color: palette.accentSoft }}>
+                            Cargando información...
                         </Typography>
-                        <Typography variant="body2" sx={{ mt: 1.5, color: palette.textMuted }}>
-                            No se encontraron cursos asociados a tus permisos. Contacta a un administrador si esto es un error.
-                        </Typography>
-                    </Paper>
+                    </Box>
                 )}
+
             </Box>
 
         </MainLayout>
