@@ -55,7 +55,7 @@ function Home() {
     {
       head: "Gestor NDC Bot",
       title: "Gestiona la automatización del NDC Bot",
-      link: "/modulo:ndc/session-logs",
+      link: "/modulo:ndc-main",
       moduloID: 2,
     },
     {

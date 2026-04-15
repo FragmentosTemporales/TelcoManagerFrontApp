@@ -33,10 +33,7 @@ import {
   ,LoadConstruccion
   ,Login
   ,MigracionesViewer
-  ,NDCLogsError
-  ,NDCSessionLogs
-  ,NDCSinConsumoUpdate
-  ,NDCErrorConConsumo
+  ,NDCMainView
   ,OnnetComponente
   ,ObjetivosView
   ,OnnetProyecto
@@ -124,11 +121,6 @@ function App() {
           <Route path="/modulo:respaldos" element={<RespaldosView />} />
           <Route path="/modulo:respaldo/:orden" element={<RespaldoView />} />
 
-          <Route path="/modulo:ndc/pendientes-sin-consumo" element={<NDCSinConsumoUpdate />} />
-          <Route path="/modulo:ndc/error-stock-consumo" element={<NDCErrorConConsumo />} />
-          <Route path="/modulo:ndc/logs-errors" element={<NDCLogsError />} />
-          <Route path="/modulo:ndc/session-logs" element={<NDCSessionLogs />} />
-
           <Route path="/modulo:log-query" element={<LogQueryStats />} />
           <Route path="/modulo:inventario" element={<InventarioView />} />
 
@@ -152,6 +144,9 @@ function App() {
           <Route path="/modulo:planilla-onnet-sgs" element={<PlanillaOnnetSGSView />} />
           <Route path="/modulo:power-bi" element={<PowerBiListView />} />
           <Route path="/modulo:power-bi/:report_id/:tabla?/:columna?/:operador?/:valor?" element={<PowerBiView />} />
+
+          <Route path="/modulo:ndc-main" element={<NDCMainView />} />
+
 
         </Route>
 
