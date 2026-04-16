@@ -35,7 +35,8 @@ import {
     agendarCursoCalidad,
     updateRelatorTallerCalidad,
     updateZonaTallerCalidad,
-    updateCursoCalidad
+    updateCursoCalidad,
+    updateEstadoCursoCalidad
 } from "../api/calidadAPI";
 import { extractDateOnly } from "../helpers/main";
 
@@ -46,6 +47,7 @@ export default function ConfigTalleresCalidad() {
     const [openModal, setOpenModal] = useState(false);
     const [openModalUpdate, setOpenModalUpdate] = useState(false);
     const [openModalHabilitado, setOpenModalHabilitado] = useState(false);
+    const [openModalUpdateCurso, setOpenModalUpdateCurso] = useState(false);
 
     const [message, setMessage] = useState(undefined);
     const [loading, setLoading] = useState(true);
@@ -61,6 +63,7 @@ export default function ConfigTalleresCalidad() {
 
     const [habilitado, setHabilitado] = useState("HABILITAR");
 
+    const [cursoSeleccionado, setCursoSeleccionado] = useState(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -74,6 +77,23 @@ export default function ConfigTalleresCalidad() {
         setOpenModal(false);
         setOpenModalUpdate(false);
         setOpenModalHabilitado(false);
+        setOpenModalUpdateCurso(false);
+    };
+
+    const onSubmitUpdateCurso = async () => {
+        try {
+            setLoading(true);
+            await updateEstadoCursoCalidad(cursoSeleccionado);
+            setMessage("Curso finalizado exitosamente.");
+            handleCloseModal();
+            setAlertType("success");
+            setMessage("Curso finalizado exitosamente.");
+        } catch (error) {
+            setAlertType("error");
+            setMessage(error);
+        }
+        loadData();
+        setOpen(true);
     };
 
     const fetchZonas = async () => {
@@ -163,7 +183,6 @@ export default function ConfigTalleresCalidad() {
             setLoading(true);
             setAvance(0);
             if (form === "zona") {
-                console.log("Payload para actualización de zona:", payloadForm);
                 await updateZonaTallerCalidad(payloadForm.id, payloadForm);
                 setMessage("Zona actualizada exitosamente.");
                 handleCloseModal();
@@ -552,6 +571,50 @@ export default function ConfigTalleresCalidad() {
                                     }}
                                     sx={{ background: palette.primaryDark, width: "200px" }}>
                                     {habilitado}
+                                </Button>
+                                <Button variant="contained" color="error" onClick={handleCloseModal} sx={{ width: "200px" }}>
+                                    CANCELAR
+                                </Button>
+                            </Box>
+
+                        </Box>
+                    </Fade>
+                </Modal>
+
+                <Modal
+                    open={openModalUpdateCurso}
+                    onClose={handleCloseModal}
+                    closeAfterTransition
+                    BackdropProps={{ timeout: 500 }}>
+                    <Fade in={openModalUpdateCurso}>
+                        <Box sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 700,
+                            bgcolor: 'background.paper',
+                            border: '2px solid #000',
+                            boxShadow: 24,
+                            p: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}>
+
+                            <Typography variant="h6" component="h2" sx={{ mb: 2, fontWeight: 600 }}>
+                                ¿DESEA FINALIZAR EL CURSO SELECCIONADO?
+                            </Typography>
+                            <Divider sx={{ width: '100%', mb: 2 }} />
+
+                            <Box sx={{ display: 'flex', gap: 2, width: '80%', justifyContent: 'space-between' }}>
+                                <Button
+                                    variant="contained"
+                                    onClick={() => {
+                                        onSubmitUpdateCurso()
+                                    }}
+                                    sx={{ background: palette.primaryDark, width: "200px" }}>
+                                    FINALIZAR
                                 </Button>
                                 <Button variant="contained" color="error" onClick={handleCloseModal} sx={{ width: "200px" }}>
                                     CANCELAR
@@ -1052,6 +1115,9 @@ export default function ConfigTalleresCalidad() {
                                         <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
                                             ESTADO
                                         </TableCell>
+                                        <TableCell size="small" align="center" sx={{ fontWeight: 600, color: palette.accentSoft }}>
+                                            ACTUALIZAR
+                                        </TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -1084,6 +1150,22 @@ export default function ConfigTalleresCalidad() {
                                             </TableCell>
                                             <TableCell align="center" size="small">
                                                 <Chip index={index} label={curso.estado_curso === true ? "Activo" : curso.estado_curso === false ? "Finalizado" : "Sin estado"} color={curso.estado_curso === true ? "success" : curso.estado_curso === false ? "error" : "default"} size="small" />
+                                            </TableCell>
+                                            <TableCell align="center" size="small">
+                                                <Button
+                                                    variant="contained"
+                                                    color="error"
+                                                    size="small"
+                                                    disabled={curso.estado_curso === false}
+                                                    sx={{ color: palette.textSecondary, width: "120px" }}
+                                                    onClick={
+                                                        () => {
+                                                            setCursoSeleccionado(curso.id_curso_agendado)
+                                                            setOpenModalUpdateCurso(true);
+                                                        }}
+                                                >
+                                                    FINALIZAR
+                                                </Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}

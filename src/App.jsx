@@ -34,6 +34,7 @@ import {
   ,Login
   ,MigracionesViewer
   ,NDCMainView
+  ,NDCOrdenConConsumoDeclaradaView
   ,OnnetComponente
   ,ObjetivosView
   ,OnnetProyecto
@@ -146,7 +147,7 @@ function App() {
           <Route path="/modulo:power-bi/:report_id/:tabla?/:columna?/:operador?/:valor?" element={<PowerBiView />} />
 
           <Route path="/modulo:ndc-main" element={<NDCMainView />} />
-
+          <Route path="/ndc/orden-con-consumo-declarada/:orden" element={<NDCOrdenConConsumoDeclaradaView />} />
 
         </Route>
 

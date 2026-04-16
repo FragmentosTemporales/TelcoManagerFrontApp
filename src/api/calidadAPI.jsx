@@ -328,6 +328,15 @@ export const updateCursoCalidad = async (id, payload) => {
   }
 };
 
+export const updateEstadoCursoCalidad = async (id) => {
+  try {
+    const response = await client.get(`/GET/actualizar-estado-curso/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || error.message;
+  }
+};
+
 export const getCursosAsignados = async () => {
   try {
     const response = await client.get(`/GET/cursos-asignados-relator`);

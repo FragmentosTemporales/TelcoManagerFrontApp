@@ -33,6 +33,7 @@ export {default as ProyectoInternoView} from './Proyecto_InternoView';
 export {default as CreateProyectoInterno} from './CreateProyectoInterno';
 export {default as LogQueryStats} from './LogQueryStatsView';
 export {default as NDCMainView} from './NDCMainView';
+export {default as NDCOrdenConConsumoDeclaradaView} from './NDCOrdenConConsumoDeclarada';
 export {default as CreateReparacionView} from './CreateReparacion';
 export {default as ReparacionesView} from './ReparacionesView';
 export {default as InventarioView} from './InventarioView';
