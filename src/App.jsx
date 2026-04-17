@@ -35,6 +35,7 @@ import {
   ,MigracionesViewer
   ,NDCMainView
   ,NDCOrdenConConsumoDeclaradaView
+  ,NDCOrdenConConsumoNoDeclaradaView
   ,OnnetComponente
   ,ObjetivosView
   ,OnnetProyecto
@@ -59,7 +60,9 @@ import {
   ,Solicitudes
   ,SupervisorViewRM
   ,TicketeraView
-  ,TicketViewer
+  ,TicketViewer,
+  NDCOrdenConConsumoSinStockView,
+  NDCOrdenSinConsumoNoConsumidaView
 } from "./views";
 
 function App() {
@@ -148,6 +151,9 @@ function App() {
 
           <Route path="/modulo:ndc-main" element={<NDCMainView />} />
           <Route path="/ndc/orden-con-consumo-declarada/:orden" element={<NDCOrdenConConsumoDeclaradaView />} />
+          <Route path="/ndc/orden-con-consumo-no-declarada/:orden" element={<NDCOrdenConConsumoNoDeclaradaView />} />
+          <Route path="/ndc/orden-con-consumo-sin-stock/:orden" element={<NDCOrdenConConsumoSinStockView />} />
+          <Route path="/ndc/orden-sin-consumo-no-consumida/:orden" element={<NDCOrdenSinConsumoNoConsumidaView />} />
 
         </Route>
 

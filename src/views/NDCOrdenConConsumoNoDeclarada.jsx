@@ -17,32 +17,35 @@ import {
 import { MainLayout } from "./Layout";
 import { palette } from "../theme/palette";
 import { useEffect, useState } from "react";
-import { fetchDetalleOrdenConsumida } from "../api/ndcAPI";
+import { fetchDetalleOrdenNoConsumida } from "../api/ndcAPI";
 import { Link, useParams } from "react-router-dom";
+import { extractDateOnly } from "../helpers/main";
 
 import ModuleHeader from "../components/ModuleHeader";
 
 
-function NDCOrdenConConsumoDeclaradaView() {
+function NDCOrdenConConsumoNoDeclaradaView() {
     const { orden } = useParams();
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(undefined);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [alertType, setAlertType] = useState(undefined);
 
-    const [dataConsumida, setDataConsumida] = useState([]);
+    const [data, setData] = useState([]);
+    const [dataError, setDataError] = useState([]);
+    const [dataValidador, setDataValidador] = useState([]);
 
     const handleClose = () => {
         setOpen(false);
     };
 
-
     const fetchData = async () => {
         setIsSubmitting(true);
         try {
-            const response = await fetchDetalleOrdenConsumida(orden);
-            console.log(response);
-            setDataConsumida(response);
+            const response = await fetchDetalleOrdenNoConsumida(orden);
+            setData(response || []);
+            setDataError(response.logs_error || []);
+            setDataValidador(response.validador_orden || []);
 
         } catch (error) {
             setMessage(error);
@@ -142,6 +145,7 @@ function NDCOrdenConConsumoDeclaradaView() {
                                 justifyContent: "center",
                                 alignItems: "center",
                                 flexDirection: "column",
+                                p:2
                             }}
                         >
 
@@ -150,7 +154,11 @@ function NDCOrdenConConsumoDeclaradaView() {
                                 flexDirection: "column",
                                 alignItems: "center",
                                 width: "100%"
+
                             }}>
+                                <Typography variant="h5" sx={{ mb: 2, color: palette.primary }}>
+                                    Registro de Errores por Stock No Disponible
+                                </Typography>
                                 <TableContainer
                                     component={Paper}
                                     sx={{
@@ -164,28 +172,73 @@ function NDCOrdenConConsumoDeclaradaView() {
                                             <TableRow>
                                                 <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Orden</TableCell>
                                                 <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Región</TableCell>
-                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Cod. Material</TableCell>
-                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Desc. Material</TableCell>
+                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Material</TableCell>
                                                 <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Cantidad</TableCell>
-                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Trabajo</TableCell>
-                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Técnico</TableCell>
-                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Rut Técnico</TableCell>
-
+                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Stock Disponible</TableCell>
+                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Fecha</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {dataConsumida.map((item, index) => (
+                                            {dataError.length > 0 ? dataError.map((item, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell size="small" align="center">{item.orden ? item.orden : "-"}</TableCell>
+                                                    <TableCell size="small" align="center">{item.region ? item.region : "-"}</TableCell>
+                                                    <TableCell size="small" align="center">{item.material ? item.material : "-"}</TableCell>
+                                                    <TableCell size="small" align="center">{item.cantidad ? item.cantidad : "-"}</TableCell>
+                                                    <TableCell size="small" align="center">{item.stock_disponible ? item.stock_disponible : "-"}</TableCell>
+                                                    <TableCell size="small" align="center">{item.fecha_registro ? extractDateOnly(item.fecha_registro) : "-"}</TableCell>
+
+                                                </TableRow>
+                                            )) : (
+                                                <TableRow>
+                                                    <TableCell colSpan={8} align="center">No hay errores registrados</TableCell>
+                                                </TableRow>
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Box>
+
+                            <Divider sx={{ width: "100%", my: 4, borderColor: palette.borderSubtle }} />
+
+                            <Box sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                width: "100%"
+
+                            }}>
+                                <Typography variant="h5" sx={{ mb: 2, color: palette.primary }}>
+                                    Registro validador de órdenes
+                                </Typography>
+                                <TableContainer
+                                    component={Paper}
+                                    sx={{
+                                        width: "100%",
+                                        boxShadow: 3,
+                                        background: palette.cardBg
+                                    }}
+                                >
+                                    <Table stickyHeader>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Orden</TableCell>
+                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Fecha Registro</TableCell>
+                                                <TableCell size="small" align="center" sx={{ fontWeight: "bold", background: palette.primary, color: "#fff" }}>Mensaje</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {dataValidador.length > 0 ? dataValidador.map((item, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell size="small" align="center">{item.orden}</TableCell>
-                                                    <TableCell size="small" align="center">{item.region}</TableCell>
-                                                    <TableCell size="small" align="center">{item.material}</TableCell>
-                                                    <TableCell size="small" align="center">{item.descripcion_material}</TableCell>
-                                                    <TableCell size="small" align="center">{item.cantidad}</TableCell>
-                                                    <TableCell size="small" align="center">{item.trabajo}</TableCell>
-                                                    <TableCell size="small" align="center">{item.tecnico}</TableCell>
-                                                    <TableCell size="small" align="center">{item.rut_tecnico}</TableCell>
+                                                    <TableCell size="small" align="center">{item.fecha_registro ? extractDateOnly(item.fecha_registro) : ""}</TableCell>
+                                                    <TableCell size="small" align="center">{item.validacion ? item.validacion : ""}</TableCell>
                                                 </TableRow>
-                                            ))}
+                                            )) : (
+                                                <TableRow>
+                                                    <TableCell colSpan={8} align="center">No hay registros validador de órdenes</TableCell>
+                                                </TableRow>
+                                            )}
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
@@ -201,4 +254,4 @@ function NDCOrdenConConsumoDeclaradaView() {
     );
 }
 
-export default NDCOrdenConConsumoDeclaradaView;
+export default NDCOrdenConConsumoNoDeclaradaView;

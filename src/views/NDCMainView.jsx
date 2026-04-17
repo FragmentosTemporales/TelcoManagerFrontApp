@@ -256,6 +256,7 @@ function NDCMainView() {
                                 justifyContent: "center",
                                 alignItems: "center",
                                 flexDirection: "column",
+                                p: 4,
                             }}
                         >
 
@@ -266,7 +267,7 @@ function NDCMainView() {
                                 alignItems: "center",
                                 width: "100%"
                             }}>
-                                <Typography variant="h6" sx={{ mb: 2, color: palette.primary, textDecoration: "underline" }}>
+                                <Typography variant="h5" sx={{ mb: 2, color: palette.primary }}>
                                     Órdenes con consumo consumidas desde {fechaInicio}
                                 </Typography>
                                 <Box sx={{
@@ -281,8 +282,13 @@ function NDCMainView() {
                                         display: "flex",
                                         flexDirection: "column",
                                         alignItems: "center",
+                                        height: "90%",
                                         width: { lg: "50%", xs: "100%" },
                                         justifyContent: "center",
+                                        boxShadow: 3,
+                                        borderRadius: 2,
+                                        p: 2,
+                                        background: palette.accentSoft,
                                     }}>
 
                                         <BarChart
@@ -358,8 +364,8 @@ function NDCMainView() {
                                                             to={`/ndc/orden-con-consumo-declarada/${item.orden}`}
                                                             style={{ textDecoration: 'none', color: 'inherit' }}
                                                             key={index}>
-                                                            <TableCell align="center" sx={{ fontWeight: "bold" }}>{item.orden}</TableCell>
-                                                            <TableCell align="center">{item.region}</TableCell>
+                                                            <TableCell align="center" sx={{ fontWeight: "bold" }}>{item.orden || "Sin Información"}</TableCell>
+                                                            <TableCell align="center">{item.region || "Sin Información"}</TableCell>
                                                         </TableRow>
                                                     ))}
                                                 </TableBody>
@@ -379,7 +385,7 @@ function NDCMainView() {
                                 alignItems: "center",
                                 width: "100%"
                             }}>
-                                <Typography variant="h6" sx={{ mb: 2, color: palette.primary, textDecoration: "underline" }}>
+                                <Typography variant="h5" sx={{ mb: 2, color: palette.primary }}>
                                     Órdenes con consumo pendientes de consumir desde {fechaInicio}
                                 </Typography>
                                 <Box sx={{
@@ -397,6 +403,10 @@ function NDCMainView() {
                                         height: "90%",
                                         width: { lg: "50%", xs: "100%" },
                                         justifyContent: "center",
+                                        boxShadow: 3,
+                                        borderRadius: 2,
+                                        p: 2,
+                                        background: palette.accentSoft,
                                     }}>
 
                                         <BarChart
@@ -468,11 +478,11 @@ function NDCMainView() {
                                                     {dataNoConsumidaFiltrada.map((item, index) => (
                                                         <TableRow 
                                                             component={Link}
-                                                            to={`/ndc/orden/${item.orden}`}
+                                                            to={`/ndc/orden-con-consumo-no-declarada/${item.orden}`}
                                                             style={{ textDecoration: 'none', color: 'inherit' }}
                                                             key={index}>
-                                                            <TableCell align="center" sx={{ fontWeight: "bold" }}>{item.orden}</TableCell>
-                                                            <TableCell align="center">{item.region}</TableCell>
+                                                            <TableCell align="center" sx={{ fontWeight: "bold" }}>{item.orden || "Sin Información"}</TableCell>
+                                                            <TableCell align="center">{item.region || "Sin Información"}</TableCell>
                                                         </TableRow>
                                                     ))}
                                                 </TableBody>
@@ -491,7 +501,7 @@ function NDCMainView() {
                                 alignItems: "center",
                                 width: "100%"
                             }}>
-                                <Typography variant="h6" sx={{ mb: 2, color: palette.primary, textDecoration: "underline" }}>
+                                <Typography variant="h5" sx={{ mb: 2, color: palette.primary }}>
                                     Órdenes con consumo sin stock desde {fechaInicio}
                                 </Typography>
                                 <Box sx={{ p: 1, display: "flex", flexDirection: { lg: "row", xs: "column" }, alignItems: "center", width: "100%" }}>
@@ -502,6 +512,10 @@ function NDCMainView() {
                                         height: "90%",
                                         width: { lg: "50%", xs: "100%" },
                                         justifyContent: "center",
+                                        boxShadow: 3,
+                                        borderRadius: 2,
+                                        p: 2,
+                                        background: palette.accentSoft,
                                     }}>
 
                                         <BarChart
@@ -572,11 +586,11 @@ function NDCMainView() {
                                                     {dataSinStockFiltrada.map((item, index) => (
                                                         <TableRow 
                                                             component={Link}
-                                                            to={`/ndc/orden/${item.orden}`}
+                                                            to={`/ndc/orden-con-consumo-sin-stock/${item.orden}`}
                                                             style={{ textDecoration: 'none', color: 'inherit' }}
                                                             key={index}>
-                                                            <TableCell align="center" sx={{ fontWeight: "bold" }}>{item.orden}</TableCell>
-                                                            <TableCell align="center">{item.region}</TableCell>
+                                                            <TableCell align="center" sx={{ fontWeight: "bold" }}>{item.orden || "Sin Información"}</TableCell>
+                                                            <TableCell align="center">{item.region || "Sin Información"}</TableCell>
                                                         </TableRow>
                                                     ))}
                                                 </TableBody>
@@ -595,7 +609,7 @@ function NDCMainView() {
                                 alignItems: "center",
                                 width: "100%"
                             }}>
-                                <Typography variant="h6" sx={{ mb: 2, color: palette.primary, textDecoration: "underline" }}>
+                                <Typography variant="h5" sx={{ mb: 2, color: palette.primary }}>
                                     Órdenes sin consumo no consumidas desde {fechaInicio}
                                 </Typography>
                                 <Box sx={{ p: 1, display: "flex", flexDirection: { lg: "row", xs: "column" }, alignItems: "center", width: "100%" }}>
@@ -606,6 +620,10 @@ function NDCMainView() {
                                         height: "90%",
                                         width: { lg: "50%", xs: "100%" },
                                         justifyContent: "center",
+                                        boxShadow: 3,
+                                        borderRadius: 2,
+                                        p: 2,
+                                        background: palette.accentSoft,
                                     }}>
                                         <BarChart
                                             series={[
@@ -669,17 +687,19 @@ function NDCMainView() {
                                                     <TableRow >
                                                         <TableCell sx={{ background: palette.primaryDark, color: palette.accentSoft, fontWeight: "bold" }} align="center">Orden</TableCell>
                                                         <TableCell sx={{ background: palette.primaryDark, color: palette.accentSoft, fontWeight: "bold" }} align="center">Región</TableCell>
+                                                        <TableCell sx={{ background: palette.primaryDark, color: palette.accentSoft, fontWeight: "bold" }} align="center">Tipo</TableCell>
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
                                                     {dataSinConsumoNoConsumidasFiltrada.map((item, index) => (
                                                         <TableRow 
                                                             component={Link}
-                                                            to={`/ndc/orden/${item.orden}`}
+                                                            to={`/ndc/orden-sin-consumo-no-consumida/${item.orden}`}
                                                             style={{ textDecoration: 'none', color: 'inherit' }}
                                                             key={index}>
-                                                            <TableCell align="center" sx={{ fontWeight: "bold" }}>{item.orden}</TableCell>
-                                                            <TableCell align="center">{item.region}</TableCell>
+                                                            <TableCell align="center" sx={{ fontWeight: "bold" }}>{item.orden || "Sin Información"}</TableCell>
+                                                            <TableCell align="center">{item.region || "Sin Información"}</TableCell>
+                                                            <TableCell align="center">{item.tipo || "Sin Información"}</TableCell>
                                                         </TableRow>
                                                     ))}
                                                 </TableBody>
