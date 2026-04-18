@@ -462,7 +462,11 @@ export default function ConfigTalleresCalidad() {
                             alignItems: 'center',
                         }}>
 
-                            <Typography variant="h6" component="h2" sx={{ mb: 2, fontWeight: 600 }}>
+                            <Typography
+                                variant="h6"
+                                component="h2"
+                                sx={{ mb: 2, fontWeight: 600 }}
+                                disabled={loading}>
                                 CREAR {form === "zona" ? "ZONA" : form === "relator" ? "RELATOR" : form === "curso" ? "CURSO" : "CURSO AGENDADO"}
                             </Typography>
                             <Divider sx={{ width: '100%', mb: 2 }} />
@@ -522,6 +526,7 @@ export default function ConfigTalleresCalidad() {
                             <Box sx={{ display: 'flex', gap: 2, width: '80%', justifyContent: 'space-between' }}>
                                 <Button
                                     variant="contained"
+                                    disabled={loading}
                                     onClick={() => {
                                         onSubmitUpdate()
                                     }}
@@ -569,7 +574,8 @@ export default function ConfigTalleresCalidad() {
                                     onClick={() => {
                                         onSubmitUpdate()
                                     }}
-                                    sx={{ background: palette.primaryDark, width: "200px" }}>
+                                    sx={{ background: palette.primaryDark, width: "200px" }}
+                                    disabled={loading}>
                                     {habilitado}
                                 </Button>
                                 <Button variant="contained" color="error" onClick={handleCloseModal} sx={{ width: "200px" }}>

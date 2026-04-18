@@ -206,9 +206,6 @@ export default function InscripcionTalleresCalidadView() {
                                 <Autocomplete
                                     fullWidth
                                     size="small"
-                                    disabled={
-                                        loading || (cursoSeleccionado && cursoSeleccionado.inscritos >= 3)
-                                    }
                                     options={dataTecnicos}
                                     getOptionLabel={(option) => `${option.nombre} (${option.rut})`}
                                     value={dataTecnicos.find(t => t.id === formInscripcion.tecnico_id) || null}
@@ -219,16 +216,11 @@ export default function InscripcionTalleresCalidadView() {
                                 />
                             </Box>
 
-                            {cursoSeleccionado && cursoSeleccionado.inscritos >= 3 && (
-                                <Typography variant="body2" sx={{ mb: 1, color: palette.textMuted }}>
-                                    **El curso ha alcanzado el número máximo de inscritos.
-                                </Typography>)}
-
                             <Box sx={{ display: 'flex', gap: 2, width: '80%', justifyContent: 'space-between' }}>
                                 <Button
                                     variant="contained"
                                     onClick={onSubmitInscripcion}
-                                    disabled={loading || cursoSeleccionado?.inscritos >= 3}
+                                    disabled={loading}
                                     sx={{ background: palette.primaryDark, width: "200px" }}>
                                     CONFIRMAR
                                 </Button>
